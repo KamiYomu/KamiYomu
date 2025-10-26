@@ -1,0 +1,36 @@
+﻿@page
+@model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.RemoveFromLibraryConfirmModel
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title">@I18n.ConfirmDelete</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@I18n.Close"></button>
+</div>
+<div class="modal-body text-center">
+    <img src="@Model.Library.Manga.CoverUrl"
+         alt="@Model.Library.Manga.Title cover"
+         class="img-fluid rounded mb-3 shadow-sm"
+         style="max-height: 200px; object-fit: cover;" />
+
+    <p class="fs-5">
+        Are you sure you want to remove <strong>@Model.Library.Manga.Title</strong> from your library?
+    </p>
+    <p class="text-muted">
+        @I18n.AllchapterWillBeTerminated
+    </p>
+</div>
+<div class="modal-footer">
+    <form method="post"
+          hx-post="/Libraries/Downloads/Index?handler=RemoveFromLibrary"
+          hx-target="#@Model.RefreshElementId"
+          hx-swap="outerHTML">
+        <input type="hidden" name="MangaId" value="@Model.Library.Manga.Id" />
+        <input type="hidden" name="AgentId" value="@Model.Library.AgentCrawler.Id" />
+
+        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">@I18n.Delete</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@I18n.Cancel</button>
+    </form>
+</div>
+

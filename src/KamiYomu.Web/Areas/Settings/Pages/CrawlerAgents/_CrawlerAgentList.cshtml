@@ -1,0 +1,52 @@
+﻿@using KamiYomu.Web.Entities
+@model List<CrawlerAgent>
+<table class="table table-striped table-hover table-sm align-middle">
+    <thead>
+        <tr>
+            <th scope="col">@I18n.Name</th>
+            <th scope="col">@I18n.Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.DisplayName</td>
+                <td>
+                    <div class="d-flex flex-wrap gap-2">
+                        <div class="btn-group" role="group" aria-label="@I18n.AgentActions">
+                            <button class="btn btn-sm btn-outline-primary"
+                                    title="@I18n.Details"
+                                    aria-label="View details"
+                                    hx-get="/Settings/CrawlerAgents/Dialogs/CrawlerAgentDetails?id=@item.Id"
+                                    hx-target="#modal-body"
+                                    hx-swap="innerHTML"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modal">
+                                <i class="bi bi-info-circle me-1"></i> @I18n.Details
+                            </button>
+
+                            <a asp-area="Settings" asp-page="/CrawlerAgents/Edit" asp-route-id="@item.Id"
+                               class="btn btn-sm btn-outline-secondary"
+                               title="@I18n.Edit"
+                               aria-label="@I18n.Edit">
+                                <i class="bi bi-pencil me-1"></i> @I18n.Edit
+                            </a>
+
+                            <button class="btn btn-sm btn-outline-danger"
+                                    title="@I18n.Delete"
+                                    aria-label="@I18n.Delete"
+                                    hx-get="/Settings/CrawlerAgents/Dialogs/DeleteConfirm?id=@item.Id"
+                                    hx-target="#modal-body"
+                                    hx-swap="innerHTML"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modal">
+                                <i class="bi bi-trash me-1"></i> @I18n.Delete
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

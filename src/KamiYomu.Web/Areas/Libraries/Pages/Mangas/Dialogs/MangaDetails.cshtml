@@ -1,0 +1,114 @@
+﻿@page
+@model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.MangaDetailsModel
+@{
+    Layout = null;
+
+    var desc = Model.Manga.Description;
+    var preview = desc?.Length > 50 ? desc.Substring(0, 50) + "..." : desc;
+    var needsExpand = desc?.Length > 50;
+}
+<div class="modal-header">
+    <h5 class="modal-title">Manga Details</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <div class="container-fluid">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="border rounded shadow-sm overflow-hidden">
+                    <a href="@Model.Manga.WebsiteUrl" alt="@Model.Manga.Title" target="_blank">
+                        <img src="@Model.Manga.CoverUrl" alt="@Model.Manga.Title"
+                             class="img-fluid w-100" style="object-fit: cover; max-height: 400px;" />
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <h2 class="fw-bold mb-3">@Model.Manga.Title</h2>
+
+                @if (!string.IsNullOrWhiteSpace(desc))
+                {
+                    <div class="accordion" id="descAccordion">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="descHeading">
+                                <button class="accordion-button collapsed text-muted fst-italic px-2 py-1" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#descCollapse" aria-expanded="false" aria-controls="descCollapse">
+                                    @preview
+                                </button>
+                            </h2>
+                            <div id="descCollapse" class="accordion-collapse collapse" aria-labelledby="descHeading" data-bs-parent="#descAccordion">
+                                <div class="accordion-body text-muted fst-italic px-2 pt-1">
+                                    @desc
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+                <div class="row gy-2">
+                    <div class="col-sm-6">
+                        <strong>@I18n.Status:</strong> @Model.Manga.ReleaseStatus.ToString()
+                    </div>
+                    <div class="col-sm-6">
+                        <strong>@I18n.ReleaseStatus:</strong> @Model.Manga.ReleaseStatus
+                    </div>
+                    <div class="col-sm-6">
+                        <strong>@I18n.ContentRating:</strong> @Model.Manga.ContentRating
+                    </div>
+                    <div class="col-sm-6">
+                        <strong>@I18n.OriginalLanguage:</strong> @Model.Manga.OriginalLanguage
+                    </div>
+                    <div class="col-sm-6">
+                        <strong>@I18n.Year:</strong> @Model.Manga.Year
+                    </div>
+                    <div class="col-sm-6">
+                        <strong>@I18n.LatestChapter:</strong> @Model.Manga.LatestChapterAvailable
+                    </div>
+                    <div class="col-sm-6">
+                        <strong>@I18n.LastVolume:</strong> @Model.Manga.LastVolumeAvailable
+                    </div>
+                    <div class="col-sm-12">
+                        <strong>@I18n.Tags:</strong>
+                        @if (Model.Manga.Tags?.Any() == true)
+                        {
+                            <div class="mt-1">
+                                @foreach (var tag in Model.Manga.Tags)
+                                {
+                                    <span class="badge bg-secondary me-1 mb-1">@tag</span>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="col-sm-12">
+                        <strong>Website:</strong>
+                        <a href="@Model.Manga.WebsiteUrl" target="_blank" class="text-decoration-none">
+                            @Model.Manga.WebsiteUrl
+                        </a>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong>@I18n.FolderName:</strong> @Model.Manga.FolderName
+                    </div>
+                </div>
+
+                @if (Model.Manga.Links?.Any() == true)
+                {
+                    <hr class="mt-4" />
+                    <h5 class="fw-semibold">@I18n.ExternalLinks</h5>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var link in Model.Manga.Links)
+                        {
+                            <li class="list-group-item px-0">
+                                <strong>@link.Key:</strong>
+                                <a href="@link.Value" target="_blank" class="ms-1 text-decoration-none">@link.Value</a>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@I18n.Close</button>
+</div>

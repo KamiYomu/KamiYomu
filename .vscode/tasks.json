@@ -1,0 +1,65 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "docker-compose up",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": [
+        "-f",
+        "${workspaceFolder}/src/docker-compose.yml",
+        "-f",
+        "${workspaceFolder}/src/docker-compose.override.yml",
+        "-f",
+        "${workspaceFolder}/.vscode/docker-compose.vscode.yml",
+        "up",
+        "--build",
+        "-d"
+      ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "install vsdbg",
+      "type": "shell",
+      "command": "docker",
+      "args": [
+        "exec",
+        "--user",
+        "root",
+        "-i",
+        "kamiyomu.web",
+        "bash",
+        "-c",
+        "apt-get update && apt-get install -y curl && curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /vsdbg"
+      ],
+      "dependsOn": ["docker-compose up"],
+      "problemMatcher": []
+    },
+    {
+      "label": "open browser at 8080",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-Command",
+        "Start-Process",
+        "http://localhost:8080"
+      ],
+      "dependsOn": ["install vsdbg"],
+      "problemMatcher": []
+    },
+    {
+      "label": "prepare docker debug with browser",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "docker-compose up",
+        "install vsdbg",
+        "open browser at 8080"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

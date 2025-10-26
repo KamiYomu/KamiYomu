@@ -1,0 +1,17 @@
+﻿@page
+
+@model KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.EditModel
+@{
+    ViewData["Title"] = I18n.EditCrawlerAgent;
+}
+
+<div class="d-flex justify-content-between align-items-center m-3">
+    <h2 class="h5 mb-0 text-primary">
+        <i class="bi bi-puzzle me-3" aria-hidden="true"></i>
+        @I18n.EditCrawlerAgent
+    </h2>
+</div>
+
+<partial name="_CrawlerAgentEditForm" model="Model.Input" />
+
+<div asp-validation-summary="All" class="text-danger"></div>

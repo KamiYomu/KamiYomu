@@ -1,0 +1,74 @@
+﻿@model KamiYomu.Web.Entities.Library
+
+@{
+    Layout = null;
+    var isNew = Model.Id == Guid.Empty;
+    var cardId = $"library-card-{Model.Manga.Id}".Replace(".", "-");
+}
+
+<div class="col" id="@cardId">
+    <div class="card h-100">
+        <img src="@Model.Manga.CoverUrl" class="card-img-top" alt="@Model.Manga.Title" style="object-fit: cover; height: 300px;">
+        <div class="card-body d-flex flex-column">
+            <h5 class="card-title fw-bold">@Model.Manga.Title</h5>
+
+            <div class="mb-3">
+                <span class="fw-semibold">@I18n.Status:</span>
+                <span class="ms-1 text-muted">@Model.Manga.ReleaseStatus</span>
+            </div>
+
+            <div class="mb-3 d-flex align-items-center">
+                <span class="fw-semibold me-2">@I18n.CrawlerAgent:</span>
+                <img src="@await Model.AgentCrawler.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None)" width="20" class="me-2" alt="favicon" />
+                <span class="text-muted">@Model.AgentCrawler.DisplayName</span>
+            </div>
+
+
+            <div class="mt-auto d-flex gap-2">
+                <button class="btn btn-sm btn-outline-primary"
+                        hx-get="/Libraries/Mangas/Dialogs/MangaDetails?agentId=@Model.AgentCrawler.Id&mangaId=@Model.Manga.Id"
+                        hx-target="#modal-body"
+                        hx-swap="innerHTML"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal">
+                    <i class="bi bi-info-circle me-2"></i> @I18n.Details
+                </button>
+                @if (isNew)
+                {
+                    <form method="post"
+                          hx-post="/Libraries/Downloads/Index?handler=AddToLibrary"
+                          hx-target="#@cardId"
+                          hx-swap="outerHTML">
+                        <input type="hidden" name="MangaId" value="@Model.Manga.Id" />
+                        <input type="hidden" name="AgentId" value="@Model.AgentCrawler.Id" />
+
+                        <button type="submit"
+                                class="btn btn-sm btn-success">
+                            <i class="bi bi-plus-circle me-2"></i> @I18n.AddToLibrary
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <button class="btn btn-sm btn-outline-danger"
+                            hx-get="/Libraries/Mangas/Dialogs/RemoveFromLibraryConfirm?LibraryId=@Model.Id&RefreshElementId=@cardId"
+                            hx-target="#modal-body"
+                            hx-swap="innerHTML"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal">
+                        <i class="bi bi-x-circle"></i> @I18n.RemoveFromLibrary
+                    </button>
+
+                    <button class="btn btn-sm btn-outline-info"
+                            hx-get="/Libraries/Mangas/Dialogs/Jobs?libraryId=@Model.Id"
+                            hx-target="#modal-body"
+                            hx-swap="innerHTML"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal">
+                        <i class="bi bi-cloud-download"></i>
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

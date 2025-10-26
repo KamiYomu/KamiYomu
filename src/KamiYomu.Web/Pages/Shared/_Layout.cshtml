@@ -1,0 +1,142 @@
+﻿<!doctype html>
+<html lang="en" data-bs-theme="auto">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="KamiYomu" />
+    <meta name="theme-color" content="#712cf9" />
+    <title>KamiYomu - @(string.IsNullOrEmpty(ViewData["Title"]?.ToString()) ? "Manga Crawler Platform" : ViewData["Title"])</title>
+    <link rel="icon" href="~/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/KamiYomu.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", false)
+</head>
+<body>
+    <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+        <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center"
+                id="bd-theme"
+                type="button"
+                aria-expanded="false"
+                data-bs-toggle="dropdown"
+                aria-label="Toggle theme (auto)">
+            <i class="bi bi-circle-half my-1 theme-icon-active" aria-hidden="true"></i>
+            <span class="visually-hidden" id="bd-theme-text">@I18n.ToggleTheme</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow"
+            aria-labelledby="bd-theme-text">
+            <li>
+                <button type="button"
+                        class="dropdown-item d-flex align-items-center"
+                        data-bs-theme-value="light"
+                        aria-pressed="false">
+
+                    <i class="bi bi-sun-fill me-2 opacity-50" aria-hidden="true"></i>
+                    @I18n.Light
+                    <i class="bi bi-check2 ms-auto d-none" aria-hidden="true"></i>
+                </button>
+
+            </li>
+            <li>
+                <button type="button"
+                        class="dropdown-item d-flex align-items-center"
+                        data-bs-theme-value="dark"
+                        aria-pressed="false">
+
+                    <i class="bi bi-moon-stars-fill me-2 opacity-50" aria-hidden="true"></i>
+                    @I18n.Dark
+                    <i class="bi bi-check2 ms-auto d-none" aria-hidden="true"></i>
+                </button>
+            </li>
+            <li>
+                <button type="button"
+                        class="dropdown-item d-flex align-items-center active"
+                        data-bs-theme-value="auto"
+                        aria-pressed="true">
+                    <i class="bi bi-circle-half me-2 opacity-50" aria-hidden="true"></i>
+                    Auto
+                    <i class="bi bi-check2 ms-auto d-none" aria-hidden="true"></i>
+                </button>
+            </li>
+        </ul>
+    </div>
+
+    <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow"
+            data-bs-theme="dark">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white"
+           href="/">
+            <img src="~/images/logo.svg" alt="KamiYomu" height="24" />
+            KamiYomu
+        </a>
+        <ul class="navbar-nav flex-row d-md-none">
+            <li class="nav-item text-nowrap">
+                <button class="nav-link px-3 text-white"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarSearch"
+                        aria-controls="navbarSearch"
+                        aria-expanded="false"
+                        aria-label="Toggle search">
+                    <i class="bi bi-search" aria-hidden="true"></i>
+                </button>
+            </li>
+            <li class="nav-item text-nowrap">
+                <button class="nav-link px-3 text-white"
+                        type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#sidebarMenu"
+                        aria-controls="sidebarMenu"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <i class="bi bi-list" aria-hidden="true"></i>
+                </button>
+            </li>
+        </ul>
+        <div id="navbarSearch" class="navbar-search w-100 collapse">
+            <input class="form-control w-100 rounded-0 border-0"
+                   type="text"
+                   placeholder="Search"
+                   aria-label="Search" />
+        </div>
+    </header>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
+                <div class="offcanvas-md offcanvas-end bg-body-tertiary"
+                     tabindex="-1"
+                     id="sidebarMenu"
+                     aria-labelledby="sidebarMenuLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title d-flex align-items-center gap-2" id="sidebarMenuLabel">
+                            <img src="~/images/logo.svg" alt="KamiYomu" height="24" />
+                            KamiYomu
+                        </h5>
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="offcanvas"
+                                data-bs-target="#sidebarMenu"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
+                        <partial name="_SideMenu" />
+
+                    </div>
+                </div>
+            </div>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                @RenderBody()
+                <partial name="_Dialogs" />
+                <partial name="_NotificationToast" />
+                <partial name="_Loading" />
+            </main>
+        </div>
+    </div>
+    <script src="~/js/color-modes.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/htmx.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

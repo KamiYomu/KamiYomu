@@ -1,0 +1,47 @@
+﻿@page
+@model IndexModel
+
+<div class="text-center mb-5">
+    <img src="~/images/logo.svg" alt="KamiYomu Owl" class="m-3 svg-black" style="width: 150px;">
+    <h1 class="display-4 fw-bold">@I18n.WelcomeToKamiYomu</h1>
+    <p class="lead text-muted">@I18n.WelcomeToKamiYomuDescription</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-cloud-download me-2"></i> @I18n.CrawlManga
+                </h5>
+                <p class="card-text">@I18n.CrawlMangaDescription</p>
+                <a asp-area="Libraries" asp-page="Downloads/Index" class="btn btn-outline-primary">
+                    <i class="bi bi-play-circle me-1"></i> @I18n.StartCrawlingNow
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-book me-2"></i> @I18n.ViewLibrary
+                </h5>
+                <p class="card-text">@I18n.ViewLibraryDescription</p>
+                <a asp-area="Libraries" asp-page="Mangas/Index" class="btn btn-outline-success">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> @I18n.OpenLibrary
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="mt-5 text-center">
+    <p class="text-muted">
+        <i class="bi bi-puzzle me-1"></i> Plugins,
+        <i class="bi bi-window me-1"></i> Razor Pages, and
+        <i class="bi bi-emoji-smile me-1"></i> Owl wisdom.
+    </p>
+</div>
