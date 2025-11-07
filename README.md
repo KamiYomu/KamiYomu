@@ -59,25 +59,65 @@ save the following `docker-compose.yml` file to run KamiYomu with Docker:
       kamiyomu_logs:
 ```
 
-
+You will have access to the web interface at `http://localhost:8080`.
 Keep in mind to map the volumes to your desired local paths. 
 See the releases branchs for identifying the versions available.
+
+Configure your sources and crawler agents 
+
+Download crawler agents from NuGet Package from [here](https://github.com/orgs/KamiYomu/packages) and upload them in [Crawler Agents](http://localhost:8080/Settings/CrawlerAgents).
+
+## 👨‍💻 Contributing
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request against the ``develop`` branch
+
+
+## 🛠️ Development Setup
+
+We recommend using Visual Studio 2022 or later with the .NET 8 SDK installed. However, you can also run KamiYomu using VsCode.
+
+### Using Visual Studio
+
+- Visual Studio: [Download here](https://visualstudio.microsoft.com/downloads/)
+- .NET 8 SDK: [Download here](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- Docker: [Download here](https://www.docker.com/get-started)
+
 
 1. **Clone the repository**
    ```bash
    git clone https://github.com/KamiYomu/KamiYomu.Web.git
 	```
-2. Build and run the Docker container
-   ```bash
-   cd ./src/KamiYomu.Web
-   docker build -t kamiyomu .
-   docker run -d -p 8080:8080 --name kamiyomu_container kamiyomu
-   ```
-3. Configure your sources and crawler agents 
+2. Open the solution in Visual Studio in `/src/KamiYomu.Web.sln`
+3. Set `docker-compose` project as startup project and run it.
 
-	Download crawler agents from NuGet Package from [here](https://github.com/orgs/KamiYomu/packages) and upload them in [Crawler Agents](http://localhost:8080/Settings/CrawlerAgents).
 
-3. Run the crawler and start your self-hosted your mangás.
+### Using VsCode
+
+To get started with local development using Visual Studio Code, ensure the following tools are installed:
+
+**Required Tools**
+
+- Visual Studio Code [Download Here](https://code.visualstudio.com/)
+- C# Dev Kit Extension [Install](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
+- Docker Extension for VS Code [Install](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
+
+Note: Make sure Docker is installed and running on your machine.
+
+1. Clone the Repository
+
+```bash
+    git clone https://github.com/KamiYomu/KamiYomu.Web.git
+```
+2. Running the Project in VS Code
+- Open the project folder in VS Code.
+- Navigate to the "Run and Debug" tab (Ctrl+Shift+D).
+- Select the launch configuration: "Attach to .NET Core in Docker".
+- Click the ▶️ Start Debugging button.
+The project includes predefined tasks to build and run the Docker container automatically.
+
 
 ## 🧠 Tech Stack- .NET 8 Razor Pages
 - Hangfire for job scheduling
