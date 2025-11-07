@@ -59,7 +59,8 @@ jobs:
           echo "version_suffix=${VERSION_SUFFIX}" >> $GITHUB_OUTPUT
           echo "is_prerelease=${is_prerelease}" >> $GITHUB_OUTPUT
 
-      - name: Build multi-platform Docker image
+      - name: Build multi-platform Docker image (stable)
+        if: env.IS_PRERELEASE == 'false'
         uses: docker/build-push-action@v5
         with:
           context: src
@@ -68,6 +69,21 @@ jobs:
           push: false
           tags: |
             ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          build-args: |
+            VERSION=${{ env.VERSION }}
+            VERSION_SUFFIX=${{ env.VERSION_SUFFIX }}
+            BUILD_CONFIGURATION=Release
+
+      - name: Build multi-platform Docker image (prerelease)
+        if: env.IS_PRERELEASE == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: src
+          file: src/KamiYomu.Web/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: false
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ env.VERSION }}${{ env.VERSION_SUFFIX }}
           build-args: |
             VERSION=${{ env.VERSION }}
             VERSION_SUFFIX=${{ env.VERSION_SUFFIX }}
