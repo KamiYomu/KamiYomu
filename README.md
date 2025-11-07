@@ -43,16 +43,18 @@ services:
       image: marcoscostadev/kamiyomu:1.0.0-beta1
       ports:
         - "8080:8080" # HTTP Port
-      volumes:
-        - ./AppData/manga:/manga # Your desired local path for manga storage 
-        - Kamiyomu_database:/db
-        - kamiyomu_agents:/agents 
-        - kamiyomu_logs:/logs 
+      restart: unless-stopped
       healthcheck:
         test: ["CMD", "curl", "-f", "https://localhost:8080/healthz"]
         interval: 30s
         timeout: 10s
         retries: 3
+      volumes:
+        - ./AppData/manga:/manga # Your desired local path for manga storage 
+        - Kamiyomu_database:/db
+        - kamiyomu_agents:/agents 
+        - kamiyomu_logs:/logs 
+
 volumes:
       kamiyomu_agents:
       Kamiyomu_database:
