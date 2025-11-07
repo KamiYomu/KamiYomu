@@ -1,0 +1,37 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to .NET Core in Docker",
+      "type": "coreclr",
+      "request": "attach",
+      "processId": "${command:pickRemoteProcess}",
+      "preLaunchTask": "prepare docker debug with browser",
+      "pipeTransport": {
+        "pipeProgram": "docker",
+        "pipeArgs": [
+          "exec",
+          "-i",
+          "kamiyomu.web"
+        ],
+        "debuggerPath": "/vsdbg/vsdbg",
+        "pipeCwd": "${workspaceFolder}",
+        "quoteArgs": false
+      },
+      "sourceFileMap": {
+        "/app": "${workspaceFolder}/src/KamiYomu.Web",
+        "/src": "${workspaceFolder}/src"
+      },
+      "justMyCode": false,
+      "logging": {
+        "diagnosticsLog": {
+          "protocolMessages": true,
+          "engineLogging": true,
+          "exceptions": true,
+        },
+        "moduleLoad": true,
+        "trace": true
+      }
+    }
+  ]
+}

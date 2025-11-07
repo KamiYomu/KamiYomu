@@ -1,0 +1,53 @@
+﻿using KamiYomu.Web.Entities;
+using LiteDB;
+
+namespace KamiYomu.Web.Infrastructure.Contexts
+{
+    public class DbContext : IDisposable
+    {
+        private bool _disposed = false;
+        private readonly LiteDatabase _database;
+        public DbContext(string connectionString) {
+            _database = new(connectionString);
+            _database.Mapper.RegisterType<Uri>(
+                uri => uri != null ? new BsonValue(uri.ToString()) : BsonValue.Null,
+                bson =>
+                {
+                    var str = bson.AsString;
+                    if (string.IsNullOrWhiteSpace(str)) return null;
+
+                    return Uri.TryCreate(str, UriKind.RelativeOrAbsolute, out var uri) ? uri : null;
+                }
+            );
+        }
+
+        public ILiteCollection<CrawlerAgent> CrawlerAgents => _database.GetCollection<CrawlerAgent>("agent_crawlers");
+        public ILiteCollection<Library> Libraries => _database.GetCollection<Library>("libraries");
+        public ILiteCollection<UserPreference> UserPreferences => _database.GetCollection<UserPreference>("user_preferences");
+        public ILiteStorage<Guid> CrawlerAgentFileStorage => _database.GetStorage<Guid>("_agent_crawler_file_storage", "_packages");
+        public LiteDatabase Raw => _database;
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _database?.Dispose();
+            }
+            _disposed = true;
+        }
+
+        ~DbContext()
+        {
+            Dispose(false);
+        }
+    }
+
+}

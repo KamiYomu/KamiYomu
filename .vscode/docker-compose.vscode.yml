@@ -1,0 +1,12 @@
+version: "3.4"
+services:
+  kamiyomu.web:
+    container_name: kamiyomu.web
+    build:
+      args:
+        BUILD_CONFIGURATION: Debug
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_USE_POLLING_FILE_WATCHER=true 
+    ports:
+      - "8080:8080"

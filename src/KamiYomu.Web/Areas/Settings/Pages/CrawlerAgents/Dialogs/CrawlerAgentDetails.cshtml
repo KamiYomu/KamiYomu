@@ -1,0 +1,36 @@
+﻿@page
+@model KamiYomu.Web.Pages.CrawlerAgents.Dialogs.AgentDetailsModel
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title">@I18n.CrawlerAgentDetails</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>@I18n.Property</th>
+                <th>@I18n.Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@I18n.Name</td>
+                <td>@Model.Agent.DisplayName</td>
+            </tr>
+            @foreach (var key in new[] { "Title", "Description", "Company", "Product", "Version", "FileVersion", "InformationalVersion" })
+            {
+                <tr>
+                    <td>@I18n.ResourceManager.GetString(key)</td>
+                    <td>@(Model.Agent.AssemblyProperties.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value) ? value : "Empty")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+</div>

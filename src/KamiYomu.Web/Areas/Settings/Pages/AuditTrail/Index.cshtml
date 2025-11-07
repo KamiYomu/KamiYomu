@@ -1,0 +1,50 @@
+﻿@page
+@model KamiYomu.Web.Areas.Settings.Pages.AuditTrail.IndexModel
+@section Styles {
+    <link rel="stylesheet" href="~/lib/xterm/xterm.min.css" />
+}
+@section Scripts {
+    <script src="~/lib/xterm/xterm.js" type="text/javascript"></script>
+    <script src="~/lib/xterm/addon-fit/lib/addon-fit.js" type="text/javascript"></script>
+    <script>
+        const term = new Terminal({
+            convertEol: true,
+            fontFamily: "monospace",
+            theme: {
+                background: "#1e1e1e",
+                foreground: "#cccccc"
+            }
+        });
+
+        const fitAddon = new FitAddon.FitAddon();
+        term.loadAddon(fitAddon);
+
+        term.open(document.getElementById("terminal"));
+        fitAddon.fit();
+
+        const eventSource = new EventSource("/Settings/AuditTrail/Index?handler=LogStream");
+
+        eventSource.onmessage = (e) => {
+            let line = e.data;
+        if (line.includes("ERR")) line = `\x1b[31m${line}\x1b[0m`; 
+        if (line.includes("FTL")) line = `\x1b[31m${line}\x1b[0m`; 
+        if (line.includes("WRN")) line = `\x1b[33m${line}\x1b[0m`; 
+        if (line.includes("INF")) line = `\x1b[36m${line}\x1b[0m`; 
+            term.writeln(line);
+        };
+    </script>
+
+}
+
+<div class="d-flex justify-content-between align-items-center m-3">
+    <h2 class="h5 mb-0 text-primary">
+        <i class="bi bi-body-text me-3" aria-hidden="true"></i>
+        @I18n.LogStream
+    </h2>
+</div>
+
+<div class="container p-4 w-100 h-100">
+    <div id="terminal" class="bg-dark text-light overflow-hidden">
+    </div>
+</div>
+

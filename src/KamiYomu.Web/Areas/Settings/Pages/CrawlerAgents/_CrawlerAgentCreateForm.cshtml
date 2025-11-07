@@ -1,0 +1,129 @@
+﻿@using KamiYomu.Web.Entities
+@model KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.CrawlerAgentCreateInputModel
+
+<form method="post"
+      asp-area="Settings"
+      asp-page="/CrawlerAgents/Create"
+      asp-page-handler="Save"
+      class="needs-validation"
+      novalidate>
+
+    <input type="hidden" asp-for="TempFileId" />
+
+    <div class="mb-3">
+        <label asp-for="DisplayName" class="form-label"></label>
+        <input asp-for="DisplayName" class="form-control" />
+    </div>
+
+    <fieldset class="border rounded p-3 mb-4">
+        <legend class="float-none w-auto px-2 fs-5 fw-semibold text-primary">@I18n.CrawlerSettings</legend>
+
+        @foreach (var option in Model.CrawlerTexts)
+        {
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="input-@option.Name">@option.Name</label>
+
+                @if (!string.IsNullOrWhiteSpace(option.Legend))
+                {
+                    <small class="form-text text-muted d-block mb-1">@option.Legend</small>
+                }
+
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-card-text"></i>
+                    </span>
+                    <input type="text"
+                           class="form-control"
+                           id="input-@option.Name"
+                           name="AgentMetadata[@option.Name]" />
+                </div>
+            </div>
+        }
+
+        @foreach (var option in Model.CrawlerPasswords)
+        {
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="input-@option.Name">@option.Name</label>
+
+                @if (!string.IsNullOrWhiteSpace(option.Legend))
+                {
+                    <small class="form-text text-muted d-block mb-1">@option.Legend</small>
+                }
+
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-key"></i> 
+                    </span>
+                    <input type="password"
+                           class="form-control"
+                           id="input-@option.Name"
+                           name="AgentMetadata[@option.Name]" />
+                </div>
+            </div>
+        }
+
+        @foreach (var option in Model.CrawlerCheckBoxs)
+        {
+            <fieldset class="mb-3">
+                <legend class="fs-6 fw-semibold">@option.Name</legend>
+                @if (!string.IsNullOrWhiteSpace(option.Legend))
+                {
+                    <small class="form-text text-muted d-block mb-1">@option.Legend</small>
+                }
+
+                @foreach (var item in option.Options)
+                {
+                    var key = item;
+                    var isChecked = (Model.AgentMetadata.TryGetValue(key, out var value)
+                    && bool.TryParse(value, out var boolValue)
+                    && boolValue);
+
+                    <div class="form-check mb-1">
+                        <input type="checkbox"
+                               class="form-check-input"
+                               name="AgentMetadata[@($"{option.Name}.{key}")]"
+                               value="true"
+                               @(isChecked ? "checked" : "") />
+                        <input type="hidden" name="AgentMetadata[@($"{option.Name}.{key}")]" value="false" />
+                        <label class="form-check-label">@key</label>
+                    </div>
+                }
+            </fieldset>
+        }
+
+    </fieldset>
+
+    <div class="accordion mb-3" id="assemblyAccordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="assemblyHeading">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#assemblyCollapse" aria-expanded="false" aria-controls="assemblyCollapse">
+                    @I18n.AssemblyProperties
+                </button>
+            </h2>
+            <div id="assemblyCollapse" class="accordion-collapse collapse" aria-labelledby="assemblyHeading" data-bs-parent="#assemblyAccordion">
+                <div class="accordion-body">
+                    @foreach (var item in Model.ReadOnlyMetadata)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">@item.Key</label>
+                            <input name="ReadOnlyMetadata[@item.Key]" class="form-control" readonly value="@item.Value" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="btn-toolbar">
+            <div class="btn-group">
+                <a asp-area="Settings" asp-page="/CrawlerAgents/Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left-circle"></i> @I18n.Back
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle-fill"></i> @I18n.Save
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

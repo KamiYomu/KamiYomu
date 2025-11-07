@@ -1,0 +1,9 @@
+﻿@page
+@model KamiYomu.Web.Areas.Libraries.Pages.Mangas.SearchResultsModel
+@{
+    Layout = null;
+}
+@foreach (var library in Model.Results)
+{
+    <partial name="_LibraryCard" model="library" />
+}

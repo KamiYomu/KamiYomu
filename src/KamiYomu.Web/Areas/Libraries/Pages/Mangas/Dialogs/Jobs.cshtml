@@ -1,0 +1,58 @@
+﻿@page
+@model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.JobsModel
+@{
+    Layout = null;
+}
+
+
+<div class="modal-header">
+    <h5 class="modal-title">Manga Details</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <div class="container-fluid">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="border rounded shadow-sm overflow-hidden">
+                    <a href="@Model.Library.Manga.WebsiteUrl" alt="@Model.Library.Manga.Title" target="_blank">
+                        <img src="@Model.Library.Manga.CoverUrl" alt="@Model.Library.Manga.Title"
+                             class="img-fluid w-100" style="object-fit: cover; max-height: 400px;" />
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <h2 class="fw-bold mb-3">@Model.Library.Manga.Title</h2>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Download Progress</label>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                             role="progressbar"
+                             style="width: @Model.Progress.ToString("F0")%;"
+                             aria-valuenow="@Model.Progress.ToString("F0")"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            @Model.Progress.ToString("F0")%
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <div class="col-sm-6">
+                        <label class="form-label fw-semibold">@I18n.ChaptersFound</label>
+                        <div class="form-control-plaintext">@Model.Total</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label fw-semibold">@I18n.Downloaded</label>
+                        <div class="form-control-plaintext">@Model.Completed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+</div>
