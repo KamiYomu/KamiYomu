@@ -102,19 +102,4 @@ jobs:
             VERSION=${{ env.VERSION }}
             VERSION_SUFFIX=${{ env.VERSION_SUFFIX }}
             BUILD_CONFIGURATION=Release
-
             
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    env:
-      VERSION: ${{ needs.build.outputs.version }}
-      TAG: ${{ needs.build.outputs.tag }}
-      IS_PRERELEASE: ${{ needs.build.outputs.is_prerelease }}
-
-    steps:
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ env.TAG }}
-          prerelease: ${{ env.IS_PRERELEASE }}
