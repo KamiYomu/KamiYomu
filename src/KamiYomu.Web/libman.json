@@ -2107,15 +2107,23 @@
     {
       "library": "xterm@5.5.0",
       "destination": "wwwroot/lib/xterm/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "@xterm/addon-fit@0.10.0",
+      "destination": "wwwroot/lib/xterm/addon-fit/",
+      "files": [
+        "lib/addon-fit.js"
+      ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "bootstrap@5.3.8",
+      "destination": "wwwroot/lib/bootstrap/",
+      "files": [
+        "js/bootstrap.min.js",
+        "css/bootstrap.min.css"
+      ]
     }
-  ,
-{
-  "provider": "unpkg",
-  "library": "@xterm/addon-fit@0.10.0",
-  "destination": "wwwroot/lib/xterm/addon-fit/",
-  "files": [
-    "lib/addon-fit.js"
   ]
-}
-]
 }
