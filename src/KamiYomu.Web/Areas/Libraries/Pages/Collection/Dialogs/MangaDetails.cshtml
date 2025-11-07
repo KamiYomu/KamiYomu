@@ -1,4 +1,5 @@
 ﻿@page
+@using KamiYomu.Web.Extensions
 @model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.MangaDetailsModel
 @{
     Layout = null;
@@ -17,7 +18,7 @@
             <div class="col-md-4">
                 <div class="border rounded shadow-sm overflow-hidden">
                     <a href="@Model.Manga.WebsiteUrl" alt="@Model.Manga.Title" target="_blank">
-                        <img src="@Model.Manga.CoverUrl" alt="@Model.Manga.Title"
+                        <img src="@Model.Manga.CoverUrl.ToInternalImageUrl()" alt="@Model.Manga.Title"
                              class="img-fluid w-100" style="object-fit: cover; max-height: 400px;" />
                     </a>
                 </div>

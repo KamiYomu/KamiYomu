@@ -5,6 +5,7 @@ using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
+using Microsoft.Extensions.Options;
 using System.Globalization;
 
 namespace KamiYomu.Web.Worker;
@@ -12,6 +13,7 @@ namespace KamiYomu.Web.Worker;
 public class MangaDownloaderJob : IMangaDownloaderJob
 {
     private readonly ILogger<MangaDownloaderJob> _logger;
+    private readonly Settings.Worker _workerOptions;
     private readonly DbContext _dbContext;
     private readonly IAgentCrawlerRepository _agentCrawlerRepository;
     private readonly IBackgroundJobClient _jobClient;
@@ -19,6 +21,7 @@ public class MangaDownloaderJob : IMangaDownloaderJob
 
     public MangaDownloaderJob(
         ILogger<MangaDownloaderJob> logger,
+        IOptions<Settings.Worker> workerOptions,
         DbContext dbContext,
         IAgentCrawlerRepository agentCrawlerRepository,
         IBackgroundJobClient jobClient,
@@ -26,6 +29,7 @@ public class MangaDownloaderJob : IMangaDownloaderJob
     {
 
         _logger = logger;
+        _workerOptions = workerOptions.Value;
         _dbContext = dbContext;
         _agentCrawlerRepository = agentCrawlerRepository;
         _jobClient = jobClient;
@@ -107,11 +111,11 @@ public class MangaDownloaderJob : IMangaDownloaderJob
 
                     record.Scheduled(backgroundJobId);
                     libDbContext.ChapterDownloadRecords.Update(record);
-                    await Task.Delay(1000, cancellationToken);
+                    await Task.Delay(_workerOptions.GetWaitPeriod(), cancellationToken);
                 }
 
                 offset += limit;
-                await Task.Delay(Settings.Worker.GetWaitPeriod(), cancellationToken);
+                await Task.Delay(_workerOptions.GetWaitPeriod(), cancellationToken);
             } while (offset < total);
 
             _logger.LogInformation("Finished dispatch for manga: {MangaId}. Total chapters: {Total}", mangaId, total);

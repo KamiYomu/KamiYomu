@@ -3,6 +3,7 @@ using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
+using Microsoft.Extensions.Options;
 using System.Globalization;
 using System.IO.Compression;
 
@@ -11,16 +12,20 @@ namespace KamiYomu.Web.Worker
     public class ChapterDownloaderJob : IChapterDownloaderJob
     {
         private readonly ILogger<ChapterDownloaderJob> _logger;
+        private readonly Settings.Worker _workerOptions;
         private readonly DbContext _dbContext;
         private readonly IAgentCrawlerRepository _agentCrawlerRepository;
         private readonly HttpClient _httpClient;
 
-        public ChapterDownloaderJob(ILogger<ChapterDownloaderJob> logger,
-        DbContext dbContext,
-        IAgentCrawlerRepository agentCrawlerRepository,
-        IHttpClientFactory httpClientFactory)
+        public ChapterDownloaderJob(
+            ILogger<ChapterDownloaderJob> logger,
+            IOptions<Settings.Worker> workerOptions,
+            DbContext dbContext,
+            IAgentCrawlerRepository agentCrawlerRepository,
+            IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
+            _workerOptions = workerOptions.Value;
             _dbContext = dbContext;
             _agentCrawlerRepository = agentCrawlerRepository;
             _httpClient = httpClientFactory.CreateClient(Settings.Worker.HttpClientBackground);
@@ -110,14 +115,14 @@ namespace KamiYomu.Web.Worker
                 }
 
                 index++;
-                await Task.Delay(Settings.Worker.GetWaitPeriod(), cancellationToken);
+                await Task.Delay(_workerOptions.GetWaitPeriod(), cancellationToken);
             }
 
             _logger.LogInformation("Completed download of chapter {ChapterDownloadId} to {ChapterFolder}", chapterDownloadId, chapterFolder);
 
             CreateCbzFile(chapterDownload, chapterFolder, seriesFolder);
 
-            MoveCbzFilesToLibrary(mangaDownload.GetTempDirectory(), mangaDownload.GetMangaDirectory());
+            MoveCbzFilesToCollection(mangaDownload.GetTempDirectory(), mangaDownload.GetMangaDirectory());
             chapterDownload.Complete();
             libDbContext.ChapterDownloadRecords.Update(chapterDownload);
         }
@@ -125,12 +130,12 @@ namespace KamiYomu.Web.Worker
         private void CreateCbzFile(ChapterDownloadRecord chapterDownload, string chapterFolder, string seriesFolder)
         {
             var volumePart = chapterDownload.Chapter.Volume != 0
-                ? $"v{chapterDownload.Chapter.Volume:00} "
+                ? $"Vol.{chapterDownload.Chapter.Volume:00} "
                 : "";
 
-            var chapterPart = chapterDownload.Chapter.Number != 0
-                ? $"ch{chapterDownload.Chapter.Number.ToString().PadLeft(3, '0')}"
-                : $"ch{chapterDownload.Chapter.Id.ToString().Substring(0, 8)}";
+            var chapterPart = chapterDownload.Chapter.Number < 0
+                ? $"Ch.{chapterDownload.Chapter.Number.ToString().PadLeft(3, '0')}"
+                : $"Ch.{chapterDownload.Chapter.Id.ToString().Substring(0, 8)}";
 
             var cbzFileName = $"{chapterDownload.Chapter.ParentManga.FolderName} {volumePart}{chapterPart}.cbz";
             var cbzFilePath = Path.Combine(seriesFolder, cbzFileName);
@@ -153,7 +158,7 @@ namespace KamiYomu.Web.Worker
             _logger.LogInformation("Created CBZ archive: {CbzFilePath}", cbzFilePath);
         }
 
-        private void MoveCbzFilesToLibrary(string tempRoot, string mangaLibraryRoot)
+        private void MoveCbzFilesToCollection(string tempRoot, string mangaLibraryRoot)
         {
             var cbzFiles = Directory.GetFiles(tempRoot, "*.cbz", SearchOption.AllDirectories);
 

@@ -41,6 +41,7 @@ builder.Services.Configure<Settings.Worker>(builder.Configuration.GetSection("Se
 builder.Services.Configure<Settings.UI>(builder.Configuration.GetSection("Settings:UI"));
 
 builder.Services.AddSingleton<CacheContext>();
+builder.Services.AddSingleton<ImageDbContext>(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb")));
 builder.Services.AddScoped<DbContext>(_ => new DbContext(builder.Configuration.GetConnectionString("AgentDb")));
 builder.Services.AddHangfire(configuration => configuration.UseSimpleAssemblyNameTypeSerializer()
                                                            .UseRecommendedSerializerSettings()
@@ -73,8 +74,6 @@ builder.Services.AddHangfireServer((services, optionActions) =>
     optionActions.WorkerCount = Environment.ProcessorCount * workerOptions.Value.WorkerCount;
     optionActions.Queues = Settings.Worker.FetchMangaQueues;
 });
-
-
 
 builder.Services.AddTransient<IAgentCrawlerRepository, AgentCrawlerRepository>();
 builder.Services.AddTransient<IHangfireRepository, HangfireRepository>();

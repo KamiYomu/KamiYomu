@@ -35,7 +35,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
 
         }
 
-        public async Task<IActionResult> OnPostUploadAsync(IFormFile agentFile, CancellationToken cancellationToken)
+        public IActionResult OnPostUpload(IFormFile agentFile, CancellationToken cancellationToken)
         {
             if (agentFile == null || agentFile.Length == 0)
                 return BadRequest("No file uploaded.");

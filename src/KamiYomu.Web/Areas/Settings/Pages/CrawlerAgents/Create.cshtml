@@ -19,6 +19,7 @@
       hx-swap="innerHTML"
       class="needs-validation"
       novalidate>
+    @Html.AntiForgeryToken()
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="btn-toolbar">
@@ -49,7 +50,7 @@
     </div>
 
 </form>
-
+<div asp-validation-summary="All" class="text-danger"></div>
 <div id="crawler-editor" class="mt-4"></div>
 
 <script>

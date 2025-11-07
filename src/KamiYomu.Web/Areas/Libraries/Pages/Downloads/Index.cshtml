@@ -1,4 +1,5 @@
 ﻿@page
+@using KamiYomu.Web.Extensions
 @model KamiYomu.Web.Areas.Libraries.Pages.Download.IndexModel
 
 @section Scripts {
@@ -30,11 +31,11 @@
                 <i class="bi bi-puzzle me-2"></i> @I18n.CrawlerAgents
             </a>
             <a asp-area="Libraries"
-               asp-page="/Mangas/Index"
+               asp-page="/Collection/Index"
                class="btn btn-sm btn-outline-secondary"
-               title="@I18n.Mangas"
-               aria-label="@I18n.Mangas">
-                <i class="bi bi-book me-2"></i> @I18n.Mangas
+               title="@I18n.Collection"
+               aria-label="@I18n.Collection">
+                <i class="bi bi-book me-2"></i> @I18n.Collection
             </a>
         </div>
     </div>
@@ -53,10 +54,12 @@
                 <ul class="dropdown-menu">
                     @foreach (var agent in Model.CrawlerAgents)
                     {
+                        var faviconUrl = await agent.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None);
+
                         <li>
                             <a class="dropdown-item d-flex align-items-center" href="#"
-                               onclick="selectSite('@agent.Id', '@agent.DisplayName', '@await agent.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None)')">
-                                <img src="@await agent.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None)" width="20" class="me-2" />
+                               onclick="selectSite('@agent.Id', '@agent.DisplayName', '@faviconUrl.ToInternalImageUrl()')">
+                                <img src="@faviconUrl.ToInternalImageUrl()" width="20" class="me-2" />
                                 @agent.DisplayName
                             </a>
                         </li>
@@ -70,7 +73,7 @@
                    placeholder="@I18n.SearchManga"
                    name="query"
                    id="searchInput"
-                   hx-get="/Libraries/Mangas/SearchResults?handler=crawler"
+                   hx-get="/Libraries/Collection/SearchResults?handler=crawler"
                    hx-target="#search-results"
                    hx-trigger="keyup changed delay:1000ms"
                    hx-include="#selectedAgent"

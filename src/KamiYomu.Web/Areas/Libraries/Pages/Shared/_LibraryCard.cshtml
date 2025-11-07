@@ -1,4 +1,5 @@
-﻿@model KamiYomu.Web.Entities.Library
+﻿@using KamiYomu.Web.Extensions
+@model KamiYomu.Web.Entities.Library
 
 @{
     Layout = null;
@@ -8,7 +9,7 @@
 
 <div class="col" id="@cardId">
     <div class="card h-100">
-        <img src="@Model.Manga.CoverUrl" class="card-img-top" alt="@Model.Manga.Title" style="object-fit: cover; height: 300px;">
+        <img src="@Model.Manga.CoverUrl.ToInternalImageUrl()" class="card-img-top" alt="@Model.Manga.Title" style="object-fit: cover; height: 300px;">
         <div class="card-body d-flex flex-column">
             <h5 class="card-title fw-bold">@Model.Manga.Title</h5>
 
@@ -26,7 +27,7 @@
 
             <div class="mt-auto d-flex gap-2">
                 <button class="btn btn-sm btn-outline-primary"
-                        hx-get="/Libraries/Mangas/Dialogs/MangaDetails?agentId=@Model.AgentCrawler.Id&mangaId=@Model.Manga.Id"
+                        hx-get="/Libraries/Collection/Dialogs/MangaDetails?agentId=@Model.AgentCrawler.Id&mangaId=@Model.Manga.Id"
                         hx-target="#modal-body"
                         hx-swap="innerHTML"
                         data-bs-toggle="modal"
@@ -44,23 +45,23 @@
 
                         <button type="submit"
                                 class="btn btn-sm btn-success">
-                            <i class="bi bi-plus-circle me-2"></i> @I18n.AddToLibrary
+                            <i class="bi bi-plus-circle me-2"></i> @I18n.AddToYourCollection
                         </button>
                     </form>
                 }
                 else
                 {
                     <button class="btn btn-sm btn-outline-danger"
-                            hx-get="/Libraries/Mangas/Dialogs/RemoveFromLibraryConfirm?LibraryId=@Model.Id&RefreshElementId=@cardId"
+                            hx-get="/Libraries/Collection/Dialogs/RemoveFromLibraryConfirm?LibraryId=@Model.Id&RefreshElementId=@cardId"
                             hx-target="#modal-body"
                             hx-swap="innerHTML"
                             data-bs-toggle="modal"
                             data-bs-target="#modal">
-                        <i class="bi bi-x-circle"></i> @I18n.RemoveFromLibrary
+                        <i class="bi bi-x-circle"></i> @I18n.RemoveFromYourCollection
                     </button>
 
                     <button class="btn btn-sm btn-outline-info"
-                            hx-get="/Libraries/Mangas/Dialogs/Jobs?libraryId=@Model.Id"
+                            hx-get="/Libraries/Collection/Dialogs/Jobs?libraryId=@Model.Id"
                             hx-target="#modal-body"
                             hx-swap="innerHTML"
                             data-bs-toggle="modal"

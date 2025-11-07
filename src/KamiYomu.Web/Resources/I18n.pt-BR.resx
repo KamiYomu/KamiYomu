@@ -360,8 +360,31 @@
   <data name="Mangas" xml:space="preserve">
     <value>Mangas</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="LogStream" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="LogStream" xml:space="preserve">
+    <value>Fluxo de registros</value>
+  </data>
+  <data name="YourCollection" xml:space="preserve">
+    <value>Sua coleção</value>
+  </data>
+  <data name="Collection" xml:space="preserve">
+    <value>Coleção</value>
+  </data>
+  <data name="Collections" xml:space="preserve">
+    <value>Coleções</value>
+  </data>
+  <data name="AddToYourCollection" xml:space="preserve">
+    <value>Adicione à sua coleção</value>
+  </data>
+  <data name="RemoveFromYourCollection" xml:space="preserve">
+    <value>Remover da sua coleção</value>
+  </data>
+  <data name="OpenYourCollection" xml:space="preserve">
+    <value>Abra sua coleção</value>
+  </data>
+  <data name="SeeYourCollection" xml:space="preserve">
+    <value>Veja sua coleção</value>
+  </data>
+  <data name="YouAreAboutToDeleteThisMangaFromYourCollection" xml:space="preserve">
+    <value>Tem certeza de que deseja excluir este mangá da sua coleção? Esta ação não pode ser desfeita. </value>
   </data>
 </root>

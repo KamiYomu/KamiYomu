@@ -1,6 +1,6 @@
 ﻿namespace KamiYomu.Web
 {
-    internal class Settings
+    public class Settings
     {
         public class SpecialFolders
         {
@@ -11,7 +11,7 @@
         }
         public class UI
         {
-            public string DefaultLanguage { get; set; }
+            public string DefaultLanguage { get; init; } = "en-US";
         }
         public class Worker
         {
@@ -41,14 +41,15 @@
             public const string HttpClientBackground = nameof(HttpClientBackground);
 
             private static readonly Random _random = new();
-            public static TimeSpan GetWaitPeriod()
+            public TimeSpan GetWaitPeriod()
             {
-                int milliseconds = _random.Next(1000, 3001);
+                int milliseconds = _random.Next(MinWaitPeriodInMilliseconds, MaxWaitPeriodInMilliseconds);
                 return TimeSpan.FromMilliseconds(milliseconds);
             }
 
-
-            public int WorkerCount { get; set; }
+            public int MinWaitPeriodInMilliseconds { get; init; } = 3000;
+            public int MaxWaitPeriodInMilliseconds { get; init; } = 7001;
+            public int WorkerCount { get; init; } = 1;
         }
     }
 }

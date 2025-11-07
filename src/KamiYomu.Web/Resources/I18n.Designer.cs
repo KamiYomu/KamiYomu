@@ -106,6 +106,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add To Your Collection.
+        /// </summary>
+        internal static string AddToYourCollection {
+            get {
+                return ResourceManager.GetString("AddToYourCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Agent Actions.
         /// </summary>
         internal static string AgentActions {
@@ -192,6 +201,24 @@ namespace KamiYomu.Web.Resources {
         internal static string Close {
             get {
                 return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collection.
+        /// </summary>
+        internal static string Collection {
+            get {
+                return ResourceManager.GetString("Collection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collections.
+        /// </summary>
+        internal static string Collections {
+            get {
+                return ResourceManager.GetString("Collections", resourceCulture);
             }
         }
         
@@ -547,6 +574,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open Your Collection.
+        /// </summary>
+        internal static string OpenYourCollection {
+            get {
+                return ResourceManager.GetString("OpenYourCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Original Language.
         /// </summary>
         internal static string OriginalLanguage {
@@ -610,6 +646,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove From Your Collection.
+        /// </summary>
+        internal static string RemoveFromYourCollection {
+            get {
+                return ResourceManager.GetString("RemoveFromYourCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         internal static string Save {
@@ -624,6 +669,15 @@ namespace KamiYomu.Web.Resources {
         internal static string SearchManga {
             get {
                 return ResourceManager.GetString("SearchManga", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to See Your Collection.
+        /// </summary>
+        internal static string SeeYourCollection {
+            get {
+                return ResourceManager.GetString("SeeYourCollection", resourceCulture);
             }
         }
         
@@ -795,6 +849,24 @@ namespace KamiYomu.Web.Resources {
         internal static string Year {
             get {
                 return ResourceManager.GetString("Year", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this manga from your collection? This action cannot be undone. .
+        /// </summary>
+        internal static string YouAreAboutToDeleteThisMangaFromYourCollection {
+            get {
+                return ResourceManager.GetString("YouAreAboutToDeleteThisMangaFromYourCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Collection.
+        /// </summary>
+        internal static string YourCollection {
+            get {
+                return ResourceManager.GetString("YourCollection", resourceCulture);
             }
         }
     }

@@ -363,4 +363,28 @@
   <data name="LogStream" xml:space="preserve">
     <value>Log Stream</value>
   </data>
+  <data name="YourCollection" xml:space="preserve">
+    <value>Your Collection</value>
+  </data>
+  <data name="Collection" xml:space="preserve">
+    <value>Collection</value>
+  </data>
+  <data name="Collections" xml:space="preserve">
+    <value>Collections</value>
+  </data>
+  <data name="AddToYourCollection" xml:space="preserve">
+    <value>Add To Your Collection</value>
+  </data>
+  <data name="RemoveFromYourCollection" xml:space="preserve">
+    <value>Remove From Your Collection</value>
+  </data>
+  <data name="OpenYourCollection" xml:space="preserve">
+    <value>Open Your Collection</value>
+  </data>
+  <data name="SeeYourCollection" xml:space="preserve">
+    <value>See Your Collection</value>
+  </data>
+  <data name="YouAreAboutToDeleteThisMangaFromYourCollection" xml:space="preserve">
+    <value>Are you sure you want to delete this manga from your collection? This action cannot be undone. </value>
+  </data>
 </root>
