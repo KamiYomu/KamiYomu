@@ -91,7 +91,7 @@ jobs:
 
       - name: Save image as artifact
         run: |
-          if [[ "$IS_PRERELEASE" == "true" ]]; then
+          if [[ "$is_prerelease" == "true" ]]; then
             docker save $IMAGE_NAME:$VERSION$VERSION_SUFFIX -o image.tar
           else
             docker save $IMAGE_NAME:$VERSION -o image.tar
