@@ -38,27 +38,32 @@ Whether you're cataloging rare series, powering a personal manga dashboard, or s
 save the following `docker-compose.yml` file to run KamiYomu with Docker:
 
 ```yml
-    services:
-        kamiyomu.web:
-          image: marcoscostadev/kamiyomu:1.0.0-beta1
-          ports:
-            - "8080:8080" # HTTP Port
-          volumes:
-            - ./AppData/manga:/manga # Your desired local path for manga storage 
-            - Kamiyomu_database:/db
-            - kamiyomu_agents:/agents 
-            - kamiyomu_logs:/logs 
-          healthcheck:
-            test: ["CMD", "curl", "-f", "https://localhost:8080/healthz"]
-            interval: 30s
-            timeout: 10s
-            retries: 3
-    Volumes:
+services:
+    kamiyomu:
+      image: marcoscostadev/kamiyomu:1.0.0-beta1
+      ports:
+        - "8080:8080" # HTTP Port
+      volumes:
+        - ./AppData/manga:/manga # Your desired local path for manga storage 
+        - Kamiyomu_database:/db
+        - kamiyomu_agents:/agents 
+        - kamiyomu_logs:/logs 
+      healthcheck:
+        test: ["CMD", "curl", "-f", "https://localhost:8080/healthz"]
+        interval: 30s
+        timeout: 10s
+        retries: 3
+volumes:
       kamiyomu_agents:
       Kamiyomu_database:
       kamiyomu_logs:
 ```
 
+In the folder where you saved the `docker-compose.yml` file, run:
+
+```bash
+    docker-compose up -d
+```
 You will have access to the web interface at `http://localhost:8080`.
 Keep in mind to map the volumes to your desired local paths. 
 See the releases branchs for identifying the versions available.
