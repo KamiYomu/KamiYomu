@@ -7,14 +7,6 @@
       "destination": "wwwroot/lib/htmx/"
     },
     {
-      "library": "bootstrap@5.3.8",
-      "destination": "wwwroot/lib/bootstrap/",
-      "files": [
-        "js/bootstrap.min.js",
-        "js/bootstrap.bundle.min.js"
-      ]
-    },
-    {
       "library": "bootstrap-icons@1.13.1",
       "destination": "wwwroot/lib/bootstrap-icons/",
       "files": [
@@ -2117,13 +2109,8 @@
       ]
     },
     {
-      "provider": "cdnjs",
       "library": "bootstrap@5.3.8",
-      "destination": "wwwroot/lib/bootstrap/",
-      "files": [
-        "js/bootstrap.min.js",
-        "css/bootstrap.min.css"
-      ]
+      "destination": "wwwroot/lib/bootstrap/"
     }
   ]
 }
