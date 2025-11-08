@@ -11,7 +11,7 @@ namespace KamiYomu.Web.Pages.CrawlerAgents.Dialogs
         [BindProperty]
         public Guid Id { get; set; }
 
-        public Entities.CrawlerAgent Agent { get; set; }
+        public Entities.CrawlerAgent? Agent { get; set; }
 
         public IActionResult OnGet(Guid id)
         {
@@ -29,7 +29,7 @@ namespace KamiYomu.Web.Pages.CrawlerAgents.Dialogs
             {
                 using var libDbContext = lib.GetDbContext();
                 var downloadMangas = libDbContext.MangaDownloadRecords.Find(p => p.Library.AgentCrawler.Id == agentCrawler.Id);
-                var downloadChapters = libDbContext.ChapterDownloadRecords.Find(p => p.AgentCrawler.Id == agentCrawler.Id);
+                var downloadChapters = libDbContext.ChapterDownloadRecords.Find(p => p.CrawlerAgent.Id == agentCrawler.Id);
 
                 foreach (var jobId in downloadMangas.Select(p => p.BackgroundJobId).Union(downloadChapters.Select(p => p.BackgroundJobId)))
                 {
@@ -37,7 +37,7 @@ namespace KamiYomu.Web.Pages.CrawlerAgents.Dialogs
                 }
 
                 libDbContext.MangaDownloadRecords.DeleteMany(p => p.Library.AgentCrawler.Id == agentCrawler.Id);
-                libDbContext.ChapterDownloadRecords.DeleteMany(p => p.AgentCrawler.Id == agentCrawler.Id);
+                libDbContext.ChapterDownloadRecords.DeleteMany(p => p.CrawlerAgent.Id == agentCrawler.Id);
             }
 
             agentCrawler.DeleteAssembly();

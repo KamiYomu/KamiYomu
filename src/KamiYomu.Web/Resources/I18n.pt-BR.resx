@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AcceptedFormats" xml:space="preserve">
-    <value>Formatos aceitos</value>
-  </data>
   <data name="Add" xml:space="preserve">
     <value>Adicionar</value>
   </data>
@@ -137,9 +134,6 @@
   </data>
   <data name="EditCrawlerAgent" xml:space="preserve">
     <value>Editar agente rastreador</value>
-  </data>
-  <data name="ImportCrawlerAgent" xml:space="preserve">
-    <value>Agente rastreador de importação</value>
   </data>
   <data name="Library" xml:space="preserve">
     <value>Biblioteca</value>
@@ -386,5 +380,11 @@
   </data>
   <data name="YouAreAboutToDeleteThisMangaFromYourCollection" xml:space="preserve">
     <value>Tem certeza de que deseja excluir este mangá da sua coleção? Esta ação não pode ser desfeita. </value>
+  </data>
+  <data name="AcceptedFormats" xml:space="preserve">
+    <value>Formatos aceitos</value>
+  </data>
+  <data name="ImportCrawlerAgent" xml:space="preserve">
+    <value>Agente rastreador de importação</value>
   </data>
 </root>

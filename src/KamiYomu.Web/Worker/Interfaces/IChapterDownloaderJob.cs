@@ -4,7 +4,6 @@ using System.ComponentModel;
 
 namespace KamiYomu.Web.Worker.Interfaces
 {
-    [DisableConcurrentExecution(timeoutInSeconds: 3600)]
     public interface IChapterDownloaderJob
     {
         [DisplayName("Down Chapter {3}")]

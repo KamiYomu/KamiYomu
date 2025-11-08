@@ -16,7 +16,7 @@ namespace KamiYomu.Web.Infrastructure.Contexts
                     var str = bson.AsString;
                     if (string.IsNullOrWhiteSpace(str)) return null;
 
-                    return Uri.TryCreate(str, UriKind.RelativeOrAbsolute, out var uri) ? uri : null;
+                    return Uri.TryCreate(str, UriKind.RelativeOrAbsolute, out Uri? uri) ? uri : null;
                 }
             );
         }

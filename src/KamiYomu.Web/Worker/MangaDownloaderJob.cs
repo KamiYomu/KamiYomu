@@ -2,6 +2,7 @@
 using Hangfire.Server;
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
@@ -40,7 +41,7 @@ public class MangaDownloaderJob : IMangaDownloaderJob
     {
         if (cancellationToken.IsCancellationRequested)
         {
-            _logger.LogWarning("Dispatch cancelled before processing manga: {mangaDownloadId}", mangaDownloadId);
+            _logger.LogWarning("Dispatch {jobName} cancelled before processing manga: {mangaDownloadId}", nameof(MangaDownloaderJob), mangaDownloadId);
             return;
         }
        
@@ -51,12 +52,6 @@ public class MangaDownloaderJob : IMangaDownloaderJob
             throw new ArgumentException("Library was not found");
         }
         using var libDbContext = library.GetDbContext();
-        var userPreference = _dbContext.UserPreferences.FindOne(p => true);
-
-        Thread.CurrentThread.CurrentCulture =
-        Thread.CurrentThread.CurrentUICulture =
-        CultureInfo.CurrentCulture =
-        CultureInfo.CurrentUICulture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
 
         var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Id == mangaDownloadId && p.DownloadStatus == Entities.Definitions.DownloadStatus.Pending);
         if (mangaDownload == null) return;
@@ -105,8 +100,8 @@ public class MangaDownloaderJob : IMangaDownloaderJob
                     libDbContext.ChapterDownloadRecords.Insert(record);
 
                     var backgroundJobId = _jobClient.Create<IChapterDownloaderJob>(
-                          p => p.DispatchAsync(library.Id, mangaDownload.Id, record.Id, $"v{chapter.Volume}-ch{chapter.Number}-{chapter.Title}", null!, CancellationToken.None),
-                          _hangfireRepository.GetLeastLoadedCrawlerQueue()
+                          p => p.DispatchAsync(library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(), null!, CancellationToken.None),
+                          _hangfireRepository.GetLeastLoadedDownloadChapterQueue()
                      );
 
                     record.Scheduled(backgroundJobId);

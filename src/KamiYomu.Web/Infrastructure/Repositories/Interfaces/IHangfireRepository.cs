@@ -4,9 +4,7 @@ namespace KamiYomu.Web.Infrastructure.Repositories.Interfaces
 {
     public interface IHangfireRepository
     {
-        EnqueuedState GetLeastLoadedCrawlerQueue();
-        EnqueuedState GetLeastLoadedSearchQueue();
-        EnqueuedState GetLeastLoadedFetchMangaQueue();
-
+        EnqueuedState GetLeastLoadedDownloadChapterQueue();
+        EnqueuedState GetLeastLoadedMangaDownloadSchedulerQueue();
     }
 }

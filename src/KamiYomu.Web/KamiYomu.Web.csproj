@@ -43,5 +43,5 @@
 		</EmbeddedResource>
 	</ItemGroup>
 
-	<Import Project="KamiYomu.Web.props"/>
+	<Import Project="KamiYomu.Web.props" />
 </Project>
