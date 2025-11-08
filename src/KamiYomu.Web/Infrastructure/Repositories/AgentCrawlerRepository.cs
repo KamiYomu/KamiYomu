@@ -14,7 +14,7 @@ namespace KamiYomu.Web.Infrastructure.Repositories
              {
                  var manga = await agentCrawler.GetCrawlerInstance().GetByIdAsync(mangaId.ToString(), cancellationToken);
                  return manga;
-             }, TimeSpan.FromMinutes(5));
+             }, TimeSpan.FromMinutes(30));
         }
 
         public Task<Manga> GetMangaAsync(Guid agentCrawlerId, string mangaId, CancellationToken cancellationToken)
@@ -24,7 +24,7 @@ namespace KamiYomu.Web.Infrastructure.Repositories
                 var agent = dbContext.CrawlerAgents.FindById(agentCrawlerId);
                 var manga = await agent.GetCrawlerInstance().GetByIdAsync(mangaId.ToString(), cancellationToken);
                 return manga;
-            }, TimeSpan.FromMinutes(5));
+            }, TimeSpan.FromMinutes(30));
         }
 
         public Task<PagedResult<Chapter>> GetMangaChaptersAsync(CrawlerAgent agentCrawler, string mangaId, PaginationOptions paginationOptions, CancellationToken cancellationToken)
@@ -33,7 +33,7 @@ namespace KamiYomu.Web.Infrastructure.Repositories
             {
                 var library = dbContext.Libraries.Include(p => p.Manga).FindOne(p => p.Manga.Id == mangaId);
                 return await agentCrawler.GetCrawlerInstance().GetChaptersAsync(library.Manga, paginationOptions, cancellationToken);
-            }, TimeSpan.FromMinutes(5));
+            }, TimeSpan.FromMinutes(30));
         }
 
         public Task<IEnumerable<Page>> GetChapterPagesAsync(CrawlerAgent agentCrawler, Chapter chapter, CancellationToken cancellationToken)
@@ -41,7 +41,7 @@ namespace KamiYomu.Web.Infrastructure.Repositories
             return cacheContext.GetOrSetAsync($"{agentCrawler.Id}-chapter-{chapter.ParentManga.Id}-{chapter.Id}", async () =>
             {
                 return await agentCrawler.GetCrawlerInstance().GetChapterPagesAsync(chapter, cancellationToken);
-            }, TimeSpan.FromMinutes(5));
+            }, TimeSpan.FromMinutes(30));
         }
 
         public Task<PagedResult<Manga>> SearchAsync(CrawlerAgent agentCrawler, string query, PaginationOptions paginationOptions, CancellationToken cancellationToken)

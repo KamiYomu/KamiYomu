@@ -47,6 +47,7 @@
                 return TimeSpan.FromMilliseconds(milliseconds);
             }
 
+            public int ChapterDiscoveryIntervalInHours { get; init; } = 6;
             public int MinWaitPeriodInMilliseconds { get; init; } = 3000;
             public int MaxWaitPeriodInMilliseconds { get; init; } = 7001;
             public int WorkerCount { get; init; } = 1;

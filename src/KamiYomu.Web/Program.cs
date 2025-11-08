@@ -146,6 +146,11 @@ app.UseHangfireDashboard("/worker", new DashboardOptions
     Authorization = [new AllowAllDashboardAuthorizationFilter()]
 });
 
+RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(
+    nameof(ChapterDiscoveryJob),
+    job => job.DispatchAsync(null, CancellationToken.None),
+    app.Environment.IsDevelopment() ? Cron.Minutely() : Cron.Hourly());
+
 app.MapRazorPages();
 app.UseMiddleware<ExceptionNotificationMiddleware>();
 app.MapHealthChecks("/healthz");

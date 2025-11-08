@@ -11,6 +11,7 @@ namespace KamiYomu.Web.Entities
             Library = library;
             BackgroundJobId = jobId;
             DownloadStatus = DownloadStatus.Pending;
+            StatusUpdateAt = DateTime.UtcNow;
             CreateAt = DateTime.UtcNow;
         }
 
@@ -47,10 +48,6 @@ namespace KamiYomu.Web.Entities
         {
             return $"{nameof(MangaDownloadRecord)}-{Id}";
         }
-
-        
-
-
 
         public Guid Id { get; private set; }
         public string BackgroundJobId { get; private set; }

@@ -69,11 +69,11 @@ namespace KamiYomu.Web.Worker
             libDbContext.ChapterDownloadRecords.Update(chapterDownload);
 
             var pages = await _agentCrawlerRepository.GetChapterPagesAsync(
-                chapterDownload.AgentCrawler,
+                chapterDownload.CrawlerAgent,
                 chapterDownload.Chapter,
                 cancellationToken);
 
-            var seriesFolder = mangaDownload!.Library!.Manga!.GetTempDirectory();
+            var seriesFolder = mangaDownload.Library.Manga!.GetTempDirectory();
 
             var chapterFolderPath = chapterDownload.Chapter.GetChapterFolderPath(seriesFolder);
 
@@ -121,17 +121,19 @@ namespace KamiYomu.Web.Worker
 
             CreateCbzFile(chapterDownload, chapterFolderPath, seriesFolder);
 
-            MoveCbzFilesToCollection(mangaDownload!.Library!.Manga.GetTempDirectory(), mangaDownload!.Library!.Manga.GetDirectory());
+            MoveTempCbzFilesToCollection(mangaDownload!.Library!.Manga!);
             chapterDownload.Complete();
             libDbContext.ChapterDownloadRecords.Update(chapterDownload);
         }
 
         private void CreateCbzFile(ChapterDownloadRecord chapterDownload, string chapterFolder, string seriesFolder)
         {
-            var cbzFilePath = Path.Combine(seriesFolder, chapterDownload!.Chapter!.GetCbzFileName());
+            var cbzFilePath = Path.Combine(seriesFolder, chapterDownload.Chapter!.GetCbzFileName());
 
             if (File.Exists(cbzFilePath))
+            {
                 File.Delete(cbzFilePath);
+            }
 
             ZipFile.CreateFromDirectory(chapterFolder, cbzFilePath);
 
@@ -148,19 +150,22 @@ namespace KamiYomu.Web.Worker
             _logger.LogInformation("Created CBZ archive: {CbzFilePath}", cbzFilePath);
         }
 
-        private void MoveCbzFilesToCollection(string tempRoot, string mangaLibraryRoot)
+        private void MoveTempCbzFilesToCollection(Manga manga)
         {
-            var cbzFiles = Directory.GetFiles(tempRoot, "*.cbz", SearchOption.AllDirectories);
+            var cbzFiles = Directory.GetFiles(manga.GetTempDirectory(), "*.cbz", SearchOption.AllDirectories);
 
             foreach (var cbzFile in cbzFiles)
             {
-                var relativePath = Path.GetRelativePath(tempRoot, cbzFile);
-                var destinationPath = Path.Combine(mangaLibraryRoot, relativePath);
+                var relativePath = Path.GetRelativePath(manga.GetTempDirectory(), cbzFile);
+                var destinationPath = Path.Combine(manga.GetDirectory(), relativePath);
 
                 var destinationDir = Path.GetDirectoryName(destinationPath);
-                if (!Directory.Exists(destinationDir))
-                    Directory.CreateDirectory(destinationDir);
 
+                if (!Directory.Exists(destinationDir))
+                {
+                    Directory.CreateDirectory(destinationDir);
+                }
+       
                 File.Copy(cbzFile, destinationPath, overwrite: true);
 
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))

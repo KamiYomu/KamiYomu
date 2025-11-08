@@ -1,5 +1,7 @@
 ﻿using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Entities.Definitions;
+using KamiYomu.Web.Extensions;
+using Polly;
 
 namespace KamiYomu.Web.Entities
 {
@@ -8,13 +10,19 @@ namespace KamiYomu.Web.Entities
         protected ChapterDownloadRecord() { }
         public ChapterDownloadRecord(CrawlerAgent? agentCrawler, MangaDownloadRecord? mangaDownload, Chapter? chapter)
         {
-            AgentCrawler = agentCrawler;
+            CrawlerAgent = agentCrawler;
             MangaDownload = mangaDownload;
             Chapter = chapter;
             DownloadStatus = DownloadStatus.Pending;
+            StatusUpdateAt = DateTime.UtcNow;
             CreateAt = DateTime.UtcNow;
         }
 
+        public void Pending()
+        {
+            DownloadStatus = DownloadStatus.Pending;
+            StatusUpdateAt = DateTime.UtcNow;
+        }
 
         public void Scheduled(string jobId)
         {
@@ -41,8 +49,32 @@ namespace KamiYomu.Web.Entities
             StatusUpdateAt = DateTime.UtcNow;
         }
 
+
+        public bool IsInProgress()
+        {
+            return DownloadStatus == DownloadStatus.Scheduled || DownloadStatus == DownloadStatus.Processing;
+        }
+
+        public bool IsCancelled()
+        {
+            return DownloadStatus == DownloadStatus.Cancelled;
+        }   
+
+        public bool IsCompleted()
+        {
+            return DownloadStatus == DownloadStatus.Completed;
+        }
+
+        public int LastUpdatedStatusTotalHours()
+        {
+            if (!StatusUpdateAt.HasValue) return int.MaxValue;
+            return (int)(DateTime.UtcNow - StatusUpdateAt.Value).TotalHours;
+        }
+
+
+
         public Guid Id { get; private set; }
-        public CrawlerAgent? AgentCrawler { get; private set; }
+        public CrawlerAgent? CrawlerAgent { get; private set; }
         public MangaDownloadRecord? MangaDownload { get; private set; }
         public Chapter? Chapter { get; private set; }
         public string BackgroundJobId { get; private set; }

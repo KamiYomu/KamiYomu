@@ -80,7 +80,7 @@
                    oninput="if (!document.getElementById('selectedAgent').value) this.removeAttribute('hx-get'); else this.setAttribute('hx-get', '/Library/SearchResults');" />
 
             <!-- Search button -->
-            <button class="btn btn-outline-primary" type="button" onclick="document.getElementById('searchInput').dispatchEvent(new Event('change'))">
+            <button class="btn btn-outline-primary" type="button" onclick="htmx.trigger('#searchInput', 'change')">
                 <i class="bi bi-search"></i>
             </button>
 

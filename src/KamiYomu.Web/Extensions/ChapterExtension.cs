@@ -18,6 +18,12 @@ namespace KamiYomu.Web.Extensions
             return comicInfo.ToString();
         }
 
+        public static string GetCbzFilePath(this Chapter chapter)
+        {
+            var mangaDirectory = chapter.ParentManga.GetDirectory();
+            var cbzFileName = chapter.GetCbzFileName();
+            return Path.Combine(mangaDirectory, cbzFileName);
+        }
 
         public static string GetCbzFileName(this Chapter chapter)
         {
