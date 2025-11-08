@@ -95,7 +95,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
             });
         }
 
-        public async Task<IActionResult> OnPostSaveAsync()
+        public IActionResult OnPostSave()
         {
             var fileStorage = dbContext.CrawlerAgentFileStorage.FindById(Input.TempFileId);
 

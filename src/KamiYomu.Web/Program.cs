@@ -10,6 +10,7 @@ using KamiYomu.Web.Middlewares;
 using KamiYomu.Web.Worker;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using MonkeyCache;
 using MonkeyCache.LiteDB;
@@ -59,7 +60,7 @@ builder.Services.AddHangfireServer((services, optionActions) =>
     optionActions.Queues = Settings.Worker.CrawlerQueues;
 });
 
-builder.Services.AddHangfireServer((services, optionActions)  =>
+builder.Services.AddHangfireServer((services, optionActions) =>
 {
     var workerOptions = services.GetService<IOptions<Settings.Worker>>();
     optionActions.ServerName = nameof(Settings.Worker.SearchQueues);
@@ -74,6 +75,20 @@ builder.Services.AddHangfireServer((services, optionActions) =>
     optionActions.WorkerCount = Environment.ProcessorCount * workerOptions.Value.WorkerCount;
     optionActions.Queues = Settings.Worker.FetchMangaQueues;
 });
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { "en-US", "pt-BR", "fr" }.Select(c => new CultureInfo(c)).ToList();
+
+    options.DefaultRequestCulture = new RequestCulture("en-US");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+    options.FallBackToParentCultures = true;
+    options.FallBackToParentUICultures = true;
+    options.ApplyCurrentCultureToResponseHeaders = true;
+});
+
 
 builder.Services.AddTransient<IAgentCrawlerRepository, AgentCrawlerRepository>();
 builder.Services.AddTransient<IHangfireRepository, HangfireRepository>();
@@ -105,18 +120,13 @@ builder.Services.AddHttpClient(Settings.Worker.HttpClientBackground, client =>
 var app = builder.Build();
 
 var uiSettings = app.Services.GetService<IOptions<Settings.UI>>();
-var supportedCultures = new[] { "en-US", "pt-BR", "fr" };
+var localizer = app.Services.GetRequiredService<IStringLocalizer<I18n>>();
 
-var localizationOptions = new RequestLocalizationOptions
+app.UseRequestLocalization(options =>
 {
-    DefaultRequestCulture = new RequestCulture(uiSettings.Value.DefaultLanguage),
-    SupportedCultures = [.. supportedCultures.Select(c => new CultureInfo(c))],
-    SupportedUICultures = [.. supportedCultures.Select(c => new CultureInfo(c))],
-    FallBackToParentCultures = true,
-    FallBackToParentUICultures = true
-};
+    options.DefaultRequestCulture = new RequestCulture(uiSettings.Value.DefaultLanguage);
+});
 
-app.UseRequestLocalization(localizationOptions);
 
 if (!app.Environment.IsDevelopment())
 {
@@ -132,6 +142,7 @@ app.UseHangfireDashboard("/worker", new DashboardOptions
     DisplayStorageConnectionString = false,
     DashboardTitle = I18n.BackgroundJobs,
     FaviconPath = "/images/favicon.ico",
+    IgnoreAntiforgeryToken = true,
     Authorization = [new AllowAllDashboardAuthorizationFilter()]
 });
 

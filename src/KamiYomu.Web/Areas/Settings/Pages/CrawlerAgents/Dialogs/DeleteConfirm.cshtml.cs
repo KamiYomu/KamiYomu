@@ -11,7 +11,7 @@ namespace KamiYomu.Web.Pages.CrawlerAgents.Dialogs
         [BindProperty]
         public Guid Id { get; set; }
 
-        public Entities.CrawlerAgent Agent { get; set; }
+        public Entities.CrawlerAgent? Agent { get; set; }
 
         public IActionResult OnGet(Guid id)
         {

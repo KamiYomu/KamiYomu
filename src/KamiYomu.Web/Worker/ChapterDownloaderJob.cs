@@ -1,11 +1,14 @@
 ﻿using Hangfire.Server;
+using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.Extensions.Options;
 using System.Globalization;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 
 namespace KamiYomu.Web.Worker
 {
@@ -86,7 +89,7 @@ namespace KamiYomu.Web.Worker
             var pageCount = pages.Count();
             _logger.LogInformation("Downloading {Count} pages to chapter folder: {ChapterFolder}", pageCount, chapterFolder);
 
-            
+            File.WriteAllText(Path.Join(chapterFolder, "ComicInfo.xml"), chapterDownload.Chapter.ToComicInfo());
             int index = 1;
 
             foreach (var page in pages.OrderBy(p => p.PageNumber))
@@ -172,6 +175,20 @@ namespace KamiYomu.Web.Worker
                     Directory.CreateDirectory(destinationDir);
 
                 File.Copy(cbzFile, destinationPath, overwrite: true);
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    File.SetUnixFileMode(destinationPath, UnixFileMode.UserRead
+                                                        | UnixFileMode.UserWrite
+                                                        | UnixFileMode.UserExecute
+                                                        | UnixFileMode.GroupRead
+                                                        | UnixFileMode.GroupWrite
+                                                        | UnixFileMode.GroupExecute
+                                                        | UnixFileMode.OtherRead
+                                                        | UnixFileMode.OtherExecute);
+                }
+
+
                 _logger.LogInformation("Copied: {cbzFile} → {destinationPath}", cbzFile, destinationPath);
             }
         }

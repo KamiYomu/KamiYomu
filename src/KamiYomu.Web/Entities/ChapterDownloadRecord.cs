@@ -6,7 +6,7 @@ namespace KamiYomu.Web.Entities
     public class ChapterDownloadRecord
     {
         protected ChapterDownloadRecord() { }
-        public ChapterDownloadRecord(CrawlerAgent agentCrawler, MangaDownloadRecord mangaDownload, Chapter chapter)
+        public ChapterDownloadRecord(CrawlerAgent? agentCrawler, MangaDownloadRecord? mangaDownload, Chapter? chapter)
         {
             AgentCrawler = agentCrawler;
             MangaDownload = mangaDownload;
@@ -42,9 +42,9 @@ namespace KamiYomu.Web.Entities
         }
 
         public Guid Id { get; private set; }
-        public CrawlerAgent AgentCrawler { get; private set; }
-        public MangaDownloadRecord MangaDownload { get; private set; }
-        public Chapter Chapter { get; private set; }
+        public CrawlerAgent? AgentCrawler { get; private set; }
+        public MangaDownloadRecord? MangaDownload { get; private set; }
+        public Chapter? Chapter { get; private set; }
         public string BackgroundJobId { get; private set; }
         public DateTime CreateAt { get; private set; }
         public DateTime? StatusUpdateAt { get; private set; }
