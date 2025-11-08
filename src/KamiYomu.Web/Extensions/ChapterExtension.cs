@@ -29,7 +29,7 @@ namespace KamiYomu.Web.Extensions
         {
             var volumePart = chapter.Volume != 0 ? $"Vol.{chapter.Volume:00} " : "";
 
-            var chapterPart = chapter.Number < 0 ? $"Ch.{chapter.Number.ToString().PadLeft(3, '0')}"
+            var chapterPart = chapter.Number > -1 ? $"Ch.{chapter.Number.ToString().PadLeft(3, '0')}"
                                                                  : $"Ch.{chapter.Id.ToString().Substring(0, 8)}";
 
             var cbzFileName = $"{chapter.ParentManga.FolderName} {volumePart}{chapterPart}.cbz";

@@ -55,25 +55,25 @@ builder.Services.AddHangfire(configuration => configuration.UseSimpleAssemblyNam
 builder.Services.AddHangfireServer((services, optionActions) =>
 {
     var workerOptions = services.GetService<IOptions<Settings.Worker>>();
-    optionActions.ServerName = nameof(Settings.Worker.CrawlerQueues);
+    optionActions.ServerName = nameof(Settings.Worker.DownloadChapterQueues);
     optionActions.WorkerCount = Environment.ProcessorCount * workerOptions.Value.WorkerCount;
-    optionActions.Queues = Settings.Worker.CrawlerQueues;
+    optionActions.Queues = Settings.Worker.DownloadChapterQueues;
 });
 
 builder.Services.AddHangfireServer((services, optionActions) =>
 {
     var workerOptions = services.GetService<IOptions<Settings.Worker>>();
-    optionActions.ServerName = nameof(Settings.Worker.SearchQueues);
+    optionActions.ServerName = nameof(Settings.Worker.DiscoveryNewChapterQueues);
     optionActions.WorkerCount = Environment.ProcessorCount * workerOptions.Value.WorkerCount;
-    optionActions.Queues = Settings.Worker.SearchQueues;
+    optionActions.Queues = [Settings.Worker.DiscoveryNewChapterQueues];
 });
 
 builder.Services.AddHangfireServer((services, optionActions) =>
 {
     var workerOptions = services.GetService<IOptions<Settings.Worker>>();
-    optionActions.ServerName = nameof(Settings.Worker.FetchNewChaptersQueues);
+    optionActions.ServerName = nameof(Settings.Worker.MangaDownloadSchedulerQueues);
     optionActions.WorkerCount = Environment.ProcessorCount * workerOptions.Value.WorkerCount;
-    optionActions.Queues = Settings.Worker.FetchNewChaptersQueues;
+    optionActions.Queues = Settings.Worker.MangaDownloadSchedulerQueues;
 });
 
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
@@ -89,9 +89,9 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.ApplyCurrentCultureToResponseHeaders = true;
 });
 
-
 builder.Services.AddTransient<IAgentCrawlerRepository, AgentCrawlerRepository>();
 builder.Services.AddTransient<IHangfireRepository, HangfireRepository>();
+builder.Services.AddTransient<IChapterDiscoveryJob, ChapterDiscoveryJob>();
 builder.Services.AddTransient<IChapterDownloaderJob, ChapterDownloaderJob>();
 builder.Services.AddTransient<IMangaDownloaderJob, MangaDownloaderJob>();
 
@@ -146,10 +146,14 @@ app.UseHangfireDashboard("/worker", new DashboardOptions
     Authorization = [new AllowAllDashboardAuthorizationFilter()]
 });
 
+
+var hangfireRepository = app.Services.GetService<IHangfireRepository>();
+
 RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(
     nameof(ChapterDiscoveryJob),
-    job => job.DispatchAsync(null, CancellationToken.None),
-    app.Environment.IsDevelopment() ? Cron.Minutely() : Cron.Hourly());
+    Settings.Worker.DiscoveryNewChapterQueues,
+    (job) => job.DispatchAsync(null!, CancellationToken.None),
+    Cron.Hourly());
 
 app.MapRazorPages();
 app.UseMiddleware<ExceptionNotificationMiddleware>();

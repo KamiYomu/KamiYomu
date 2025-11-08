@@ -15,28 +15,28 @@
         }
         public class Worker
         {
-            public static readonly string[] CrawlerQueues =
+            public static readonly string[] DownloadChapterQueues =
             [
-                "crawler-agent-download-queue-1",
-                "crawler-agent-download-queue-2",
-                "crawler-agent-download-queue-3",
+                "download-chapter-queue-1",
+                "download-chapter-queue-2",
+                "download-chapter-queue-3",
             ];
 
-            public static readonly string[] FetchNewChaptersQueues =
+            public static readonly string[] MangaDownloadSchedulerQueues =
             [
-                "crawler-agent-new-chapters-queue-1",
-                "crawler-agent-new-chapters-queue-2",
-                "crawler-agent-new-chapters-queue-3",
+                "manga-download-scheduler-queue-1",
+                "manga-download-scheduler-queue-2",
+                "manga-download-scheduler-queue-3",
             ];
 
-            public static readonly string[] SearchQueues =
-            [
-                "crawler-agent-search-queue-1",
-                "crawler-agent-search-queue-2",
-                "crawler-agent-search-queue-3",
-            ];
+            public static readonly string DiscoveryNewChapterQueues = "discovery-new-chapter-queue";
 
-            public static readonly string[] AllQueues = [.. CrawlerQueues, .. SearchQueues];
+            public static readonly string[] AllQueues = 
+            [
+                DiscoveryNewChapterQueues,
+                .. MangaDownloadSchedulerQueues, 
+                .. DownloadChapterQueues,
+            ];
 
             public const string HttpClientBackground = nameof(HttpClientBackground);
 

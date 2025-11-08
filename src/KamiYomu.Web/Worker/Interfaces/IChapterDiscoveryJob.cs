@@ -7,7 +7,7 @@ namespace KamiYomu.Web.Worker.Interfaces
     [DisableConcurrentExecution(timeoutInSeconds: 3600)]
     public interface IChapterDiscoveryJob
     {
-        [DisplayName("Monitor Chapter Release")]
+        [DisplayName("Discovery New Chapter")]
         Task DispatchAsync(PerformContext context, CancellationToken cancellationToken);
     }
 }

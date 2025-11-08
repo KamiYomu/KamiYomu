@@ -110,7 +110,7 @@ namespace KamiYomu.Web.Worker
 
                             var backgroundJobId = _jobClient.Create<IChapterDownloaderJob>(
                                   p => p.DispatchAsync(library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(), null!, CancellationToken.None),
-                                  _hangfireRepository.GetLeastLoadedCrawlerQueue()
+                                  _hangfireRepository.GetLeastLoadedDownloadChapterQueue()
                              );
 
                             record.Scheduled(backgroundJobId);
