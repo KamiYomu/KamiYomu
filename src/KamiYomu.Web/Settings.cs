@@ -22,11 +22,11 @@
                 "crawler-agent-download-queue-3",
             ];
 
-            public static readonly string[] FetchMangaQueues =
+            public static readonly string[] FetchNewChaptersQueues =
             [
-                "crawler-agent-fetch-manga-queue-1",
-                "crawler-agent-fetch-manga-queue-2",
-                "crawler-agent-fetch-manga-queue-3",
+                "crawler-agent-new-chapters-queue-1",
+                "crawler-agent-new-chapters-queue-2",
+                "crawler-agent-new-chapters-queue-3",
             ];
 
             public static readonly string[] SearchQueues =

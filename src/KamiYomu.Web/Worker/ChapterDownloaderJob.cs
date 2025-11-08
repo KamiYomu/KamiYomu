@@ -73,23 +73,18 @@ namespace KamiYomu.Web.Worker
                 chapterDownload.Chapter,
                 cancellationToken);
 
-            var seriesFolder = mangaDownload.GetTempDirectory();
-            var volumeFolder = chapterDownload.Chapter.Volume != 0
-                ? Path.Combine(seriesFolder, $"Volume {chapterDownload.Chapter.Volume:00}")
-                : seriesFolder;
+            var seriesFolder = mangaDownload!.Library!.Manga!.GetTempDirectory();
 
-            var chapterFolderName = chapterDownload.Chapter.Number != 0
-                ? $"Chapter {chapterDownload.Chapter.Number:000}"
-                : $"Chapter {chapterDownload.Chapter.Id.ToString().Substring(0, 8)}";
+            var chapterFolderPath = chapterDownload.Chapter.GetChapterFolderPath(seriesFolder);
 
-            var chapterFolder = Path.Combine(volumeFolder, chapterFolderName);
-
-            Directory.CreateDirectory(chapterFolder);
+            Directory.CreateDirectory(chapterFolderPath);
 
             var pageCount = pages.Count();
-            _logger.LogInformation("Downloading {Count} pages to chapter folder: {ChapterFolder}", pageCount, chapterFolder);
 
-            File.WriteAllText(Path.Join(chapterFolder, "ComicInfo.xml"), chapterDownload.Chapter.ToComicInfo());
+            _logger.LogInformation("Downloading {Count} pages to chapter folder: {chapterFolderPath}", pageCount, chapterFolderPath);
+
+            File.WriteAllText(Path.Join(chapterFolderPath, "ComicInfo.xml"), chapterDownload.Chapter.ToComicInfo());
+
             int index = 1;
 
             foreach (var page in pages.OrderBy(p => p.PageNumber))
@@ -103,7 +98,7 @@ namespace KamiYomu.Web.Worker
                 }
 
                 var fileName = $"{index:D3}-{Path.GetFileName(page.ImageUrl.AbsolutePath)}";
-                var filePath = Path.Combine(chapterFolder, fileName);
+                var filePath = Path.Combine(chapterFolderPath, fileName);
 
                 try
                 {
@@ -118,30 +113,22 @@ namespace KamiYomu.Web.Worker
                 }
 
                 index++;
+
                 await Task.Delay(_workerOptions.GetWaitPeriod(), cancellationToken);
             }
 
-            _logger.LogInformation("Completed download of chapter {ChapterDownloadId} to {ChapterFolder}", chapterDownloadId, chapterFolder);
+            _logger.LogInformation("Completed download of chapter {ChapterDownloadId} to {ChapterFolder}", chapterDownloadId, chapterFolderPath);
 
-            CreateCbzFile(chapterDownload, chapterFolder, seriesFolder);
+            CreateCbzFile(chapterDownload, chapterFolderPath, seriesFolder);
 
-            MoveCbzFilesToCollection(mangaDownload.GetTempDirectory(), mangaDownload.GetMangaDirectory());
+            MoveCbzFilesToCollection(mangaDownload!.Library!.Manga.GetTempDirectory(), mangaDownload!.Library!.Manga.GetDirectory());
             chapterDownload.Complete();
             libDbContext.ChapterDownloadRecords.Update(chapterDownload);
         }
 
         private void CreateCbzFile(ChapterDownloadRecord chapterDownload, string chapterFolder, string seriesFolder)
         {
-            var volumePart = chapterDownload.Chapter.Volume != 0
-                ? $"Vol.{chapterDownload.Chapter.Volume:00} "
-                : "";
-
-            var chapterPart = chapterDownload.Chapter.Number < 0
-                ? $"Ch.{chapterDownload.Chapter.Number.ToString().PadLeft(3, '0')}"
-                : $"Ch.{chapterDownload.Chapter.Id.ToString().Substring(0, 8)}";
-
-            var cbzFileName = $"{chapterDownload.Chapter.ParentManga.FolderName} {volumePart}{chapterPart}.cbz";
-            var cbzFilePath = Path.Combine(seriesFolder, cbzFileName);
+            var cbzFilePath = Path.Combine(seriesFolder, chapterDownload!.Chapter!.GetCbzFileName());
 
             if (File.Exists(cbzFilePath))
                 File.Delete(cbzFilePath);

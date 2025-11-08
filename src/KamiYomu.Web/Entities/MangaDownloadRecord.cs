@@ -48,28 +48,7 @@ namespace KamiYomu.Web.Entities
             return $"{nameof(MangaDownloadRecord)}-{Id}";
         }
 
-        public string GetTempDirectory()
-        {
-            var dirPath = Path.Combine(Path.GetTempPath(), Library.Manga.FolderName);
-
-            if (!Directory.Exists(dirPath)) { 
-                Directory.CreateDirectory(dirPath);
-            }
-
-            return dirPath;
-        }
-
-        public string GetMangaDirectory()
-        {
-            var dirPath = Path.Combine(Settings.SpecialFolders.MangaDir, Library.Manga.FolderName);
-
-            if (!Directory.Exists(dirPath))
-            {
-                Directory.CreateDirectory(dirPath);
-            }
-
-            return dirPath;
-        }
+        
 
 
 

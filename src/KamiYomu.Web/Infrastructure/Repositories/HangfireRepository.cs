@@ -41,7 +41,7 @@ namespace KamiYomu.Web.Infrastructure.Repositories
             var monitor = JobStorage.Current.GetMonitoringApi();
             var activeQueues = monitor.Queues().ToDictionary(q => q.Name, q => q.Length);
 
-            var allQueuesWithStats = Settings.Worker.FetchMangaQueues
+            var allQueuesWithStats = Settings.Worker.FetchNewChaptersQueues
                 .Select(name => new
                 {
                     Name = name,

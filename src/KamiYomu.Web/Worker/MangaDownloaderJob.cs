@@ -51,12 +51,6 @@ public class MangaDownloaderJob : IMangaDownloaderJob
             throw new ArgumentException("Library was not found");
         }
         using var libDbContext = library.GetDbContext();
-        var userPreference = _dbContext.UserPreferences.FindOne(p => true);
-
-        Thread.CurrentThread.CurrentCulture =
-        Thread.CurrentThread.CurrentUICulture =
-        CultureInfo.CurrentCulture =
-        CultureInfo.CurrentUICulture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
 
         var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Id == mangaDownloadId && p.DownloadStatus == Entities.Definitions.DownloadStatus.Pending);
         if (mangaDownload == null) return;

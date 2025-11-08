@@ -71,9 +71,9 @@ builder.Services.AddHangfireServer((services, optionActions) =>
 builder.Services.AddHangfireServer((services, optionActions) =>
 {
     var workerOptions = services.GetService<IOptions<Settings.Worker>>();
-    optionActions.ServerName = nameof(Settings.Worker.FetchMangaQueues);
+    optionActions.ServerName = nameof(Settings.Worker.FetchNewChaptersQueues);
     optionActions.WorkerCount = Environment.ProcessorCount * workerOptions.Value.WorkerCount;
-    optionActions.Queues = Settings.Worker.FetchMangaQueues;
+    optionActions.Queues = Settings.Worker.FetchNewChaptersQueues;
 });
 
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
