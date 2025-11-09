@@ -387,4 +387,52 @@
   <data name="YouAreAboutToDeleteThisMangaFromYourCollection" xml:space="preserve">
     <value>Are you sure you want to delete this manga from your collection? This action cannot be undone. </value>
   </data>
+  <data name="Addons" xml:space="preserve">
+    <value>Add-ons</value>
+  </data>
+  <data name="NoCrawlerAgent" xml:space="preserve">
+    <value>No Crawler Agent</value>
+  </data>
+  <data name="AddCrawlerAgentToGetStarted" xml:space="preserve">
+    <value>Add Crawler Agent To Get Started</value>
+  </data>
+  <data name="SearchCrawlerAgents" xml:space="preserve">
+    <value>Search Crawler Agents</value>
+  </data>
+  <data name="AddNuGetSources" xml:space="preserve">
+    <value>Add NuGet Sources</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="NoAddonsAvailable" xml:space="preserve">
+    <value>No Add-ons Available</value>
+  </data>
+  <data name="Install" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="License" xml:space="preserve">
+    <value>License</value>
+  </data>
+  <data name="Authors" xml:space="preserve">
+    <value>Authors</value>
+  </data>
+  <data name="TotalDownloads" xml:space="preserve">
+    <value>Total Downloads</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>User Name</value>
+  </data>
+  <data name="Sources" xml:space="preserve">
+    <value>Sources</value>
+  </data>
+  <data name="SelectSource" xml:space="preserve">
+    <value>Select Source</value>
+  </data>
+  <data name="NoSources" xml:space="preserve">
+    <value>No Sources</value>
+  </data>
+  <data name="Examples" xml:space="preserve">
+    <value>Examples</value>
+  </data>
 </root>

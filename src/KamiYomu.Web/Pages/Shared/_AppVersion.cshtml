@@ -1,0 +1,17 @@
+﻿@using System.Reflection
+
+@{
+    var assembly = typeof(Program).Assembly;
+    var coreAssembly = typeof(KamiYomu.CrawlerAgents.Core.AbstractCrawlerAgent).Assembly;
+    var name = assembly.GetName();
+    var version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+    var company = assembly.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
+    var product = assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
+    var copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
+    var description = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description;
+}
+
+<div class="mt-3">
+    <small class="text-secondary d-block text-wrap text-break">@version</small>
+    <small class="text-secondary d-block text-wrap text-break">@copyright</small>
+</div>

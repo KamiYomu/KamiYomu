@@ -6,6 +6,8 @@ using KamiYomu.Web.HealthCheckers;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
+using KamiYomu.Web.Infrastructure.Services;
+using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Middlewares;
 using KamiYomu.Web.Worker;
 using KamiYomu.Web.Worker.Interfaces;
@@ -94,6 +96,7 @@ builder.Services.AddTransient<IHangfireRepository, HangfireRepository>();
 builder.Services.AddTransient<IChapterDiscoveryJob, ChapterDiscoveryJob>();
 builder.Services.AddTransient<IChapterDownloaderJob, ChapterDownloaderJob>();
 builder.Services.AddTransient<IMangaDownloaderJob, MangaDownloaderJob>();
+builder.Services.AddTransient<INugetService, NugetService>();
 
 builder.Services.AddHealthChecks()
                 .AddCheck<DatabaseHealthCheck>(nameof(DatabaseHealthCheck), tags: ["storage"])

@@ -1,0 +1,68 @@
+﻿@page
+@model KamiYomu.Web.Areas.Settings.Pages.Add_ons.Dialogs.ListSourceDialogModel
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title">
+        <i class="bi bi-terminal me-3" aria-hidden="true"></i>
+        @I18n.Sources
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@I18n.Close"></button>
+</div>
+<div class="modal-body text-center">
+    <div class="d-flex justify-content-between align-items-center m-3">
+        <div class="btn-toolbar">
+            <div class="btn-group">
+                <a asp-area="Settings" asp-page="/Add-ons/Edit"
+                   class="btn btn-sm btn-outline-secondary"
+                   title="@I18n.Add"
+                   aria-label="@I18n.Add">
+                    <i class="bi bi-plus-circle me-1"></i> @I18n.Add
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Sources.Any())
+    {
+        <div class="list-group">
+            @foreach (var source in Model.Sources)
+            {
+                <div class="list-group-item d-flex justify-content-between align-items-start flex-wrap">
+                    <div class="me-3">
+                        <div><strong>@source.DisplayName</strong></div>
+                        <div>
+                            <a href="@source.Url" target="_blank">@source.Url</a>
+                        </div>
+                        @if (!string.IsNullOrEmpty(source.UserName))
+                        {
+                            <div class="text-muted">User: @source.UserName</div>
+                        }
+                    </div>
+                    <div class="ms-auto d-flex align-items-center">
+                        <a asp-area="Settings" asp-page="/Add-ons/Edit" asp-route-id="@source.Id"
+                           class="btn btn-sm btn-outline-secondary me-2" title="@I18n.Edit">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <button class="btn btn-sm btn-outline-danger" title="@I18n.Delete">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-4">
+            <p class="text-muted mb-2">@I18n.NoSources</p>
+            <a asp-area="Settings" asp-page="/Add-ons/Edit" class="btn btn-outline-primary btn-sm">
+                @I18n.Add
+            </a>
+        </div>
+    }
+</div>
+
+
