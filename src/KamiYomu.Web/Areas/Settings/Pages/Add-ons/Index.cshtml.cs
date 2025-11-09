@@ -1,0 +1,132 @@
+using KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents;
+using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.Addons;
+using KamiYomu.Web.Infrastructure.Contexts;
+using KamiYomu.Web.Infrastructure.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Polly;
+using System.IO.Compression;
+
+namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
+{
+    public class IndexModel : PageModel
+    {
+        private readonly ILogger<IndexModel> _logger;
+        private readonly DbContext _dbContext;
+        private readonly INugetService _nugetService;
+
+        [BindProperty]
+        public string Search { get; set; } = "";
+
+        [BindProperty]
+        public Guid SourceId { get; set; } = Guid.Empty;
+
+        public IEnumerable<NugetSource> Sources { get; set; } = [];
+
+        public IEnumerable<NugetPackageInfo> Packages { get; set; } = [];
+
+        public PackageListViewModel PackageListViewModel { get; set; } = new();
+
+        public IndexModel(ILogger<IndexModel> logger, DbContext dbContext, INugetService nugetService)
+        {
+            _logger = logger;
+            _dbContext = dbContext;
+            _nugetService = nugetService;
+        }
+
+        public void OnGet()
+        {
+            Sources = _dbContext.NugetSources.FindAll();
+            PackageListViewModel = new PackageListViewModel
+            {
+                SourceId = SourceId,
+                Packages = Packages
+            };
+        }
+
+        public async Task<IActionResult> OnPostSearchAsync()
+        {
+            try
+            {
+                Packages = await _nugetService.SearchPackagesAsync(Search, SourceId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error on search packages");
+                Packages = [];
+            }
+
+            return Partial("_PackageList", new PackageListViewModel
+            {
+                SourceId = SourceId,
+                Packages = Packages
+            });
+        }
+
+
+        public async Task<IActionResult> OnPostInstallAsync(Guid sourceId, string packageId, string packageVersion)
+        {
+            try
+            {
+                var stream = await _nugetService.OnGetDownloadAsync(sourceId, packageId, packageVersion);
+
+                var tempUploadId = Guid.NewGuid();
+                var tempFileName = $"{packageId}.{packageVersion}.nupkg";
+                var tempFilePath = Path.Combine(Path.GetTempPath(), tempFileName);
+
+                _dbContext.CrawlerAgentFileStorage.Upload(tempUploadId, tempFileName, stream);
+
+                var fileStorage = _dbContext.CrawlerAgentFileStorage.FindById(tempUploadId);
+                fileStorage.SaveAs(tempFilePath);
+
+                var crawlerAgentTempDir = Path.Combine(Path.GetTempPath(), CrawlerAgent.GetAgentDirName(tempFileName));
+
+                ZipFile.ExtractToDirectory(tempFilePath, crawlerAgentTempDir, true);
+
+                var dllPath = Directory.EnumerateFiles(crawlerAgentTempDir, searchPattern: "*.dll", SearchOption.AllDirectories).FirstOrDefault();
+
+                var assembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
+                var metadata = CrawlerAgent.GetAssemblyMetadata(assembly);
+
+                return Partial("_CrawlerAgentCreateForm", new CrawlerAgentCreateInputModel
+                {
+                    DisplayName = CrawlerAgent.GetCrawlerDisplayName(assembly),
+                    CrawlerTexts = CrawlerAgent.GetCrawlerTexts(assembly),
+                    CrawlerPasswords = CrawlerAgent.GetCrawlerPasswords(assembly),
+                    CrawlerCheckBoxs = CrawlerAgent.GetCrawlerCheckBoxs(assembly),
+                    CrawlerSelects = CrawlerAgent.GetCrawlerSelects(assembly),
+                    AgentMetadata = [],
+                    TempFileId = tempUploadId,
+                    ReadOnlyMetadata = metadata,
+                });
+
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Package is invalid.");
+            }
+
+            ModelState.Remove("Search");
+
+            Sources = _dbContext.NugetSources.FindAll();
+            PackageListViewModel = new PackageListViewModel
+            {
+                SourceId = SourceId,
+                Packages = Packages
+            };
+
+            return Page();
+        }
+
+    }
+
+    public class PackageListViewModel
+    {
+        public Guid SourceId { get; set; }
+        public IEnumerable<NugetPackageInfo> Packages { get; set; } = Enumerable.Empty<NugetPackageInfo>();
+    }
+
+
+}

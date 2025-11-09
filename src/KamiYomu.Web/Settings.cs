@@ -2,7 +2,12 @@
 {
     public class Settings
     {
-        public class SpecialFolders
+        public static class Package
+        {
+            public const string KamiYomuCrawlerAgentTag = "kamiyomu-crawler-agent";
+        }
+
+        public static class SpecialFolders
         {
             public const string LogDir = "/logs";
             public const string AgentsDir = "/agents";

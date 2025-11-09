@@ -97,6 +97,33 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Crawler Agent To Get Started.
+        /// </summary>
+        internal static string AddCrawlerAgentToGetStarted {
+            get {
+                return ResourceManager.GetString("AddCrawlerAgentToGetStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add NuGet Sources.
+        /// </summary>
+        internal static string AddNuGetSources {
+            get {
+                return ResourceManager.GetString("AddNuGetSources", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add-ons.
+        /// </summary>
+        internal static string Addons {
+            get {
+                return ResourceManager.GetString("Addons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add To Library.
         /// </summary>
         internal static string AddToLibrary {
@@ -133,11 +160,29 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to API Key.
+        /// </summary>
+        internal static string APIKey {
+            get {
+                return ResourceManager.GetString("APIKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Assembly Properties.
         /// </summary>
         internal static string AssemblyProperties {
             get {
                 return ResourceManager.GetString("AssemblyProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Authors.
+        /// </summary>
+        internal static string Authors {
+            get {
+                return ResourceManager.GetString("Authors", resourceCulture);
             }
         }
         
@@ -421,6 +466,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Examples.
+        /// </summary>
+        internal static string Examples {
+            get {
+                return ResourceManager.GetString("Examples", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to External Links.
         /// </summary>
         internal static string ExternalLinks {
@@ -475,6 +529,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Install.
+        /// </summary>
+        internal static string Install {
+            get {
+                return ResourceManager.GetString("Install", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language.
         /// </summary>
         internal static string Language {
@@ -507,6 +570,15 @@ namespace KamiYomu.Web.Resources {
         internal static string Library {
             get {
                 return ResourceManager.GetString("Library", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License.
+        /// </summary>
+        internal static string License {
+            get {
+                return ResourceManager.GetString("License", resourceCulture);
             }
         }
         
@@ -565,6 +637,51 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Add-ons Available.
+        /// </summary>
+        internal static string NoAddonsAvailable {
+            get {
+                return ResourceManager.GetString("NoAddonsAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Crawler Agent.
+        /// </summary>
+        internal static string NoCrawlerAgent {
+            get {
+                return ResourceManager.GetString("NoCrawlerAgent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Sources.
+        /// </summary>
+        internal static string NoSources {
+            get {
+                return ResourceManager.GetString("NoSources", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Required for authenticated sources. Enter either the password for basic auth or an API key for token-based access. This will be used to fetch packages securely..
+        /// </summary>
+        internal static string NugetSourcePasswordExplanation {
+            get {
+                return ResourceManager.GetString("NugetSourcePasswordExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Optional. Provide a username if the NuGet source requires basic authentication. Leave blank for public feeds or API key-only access..
+        /// </summary>
+        internal static string NugetSourceUserNameExplanation {
+            get {
+                return ResourceManager.GetString("NugetSourceUserNameExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Library.
         /// </summary>
         internal static string OpenLibrary {
@@ -606,6 +723,15 @@ namespace KamiYomu.Web.Resources {
         internal static string PageSubtitleLibrary {
             get {
                 return ResourceManager.GetString("PageSubtitleLibrary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        internal static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
             }
         }
         
@@ -664,6 +790,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        internal static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search Crawler Agents.
+        /// </summary>
+        internal static string SearchCrawlerAgents {
+            get {
+                return ResourceManager.GetString("SearchCrawlerAgents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search manga....
         /// </summary>
         internal static string SearchManga {
@@ -691,11 +835,29 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select Source.
+        /// </summary>
+        internal static string SelectSource {
+            get {
+                return ResourceManager.GetString("SelectSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         internal static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sources.
+        /// </summary>
+        internal static string Sources {
+            get {
+                return ResourceManager.GetString("Sources", resourceCulture);
             }
         }
         
@@ -741,6 +903,24 @@ namespace KamiYomu.Web.Resources {
         internal static string ToggleTheme {
             get {
                 return ResourceManager.GetString("ToggleTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Downloads.
+        /// </summary>
+        internal static string TotalDownloads {
+            get {
+                return ResourceManager.GetString("TotalDownloads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Name.
+        /// </summary>
+        internal static string UserName {
+            get {
+                return ResourceManager.GetString("UserName", resourceCulture);
             }
         }
         
