@@ -880,6 +880,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Source Code.
+        /// </summary>
+        internal static string SourceCode {
+            get {
+                return ResourceManager.GetString("SourceCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sources.
         /// </summary>
         internal static string Sources {

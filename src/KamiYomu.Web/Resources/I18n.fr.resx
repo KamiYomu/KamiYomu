@@ -457,4 +457,19 @@
   <data name="MyGetFeed" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="SourceCode" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="OfficialNuGetOrg" xml:space="preserve">
+    <value>NuGet.org officiel</value>
+  </data>
+  <data name="FromKamiYomuNuGetRepository" xml:space="preserve">
+    <value>Depuis le référentiel KamiYomu NuGet - nécessite une clé API</value>
+  </data>
+  <data name="MyGetFeed" xml:space="preserve">
+    <value>Flux MonObtenir</value>
+  </data>
+  <data name="SourceCode" xml:space="preserve">
+    <value>Code source</value>
+  </data>
 </root>

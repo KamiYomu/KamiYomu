@@ -1,6 +1,7 @@
 using KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Entities.Addons;
+using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -89,17 +90,17 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
 
                 var assembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
                 var metadata = CrawlerAgent.GetAssemblyMetadata(assembly);
+                var displayName = CrawlerAgent.GetCrawlerDisplayName(assembly);
 
-                return Partial("_CrawlerAgentCreateForm", new CrawlerAgentCreateInputModel
+                // Register agent
+                var crawlerAgent = new CrawlerAgent(dllPath, displayName, new Dictionary<string, object>());
+                _dbContext.CrawlerAgents.Insert(crawlerAgent);
+
+                _dbContext.CrawlerAgentFileStorage.Delete(tempUploadId);
+
+                return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit", new
                 {
-                    DisplayName = CrawlerAgent.GetCrawlerDisplayName(assembly),
-                    CrawlerTexts = CrawlerAgent.GetCrawlerTexts(assembly),
-                    CrawlerPasswords = CrawlerAgent.GetCrawlerPasswords(assembly),
-                    CrawlerCheckBoxs = CrawlerAgent.GetCrawlerCheckBoxs(assembly),
-                    CrawlerSelects = CrawlerAgent.GetCrawlerSelects(assembly),
-                    AgentMetadata = [],
-                    TempFileId = tempUploadId,
-                    ReadOnlyMetadata = metadata,
+                    crawlerAgent.Id
                 });
 
             }
