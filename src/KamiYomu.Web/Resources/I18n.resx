@@ -447,4 +447,13 @@
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="OfficialNuGetOrg" xml:space="preserve">
+    <value>official NuGet.org</value>
+  </data>
+  <data name="FromKamiYomuNuGetRepository" xml:space="preserve">
+    <value>From KamiYomu NuGet Repository - requires api key</value>
+  </data>
+  <data name="MyGetFeed" xml:space="preserve">
+    <value>MyGet feed</value>
+  </data>
 </root>

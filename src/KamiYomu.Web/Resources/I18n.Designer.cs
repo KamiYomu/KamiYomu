@@ -502,6 +502,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to From KamiYomu NuGet Repository - requires api key.
+        /// </summary>
+        internal static string FromKamiYomuNuGetRepository {
+            get {
+                return ResourceManager.GetString("FromKamiYomuNuGetRepository", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Has Terms Accepted?.
         /// </summary>
         internal static string HasTermsAccepted {
@@ -628,6 +637,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MyGet feed.
+        /// </summary>
+        internal static string MyGetFeed {
+            get {
+                return ResourceManager.GetString("MyGetFeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         internal static string Name {
@@ -678,6 +696,15 @@ namespace KamiYomu.Web.Resources {
         internal static string NugetSourceUserNameExplanation {
             get {
                 return ResourceManager.GetString("NugetSourceUserNameExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to official NuGet.org.
+        /// </summary>
+        internal static string OfficialNuGetOrg {
+            get {
+                return ResourceManager.GetString("OfficialNuGetOrg", resourceCulture);
             }
         }
         

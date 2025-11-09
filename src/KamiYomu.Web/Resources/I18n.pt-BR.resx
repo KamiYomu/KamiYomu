@@ -441,17 +441,20 @@
   <data name="NugetSourcePasswordExplanation" xml:space="preserve">
     <value>Obrigatório para fontes autenticadas. Insira a senha para autenticação básica ou uma chave de API para acesso baseado em token. Isso será usado para buscar pacotes com segurança.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="APIKey" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="Password" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="APIKey" xml:space="preserve">
     <value>Chave de API</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Senha</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="OfficialNuGetOrg" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="FromKamiYomuNuGetRepository" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="MyGetFeed" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>
