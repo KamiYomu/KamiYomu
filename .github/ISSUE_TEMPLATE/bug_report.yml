@@ -1,0 +1,42 @@
+﻿name: Bug Report
+description: Report a reproducible issue or unexpected behavior
+title: "[Bug] "
+labels: [bug]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🐞 Bug Report
+        Please describe the issue clearly and provide steps to reproduce.
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, browser, runtime, or platform details
+      placeholder: "e.g. Windows 11, .NET 8, Chrome 120"
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: What did you do and what happened?
+      placeholder: |
+        1. Go to...
+        2. Click on...
+        3. See error...
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs or Screenshots
+      description: Paste logs or attach screenshots if available
+      render: shell
