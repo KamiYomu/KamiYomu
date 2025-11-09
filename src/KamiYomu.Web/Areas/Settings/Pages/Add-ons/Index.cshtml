@@ -50,7 +50,9 @@
         </div>
     </form>
 
+    <div asp-validation-summary="All" class="text-danger"></div>
+
     <div id="result" class="mt-4">
-        <partial name="_PackageList" model="Model.Packages" />
+        <partial name="_PackageList" model="Model.PackageListViewModel" />
     </div>
 </div>

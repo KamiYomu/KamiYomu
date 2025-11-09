@@ -46,8 +46,15 @@
                            class="btn btn-sm btn-outline-secondary me-2" title="@I18n.Edit">
                             <i class="bi bi-pencil-square"></i>
                         </a>
-                        <button class="btn btn-sm btn-outline-danger" title="@I18n.Delete">
-                            <i class="bi bi-trash"></i>
+                        <button class="btn btn-sm btn-outline-danger"
+                                title="@I18n.Delete"
+                                aria-label="@I18n.Delete"
+                                hx-get="/Settings/Add-ons/Dialogs/DeleteConfirm?id=@source.Id"
+                                hx-target="#sub-modal-body"
+                                hx-swap="innerHTML"
+                                data-bs-toggle="modal"
+                                data-bs-target="#sub-modal">
+                            <i class="bi bi-trash me-1"></i> @I18n.Delete
                         </button>
                     </div>
                 </div>

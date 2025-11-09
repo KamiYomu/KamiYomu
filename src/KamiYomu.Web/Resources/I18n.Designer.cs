@@ -160,6 +160,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to API Key.
+        /// </summary>
+        internal static string APIKey {
+            get {
+                return ResourceManager.GetString("APIKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Assembly Properties.
         /// </summary>
         internal static string AssemblyProperties {
@@ -655,6 +664,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Required for authenticated sources. Enter either the password for basic auth or an API key for token-based access. This will be used to fetch packages securely..
+        /// </summary>
+        internal static string NugetSourcePasswordExplanation {
+            get {
+                return ResourceManager.GetString("NugetSourcePasswordExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Optional. Provide a username if the NuGet source requires basic authentication. Leave blank for public feeds or API key-only access..
+        /// </summary>
+        internal static string NugetSourceUserNameExplanation {
+            get {
+                return ResourceManager.GetString("NugetSourceUserNameExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Library.
         /// </summary>
         internal static string OpenLibrary {
@@ -696,6 +723,15 @@ namespace KamiYomu.Web.Resources {
         internal static string PageSubtitleLibrary {
             get {
                 return ResourceManager.GetString("PageSubtitleLibrary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        internal static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
             }
         }
         

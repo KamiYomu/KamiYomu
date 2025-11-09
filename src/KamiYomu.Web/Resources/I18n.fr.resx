@@ -429,17 +429,29 @@
   <data name="SelectSource" xml:space="preserve">
     <value>Sélectionnez la source</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="NoSources" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="Examples" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="NoSources" xml:space="preserve">
     <value>Aucune source</value>
   </data>
   <data name="Examples" xml:space="preserve">
     <value>Exemples</value>
+  </data>
+  <data name="NugetSourceUserNameExplanation" xml:space="preserve">
+    <value>Facultatif. Fournissez un nom d'utilisateur si la source NuGet nécessite une authentification de base. Laissez ce champ vide pour les flux publics ou l'accès par clé API uniquement.</value>
+  </data>
+  <data name="NugetSourcePasswordExplanation" xml:space="preserve">
+    <value>Obligatoire pour les sources authentifiées. Saisissez soit le mot de passe pour l'authentification de base, soit une clé API pour un accès basé sur un jeton. Ceci sera utilisé pour récupérer les packages en toute sécurité.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="APIKey" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="Password" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="APIKey" xml:space="preserve">
+    <value>Clé API</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Mot de passe</value>
   </data>
 </root>

@@ -435,4 +435,16 @@
   <data name="Examples" xml:space="preserve">
     <value>Examples</value>
   </data>
+  <data name="NugetSourceUserNameExplanation" xml:space="preserve">
+    <value>Optional. Provide a username if the NuGet source requires basic authentication. Leave blank for public feeds or API key-only access.</value>
+  </data>
+  <data name="NugetSourcePasswordExplanation" xml:space="preserve">
+    <value>Required for authenticated sources. Enter either the password for basic auth or an API key for token-based access. This will be used to fetch packages securely.</value>
+  </data>
+  <data name="APIKey" xml:space="preserve">
+    <value>API Key</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
 </root>

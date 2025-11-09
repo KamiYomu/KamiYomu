@@ -1,8 +1,9 @@
-﻿@model IEnumerable<KamiYomu.Web.Entities.Addons.NugetPackageInfo>
+﻿@using KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
+@model PackageListViewModel
 
-@if (Model.Any())
+@if (Model.Packages.Any())
 {
-    foreach (var packageInfo in Model)
+    foreach (var packageInfo in Model.Packages)
     {
         <div class="row mb-1">
             <div class="card">
@@ -47,11 +48,18 @@
                             </div>
                         </div>
 
-                        <!-- Download button on the right -->
                         <div class="ms-3 d-flex align-items-center">
-                            <a href="@packageInfo.RepositoryUrl" target="_blank" class="btn btn-outline-primary">
-                                <i class="bi bi-download me-1"></i> @I18n.Install
-                            </a>
+                            <form method="post" asp-page-handler="Install"
+                                  asp-route-packageId="@packageInfo.Id"
+                                  asp-route-packageVersion="@packageInfo.Version"
+                                  asp-route-sourceId="@Model.SourceId">
+                                <button type="submit" class="btn btn-outline-primary">
+                                    <i class="bi bi-download me-1"></i> @I18n.Install
+                                </button>
+                            </form>
+
+                            <div id="download-message-@packageInfo.Id"></div>
+
                         </div>
                     </div>
                 </div>
@@ -67,3 +75,5 @@ else
         @I18n.NoAddonsAvailable
     </div>
 }
+
+<iframe name="download-frame" style="display:none;"></iframe>

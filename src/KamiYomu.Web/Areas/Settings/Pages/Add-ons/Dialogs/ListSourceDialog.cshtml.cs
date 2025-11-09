@@ -8,7 +8,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.Add_ons.Dialogs
     {
         public List<NugetSource> Sources { get; set; } = new();
 
-        public async Task OnGetAsync()
+        public void OnGet()
         {
             Sources = dbContext.NugetSources.FindAll().ToList();
         }

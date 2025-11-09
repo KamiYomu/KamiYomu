@@ -429,17 +429,29 @@
   <data name="SelectSource" xml:space="preserve">
     <value>Selecione a fonte</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="NoSources" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="Examples" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="NoSources" xml:space="preserve">
     <value>Sem fontes</value>
   </data>
   <data name="Examples" xml:space="preserve">
     <value>Exemplos</value>
+  </data>
+  <data name="NugetSourceUserNameExplanation" xml:space="preserve">
+    <value>Opcional. Forneça um nome de usuário se a origem do NuGet exigir autenticação básica. Deixe em branco para feeds públicos ou acesso somente com chave de API.</value>
+  </data>
+  <data name="NugetSourcePasswordExplanation" xml:space="preserve">
+    <value>Obrigatório para fontes autenticadas. Insira a senha para autenticação básica ou uma chave de API para acesso baseado em token. Isso será usado para buscar pacotes com segurança.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="APIKey" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="Password" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="APIKey" xml:space="preserve">
+    <value>Chave de API</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Senha</value>
   </data>
 </root>
