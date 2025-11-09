@@ -459,4 +459,7 @@
   <data name="SourceCode" xml:space="preserve">
     <value>Source Code</value>
   </data>
+  <data name="CrawlerAgentSavedSuccessfully" xml:space="preserve">
+    <value>Crawler Agent Saved Successfully!</value>
+  </data>
 </root>

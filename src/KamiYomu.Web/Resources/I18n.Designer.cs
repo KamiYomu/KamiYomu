@@ -340,6 +340,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crawler Agent Saved Successfully!.
+        /// </summary>
+        internal static string CrawlerAgentSavedSuccessfully {
+            get {
+                return ResourceManager.GetString("CrawlerAgentSavedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crawler Settings.
         /// </summary>
         internal static string CrawlerSettings {

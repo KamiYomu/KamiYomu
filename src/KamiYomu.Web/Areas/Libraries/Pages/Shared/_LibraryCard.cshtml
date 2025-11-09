@@ -39,7 +39,7 @@
                     <form method="post"
                           hx-post="/Libraries/Downloads/Index?handler=AddToCollection"
                           hx-target="#@cardId"
-                          hx-swap="outerHTML">
+                          hx-swap="innerHTML">
                         <input type="hidden" name="MangaId" value="@Model.Manga.Id" />
                         <input type="hidden" name="AgentId" value="@Model.AgentCrawler.Id" />
 

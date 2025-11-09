@@ -447,19 +447,6 @@
   <data name="Password" xml:space="preserve">
     <value>Senha</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="OfficialNuGetOrg" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="FromKamiYomuNuGetRepository" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="MyGetFeed" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="SourceCode" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="OfficialNuGetOrg" xml:space="preserve">
     <value>NuGet.org oficial</value>
   </data>
@@ -471,5 +458,12 @@
   </data>
   <data name="SourceCode" xml:space="preserve">
     <value>Código Fonte</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="CrawlerAgentSavedSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="CrawlerAgentSavedSuccessfully" xml:space="preserve">
+    <value>Agente rastreador salvo com sucesso!</value>
   </data>
 </root>

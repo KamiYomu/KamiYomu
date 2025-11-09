@@ -42,6 +42,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
             agentCrawler.Update(Input.DisplayName, Input.GetAgentMetadataValues(), Input.ReadOnlyMetadata);
             dbContext.CrawlerAgents.Update(agentCrawler);
             cacheContext.EmptyAgentKeys(agentCrawler.Id);
+            TempData["SuccessMessage"] = I18n.CrawlerAgentSavedSuccessfully;
             return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit", new { agentCrawler.Id });
         }
     }

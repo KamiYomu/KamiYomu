@@ -49,20 +49,18 @@ namespace KamiYomu.Web.Infrastructure.Services
 
             var packageUrl = $"{metadataUrl.TrimEnd('/')}/{packageName.ToLowerInvariant()}/index.json";
             var packageJson = await client.GetStringAsync(packageUrl);
-            var packageNode = JsonNode.Parse(packageJson)?["items"]?.AsArray()?[0]?["items"]?.AsArray()?[0]?["catalogEntry"];
+            var result = JsonNode.Parse(packageJson)?["items"]?.AsArray()?[0]?["items"]?.AsArray()?[0]?["catalogEntry"];
 
-            if (packageNode == null)
+            if (result == null)
                 return null;
 
-            var packageTypes = packageNode["packageTypes"]?.AsArray();
-            var isCrawlerAgent = packageTypes?.Any(pt =>
-                pt?["name"]?.ToString()?.Equals(Settings.Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase) == true
-            ) ?? false;
+            var packageTypes = result?["tags"]?.ToString();
+            var isCrawlerAgent = packageTypes?.Contains(Settings.Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase) == true;
 
-            //if (!isCrawlerAgent)
-            //    return null;
+            if (!isCrawlerAgent)
+                return null;
 
-            NugetPackageInfo packageInfo = ConvertToNuGetPackageInfo(packageNode);
+            NugetPackageInfo packageInfo = ConvertToNuGetPackageInfo(result);
             return packageInfo;
         }
 
@@ -106,13 +104,11 @@ namespace KamiYomu.Web.Infrastructure.Services
             {
                 foreach (var result in searchResults)
                 {
-                    var packageTypes = result?["packageTypes"]?.AsArray();
-                    var isCrawlerAgent = packageTypes?.Any(pt =>
-                        pt?["name"]?.ToString()?.Equals(Settings.Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase) == true
-                    ) ?? false;
+                    var packageTypes = result?["tags"]?.ToString();
+                    var isCrawlerAgent = packageTypes?.Contains(Settings.Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase) == true;
 
-                    //if (!isCrawlerAgent)
-                    //    continue;
+                    if (!isCrawlerAgent)
+                        continue;
 
                     NugetPackageInfo packageInfo = ConvertToNuGetPackageInfo(result);
                     packages.Add(packageInfo);
