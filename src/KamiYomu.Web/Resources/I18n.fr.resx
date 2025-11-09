@@ -241,7 +241,7 @@
     <value>Bienvenue à KamiYomu</value>
   </data>
   <data name="WelcomeToKamiYomuDescription" xml:space="preserve">
-    <value>Votre robot d'exploration et lecteur de mangas auto-hébergé</value>
+    <value>Un robot d'exploration de mangas entièrement auto-hébergé. Pas de serveurs externes, pas de suivi, votre collection reste entièrement sous votre contrôle.</value>
   </data>
   <data name="ConfirmDelete" xml:space="preserve">
     <value>Confirmer la suppression</value>
@@ -477,12 +477,11 @@
   <data name="ModalPosePotentialSecurityPrivacyRisks" xml:space="preserve">
     <value>Présentent des risques potentiels pour la sécurité ou la confidentialité s’ils ne sont pas correctement vérifiés</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ModalKamiYomuNotProvideSupportCommunityAddons" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="ModalKamiYomuNotProvideSupportCommunityAddons" xml:space="preserve">
+    <value>KamiYomu ne prend pas en charge les modules complémentaires de la communauté et n'assume aucune responsabilité quant à leur fonctionnalité, leur sécurité ou leur légalité.</value>
   </data>
-  <data name="ModalReviewAddonRepositoryBeforeInstall" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="ModalReviewAddonRepositoryBeforeInstall" xml:space="preserve">
+    <value>Avant d'installer un module complémentaire : examinez le code source dans son référentiel public, vérifiez qu'il est open source et évitez de l'installer si la source n'est pas disponible ou n'est pas fiable.</value>
   </data>
   <data name="ModalDontShowThisMessageAgain" xml:space="preserve">
     <value>Ne plus afficher ce message</value>
@@ -490,10 +489,11 @@
   <data name="GotIt" xml:space="preserve">
     <value>J'ai compris</value>
   </data>
-  <data name="ModalReviewAddonRepositoryBeforeInstall" xml:space="preserve">
-    <value>Avant d'installer un module complémentaire : examinez le code source dans son référentiel public, vérifiez qu'il est open source et évitez de l'installer si la source n'est pas disponible ou n'est pas fiable.</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="AddonExplorer" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
-  <data name="ModalKamiYomuNotProvideSupportCommunityAddons" xml:space="preserve">
-    <value>KamiYomu ne prend pas en charge les modules complémentaires de la communauté et n'assume aucune responsabilité quant à leur fonctionnalité, leur sécurité ou leur légalité.</value>
+  <data name="AddonExplorer" xml:space="preserve">
+    <value>Explorateur de modules complémentaires</value>
   </data>
 </root>

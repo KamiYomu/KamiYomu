@@ -124,6 +124,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add-on Explorer.
+        /// </summary>
+        internal static string AddonExplorer {
+            get {
+                return ResourceManager.GetString("AddonExplorer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add-ons.
         /// </summary>
         internal static string Addons {
@@ -1141,7 +1150,7 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your self-hosted manga crawler and reader.
+        ///   Looks up a localized string similar to A fully self-hosted manga crawler. No external servers, no tracking — your collection stays entirely under your control..
         /// </summary>
         internal static string WelcomeToKamiYomuDescription {
             get {

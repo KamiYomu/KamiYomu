@@ -241,7 +241,7 @@
     <value>Welcome to KamiYomu</value>
   </data>
   <data name="WelcomeToKamiYomuDescription" xml:space="preserve">
-    <value>Your self-hosted manga crawler and reader</value>
+    <value>A fully self-hosted manga crawler. No external servers, no tracking — your collection stays entirely under your control.</value>
   </data>
   <data name="ConfirmDelete" xml:space="preserve">
     <value>Confirm Delete</value>
@@ -488,5 +488,8 @@
   </data>
   <data name="GotIt" xml:space="preserve">
     <value>Got it</value>
+  </data>
+  <data name="AddonExplorer" xml:space="preserve">
+    <value>Add-on Explorer</value>
   </data>
 </root>

@@ -78,19 +78,6 @@ builder.Services.AddHangfireServer((services, optionActions) =>
     optionActions.Queues = Settings.Worker.MangaDownloadSchedulerQueues;
 });
 
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-builder.Services.Configure<RequestLocalizationOptions>(options =>
-{
-    var supportedCultures = new[] { "en-US", "pt-BR", "fr" }.Select(c => new CultureInfo(c)).ToList();
-
-    options.DefaultRequestCulture = new RequestCulture("en-US");
-    options.SupportedCultures = supportedCultures;
-    options.SupportedUICultures = supportedCultures;
-    options.FallBackToParentCultures = true;
-    options.FallBackToParentUICultures = true;
-    options.ApplyCurrentCultureToResponseHeaders = true;
-});
-
 builder.Services.AddTransient<IAgentCrawlerRepository, AgentCrawlerRepository>();
 builder.Services.AddTransient<IHangfireRepository, HangfireRepository>();
 builder.Services.AddTransient<IChapterDiscoveryJob, ChapterDiscoveryJob>();
@@ -122,14 +109,6 @@ builder.Services.AddHttpClient(Settings.Worker.HttpClientBackground, client =>
 
 var app = builder.Build();
 
-var uiSettings = app.Services.GetService<IOptions<Settings.UI>>();
-var localizer = app.Services.GetRequiredService<IStringLocalizer<I18n>>();
-
-app.UseRequestLocalization(options =>
-{
-    options.DefaultRequestCulture = new RequestCulture(uiSettings.Value.DefaultLanguage);
-});
-
 
 if (!app.Environment.IsDevelopment())
 {
@@ -137,8 +116,21 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseStaticFiles();
-
 app.UseRouting();
+
+var uiSettings = app.Services.GetService<IOptions<Settings.UI>>();
+var supportedCultures = new[] { "en-US", "pt-BR", "fr" };
+
+var localizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture(uiSettings.Value.DefaultLanguage),
+    SupportedCultures = [.. supportedCultures.Select(c => new CultureInfo(c))],
+    SupportedUICultures = [.. supportedCultures.Select(c => new CultureInfo(c))],
+    FallBackToParentCultures = true,
+    FallBackToParentUICultures = true
+};
+
+app.UseRequestLocalization(localizationOptions);
 
 app.UseHangfireDashboard("/worker", new DashboardOptions
 {
@@ -148,7 +140,6 @@ app.UseHangfireDashboard("/worker", new DashboardOptions
     IgnoreAntiforgeryToken = true,
     Authorization = [new AllowAllDashboardAuthorizationFilter()]
 });
-
 
 var hangfireRepository = app.Services.GetService<IHangfireRepository>();
 
