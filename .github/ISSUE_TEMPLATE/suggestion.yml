@@ -1,0 +1,31 @@
+﻿name: Suggestion
+description: Propose a new feature or improvement
+title: "[Suggestion] "
+labels: [enhancement]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 💡 Suggestion
+        Share your idea for improving this project.
+
+  - type: input
+    id: context
+    attributes:
+      label: Context
+      description: What problem would this solve or what use case does it support?
+      placeholder: "e.g. Improve onboarding for new contributors"
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed Solution
+      description: Describe your idea or feature in detail
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: How would this benefit users or developers?
