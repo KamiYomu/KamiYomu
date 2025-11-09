@@ -19,7 +19,7 @@
 	<ItemGroup>
 		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.21" />
 		<PackageReference Include="Hangfire.Storage.SQLite" Version="0.4.2" />
-		<PackageReference Include="KamiYomu.CrawlerAgents.Core" Version="1.1.0-rc1" />
+		<PackageReference Include="KamiYomu.CrawlerAgents.Core" Version="1.1.0" />
 		<PackageReference Include="LiteDB" Version="5.0.21" />
 		<PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.3.0" />
 		<PackageReference Include="Microsoft.Extensions.Http.Polly" Version="9.0.10" />

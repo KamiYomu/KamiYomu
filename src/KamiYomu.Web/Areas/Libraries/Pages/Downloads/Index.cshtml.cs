@@ -15,7 +15,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
         IBackgroundJobClient jobClient,
         IHangfireRepository hangfireRepository) : PageModel
     {
-        public IEnumerable<CrawlerAgent> CrawlerAgents { get; set; }
+        public IEnumerable<CrawlerAgent> CrawlerAgents { get; set; } = [];
 
         [BindProperty]
         public string MangaId { get; set; }

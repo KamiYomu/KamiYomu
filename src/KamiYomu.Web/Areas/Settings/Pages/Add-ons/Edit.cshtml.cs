@@ -23,10 +23,10 @@ namespace KamiYomu.Web.Areas.Settings.Pages.Add_ons
                 Input = new NugetSourceInput
                 {
                     Id = source.Id,
-                    DisplayName = source.DisplayName,
+                    DisplayName = source.DisplayName.Trim(),
                     Url = source.Url.ToString(),
-                    UserName = source.UserName,
-                    Password = source.Password
+                    UserName = source.UserName?.Trim(),
+                    Password = source.Password?.Trim()
                 };
             }
 
@@ -44,8 +44,8 @@ namespace KamiYomu.Web.Areas.Settings.Pages.Add_ons
                 source.Update(
                     Input.DisplayName,
                     new Uri(Input.Url),
-                    Input.UserName ?? "",
-                    Input.Password ?? ""
+                    Input.UserName?.Trim() ?? "",
+                    Input.Password?.Trim() ?? ""
                 );
                 dbContext.NugetSources.Update(source);
             }
@@ -54,8 +54,8 @@ namespace KamiYomu.Web.Areas.Settings.Pages.Add_ons
                 source = new NugetSource(
                     Input.DisplayName,
                     new Uri(Input.Url),
-                    Input.UserName ?? "",
-                    Input.Password ?? ""
+                    Input.UserName?.Trim() ?? "",
+                    Input.Password?.Trim() ?? ""
                 );
                 dbContext.NugetSources.Insert(source);
             }

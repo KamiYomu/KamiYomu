@@ -1,6 +1,6 @@
 ﻿@page
 @using KamiYomu.Web.Extensions
-@model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.RemoveFromLibraryConfirmModel
+@model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.RemoveFromCollectionModel
 @{
     Layout = null;
 }
@@ -24,7 +24,7 @@
 </div>
 <div class="modal-footer">
     <form method="post"
-          hx-post="/Libraries/Downloads/Index?handler=RemoveFromLibrary"
+          hx-post="/Libraries/Downloads/Index?handler=RemoveFromCollection"
           hx-target="#@Model.RefreshElementId"
           hx-swap="innerHTML">
         @Html.AntiForgeryToken()

@@ -56,3 +56,58 @@
         <partial name="_PackageList" model="Model.PackageListViewModel" />
     </div>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="startupDisclaimerModal" tabindex="-1" aria-labelledby="startupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="startupModalLabel"><i class="bi bi-exclamation-circle text-warning me-3"></i> @I18n.AddonDisclaimer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    @I18n.ModalSomeAddonsAvailableMaintainedCommunity
+                </p>
+                <ul>
+                    <li>@I18n.ModalAccessUnofficialThirdPartySourcesManga</li>
+                    <li>@I18n.ModalIncludeCodeBehaviorNotEndorsedKamiYomu</li>
+                    <li>@I18n.ModalPosePotentialSecurityPrivacyRisks</li>
+                </ul>
+                <p>
+                    @I18n.ModalKamiYomuNotProvideSupportCommunityAddons
+                </p>
+                <p>
+                    @I18n.ModalReviewAddonRepositoryBeforeInstall
+                </p>
+                <div class="form-check mt-3">
+                    <input class="form-check-input" type="checkbox" value="" id="disableDisclaimer">
+                    <label class="form-check-label" for="disableDisclaimer">
+                        @I18n.ModalDontShowThisMessageAgain
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Got it</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+          const modalShown = localStorage.getItem('disableDisclaimer') === 'true';
+          if (!modalShown) {
+            const modal = new bootstrap.Modal(document.getElementById('startupDisclaimerModal'));
+            modal.show();
+
+            document.getElementById('disableDisclaimer').addEventListener('change', function () {
+              localStorage.setItem('disableDisclaimer', this.checked.toString());
+            });
+          }
+        });
+    </script>
+}
+

@@ -459,11 +459,41 @@
   <data name="SourceCode" xml:space="preserve">
     <value>Código Fonte</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="CrawlerAgentSavedSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="CrawlerAgentSavedSuccessfully" xml:space="preserve">
     <value>Agente rastreador salvo com sucesso!</value>
+  </data>
+  <data name="AddonDisclaimer" xml:space="preserve">
+    <value>Isenção de responsabilidade adicional</value>
+  </data>
+  <data name="ModalSomeAddonsAvailableMaintainedCommunity" xml:space="preserve">
+    <value>Alguns complementos disponíveis nesta plataforma são desenvolvidos e mantidos pela comunidade. Esses complementos da comunidade podem:</value>
+  </data>
+  <data name="ModalAccessUnofficialThirdPartySourcesManga" xml:space="preserve">
+    <value>Acesse fontes não oficiais ou de terceiros para recuperar conteúdo de mangá</value>
+  </data>
+  <data name="ModalIncludeCodeBehaviorNotEndorsedKamiYomu" xml:space="preserve">
+    <value>Incluir código ou comportamento não revisado ou endossado pela equipe KamiYomu</value>
+  </data>
+  <data name="ModalPosePotentialSecurityPrivacyRisks" xml:space="preserve">
+    <value>Representam riscos potenciais de segurança ou privacidade se não forem devidamente avaliados</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ModalKamiYomuNotProvideSupportCommunityAddons" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ModalReviewAddonRepositoryBeforeInstall" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ModalDontShowThisMessageAgain" xml:space="preserve">
+    <value>Não mostrar esta mensagem novamente</value>
+  </data>
+  <data name="GotIt" xml:space="preserve">
+    <value>Entendi</value>
+  </data>
+  <data name="ModalReviewAddonRepositoryBeforeInstall" xml:space="preserve">
+    <value>Antes de instalar qualquer complemento: revise o código-fonte em seu repositório público, verifique se ele é de código aberto e evite instalar se a fonte não estiver disponível ou não for confiável.</value>
+  </data>
+  <data name="ModalKamiYomuNotProvideSupportCommunityAddons" xml:space="preserve">
+    <value>KamiYomu não fornece suporte para complementos da comunidade e não assume nenhuma responsabilidade por sua funcionalidade, segurança ou legalidade.</value>
   </data>
 </root>

@@ -462,4 +462,31 @@
   <data name="CrawlerAgentSavedSuccessfully" xml:space="preserve">
     <value>Crawler Agent Saved Successfully!</value>
   </data>
+  <data name="AddonDisclaimer" xml:space="preserve">
+    <value>Add-on Disclaimer</value>
+  </data>
+  <data name="ModalSomeAddonsAvailableMaintainedCommunity" xml:space="preserve">
+    <value>Some add-ons available through this platform are developed and maintained by the community. These community add-ons may:</value>
+  </data>
+  <data name="ModalAccessUnofficialThirdPartySourcesManga" xml:space="preserve">
+    <value>Access unofficial or third-party sources to retrieve manga content</value>
+  </data>
+  <data name="ModalIncludeCodeBehaviorNotEndorsedKamiYomu" xml:space="preserve">
+    <value>Include code or behavior not reviewed or endorsed by the KamiYomu team</value>
+  </data>
+  <data name="ModalPosePotentialSecurityPrivacyRisks" xml:space="preserve">
+    <value>Pose potential security or privacy risks if not properly vetted</value>
+  </data>
+  <data name="ModalKamiYomuNotProvideSupportCommunityAddons" xml:space="preserve">
+    <value>KamiYomu does not provide support for community add-ons and assumes no responsibility for their functionality, safety, or legality.</value>
+  </data>
+  <data name="ModalReviewAddonRepositoryBeforeInstall" xml:space="preserve">
+    <value>Before installing any add-on: review the source code in its public repository, verify that it is open source, and avoid installing if the source is unavailable or untrusted.</value>
+  </data>
+  <data name="ModalDontShowThisMessageAgain" xml:space="preserve">
+    <value>Don't show this message again</value>
+  </data>
+  <data name="GotIt" xml:space="preserve">
+    <value>Got it</value>
+  </data>
 </root>

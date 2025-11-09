@@ -4,7 +4,6 @@ using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json.Nodes;
-using static SQLite.SQLite3;
 
 namespace KamiYomu.Web.Infrastructure.Services
 {
@@ -104,9 +103,23 @@ namespace KamiYomu.Web.Infrastructure.Services
             {
                 foreach (var result in searchResults)
                 {
-                    var packageTypes = result?["tags"]?.ToString();
-                    var isCrawlerAgent = packageTypes?.Contains(Settings.Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase) == true;
+                    var tagsNode = result?["tags"];
+                    string[] tags = tagsNode switch
+                    {
+                        JsonArray array => array
+                            .Select(t => t?.ToString())
+                            .Where(t => !string.IsNullOrWhiteSpace(t))
+                            .ToArray(),
 
+                        { } node when !string.IsNullOrWhiteSpace(node.ToString()) =>
+                            node.ToString().Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries),
+
+                        _ => Array.Empty<string>()
+                    };
+
+                    var isCrawlerAgent = tags.Any(tag =>
+                        tag.Equals(Settings.Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase));
+                    
                     if (!isCrawlerAgent)
                         continue;
 

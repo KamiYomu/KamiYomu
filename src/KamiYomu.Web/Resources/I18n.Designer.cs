@@ -115,6 +115,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add-on Disclaimer.
+        /// </summary>
+        internal static string AddonDisclaimer {
+            get {
+                return ResourceManager.GetString("AddonDisclaimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add-ons.
         /// </summary>
         internal static string Addons {
@@ -520,6 +529,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Got it.
+        /// </summary>
+        internal static string GotIt {
+            get {
+                return ResourceManager.GetString("GotIt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Has Terms Accepted?.
         /// </summary>
         internal static string HasTermsAccepted {
@@ -642,6 +660,69 @@ namespace KamiYomu.Web.Resources {
         internal static string Mangas {
             get {
                 return ResourceManager.GetString("Mangas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Access unofficial or third-party sources to retrieve manga content.
+        /// </summary>
+        internal static string ModalAccessUnofficialThirdPartySourcesManga {
+            get {
+                return ResourceManager.GetString("ModalAccessUnofficialThirdPartySourcesManga", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t show this message again.
+        /// </summary>
+        internal static string ModalDontShowThisMessageAgain {
+            get {
+                return ResourceManager.GetString("ModalDontShowThisMessageAgain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include code or behavior not reviewed or endorsed by the KamiYomu team.
+        /// </summary>
+        internal static string ModalIncludeCodeBehaviorNotEndorsedKamiYomu {
+            get {
+                return ResourceManager.GetString("ModalIncludeCodeBehaviorNotEndorsedKamiYomu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to KamiYomu does not provide support for community add-ons and assumes no responsibility for their functionality, safety, or legality..
+        /// </summary>
+        internal static string ModalKamiYomuNotProvideSupportCommunityAddons {
+            get {
+                return ResourceManager.GetString("ModalKamiYomuNotProvideSupportCommunityAddons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pose potential security or privacy risks if not properly vetted.
+        /// </summary>
+        internal static string ModalPosePotentialSecurityPrivacyRisks {
+            get {
+                return ResourceManager.GetString("ModalPosePotentialSecurityPrivacyRisks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Before installing any add-on: review the source code in its public repository, verify that it is open source, and avoid installing if the source is unavailable or untrusted..
+        /// </summary>
+        internal static string ModalReviewAddonRepositoryBeforeInstall {
+            get {
+                return ResourceManager.GetString("ModalReviewAddonRepositoryBeforeInstall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Some add-ons available through this platform are developed and maintained by the community. These community add-ons may:.
+        /// </summary>
+        internal static string ModalSomeAddonsAvailableMaintainedCommunity {
+            get {
+                return ResourceManager.GetString("ModalSomeAddonsAvailableMaintainedCommunity", resourceCulture);
             }
         }
         
