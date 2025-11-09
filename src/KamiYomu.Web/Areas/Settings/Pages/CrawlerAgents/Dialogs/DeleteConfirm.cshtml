@@ -5,8 +5,8 @@
 }
 
 <div class="modal-header">
-    <h5 class="modal-title">Confirm Delete</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@I18n.Close"></button>
+    <h5 class="modal-title">@I18n.ConfirmDelete</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body">
     <p>Are you sure you want to remove <strong>@Model.Agent.AssemblyName</strong>?</p>
@@ -15,7 +15,7 @@
     <form method="post"
           hx-post="/Settings/CrawlerAgents/Dialogs/DeleteConfirm"
           hx-target="#crawler-agent-list"
-          hx-swap="outerHTML">
+          hx-swap="innerHtml">
         <input type="hidden" name="Id" value="@Model.Agent.Id" />
         <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Remove</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

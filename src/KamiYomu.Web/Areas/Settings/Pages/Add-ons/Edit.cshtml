@@ -1,0 +1,56 @@
+﻿@page
+@model KamiYomu.Web.Areas.Settings.Pages.Add_ons.EditModel
+@{
+    ViewData["Title"] = Model.IsEditMode ? "Edit NuGet Source" : "Create NuGet Source";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post" class="mt-4">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Input.Id" />
+
+    <div class="mb-3">
+        <label asp-for="Input.DisplayName" class="form-label">@I18n.DisplayName</label>
+        <input asp-for="Input.DisplayName" class="form-control" />
+        <span asp-validation-for="Input.DisplayName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Input.Url" class="form-label">URL</label>
+        <input asp-for="Input.Url" class="form-control" />
+        <span asp-validation-for="Input.Url" class="text-danger"></span>
+        <div class="form-text">
+            @I18n.Examples:
+            <ul class="mb-0 ps-3">
+                <li><code>https://api.nuget.org/v3/index.json</code> (@I18n.OfficialNuGetOrg)</li>
+                <li><code>https://nuget.pkg.github.com/KamiYomu/index.json</code> (@I18n.FromKamiYomuNuGetRepository)</li>
+                <li><code>https://www.myget.org/F/example/api/v3/index.json</code> (@I18n.MyGetFeed)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Input.UserName" class="form-label">@I18n.UserName</label>
+        <input asp-for="Input.UserName" class="form-control" />
+        <div class="form-text">
+            @I18n.NugetSourceUserNameExplanation
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Input.Password" class="form-label">@I18n.Password / @I18n.APIKey</label>
+        <input asp-for="Input.Password" class="form-control" type="password" />
+        <div class="form-text">
+            @I18n.NugetSourcePasswordExplanation
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        <i class="bi bi-save me-2"></i> @I18n.Save
+    </button>
+    <a asp-page="Index" class="btn btn-secondary ms-2">@I18n.Cancel</a>
+
+</form>
+
+<div asp-validation-summary="All" class="text-danger"></div>

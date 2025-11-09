@@ -19,8 +19,8 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
        
         public void OnGet(Guid? id)
         {
-            CrawlerAgent? agent = id != null ? dbContext.CrawlerAgents.FindById(id) : null;
-            if (agent == null)
+            CrawlerAgent? crawlerAgent = id != null ? dbContext.CrawlerAgents.FindById(id) : null;
+            if (crawlerAgent == null)
             {
                 Input = new CrawlerAgentCreateInputModel();
             }
@@ -29,13 +29,13 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
                 Input = new CrawlerAgentCreateInputModel()
                 {
                     Id = id,
-                    DisplayName = agent.AssemblyName
+                    DisplayName = crawlerAgent.AssemblyName
                 };
             }
 
         }
 
-        public async Task<IActionResult> OnPostUploadAsync(IFormFile agentFile, CancellationToken cancellationToken)
+        public IActionResult OnPostUpload(IFormFile agentFile, CancellationToken cancellationToken)
         {
             if (agentFile == null || agentFile.Length == 0)
                 return BadRequest("No file uploaded.");
@@ -57,13 +57,13 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
             dbContext.CrawlerAgentFileStorage.Upload(tempUploadId, agentFile.FileName, agentFile.OpenReadStream());
             var fileStorage = dbContext.CrawlerAgentFileStorage.FindById(tempUploadId);
             fileStorage.SaveAs(tempFilePath);
-            var agentTempDir = Path.Combine(Path.GetTempPath(), CrawlerAgent.GetAgentDirName(agentFile.FileName));
+            var crawlerAgentTempDir = Path.Combine(Path.GetTempPath(), CrawlerAgent.GetAgentDirName(agentFile.FileName));
             var dllPath = "";
             if (isNuget && NugetHelper.IsNugetPackage(tempFilePath))
             {
-                ZipFile.ExtractToDirectory(tempFilePath, agentTempDir, true);
+                ZipFile.ExtractToDirectory(tempFilePath, crawlerAgentTempDir, true);
 
-                dllPath = Directory.EnumerateFiles(agentTempDir, searchPattern: "*.dll", SearchOption.AllDirectories)
+                dllPath = Directory.EnumerateFiles(crawlerAgentTempDir, searchPattern: "*.dll", SearchOption.AllDirectories)
                                    .FirstOrDefault();
 
                 if (dllPath == null)
@@ -73,8 +73,8 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
             }
             else
             {
-                Directory.CreateDirectory(agentTempDir);
-                dllPath = Path.Combine(agentTempDir, Path.GetFileName(agentFile.FileName));
+                Directory.CreateDirectory(crawlerAgentTempDir);
+                dllPath = Path.Combine(crawlerAgentTempDir, Path.GetFileName(agentFile.FileName));
                 fileStorage.SaveAs(dllPath);
             }
 
@@ -95,7 +95,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
             });
         }
 
-        public async Task<IActionResult> OnPostSaveAsync()
+        public IActionResult OnPostSave()
         {
             var fileStorage = dbContext.CrawlerAgentFileStorage.FindById(Input.TempFileId);
 

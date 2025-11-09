@@ -6,10 +6,13 @@ using KamiYomu.Web.HealthCheckers;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
+using KamiYomu.Web.Infrastructure.Services;
+using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Middlewares;
 using KamiYomu.Web.Worker;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using MonkeyCache;
 using MonkeyCache.LiteDB;
@@ -41,6 +44,7 @@ builder.Services.Configure<Settings.Worker>(builder.Configuration.GetSection("Se
 builder.Services.Configure<Settings.UI>(builder.Configuration.GetSection("Settings:UI"));
 
 builder.Services.AddSingleton<CacheContext>();
+builder.Services.AddSingleton<ImageDbContext>(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb")));
 builder.Services.AddScoped<DbContext>(_ => new DbContext(builder.Configuration.GetConnectionString("AgentDb")));
 builder.Services.AddHangfire(configuration => configuration.UseSimpleAssemblyNameTypeSerializer()
                                                            .UseRecommendedSerializerSettings()
@@ -53,33 +57,33 @@ builder.Services.AddHangfire(configuration => configuration.UseSimpleAssemblyNam
 builder.Services.AddHangfireServer((services, optionActions) =>
 {
     var workerOptions = services.GetService<IOptions<Settings.Worker>>();
-    optionActions.ServerName = nameof(Settings.Worker.CrawlerQueues);
+    optionActions.ServerName = nameof(Settings.Worker.DownloadChapterQueues);
     optionActions.WorkerCount = Environment.ProcessorCount * workerOptions.Value.WorkerCount;
-    optionActions.Queues = Settings.Worker.CrawlerQueues;
-});
-
-builder.Services.AddHangfireServer((services, optionActions)  =>
-{
-    var workerOptions = services.GetService<IOptions<Settings.Worker>>();
-    optionActions.ServerName = nameof(Settings.Worker.SearchQueues);
-    optionActions.WorkerCount = Environment.ProcessorCount * workerOptions.Value.WorkerCount;
-    optionActions.Queues = Settings.Worker.SearchQueues;
+    optionActions.Queues = Settings.Worker.DownloadChapterQueues;
 });
 
 builder.Services.AddHangfireServer((services, optionActions) =>
 {
     var workerOptions = services.GetService<IOptions<Settings.Worker>>();
-    optionActions.ServerName = nameof(Settings.Worker.FetchMangaQueues);
+    optionActions.ServerName = nameof(Settings.Worker.DiscoveryNewChapterQueues);
     optionActions.WorkerCount = Environment.ProcessorCount * workerOptions.Value.WorkerCount;
-    optionActions.Queues = Settings.Worker.FetchMangaQueues;
+    optionActions.Queues = [Settings.Worker.DiscoveryNewChapterQueues];
 });
 
-
+builder.Services.AddHangfireServer((services, optionActions) =>
+{
+    var workerOptions = services.GetService<IOptions<Settings.Worker>>();
+    optionActions.ServerName = nameof(Settings.Worker.MangaDownloadSchedulerQueues);
+    optionActions.WorkerCount = Environment.ProcessorCount * workerOptions.Value.WorkerCount;
+    optionActions.Queues = Settings.Worker.MangaDownloadSchedulerQueues;
+});
 
 builder.Services.AddTransient<IAgentCrawlerRepository, AgentCrawlerRepository>();
 builder.Services.AddTransient<IHangfireRepository, HangfireRepository>();
+builder.Services.AddTransient<IChapterDiscoveryJob, ChapterDiscoveryJob>();
 builder.Services.AddTransient<IChapterDownloaderJob, ChapterDownloaderJob>();
 builder.Services.AddTransient<IMangaDownloaderJob, MangaDownloaderJob>();
+builder.Services.AddTransient<INugetService, NugetService>();
 
 builder.Services.AddHealthChecks()
                 .AddCheck<DatabaseHealthCheck>(nameof(DatabaseHealthCheck), tags: ["storage"])
@@ -105,6 +109,15 @@ builder.Services.AddHttpClient(Settings.Worker.HttpClientBackground, client =>
 
 var app = builder.Build();
 
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+}
+
+app.UseStaticFiles();
+app.UseRouting();
+
 var uiSettings = app.Services.GetService<IOptions<Settings.UI>>();
 var supportedCultures = new[] { "en-US", "pt-BR", "fr" };
 
@@ -119,22 +132,22 @@ var localizationOptions = new RequestLocalizationOptions
 
 app.UseRequestLocalization(localizationOptions);
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-}
-
-app.UseStaticFiles();
-
-app.UseRouting();
-
 app.UseHangfireDashboard("/worker", new DashboardOptions
 {
     DisplayStorageConnectionString = false,
     DashboardTitle = I18n.BackgroundJobs,
     FaviconPath = "/images/favicon.ico",
+    IgnoreAntiforgeryToken = true,
     Authorization = [new AllowAllDashboardAuthorizationFilter()]
 });
+
+var hangfireRepository = app.Services.GetService<IHangfireRepository>();
+
+RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(
+    nameof(ChapterDiscoveryJob),
+    Settings.Worker.DiscoveryNewChapterQueues,
+    (job) => job.DispatchAsync(null!, CancellationToken.None),
+    Cron.Hourly());
 
 app.MapRazorPages();
 app.UseMiddleware<ExceptionNotificationMiddleware>();

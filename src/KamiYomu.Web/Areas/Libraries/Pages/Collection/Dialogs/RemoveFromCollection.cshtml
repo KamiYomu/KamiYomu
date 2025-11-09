@@ -1,21 +1,22 @@
 ﻿@page
-@model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.RemoveFromLibraryConfirmModel
+@using KamiYomu.Web.Extensions
+@model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.RemoveFromCollectionModel
 @{
     Layout = null;
 }
 
 <div class="modal-header">
     <h5 class="modal-title">@I18n.ConfirmDelete</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@I18n.Close"></button>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body text-center">
-    <img src="@Model.Library.Manga.CoverUrl"
+    <img src="@Model.Library.Manga.CoverUrl.ToInternalImageUrl()"
          alt="@Model.Library.Manga.Title cover"
          class="img-fluid rounded mb-3 shadow-sm"
          style="max-height: 200px; object-fit: cover;" />
 
     <p class="fs-5">
-        Are you sure you want to remove <strong>@Model.Library.Manga.Title</strong> from your library?
+        @I18n.YouAreAboutToDeleteThisMangaFromYourCollection
     </p>
     <p class="text-muted">
         @I18n.AllchapterWillBeTerminated
@@ -23,9 +24,11 @@
 </div>
 <div class="modal-footer">
     <form method="post"
-          hx-post="/Libraries/Downloads/Index?handler=RemoveFromLibrary"
+          hx-post="/Libraries/Downloads/Index?handler=RemoveFromCollection"
           hx-target="#@Model.RefreshElementId"
-          hx-swap="outerHTML">
+          hx-swap="innerHTML">
+        @Html.AntiForgeryToken()
+
         <input type="hidden" name="MangaId" value="@Model.Library.Manga.Id" />
         <input type="hidden" name="AgentId" value="@Model.Library.AgentCrawler.Id" />
 

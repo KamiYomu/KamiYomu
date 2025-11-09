@@ -1,4 +1,5 @@
 ﻿@page
+@using KamiYomu.Web.Extensions
 @model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.MangaDetailsModel
 @{
     Layout = null;
@@ -8,7 +9,7 @@
     var needsExpand = desc?.Length > 50;
 }
 <div class="modal-header">
-    <h5 class="modal-title">Manga Details</h5>
+    <h5 class="modal-title">@I18n.CrawlerAgentDetails</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body">
@@ -16,8 +17,8 @@
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="border rounded shadow-sm overflow-hidden">
-                    <a href="@Model.Manga.WebsiteUrl" alt="@Model.Manga.Title" target="_blank">
-                        <img src="@Model.Manga.CoverUrl" alt="@Model.Manga.Title"
+                    <a href="@Model.Manga.WebSiteUrl" alt="@Model.Manga.Title" target="_blank">
+                        <img src="@Model.Manga.CoverUrl.ToInternalImageUrl()" alt="@Model.Manga.Title"
                              class="img-fluid w-100" style="object-fit: cover; max-height: 400px;" />
                     </a>
                 </div>
@@ -82,8 +83,8 @@
                     </div>
                     <div class="col-sm-12">
                         <strong>Website:</strong>
-                        <a href="@Model.Manga.WebsiteUrl" target="_blank" class="text-decoration-none">
-                            @Model.Manga.WebsiteUrl
+                        <a href="@Model.Manga.WebSiteUrl" target="_blank" class="text-decoration-none">
+                            @Model.Manga.WebSiteUrl
                         </a>
                     </div>
                     <div class="col-sm-6">

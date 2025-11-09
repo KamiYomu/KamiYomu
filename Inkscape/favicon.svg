@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    version="1.1"
-   width="200"
-   height="150"
+   width="64"
+   height="64"
    id="svg634"
    sodipodi:docname="favicon.svg"
    inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   inkscape:export-filename="favicon.png"
+   inkscape:export-xdpi="30.719999"
+   inkscape:export-ydpi="30.719999"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#">
   <sodipodi:namedview
      id="namedview8"
      pagecolor="#ffffff"
@@ -20,9 +25,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
-     inkscape:zoom="3.34704"
-     inkscape:cx="162.97983"
-     inkscape:cy="68.269277"
+     inkscape:zoom="8.5363647"
+     inkscape:cx="53.008513"
+     inkscape:cy="41.059633"
      inkscape:window-width="1920"
      inkscape:window-height="1111"
      inkscape:window-x="-9"
@@ -43,7 +48,7 @@
        style="fill:#1a1a1a" />
     <g
        id="g2619"
-       transform="matrix(-0.72054896,0,0,0.69240732,292.8434,-119.49076)"
+       transform="matrix(-0.22735866,0,0,0.21847897,92.848909,-29.368705)"
        class="UnoptimicedTransforms"
        style="fill:#1a1a1a"
        inkscape:export-filename="..\KamiYomu.Web\wwwroot\images\favicon.png"
@@ -78,4 +83,23 @@
          sodipodi:nodetypes="cccccccccccccccccccc" />
     </g>
   </g>
+  <metadata
+     id="metadata870">
+    <rdf:RDF>
+      <cc:License
+         rdf:about="http://creativecommons.org/publicdomain/zero/1.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+      <cc:Work
+         rdf:about="">
+        <cc:license
+           rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
 </svg>

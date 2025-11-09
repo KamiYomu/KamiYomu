@@ -18,7 +18,7 @@ namespace KamiYomu.Web.Pages
         }
 
 
-        public IActionResult OnPostLanguageSet()
+        public IActionResult OnPostLanguageSet(string returnUrl = null)
         {
             var culture = CultureInfo.GetCultureInfo(Culture);
 
@@ -45,7 +45,7 @@ namespace KamiYomu.Web.Pages
             CultureInfo.CurrentCulture =
             CultureInfo.CurrentUICulture = culture;
 
-            return new EmptyResult();
+            return Redirect(returnUrl ?? Url.Page("/Index", new { area = "" }));
         }
     }
 }

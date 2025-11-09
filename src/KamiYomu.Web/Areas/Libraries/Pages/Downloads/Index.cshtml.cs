@@ -15,7 +15,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
         IBackgroundJobClient jobClient,
         IHangfireRepository hangfireRepository) : PageModel
     {
-        public IEnumerable<CrawlerAgent> CrawlerAgents { get; set; }
+        public IEnumerable<CrawlerAgent> CrawlerAgents { get; set; } = [];
 
         [BindProperty]
         public string MangaId { get; set; }
@@ -28,7 +28,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
             CrawlerAgents = dbContext.CrawlerAgents.FindAll();
         }
 
-        public async Task<IActionResult> OnPostAddToLibraryAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> OnPostAddToCollectionAsync(CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
             {
@@ -38,7 +38,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 
             var manga = await agentCrawlerRepository.GetMangaAsync(agentCrawler, MangaId, cancellationToken);
 
-            var library = new Entities.Library(agentCrawler, manga);
+            var library = new Library(agentCrawler, manga);
 
             dbContext.Libraries.Insert(library);
 
@@ -50,7 +50,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 
             var backgroundJobId = jobClient.Create<IMangaDownloaderJob>(
                 p => p.DispatchAsync(library.Id, downloadRecord.Id, manga.Title, null!, CancellationToken.None),
-                hangfireRepository.GetLeastLoadedFetchMangaQueue()
+                hangfireRepository.GetLeastLoadedMangaDownloadSchedulerQueue()
             );
 
             downloadRecord.Schedule(backgroundJobId);
@@ -60,7 +60,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
             return Partial("_LibraryCard", library);
         }
 
-        public IActionResult OnPostRemoveFromLibrary()
+        public IActionResult OnPostRemoveFromCollection()
         {
             if (!ModelState.IsValid)
             {

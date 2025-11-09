@@ -12,9 +12,9 @@
         <a class="nav-link d-flex align-items-center gap-2"
            aria-current="page"
            asp-area="Libraries"
-           asp-page="/Mangas/Index">
+           asp-page="/Collection/Index">
             <i class="bi bi-book" aria-hidden="true"></i>
-            @I18n.Mangas
+            @I18n.YourCollection
         </a>
     </li>
     <li class="nav-item">
@@ -40,6 +40,14 @@
             @I18n.CrawlerAgents
         </a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link d-flex align-items-center gap-2"
+           asp-area="Settings"
+           asp-page="/Add-ons/Index">
+            <i class="bi bi-node-plus-fill" aria-hidden="true"></i>
+            @I18n.Addons
+        </a>
+    </li>
 
     <li class="nav-item">
         <a class="nav-link d-flex align-items-center gap-2" href="~/Worker">
@@ -59,9 +67,4 @@
 </ul>
 <div class="nav flex-column mb-auto m-1 mb-3">
     <partial name="_LanguageSelector" />
-</div>
-<div class="nav flex-column mb-auto m-3 overflow-hidden">
-    <small class="text-secondary">
-        @Html.Raw(typeof(Program).Assembly.GetCustomAttribute<System.Reflection.AssemblyInformationalVersionAttribute>()?.InformationalVersion)
-    </small>
 </div>

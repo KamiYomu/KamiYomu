@@ -2,17 +2,16 @@
 
 <div class="dropdown">
     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-        <i class="bi bi-globe"></i> @(CultureInfo.CurrentCulture.IsNeutralCulture ? I18n.Language : @CultureInfo.CurrentCulture.NativeName)
+        <i class="bi bi-globe"></i> @(CultureInfo.CurrentCulture.IsNeutralCulture? I18n.Language: @CultureInfo.CurrentCulture.NativeName)
     </button>
     <ul class="dropdown-menu">
         <li>
             <form method="post"
-                  hx-post="/?handler=LanguageSet"
-                  hx-trigger="submit"
-                  hx-swap="none"
-                  hx-on="htmx:afterRequest: () => window.location.reload()"
-                  hx-params="*">
-
+                  asp-page="/Index"
+                  asp-page-handler="LanguageSet"
+                  asp-route-area=""
+                  asp-route-returnUrl="@Context.Request.Path"
+                  novalidate>
                 <input type="hidden" name="Culture" value="@CultureInfo.GetCultureInfo("en-US").Name" />
                 <button type="submit" class="dropdown-item">
                     🇺🇸 @CultureInfo.GetCultureInfo("en-US").NativeName
@@ -21,11 +20,11 @@
         </li>
         <li>
             <form method="post"
-                  hx-post="/?handler=LanguageSet"
-                  hx-trigger="submit"
-                  hx-swap="none"
-                  hx-on="htmx:afterRequest: () => window.location.reload()"
-                  hx-params="*">
+                  asp-page="/Index"
+                  asp-page-handler="LanguageSet"
+                  asp-route-area=""
+                  asp-route-returnUrl="@Context.Request.Path"
+                  novalidate>
                 <input type="hidden" name="Culture" value="@CultureInfo.GetCultureInfo("pt-BR").Name" />
                 <button type="submit" class="dropdown-item">
                     🇧🇷 @CultureInfo.GetCultureInfo("pt-BR").NativeName
@@ -34,11 +33,11 @@
         </li>
         <li>
             <form method="post"
-                  hx-post="/?handler=LanguageSet"
-                  hx-trigger="submit"
-                  hx-swap="none"
-                  hx-on="htmx:afterRequest: window.location.reload()"
-                  hx-params="*">
+                  asp-page="/Index"
+                  asp-page-handler="LanguageSet"
+                  asp-route-area=""
+                  asp-route-returnUrl="@Context.Request.Path"
+                  novalidate>
                 <input type="hidden" name="Culture" value="@CultureInfo.GetCultureInfo("fr").Name" />
                 <button type="submit" class="dropdown-item">
                     🇫🇷 @CultureInfo.GetCultureInfo("fr").NativeName

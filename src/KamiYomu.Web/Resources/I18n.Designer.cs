@@ -97,11 +97,65 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Crawler Agent To Get Started.
+        /// </summary>
+        internal static string AddCrawlerAgentToGetStarted {
+            get {
+                return ResourceManager.GetString("AddCrawlerAgentToGetStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add NuGet Sources.
+        /// </summary>
+        internal static string AddNuGetSources {
+            get {
+                return ResourceManager.GetString("AddNuGetSources", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add-on Disclaimer.
+        /// </summary>
+        internal static string AddonDisclaimer {
+            get {
+                return ResourceManager.GetString("AddonDisclaimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add-on Explorer.
+        /// </summary>
+        internal static string AddonExplorer {
+            get {
+                return ResourceManager.GetString("AddonExplorer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add-ons.
+        /// </summary>
+        internal static string Addons {
+            get {
+                return ResourceManager.GetString("Addons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add To Library.
         /// </summary>
         internal static string AddToLibrary {
             get {
                 return ResourceManager.GetString("AddToLibrary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add To Your Collection.
+        /// </summary>
+        internal static string AddToYourCollection {
+            get {
+                return ResourceManager.GetString("AddToYourCollection", resourceCulture);
             }
         }
         
@@ -124,11 +178,29 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to API Key.
+        /// </summary>
+        internal static string APIKey {
+            get {
+                return ResourceManager.GetString("APIKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Assembly Properties.
         /// </summary>
         internal static string AssemblyProperties {
             get {
                 return ResourceManager.GetString("AssemblyProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Authors.
+        /// </summary>
+        internal static string Authors {
+            get {
+                return ResourceManager.GetString("Authors", resourceCulture);
             }
         }
         
@@ -192,6 +264,24 @@ namespace KamiYomu.Web.Resources {
         internal static string Close {
             get {
                 return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collection.
+        /// </summary>
+        internal static string Collection {
+            get {
+                return ResourceManager.GetString("Collection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collections.
+        /// </summary>
+        internal static string Collections {
+            get {
+                return ResourceManager.GetString("Collections", resourceCulture);
             }
         }
         
@@ -264,6 +354,15 @@ namespace KamiYomu.Web.Resources {
         internal static string CrawlerAgents {
             get {
                 return ResourceManager.GetString("CrawlerAgents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crawler Agent Saved Successfully!.
+        /// </summary>
+        internal static string CrawlerAgentSavedSuccessfully {
+            get {
+                return ResourceManager.GetString("CrawlerAgentSavedSuccessfully", resourceCulture);
             }
         }
         
@@ -394,6 +493,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Examples.
+        /// </summary>
+        internal static string Examples {
+            get {
+                return ResourceManager.GetString("Examples", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to External Links.
         /// </summary>
         internal static string ExternalLinks {
@@ -421,6 +529,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to From KamiYomu NuGet Repository - requires api key.
+        /// </summary>
+        internal static string FromKamiYomuNuGetRepository {
+            get {
+                return ResourceManager.GetString("FromKamiYomuNuGetRepository", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Got it.
+        /// </summary>
+        internal static string GotIt {
+            get {
+                return ResourceManager.GetString("GotIt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Has Terms Accepted?.
         /// </summary>
         internal static string HasTermsAccepted {
@@ -444,6 +570,15 @@ namespace KamiYomu.Web.Resources {
         internal static string InformationalVersion {
             get {
                 return ResourceManager.GetString("InformationalVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install.
+        /// </summary>
+        internal static string Install {
+            get {
+                return ResourceManager.GetString("Install", resourceCulture);
             }
         }
         
@@ -480,6 +615,15 @@ namespace KamiYomu.Web.Resources {
         internal static string Library {
             get {
                 return ResourceManager.GetString("Library", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License.
+        /// </summary>
+        internal static string License {
+            get {
+                return ResourceManager.GetString("License", resourceCulture);
             }
         }
         
@@ -529,6 +673,78 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Access unofficial or third-party sources to retrieve manga content.
+        /// </summary>
+        internal static string ModalAccessUnofficialThirdPartySourcesManga {
+            get {
+                return ResourceManager.GetString("ModalAccessUnofficialThirdPartySourcesManga", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t show this message again.
+        /// </summary>
+        internal static string ModalDontShowThisMessageAgain {
+            get {
+                return ResourceManager.GetString("ModalDontShowThisMessageAgain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include code or behavior not reviewed or endorsed by the KamiYomu team.
+        /// </summary>
+        internal static string ModalIncludeCodeBehaviorNotEndorsedKamiYomu {
+            get {
+                return ResourceManager.GetString("ModalIncludeCodeBehaviorNotEndorsedKamiYomu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to KamiYomu does not provide support for community add-ons and assumes no responsibility for their functionality, safety, or legality..
+        /// </summary>
+        internal static string ModalKamiYomuNotProvideSupportCommunityAddons {
+            get {
+                return ResourceManager.GetString("ModalKamiYomuNotProvideSupportCommunityAddons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pose potential security or privacy risks if not properly vetted.
+        /// </summary>
+        internal static string ModalPosePotentialSecurityPrivacyRisks {
+            get {
+                return ResourceManager.GetString("ModalPosePotentialSecurityPrivacyRisks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Before installing any add-on: review the source code in its public repository, verify that it is open source, and avoid installing if the source is unavailable or untrusted..
+        /// </summary>
+        internal static string ModalReviewAddonRepositoryBeforeInstall {
+            get {
+                return ResourceManager.GetString("ModalReviewAddonRepositoryBeforeInstall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Some add-ons available through this platform are developed and maintained by the community. These community add-ons may:.
+        /// </summary>
+        internal static string ModalSomeAddonsAvailableMaintainedCommunity {
+            get {
+                return ResourceManager.GetString("ModalSomeAddonsAvailableMaintainedCommunity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MyGet feed.
+        /// </summary>
+        internal static string MyGetFeed {
+            get {
+                return ResourceManager.GetString("MyGetFeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         internal static string Name {
@@ -538,11 +754,74 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Add-ons Available.
+        /// </summary>
+        internal static string NoAddonsAvailable {
+            get {
+                return ResourceManager.GetString("NoAddonsAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Crawler Agent.
+        /// </summary>
+        internal static string NoCrawlerAgent {
+            get {
+                return ResourceManager.GetString("NoCrawlerAgent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Sources.
+        /// </summary>
+        internal static string NoSources {
+            get {
+                return ResourceManager.GetString("NoSources", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Required for authenticated sources. Enter either the password for basic auth or an API key for token-based access. This will be used to fetch packages securely..
+        /// </summary>
+        internal static string NugetSourcePasswordExplanation {
+            get {
+                return ResourceManager.GetString("NugetSourcePasswordExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Optional. Provide a username if the NuGet source requires basic authentication. Leave blank for public feeds or API key-only access..
+        /// </summary>
+        internal static string NugetSourceUserNameExplanation {
+            get {
+                return ResourceManager.GetString("NugetSourceUserNameExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to official NuGet.org.
+        /// </summary>
+        internal static string OfficialNuGetOrg {
+            get {
+                return ResourceManager.GetString("OfficialNuGetOrg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Library.
         /// </summary>
         internal static string OpenLibrary {
             get {
                 return ResourceManager.GetString("OpenLibrary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Your Collection.
+        /// </summary>
+        internal static string OpenYourCollection {
+            get {
+                return ResourceManager.GetString("OpenYourCollection", resourceCulture);
             }
         }
         
@@ -570,6 +849,15 @@ namespace KamiYomu.Web.Resources {
         internal static string PageSubtitleLibrary {
             get {
                 return ResourceManager.GetString("PageSubtitleLibrary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        internal static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
             }
         }
         
@@ -610,11 +898,38 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove From Your Collection.
+        /// </summary>
+        internal static string RemoveFromYourCollection {
+            get {
+                return ResourceManager.GetString("RemoveFromYourCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         internal static string Save {
             get {
                 return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        internal static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search Crawler Agents.
+        /// </summary>
+        internal static string SearchCrawlerAgents {
+            get {
+                return ResourceManager.GetString("SearchCrawlerAgents", resourceCulture);
             }
         }
         
@@ -628,6 +943,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to See Your Collection.
+        /// </summary>
+        internal static string SeeYourCollection {
+            get {
+                return ResourceManager.GetString("SeeYourCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select Crawler Agent.
         /// </summary>
         internal static string SelectCrawlerAgent {
@@ -637,11 +961,38 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select Source.
+        /// </summary>
+        internal static string SelectSource {
+            get {
+                return ResourceManager.GetString("SelectSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         internal static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source Code.
+        /// </summary>
+        internal static string SourceCode {
+            get {
+                return ResourceManager.GetString("SourceCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sources.
+        /// </summary>
+        internal static string Sources {
+            get {
+                return ResourceManager.GetString("Sources", resourceCulture);
             }
         }
         
@@ -687,6 +1038,24 @@ namespace KamiYomu.Web.Resources {
         internal static string ToggleTheme {
             get {
                 return ResourceManager.GetString("ToggleTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Downloads.
+        /// </summary>
+        internal static string TotalDownloads {
+            get {
+                return ResourceManager.GetString("TotalDownloads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Name.
+        /// </summary>
+        internal static string UserName {
+            get {
+                return ResourceManager.GetString("UserName", resourceCulture);
             }
         }
         
@@ -781,7 +1150,7 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your self-hosted manga crawler and reader.
+        ///   Looks up a localized string similar to A fully self-hosted manga crawler. No external servers, no tracking — your collection stays entirely under your control..
         /// </summary>
         internal static string WelcomeToKamiYomuDescription {
             get {
@@ -795,6 +1164,24 @@ namespace KamiYomu.Web.Resources {
         internal static string Year {
             get {
                 return ResourceManager.GetString("Year", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this manga from your collection? This action cannot be undone. .
+        /// </summary>
+        internal static string YouAreAboutToDeleteThisMangaFromYourCollection {
+            get {
+                return ResourceManager.GetString("YouAreAboutToDeleteThisMangaFromYourCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Collection.
+        /// </summary>
+        internal static string YourCollection {
+            get {
+                return ResourceManager.GetString("YourCollection", resourceCulture);
             }
         }
     }

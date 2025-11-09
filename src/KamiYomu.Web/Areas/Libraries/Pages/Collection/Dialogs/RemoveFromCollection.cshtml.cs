@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs
 {
-    public class RemoveFromLibraryConfirmModel(DbContext dbContext) : PageModel
+    public class RemoveFromCollectionModel(DbContext dbContext) : PageModel
     {
 
         public Guid LibraryId { get; set; }

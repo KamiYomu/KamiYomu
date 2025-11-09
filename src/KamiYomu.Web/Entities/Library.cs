@@ -1,5 +1,6 @@
 ﻿using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Infrastructure.Contexts;
+using System.Xml.Linq;
 
 namespace KamiYomu.Web.Entities
 {

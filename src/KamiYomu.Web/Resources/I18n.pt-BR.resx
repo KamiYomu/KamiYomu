@@ -241,7 +241,7 @@
     <value>Bem-vindo ao KamiYomu</value>
   </data>
   <data name="WelcomeToKamiYomuDescription" xml:space="preserve">
-    <value>Seu rastreador e leitor de mangá auto-hospedado</value>
+    <value>Um rastreador de mangá totalmente auto-hospedado. Sem servidores externos, sem rastreamento — sua coleção permanece inteiramente sob seu controle.</value>
   </data>
   <data name="ConfirmDelete" xml:space="preserve">
     <value>Confirmar exclusão</value>
@@ -360,8 +360,140 @@
   <data name="Mangas" xml:space="preserve">
     <value>Mangas</value>
   </data>
+  <data name="LogStream" xml:space="preserve">
+    <value>Fluxo de registros</value>
+  </data>
+  <data name="YourCollection" xml:space="preserve">
+    <value>Sua coleção</value>
+  </data>
+  <data name="Collection" xml:space="preserve">
+    <value>Coleção</value>
+  </data>
+  <data name="Collections" xml:space="preserve">
+    <value>Coleções</value>
+  </data>
+  <data name="AddToYourCollection" xml:space="preserve">
+    <value>Adicione à sua coleção</value>
+  </data>
+  <data name="RemoveFromYourCollection" xml:space="preserve">
+    <value>Remover da sua coleção</value>
+  </data>
+  <data name="OpenYourCollection" xml:space="preserve">
+    <value>Abra sua coleção</value>
+  </data>
+  <data name="SeeYourCollection" xml:space="preserve">
+    <value>Veja sua coleção</value>
+  </data>
+  <data name="YouAreAboutToDeleteThisMangaFromYourCollection" xml:space="preserve">
+    <value>Tem certeza de que deseja excluir este mangá da sua coleção? Esta ação não pode ser desfeita. </value>
+  </data>
+  <data name="Addons" xml:space="preserve">
+    <value>Extensões</value>
+  </data>
+  <data name="NoCrawlerAgent" xml:space="preserve">
+    <value>Nenhum agente rastreador</value>
+  </data>
+  <data name="AddCrawlerAgentToGetStarted" xml:space="preserve">
+    <value>Adicione o agente rastreador para começar</value>
+  </data>
+  <data name="SearchCrawlerAgents" xml:space="preserve">
+    <value>Agentes rastreadores de pesquisa</value>
+  </data>
+  <data name="AddNuGetSources" xml:space="preserve">
+    <value>Adicionar fontes do NuGet</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Procurar</value>
+  </data>
+  <data name="NoAddonsAvailable" xml:space="preserve">
+    <value>Nenhuma extensão disponível</value>
+  </data>
+  <data name="Install" xml:space="preserve">
+    <value>Instalar</value>
+  </data>
+  <data name="License" xml:space="preserve">
+    <value>Licença</value>
+  </data>
+  <data name="Authors" xml:space="preserve">
+    <value>Autores</value>
+  </data>
+  <data name="TotalDownloads" xml:space="preserve">
+    <value>Total de downloads</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>Nome de usuário</value>
+  </data>
+  <data name="Sources" xml:space="preserve">
+    <value>Fontes</value>
+  </data>
+  <data name="SelectSource" xml:space="preserve">
+    <value>Selecione a fonte</value>
+  </data>
+  <data name="NoSources" xml:space="preserve">
+    <value>Sem fontes</value>
+  </data>
+  <data name="Examples" xml:space="preserve">
+    <value>Exemplos</value>
+  </data>
+  <data name="NugetSourceUserNameExplanation" xml:space="preserve">
+    <value>Opcional. Forneça um nome de usuário se a origem do NuGet exigir autenticação básica. Deixe em branco para feeds públicos ou acesso somente com chave de API.</value>
+  </data>
+  <data name="NugetSourcePasswordExplanation" xml:space="preserve">
+    <value>Obrigatório para fontes autenticadas. Insira a senha para autenticação básica ou uma chave de API para acesso baseado em token. Isso será usado para buscar pacotes com segurança.</value>
+  </data>
+  <data name="APIKey" xml:space="preserve">
+    <value>Chave de API</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Senha</value>
+  </data>
+  <data name="OfficialNuGetOrg" xml:space="preserve">
+    <value>NuGet.org oficial</value>
+  </data>
+  <data name="FromKamiYomuNuGetRepository" xml:space="preserve">
+    <value>Do repositório KamiYomu NuGet - requer chave de API</value>
+  </data>
+  <data name="MyGetFeed" xml:space="preserve">
+    <value>Meu feed de obtenção</value>
+  </data>
+  <data name="SourceCode" xml:space="preserve">
+    <value>Código Fonte</value>
+  </data>
+  <data name="CrawlerAgentSavedSuccessfully" xml:space="preserve">
+    <value>Agente rastreador salvo com sucesso!</value>
+  </data>
+  <data name="AddonDisclaimer" xml:space="preserve">
+    <value>Isenção de responsabilidade adicional</value>
+  </data>
+  <data name="ModalSomeAddonsAvailableMaintainedCommunity" xml:space="preserve">
+    <value>Alguns complementos disponíveis nesta plataforma são desenvolvidos e mantidos pela comunidade. Esses complementos da comunidade podem:</value>
+  </data>
+  <data name="ModalAccessUnofficialThirdPartySourcesManga" xml:space="preserve">
+    <value>Acesse fontes não oficiais ou de terceiros para recuperar conteúdo de mangá</value>
+  </data>
+  <data name="ModalIncludeCodeBehaviorNotEndorsedKamiYomu" xml:space="preserve">
+    <value>Incluir código ou comportamento não revisado ou endossado pela equipe KamiYomu</value>
+  </data>
+  <data name="ModalPosePotentialSecurityPrivacyRisks" xml:space="preserve">
+    <value>Representam riscos potenciais de segurança ou privacidade se não forem devidamente avaliados</value>
+  </data>
+  <data name="ModalKamiYomuNotProvideSupportCommunityAddons" xml:space="preserve">
+    <value>KamiYomu não fornece suporte para complementos da comunidade e não assume nenhuma responsabilidade por sua funcionalidade, segurança ou legalidade.</value>
+  </data>
+  <data name="ModalReviewAddonRepositoryBeforeInstall" xml:space="preserve">
+    <value>Antes de instalar qualquer complemento: revise o código-fonte em seu repositório público, verifique se ele é de código aberto e evite instalar se a fonte não estiver disponível ou não for confiável.</value>
+  </data>
+  <data name="ModalDontShowThisMessageAgain" xml:space="preserve">
+    <value>Não mostrar esta mensagem novamente</value>
+  </data>
+  <data name="GotIt" xml:space="preserve">
+    <value>Entendi</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="LogStream" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="AddonExplorer" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
+  </data>
+  <data name="AddonExplorer" xml:space="preserve">
+    <value>Explorador de complementos</value>
   </data>
 </root>
