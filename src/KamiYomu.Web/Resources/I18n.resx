@@ -492,4 +492,19 @@
   <data name="AddonExplorer" xml:space="preserve">
     <value>Add-on Explorer</value>
   </data>
+  <data name="InstallACrawlerAgent" xml:space="preserve">
+    <value>Install a Crawler Agent</value>
+  </data>
+  <data name="GoToAddOn" xml:space="preserve">
+    <value>Go to add-on</value>
+  </data>
+  <data name="StartDownloadYourMangas" xml:space="preserve">
+    <value>Start Download Your Mangas</value>
+  </data>
+  <data name="Enjoy" xml:space="preserve">
+    <value>Enjoy</value>
+  </data>
+  <data name="SeeTheLicense" xml:space="preserve">
+    <value>See the license</value>
+  </data>
 </root>

@@ -493,6 +493,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enjoy.
+        /// </summary>
+        internal static string Enjoy {
+            get {
+                return ResourceManager.GetString("Enjoy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Examples.
         /// </summary>
         internal static string Examples {
@@ -547,6 +556,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Go to add-on.
+        /// </summary>
+        internal static string GoToAddOn {
+            get {
+                return ResourceManager.GetString("GoToAddOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Has Terms Accepted?.
         /// </summary>
         internal static string HasTermsAccepted {
@@ -579,6 +597,15 @@ namespace KamiYomu.Web.Resources {
         internal static string Install {
             get {
                 return ResourceManager.GetString("Install", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install a Crawler Agent.
+        /// </summary>
+        internal static string InstallACrawlerAgent {
+            get {
+                return ResourceManager.GetString("InstallACrawlerAgent", resourceCulture);
             }
         }
         
@@ -943,6 +970,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to See the license.
+        /// </summary>
+        internal static string SeeTheLicense {
+            get {
+                return ResourceManager.GetString("SeeTheLicense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to See Your Collection.
         /// </summary>
         internal static string SeeYourCollection {
@@ -1002,6 +1038,15 @@ namespace KamiYomu.Web.Resources {
         internal static string StartCrawlingNow {
             get {
                 return ResourceManager.GetString("StartCrawlingNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start Download Your Mangas.
+        /// </summary>
+        internal static string StartDownloadYourMangas {
+            get {
+                return ResourceManager.GetString("StartDownloadYourMangas", resourceCulture);
             }
         }
         
