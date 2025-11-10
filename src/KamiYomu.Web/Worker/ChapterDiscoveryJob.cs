@@ -38,7 +38,7 @@ namespace KamiYomu.Web.Worker
             _dbContext = dbContext;
         }
 
-        public async Task DispatchAsync(PerformContext context, CancellationToken cancellationToken)
+        public async Task DispatchAsync(Guid crawlerId, Guid libraryId, PerformContext context, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested)
             {
@@ -53,78 +53,72 @@ namespace KamiYomu.Web.Worker
             CultureInfo.CurrentCulture =
             CultureInfo.CurrentUICulture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
 
-            var libraries = _dbContext.Libraries.FindAll();
+            var library = _dbContext.Libraries.FindById(libraryId);
 
-            foreach (var library in libraries)
+
+            using var libDbContext = library.GetDbContext();
+            var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Library.Id == libraryId);
+            var files = Directory.GetFiles(library!.Manga!.GetDirectory(), "*.cbz", SearchOption.AllDirectories);
+
+
+            var crawlerAgent = mangaDownload.Library.AgentCrawler;
+            var mangaId = mangaDownload.Library.Manga!.Id;
+
+            int offset = 0;
+            const int limit = 100;
+            int? total = null;
+
+            _logger.LogInformation("Starting {jobname} for manga: {MangaId}", nameof(ChapterDiscoveryJob), mangaId);
+
+            do
             {
-                using var libDbContext = library.GetDbContext();
-                var mangaDownloads = libDbContext.MangaDownloadRecords.FindAll();
-                var files = Directory.GetFiles(library!.Manga!.GetDirectory(), "*.cbz", SearchOption.AllDirectories);
-
-                foreach (var mangaDownload in mangaDownloads)
+                if (cancellationToken.IsCancellationRequested)
                 {
-                    var crawlerAgent = mangaDownload.Library.AgentCrawler;
-                    var mangaId = mangaDownload.Library.Manga!.Id;
+                    _logger.LogWarning("Dispatch cancelled during chapter fetch for manga: {MangaId}", mangaId);
+                    mangaDownload.Cancelled($"Cancelled during the running job: {mangaId}");
+                    libDbContext.MangaDownloadRecords.Update(mangaDownload);
+                    return;
+                }
 
-                    int offset = 0;
-                    const int limit = 100;
-                    int? total = null;
+                var page = await _agentCrawlerRepository.GetMangaChaptersAsync(
+                    crawlerAgent, mangaId, new PaginationOptions(offset, limit), cancellationToken);
 
-                    _logger.LogInformation("Starting {jobname} for manga: {MangaId}", nameof(ChapterDiscoveryJob), mangaId);
+                total = page.PaginationOptions.Total;
 
-                    do
+                foreach (var chapter in page.Data)
+                {
+                    if (File.Exists(chapter.GetCbzFilePath()))
                     {
-                        if (cancellationToken.IsCancellationRequested)
-                        {
-                            _logger.LogWarning("Dispatch cancelled during chapter fetch for manga: {MangaId}", mangaId);
-                            mangaDownload.Cancelled($"Cancelled during the running job: {mangaId}");
-                            libDbContext.MangaDownloadRecords.Update(mangaDownload);
-                            return;
-                        }
+                        continue;
+                    }
 
-                        var page = await _agentCrawlerRepository.GetMangaChaptersAsync(
-                            crawlerAgent, mangaId, new PaginationOptions(offset, limit), cancellationToken);
+                    var record = libDbContext.ChapterDownloadRecords
+                                             .FindOne(p => p.Chapter!.Id == chapter.Id
+                                                        && p.CrawlerAgent!.Id == crawlerAgent.Id)
+                                             ?? new ChapterDownloadRecord(crawlerAgent, mangaDownload, chapter);
 
-                        total = page.PaginationOptions.Total;
+                    if (record.IsInProgress() || (record.IsCompleted() && record.LastUpdatedStatusTotalHours() < _workerOptions.ChapterDiscoveryIntervalInHours))
+                    {
+                        continue;
+                    }
 
-                        foreach (var chapter in page.Data)
-                        {
-                            if (File.Exists(chapter.GetCbzFilePath()))
-                            {
-                                continue;
-                            }
+                    record.Pending();
 
-                            var record = libDbContext.ChapterDownloadRecords
-                                                     .FindOne(p => p.Chapter!.Id == chapter.Id
-                                                                && p.CrawlerAgent!.Id == crawlerAgent.Id)
-                                                     ?? new ChapterDownloadRecord(crawlerAgent, mangaDownload, chapter);
+                    libDbContext.ChapterDownloadRecords.Upsert(record);
 
-                            if (record.IsInProgress() || (record.IsCompleted() && record.LastUpdatedStatusTotalHours() < _workerOptions.ChapterDiscoveryIntervalInHours))
-                            {
-                                continue;
-                            }
+                    var backgroundJobId = _jobClient.Create<IChapterDownloaderJob>(
+                          p => p.DispatchAsync(library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(), null!, CancellationToken.None),
+                          _hangfireRepository.GetLeastLoadedDownloadChapterQueue()
+                     );
 
-                            record.Pending();
-
-                            libDbContext.ChapterDownloadRecords.Upsert(record);
-
-                            var backgroundJobId = _jobClient.Create<IChapterDownloaderJob>(
-                                  p => p.DispatchAsync(library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(), null!, CancellationToken.None),
-                                  _hangfireRepository.GetLeastLoadedDownloadChapterQueue()
-                             );
-
-                            record.Scheduled(backgroundJobId);
-                            libDbContext.ChapterDownloadRecords.Update(record);
-                            await Task.Delay(_workerOptions.GetWaitPeriod(), cancellationToken);
-                        }
-
-                        offset += limit;
-                        await Task.Delay(_workerOptions.GetWaitPeriod(), cancellationToken);
-                    } while (offset < total);
+                    record.Scheduled(backgroundJobId);
+                    libDbContext.ChapterDownloadRecords.Update(record);
                     await Task.Delay(_workerOptions.GetWaitPeriod(), cancellationToken);
                 }
-            }
 
+                offset += limit;
+                await Task.Delay(_workerOptions.GetWaitPeriod(), cancellationToken);
+            } while (offset < total);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Infrastructure.Contexts;
+using KamiYomu.Web.Worker;
 using System.Xml.Linq;
 
 namespace KamiYomu.Web.Entities
@@ -23,6 +24,11 @@ namespace KamiYomu.Web.Entities
         public void DropDbContext()
         {
             _libraryDbContext.DropDatabase();
+        }
+
+        public string GetDiscovertyJobId()
+        {
+            return $"{Manga!.Title}-{Id}-{AgentCrawler.Id}";
         }
 
         public Guid Id { get; private set; }

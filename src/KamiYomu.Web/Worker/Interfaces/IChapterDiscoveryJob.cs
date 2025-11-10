@@ -8,6 +8,6 @@ namespace KamiYomu.Web.Worker.Interfaces
     public interface IChapterDiscoveryJob
     {
         [DisplayName("Discovery New Chapter")]
-        Task DispatchAsync(PerformContext context, CancellationToken cancellationToken);
+        Task DispatchAsync(Guid crawlerId, Guid libraryId, PerformContext context, CancellationToken cancellationToken);
     }
 }

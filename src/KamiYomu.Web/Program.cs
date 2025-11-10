@@ -143,12 +143,6 @@ app.UseHangfireDashboard("/worker", new DashboardOptions
 
 var hangfireRepository = app.Services.GetService<IHangfireRepository>();
 
-RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(
-    nameof(ChapterDiscoveryJob),
-    Settings.Worker.DiscoveryNewChapterQueues,
-    (job) => job.DispatchAsync(null!, CancellationToken.None),
-    Cron.Hourly());
-
 app.MapRazorPages();
 app.UseMiddleware<ExceptionNotificationMiddleware>();
 app.MapHealthChecks("/healthz");
