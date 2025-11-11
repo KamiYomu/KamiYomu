@@ -492,22 +492,6 @@
   <data name="AddonExplorer" xml:space="preserve">
     <value>Explorador de complementos</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="InstallACrawlerAgent" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="GoToAddOn" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="StartDownloadYourMangas" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="Enjoy" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="SeeTheLicense" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="InstallACrawlerAgent" xml:space="preserve">
     <value>Instale um agente rastreador</value>
   </data>
@@ -522,5 +506,9 @@
   </data>
   <data name="SeeTheLicense" xml:space="preserve">
     <value>Veja a licença</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ProcessingCertainCrawlerAgentaRequireMoreTime" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

@@ -82,11 +82,11 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
                 var fileStorage = _dbContext.CrawlerAgentFileStorage.FindById(tempUploadId);
                 fileStorage.SaveAs(tempFilePath);
 
-                var crawlerAgentTempDir = Path.Combine(Path.GetTempPath(), CrawlerAgent.GetAgentDirName(tempFileName));
+                var crawlerAgentDir = CrawlerAgent.GetAgentDir(tempFileName);
 
-                ZipFile.ExtractToDirectory(tempFilePath, crawlerAgentTempDir, true);
+                ZipFile.ExtractToDirectory(tempFilePath, crawlerAgentDir, true);
 
-                var dllPath = Directory.EnumerateFiles(crawlerAgentTempDir, searchPattern: "*.dll", SearchOption.AllDirectories).FirstOrDefault();
+                var dllPath = Directory.EnumerateFiles(crawlerAgentDir, searchPattern: "*.dll", SearchOption.AllDirectories).FirstOrDefault();
 
                 var assembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
                 var metadata = CrawlerAgent.GetAssemblyMetadata(assembly);

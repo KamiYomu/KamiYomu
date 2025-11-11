@@ -6,13 +6,16 @@ services:
         dockerfile: KamiYomu.Web/Dockerfile
       volumes:
         - ./AppData/manga:/manga
-        - ./AppData/database:/db 
+        - kamiyomu_database:/db 
         - ./AppData/agents:/agents 
-        - ./AppData/logs:/logs 
+        - kamiyomu_logs:/logs 
       healthcheck:
         test: ["CMD", "curl", "-f", "https://localhost:5001/healthz"]
         interval: 30s
         timeout: 10s
         retries: 3
 
+volumes:
+  kamiyomu_logs:
+  kamiyomu_database:
 

@@ -889,6 +889,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Processing... Certain crawler agents require more time depending on the complexity of the task..
+        /// </summary>
+        internal static string ProcessingCertainCrawlerAgentaRequireMoreTime {
+            get {
+                return ResourceManager.GetString("ProcessingCertainCrawlerAgentaRequireMoreTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Product.
         /// </summary>
         internal static string Product {

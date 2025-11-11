@@ -34,7 +34,7 @@ namespace KamiYomu.Web.Worker
             _httpClient = httpClientFactory.CreateClient(Settings.Worker.HttpClientBackground);
         }
 
-        public async Task DispatchAsync(Guid libraryId, Guid mangaDownloadId, Guid chapterDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
+        public async Task DispatchAsync(Guid crawlerId, Guid libraryId, Guid mangaDownloadId, Guid chapterDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested)
             {

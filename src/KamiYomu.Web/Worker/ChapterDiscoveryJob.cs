@@ -107,7 +107,7 @@ namespace KamiYomu.Web.Worker
                     libDbContext.ChapterDownloadRecords.Upsert(record);
 
                     var backgroundJobId = _jobClient.Create<IChapterDownloaderJob>(
-                          p => p.DispatchAsync(library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(), null!, CancellationToken.None),
+                          p => p.DispatchAsync(library.AgentCrawler.Id, library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(), null!, CancellationToken.None),
                           _hangfireRepository.GetLeastLoadedDownloadChapterQueue()
                      );
 
