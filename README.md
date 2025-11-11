@@ -26,8 +26,22 @@
 
 Whether you're cataloging rare series, powering a personal manga dashboard, or seeking a cleaner alternative to bloated online readers, KamiYomu puts you in control of how you access and organize manga content. It’s a lightweight, developer-friendly crawler built for clarity, extensibility, and respectful use of publicly accessible sources. Content availability and usage rights depend on the licensing terms of each source — KamiYomu simply provides the tools.
 
----
-
+<table>
+  <tr>
+    <td><img src="./screenshots/welcome-page.jpeg" alt="Welcome Page" width="150"/></td>
+    <td><img src="./screenshots/addon-install-page.jpeg" alt="Add-on Explorer" width="150"/></td>
+    <td><img src="./screenshots/download-page.jpeg" alt="Download" width="150"/></td>
+    <td><img src="./screenshots/download-page.jpeg" alt="Download Again" width="150"/></td>
+    <td><img src="./screenshots/collection-page.jpeg" alt="Collection" width="150"/></td>
+  </tr>
+  <tr>
+    <td>Welcome Page</td>
+    <td>Add-on Explorer</td>
+    <td>Download</td>
+    <td>Download Again</td>
+    <td>Collection</td>
+  </tr>
+</table>
 ## Requirements
 
 - [Docker](https://www.docker.com/get-started)
