@@ -28,27 +28,27 @@ Whether you're cataloging rare series, powering a personal manga dashboard, or s
 <table>
   <tr>
     <td colspan="2" align="center">
-      <img src="./screenshots/welcome-page.jpeg" alt="Welcome Page" width="200"/><br/>
+      <img src="./screenshots/welcome-page.jpeg" alt="Welcome Page" width="600"/><br/>
       <strong>Welcome Page</strong>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="./screenshots/addon-install-page.jpeg" alt="Add-on Explorer" width="200"/><br/>
+      <img src="./screenshots/addon-install-page.jpeg" alt="Add-on Explorer" width="350"/><br/>
       <strong>Add-on Explorer</strong>
     </td>
     <td align="center">
-      <img src="./screenshots/crawler-edit-page.jpeg" alt="Crawler Agent Edit Page" width="200"/><br/>
+      <img src="./screenshots/crawler-edit-page.jpeg" alt="Crawler Agent Edit Page" width="350"/><br/>
       <strong>Crawler Agent Edit Page</strong>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="./screenshots/download-page.jpeg" alt="Download Page" width="200"/><br/>
+      <img src="./screenshots/download-page.jpeg" alt="Download Page" width="350"/><br/>
       <strong>Download Page</strong>
     </td>
     <td align="center">
-      <img src="./screenshots/collection-page.jpeg" alt="Collection Page" width="200"/><br/>
+      <img src="./screenshots/collection-page.jpeg" alt="Collection Page" width="350"/><br/>
       <strong>Collection Page</strong>
     </td>
   </tr>
