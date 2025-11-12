@@ -75,7 +75,11 @@ Configure your sources and crawler agents
 
 Download crawler agents from NuGet Package from [here](https://github.com/orgs/KamiYomu/packages) and upload them in [Crawler Agents](http://localhost:8080/Settings/CrawlerAgents).
 
-## 👨‍💻 Contributing
+## 🛠️ Development Setup
+
+We recommend using Visual Studio 2022 or later with the .NET 8 SDK installed. 
+However, you can also run KamiYomu using VsCode.
+
 1. Fork the repository
 2. Select the develop branch (`git checkout develop`)
 3. Create your feature branch (`git checkout -b feature/AmazingFeature`)
@@ -83,25 +87,19 @@ Download crawler agents from NuGet Package from [here](https://github.com/orgs/K
 5. Push to the branch (`git push origin feature/AmazingFeature`)
 6. Open a Pull Request against the ``develop`` branch
 
-## 🛠️ Development Setup
-
-We recommend using Visual Studio 2022 or later with the .NET 8 SDK installed. 
-However, you can also run KamiYomu using VsCode.
-
 ### Using Visual Studio
 
+- Docker: [Download here](https://www.docker.com/get-started)
 - Visual Studio: [Download here](https://visualstudio.microsoft.com/downloads/)
 - .NET 8 SDK: [Download here](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
-- Docker: [Download here](https://www.docker.com/get-started)
-
 
 1. **Clone the repository**
    ```bash
    git clone https://github.com/KamiYomu/KamiYomu.Web.git
 	```
 2. Open the solution in Visual Studio in `/src/KamiYomu.Web.sln`
-3. Set `docker-compose` project as startup project and run it.
-
+3. Set `docker-compose` project as **startup project** (Right-click on project, select `Set As Startup Project.`).
+4. Run it 
 
 ### Using VsCode
 
@@ -109,6 +107,7 @@ To get started with local development using Visual Studio Code, ensure the follo
 
 **Required Tools**
 
+- Docker: [Download here](https://www.docker.com/get-started)
 - Visual Studio Code [Download Here](https://code.visualstudio.com/)
 - C# Dev Kit Extension [Install](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
 - Docker Extension for VS Code [Install](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
