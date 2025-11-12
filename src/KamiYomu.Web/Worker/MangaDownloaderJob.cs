@@ -47,10 +47,12 @@ public class MangaDownloaderJob : IMangaDownloaderJob
        
         var library = _dbContext.Libraries.FindById(libraryId);
 
-        if (library == null) {
-            _logger.LogError("Library was not found: {libraryId}", libraryId);
-            throw new ArgumentException("Library was not found");
+        if (library == null)
+        {
+            _logger.LogWarning("Dispatch \"{title}\" could not proceed — the associated library record no longer exists.", title);
+            return;
         }
+
         using var libDbContext = library.GetDbContext();
 
         var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Id == mangaDownloadId && p.DownloadStatus == Entities.Definitions.DownloadStatus.Pending);

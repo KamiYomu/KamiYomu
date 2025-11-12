@@ -21,6 +21,7 @@ using Polly.Extensions.Http;
 using Serilog;
 using SQLite;
 using System.Globalization;
+using static KamiYomu.Web.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -143,6 +144,7 @@ app.UseHangfireDashboard("/worker", new DashboardOptions
 
 var hangfireRepository = app.Services.GetService<IHangfireRepository>();
 
+ServiceLocator.Configure(() => app.Services);
 app.MapRazorPages();
 app.UseMiddleware<ExceptionNotificationMiddleware>();
 app.MapHealthChecks("/healthz");

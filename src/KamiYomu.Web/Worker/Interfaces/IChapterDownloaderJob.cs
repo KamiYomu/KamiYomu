@@ -7,7 +7,7 @@ namespace KamiYomu.Web.Worker.Interfaces
 {
     public interface IChapterDownloaderJob
     {
-        [PerKeyConcurrency("crawlerId")]
+        [PerKeyConcurrency("crawlerId", 5)]
         [DisplayName("Down Chapter {4}")]
         Task DispatchAsync(Guid crawlerId, Guid libraryId, Guid mangaDownloadId, Guid chapterDownloadId, string title, PerformContext context, CancellationToken cancellationToken);
     }
