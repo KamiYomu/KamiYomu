@@ -25,34 +25,7 @@
 ## 🚀 Why KamiYomu?
 
 Whether you're cataloging rare series, powering a personal manga dashboard, or seeking a cleaner alternative to bloated online readers, KamiYomu puts you in control of how you access and organize manga content. It’s a lightweight, developer-friendly crawler built for clarity, extensibility, and respectful use of publicly accessible sources. Content availability and usage rights depend on the licensing terms of each source — KamiYomu simply provides the tools.
-<table>
-  <tr>
-    <td colspan="2" align="center">
-      <img src="./screenshots/welcome-page.jpeg" alt="Welcome Page" width="600"/><br/>
-      <strong>Welcome Page</strong>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="./screenshots/addon-install-page.jpeg" alt="Add-on Explorer" width="350"/><br/>
-      <strong>Add-on Explorer</strong>
-    </td>
-    <td align="center">
-      <img src="./screenshots/crawler-edit-page.jpeg" alt="Crawler Agent Edit Page" width="350"/><br/>
-      <strong>Crawler Agent Edit Page</strong>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="./screenshots/download-page.jpeg" alt="Download Page" width="350"/><br/>
-      <strong>Download Page</strong>
-    </td>
-    <td align="center">
-      <img src="./screenshots/collection-page.jpeg" alt="Collection Page" width="350"/><br/>
-      <strong>Collection Page</strong>
-    </td>
-  </tr>
-</table>
+ <img src="./screenshots/welcome-page.jpeg" alt="Welcome Page" width="600"/><br/>
 
 ## Requirements
 
