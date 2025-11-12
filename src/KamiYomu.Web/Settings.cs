@@ -18,7 +18,7 @@
 
         public static class Package
         {
-            public const string KamiYomuCrawlerAgentTag = "crawler-agents";
+            public const string KamiYomuCrawlerAgentTag = "kamiyomu-crawler-agents";
         }
 
         public static class SpecialFolders
