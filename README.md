@@ -134,7 +134,7 @@ The project includes predefined tasks to build and run the Docker container auto
 - Plugin-based architecture for source extensibility
 
 ## 📜 License
-This project is licensed under GPL-3.0. See the LICENSE file for details.
+This project is licensed under AGPL-3.0. See the LICENSE file for details.
 
 ## 🤝 Contributing
 Pull requests are welcome! If you have ideas for new features, plugin sources, or UI improvements, feel free to open an issue or submit a PR.
