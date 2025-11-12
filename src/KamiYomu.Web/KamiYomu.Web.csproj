@@ -13,7 +13,7 @@
 		<Description>KamiYomu is a powerful, extensible manga crawler built for manga enthusiasts who want full control over their collection. It scans and downloads manga from supported websites, stores them locally, and lets you host your own private manga reader—no ads, no subscriptions, no limits.</Description>
 		<Company>KamiYomu</Company>
 		<Product>KamiYomu</Product>
-		<Copyright>© KamiYomu. Licensed under GPL-3.0.</Copyright>
+		<Copyright>© KamiYomu. Licensed under AGPL-3.0.</Copyright>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -16,6 +16,7 @@
           hx-post="/Settings/Add-ons/Dialogs/DeleteConfirm"
           hx-target="#result"
           hx-swap="innerHTML">
+        @Html.AntiForgeryToken()
         <input type="hidden" name="Id" value="@Model.NugetSource.Id" />
         <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">@I18n.Delete</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@I18n.Cancel</button>

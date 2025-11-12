@@ -53,6 +53,7 @@
                                   asp-route-packageId="@packageInfo.Id"
                                   asp-route-packageVersion="@packageInfo.Version"
                                   asp-route-sourceId="@Model.SourceId">
+                                  @Html.AntiForgeryToken()
                                 <button type="submit" class="btn btn-outline-primary">
                                     <i class="bi bi-download me-1"></i> @I18n.Install
                                 </button>

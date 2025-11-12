@@ -507,4 +507,7 @@
   <data name="SeeTheLicense" xml:space="preserve">
     <value>See the license</value>
   </data>
+  <data name="ProcessingCertainCrawlerAgentaRequireMoreTime" xml:space="preserve">
+    <value>Processing... Certain crawler agents require more time depending on the complexity of the task.</value>
+  </data>
 </root>

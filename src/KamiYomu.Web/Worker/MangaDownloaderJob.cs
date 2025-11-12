@@ -37,7 +37,7 @@ public class MangaDownloaderJob : IMangaDownloaderJob
         _hangfireRepository = hangfireRepository;
     }
 
-    public async Task DispatchAsync(Guid libraryId, Guid mangaDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
+    public async Task DispatchAsync(Guid crawlerId, Guid libraryId, Guid mangaDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested)
         {
@@ -47,10 +47,12 @@ public class MangaDownloaderJob : IMangaDownloaderJob
        
         var library = _dbContext.Libraries.FindById(libraryId);
 
-        if (library == null) {
-            _logger.LogError("Library was not found: {libraryId}", libraryId);
-            throw new ArgumentException("Library was not found");
+        if (library == null)
+        {
+            _logger.LogWarning("Dispatch \"{title}\" could not proceed — the associated library record no longer exists.", title);
+            return;
         }
+
         using var libDbContext = library.GetDbContext();
 
         var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Id == mangaDownloadId && p.DownloadStatus == Entities.Definitions.DownloadStatus.Pending);
@@ -100,7 +102,7 @@ public class MangaDownloaderJob : IMangaDownloaderJob
                     libDbContext.ChapterDownloadRecords.Insert(record);
 
                     var backgroundJobId = _jobClient.Create<IChapterDownloaderJob>(
-                          p => p.DispatchAsync(library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(), null!, CancellationToken.None),
+                          p => p.DispatchAsync(library.AgentCrawler.Id, library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(), null!, CancellationToken.None),
                           _hangfireRepository.GetLeastLoadedDownloadChapterQueue()
                      );
 

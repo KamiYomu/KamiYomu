@@ -55,6 +55,11 @@ namespace KamiYomu.Web.Worker
 
             var library = _dbContext.Libraries.FindById(libraryId);
 
+            if (library == null)
+            {
+                _logger.LogWarning("{Dispatch} for \"{libraryId}\" could not proceed — the associated library record no longer exists.", nameof(DispatchAsync), libraryId);
+                return;
+            }
 
             using var libDbContext = library.GetDbContext();
             var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Library.Id == libraryId);
@@ -107,7 +112,7 @@ namespace KamiYomu.Web.Worker
                     libDbContext.ChapterDownloadRecords.Upsert(record);
 
                     var backgroundJobId = _jobClient.Create<IChapterDownloaderJob>(
-                          p => p.DispatchAsync(library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(), null!, CancellationToken.None),
+                          p => p.DispatchAsync(library.AgentCrawler.Id, library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(), null!, CancellationToken.None),
                           _hangfireRepository.GetLeastLoadedDownloadChapterQueue()
                      );
 

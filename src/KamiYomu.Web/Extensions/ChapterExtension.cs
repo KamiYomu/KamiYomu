@@ -9,15 +9,15 @@ namespace KamiYomu.Web.Extensions
         public static string ToComicInfo(this Chapter chapter)
         {
             XElement comicInfo = new("ComicInfo",
-                new XElement("Title", chapter.Title),
-                new XElement("Series", chapter.ParentManga.Title),
-                new XElement("Number", chapter.Number),
-                new XElement("Volume", chapter.Volume),
-                new XElement("Writer", string.Join(", ", chapter.ParentManga.Authors)),
-                new XElement("LanguageISO", chapter.ParentManga.OriginalLanguage),
-                new XElement("Genre", string.Join(", ", chapter.ParentManga.Tags)),
+                new XElement("Title", chapter?.Title ?? string.Empty),
+                new XElement("Series", chapter?.ParentManga?.Title ?? string.Empty),
+                new XElement("Number", chapter?.Number.ToString() ?? string.Empty),
+                new XElement("Volume", chapter?.Volume.ToString() ?? string.Empty),
+                new XElement("Writer", string.Join(", ", chapter?.ParentManga?.Authors ?? [])),
+                new XElement("LanguageISO", chapter?.ParentManga?.OriginalLanguage ?? string.Empty),
+                new XElement("Genre", string.Join(", ", chapter?.ParentManga?.Tags ?? [])),
                 new XElement("ScanInformation", "KamiYomu"),
-                new XElement("Web", chapter.ParentManga.WebSiteUrl)
+                new XElement("Web", chapter?.ParentManga?.WebSiteUrl ?? string.Empty)
             );
 
             return comicInfo.ToString();

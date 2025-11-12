@@ -25,8 +25,7 @@
 ## 🚀 Why KamiYomu?
 
 Whether you're cataloging rare series, powering a personal manga dashboard, or seeking a cleaner alternative to bloated online readers, KamiYomu puts you in control of how you access and organize manga content. It’s a lightweight, developer-friendly crawler built for clarity, extensibility, and respectful use of publicly accessible sources. Content availability and usage rights depend on the licensing terms of each source — KamiYomu simply provides the tools.
-
----
+ <img src="./screenshots/welcome-page.jpeg" alt="Welcome Page" width="600"/><br/>
 
 ## Requirements
 

@@ -50,7 +50,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
             libDbContext.MangaDownloadRecords.Insert(downloadRecord);
 
             var backgroundJobId = jobClient.Create<IMangaDownloaderJob>(
-                p => p.DispatchAsync(library.Id, downloadRecord.Id, manga.Title, null!, CancellationToken.None),
+                p => p.DispatchAsync(library.AgentCrawler.Id, library.Id, downloadRecord.Id, manga.Title, null!, CancellationToken.None),
                 hangfireRepository.GetLeastLoadedMangaDownloadSchedulerQueue()
             );
 
