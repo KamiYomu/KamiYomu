@@ -77,15 +77,16 @@ Download crawler agents from NuGet Package from [here](https://github.com/orgs/K
 
 ## 👨‍💻 Contributing
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request against the ``develop`` branch
-
+2. Select the develop branch (`git checkout develop`)
+3. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+4. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+5. Push to the branch (`git push origin feature/AmazingFeature`)
+6. Open a Pull Request against the ``develop`` branch
 
 ## 🛠️ Development Setup
 
-We recommend using Visual Studio 2022 or later with the .NET 8 SDK installed. However, you can also run KamiYomu using VsCode.
+We recommend using Visual Studio 2022 or later with the .NET 8 SDK installed. 
+However, you can also run KamiYomu using VsCode.
 
 ### Using Visual Studio
 
@@ -120,12 +121,15 @@ Note: Make sure Docker is installed and running on your machine.
     git clone https://github.com/KamiYomu/KamiYomu.Web.git
 ```
 2. Running the Project in VS Code
-- Open the project folder in VS Code.
-- Navigate to the "Run and Debug" tab (Ctrl+Shift+D).
+- Open the `./src/` folder in VS Code.
+- Navigate to the "Run and Debug" tab (Ctrl+Shift+D) or press `F5`.
 - Select the launch configuration: "Attach to .NET Core in Docker".
 - Click the ▶️ Start Debugging button.
-The project includes predefined tasks to build and run the Docker container automatically.
 
+
+This project includes predefined tasks to build and run the Docker container automatically.
+If you install all required extensions, the project will run and open the browser in http://localhost:8080
+> NOTE:  You may see a window with some error related `=> ERROR [kamiyomu.web internal] load metadata for mcr.microsoft.com/dotnet/sdk:8.0`, just click on `abort` button then try again.
 
 ## 🧠 Tech Stack- .NET 8 Razor Pages
 - Hangfire for job scheduling
