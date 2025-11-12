@@ -7,9 +7,9 @@
       "command": "docker-compose",
       "args": [
         "-f",
-        "${workspaceFolder}/src/docker-compose.yml",
+        "${workspaceFolder}/docker-compose.yml",
         "-f",
-        "${workspaceFolder}/src/docker-compose.override.yml",
+        "${workspaceFolder}/docker-compose.override.yml",
         "-f",
         "${workspaceFolder}/.vscode/docker-compose.vscode.yml",
         "up",
