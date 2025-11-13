@@ -3,6 +3,7 @@ using Hangfire.Storage.SQLite;
 using KamiYomu.Web;
 using KamiYomu.Web.Filters;
 using KamiYomu.Web.HealthCheckers;
+using KamiYomu.Web.Hubs;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
@@ -21,6 +22,7 @@ using Polly.Extensions.Http;
 using Serilog;
 using SQLite;
 using System.Globalization;
+using System.Text.Json.Serialization;
 using static KamiYomu.Web.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,7 +42,7 @@ builder.Host.UseSerilog((context, services, configuration) =>
 
 Barrel.ApplicationId = nameof(KamiYomu);
 BarrelUtils.SetBaseCachePath(Settings.SpecialFolders.DbDir);
-
+builder.Services.AddSignalR();
 builder.Services.Configure<Settings.Worker>(builder.Configuration.GetSection("Settings:Worker"));
 builder.Services.Configure<Settings.UI>(builder.Configuration.GetSection("Settings:UI"));
 
@@ -85,14 +87,17 @@ builder.Services.AddTransient<IChapterDiscoveryJob, ChapterDiscoveryJob>();
 builder.Services.AddTransient<IChapterDownloaderJob, ChapterDownloaderJob>();
 builder.Services.AddTransient<IMangaDownloaderJob, MangaDownloaderJob>();
 builder.Services.AddTransient<INugetService, NugetService>();
+builder.Services.AddTransient<INotificationService, NotificationService>();
 
 builder.Services.AddHealthChecks()
                 .AddCheck<DatabaseHealthCheck>(nameof(DatabaseHealthCheck), tags: ["storage"])
                 .AddCheck<WorkerHealthCheck>(nameof(WorkerHealthCheck), tags: ["worker"])
                 .AddCheck<CachingHealthCheck>(nameof(CachingHealthCheck), tags: ["storage"]);
 
-builder.Services.AddRazorPages()
-                .AddViewLocalization();
+builder.Services.AddRazorPages().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+}).AddViewLocalization();
 
 var retryPolicy = HttpPolicyExtensions
     .HandleTransientHttpError()
@@ -147,5 +152,6 @@ var hangfireRepository = app.Services.GetService<IHangfireRepository>();
 ServiceLocator.Configure(() => app.Services);
 app.MapRazorPages();
 app.UseMiddleware<ExceptionNotificationMiddleware>();
+app.MapHub<NotificationHub>("/notificationHub");
 app.MapHealthChecks("/healthz");
 app.Run();

@@ -1,3 +1,4 @@
+using KamiYomu.Web.Entities.Notifications;
 using KamiYomu.Web.Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,6 +13,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Mangas
     {
         public void OnGet()
         {
+          
         }
 
         public async Task<IActionResult> OnGetImageAsync(Uri uri, CancellationToken cancellationToken)

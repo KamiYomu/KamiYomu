@@ -1,7 +1,10 @@
 using Hangfire;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.Notifications;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
+using KamiYomu.Web.Infrastructure.Services;
+using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Worker;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +17,8 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
         DbContext dbContext,
         IAgentCrawlerRepository agentCrawlerRepository,
         IBackgroundJobClient jobClient,
-        IHangfireRepository hangfireRepository) : PageModel
+        IHangfireRepository hangfireRepository,
+        INotificationService notificationService) : PageModel
     {
         public IEnumerable<CrawlerAgent> CrawlerAgents { get; set; } = [];
 
@@ -64,10 +68,12 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 
             libDbContext.MangaDownloadRecords.Update(downloadRecord);
 
+            await notificationService.PushInfoAsync($"Title {library.Manga.Title} was added to your collection.");
+
             return Partial("_LibraryCard", library);
         }
 
-        public IActionResult OnPostRemoveFromCollection()
+        public async Task<IActionResult> OnPostRemoveFromCollectionAsync()
         {
             if (!ModelState.IsValid)
             {
@@ -102,7 +108,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 
                 libDbContext.MangaDownloadRecords.Update(mangaDownload);
             }
-
+            var mangaTitle = library.Manga.Title;
             RecurringJob.RemoveIfExists(library.GetDiscovertyJobId());
 
             library.DropDbContext();
@@ -110,6 +116,8 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
             dbContext.Libraries.Delete(library.Id);
 
             logger.LogInformation("Drop Database {database}", libDbContext.DatabaseFilePath());
+
+            await notificationService.PushWarningAsync($"Title {mangaTitle} was removed from your collection.");
 
             return Partial("_LibraryCard", new Entities.Library(library.AgentCrawler, library.Manga));
         }

@@ -2,9 +2,9 @@
 @using System.Text.RegularExpressions
 @model KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.CrawlerAgentEditInputModel
 
-<form method="post"
-      asp-area="Settings"
-      asp-page="/CrawlerAgents/Edit"
+<form hx-post="/Settings/CrawlerAgents/Edit"
+      hx-target="#toast-container"
+      hx-swap="none"
       class="needs-validation"
       novalidate>
     @Html.AntiForgeryToken()

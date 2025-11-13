@@ -2111,6 +2111,10 @@
     {
       "library": "bootstrap@5.3.8",
       "destination": "wwwroot/lib/bootstrap/"
+    },
+    {
+      "library": "microsoft-signalr@9.0.6",
+      "destination": "wwwroot/lib/microsoft-signalr/"
     }
   ]
 }

@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+﻿using KamiYomu.Web.Entities.Notifications;
+using KamiYomu.Web.Infrastructure.Services;
+using KamiYomu.Web.Infrastructure.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace KamiYomu.Web.Middlewares
 {
@@ -6,16 +9,16 @@ namespace KamiYomu.Web.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionNotificationMiddleware> _logger;
-        private readonly ITempDataDictionaryFactory _tempDataFactory;
+        private readonly INotificationService _notificationService;
 
         public ExceptionNotificationMiddleware(
-            RequestDelegate next, 
-            ILogger<ExceptionNotificationMiddleware> logger, 
-            ITempDataDictionaryFactory tempDataFactory)
+            RequestDelegate next,
+            ILogger<ExceptionNotificationMiddleware> logger,
+            INotificationService notificationService)
         {
             _next = next;
             _logger = logger;
-            _tempDataFactory = tempDataFactory;
+            _notificationService = notificationService;
         }
 
         public async Task Invoke(HttpContext context)
@@ -27,9 +30,7 @@ namespace KamiYomu.Web.Middlewares
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unhandled exception occurred.");
-                var tempData = _tempDataFactory.GetTempData(context);
-                tempData["ToastError"] = "An unexpected error occurred. Please try again.";
-                context.Response.Redirect(context.Request.Path); // Reload current page
+                await _notificationService.PushErrorAsync($"An unexpected error occurred. Please try again later. {ex.Message}");
             }
         }
 

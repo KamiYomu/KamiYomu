@@ -1,11 +1,12 @@
 using Hangfire;
 using KamiYomu.Web.Infrastructure.Contexts;
+using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KamiYomu.Web.Pages.CrawlerAgents.Dialogs
 {
-    public class DeleteConfirmModel(DbContext dbContext, IBackgroundJobClient jobClient) : PageModel
+    public class DeleteConfirmModel(DbContext dbContext, IBackgroundJobClient jobClient, INotificationService notificationService) : PageModel
     {
 
         [BindProperty]
@@ -45,6 +46,9 @@ namespace KamiYomu.Web.Pages.CrawlerAgents.Dialogs
             dbContext.CrawlerAgents.Delete(Id);
 
             var crawlerAgents = dbContext.CrawlerAgents.FindAll().ToList();
+
+            notificationService.PushSuccessAsync("Crawler Agent removed successfully");
+
             return Partial("_CrawlerAgentList", crawlerAgents);
         }
     }

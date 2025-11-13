@@ -3,6 +3,7 @@ using KamiYomu.Web.Entities;
 using KamiYomu.Web.Entities.Addons;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
+using KamiYomu.Web.Infrastructure.Services;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,12 +13,11 @@ using System.IO.Compression;
 
 namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
 {
-    public class IndexModel : PageModel
+    public class IndexModel(ILogger<IndexModel> logger, 
+                            DbContext dbContext, 
+                            INugetService nugetService, 
+                            INotificationService notificationService) : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
-        private readonly DbContext _dbContext;
-        private readonly INugetService _nugetService;
-
         [BindProperty]
         public string Search { get; set; } = "";
 
@@ -30,16 +30,9 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
 
         public PackageListViewModel PackageListViewModel { get; set; } = new();
 
-        public IndexModel(ILogger<IndexModel> logger, DbContext dbContext, INugetService nugetService)
-        {
-            _logger = logger;
-            _dbContext = dbContext;
-            _nugetService = nugetService;
-        }
-
         public void OnGet()
         {
-            Sources = _dbContext.NugetSources.FindAll();
+            Sources = dbContext.NugetSources.FindAll();
             PackageListViewModel = new PackageListViewModel
             {
                 SourceId = SourceId,
@@ -51,11 +44,12 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
         {
             try
             {
-                Packages = await _nugetService.SearchPackagesAsync(Search, SourceId);
+                Packages = await nugetService.SearchPackagesAsync(Search, SourceId);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error on search packages");
+                logger.LogError(ex, "Error on search packages");
+                await notificationService.PushErrorAsync("Failed to search packages from the source.");
                 Packages = [];
             }
 
@@ -71,15 +65,15 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
         {
             try
             {
-                var stream = await _nugetService.OnGetDownloadAsync(sourceId, packageId, packageVersion);
+                var stream = await nugetService.OnGetDownloadAsync(sourceId, packageId, packageVersion);
 
                 var tempUploadId = Guid.NewGuid();
                 var tempFileName = $"{packageId}.{packageVersion}.nupkg";
                 var tempFilePath = Path.Combine(Path.GetTempPath(), tempFileName);
 
-                _dbContext.CrawlerAgentFileStorage.Upload(tempUploadId, tempFileName, stream);
+                dbContext.CrawlerAgentFileStorage.Upload(tempUploadId, tempFileName, stream);
 
-                var fileStorage = _dbContext.CrawlerAgentFileStorage.FindById(tempUploadId);
+                var fileStorage = dbContext.CrawlerAgentFileStorage.FindById(tempUploadId);
                 fileStorage.SaveAs(tempFilePath);
 
                 var crawlerAgentDir = CrawlerAgent.GetAgentDir(tempFileName);
@@ -94,9 +88,9 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
 
                 // Register agent
                 var crawlerAgent = new CrawlerAgent(dllPath, displayName, new Dictionary<string, object>());
-                _dbContext.CrawlerAgents.Insert(crawlerAgent);
+                dbContext.CrawlerAgents.Insert(crawlerAgent);
 
-                _dbContext.CrawlerAgentFileStorage.Delete(tempUploadId);
+                dbContext.CrawlerAgentFileStorage.Delete(tempUploadId);
 
                 return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit", new
                 {
@@ -106,12 +100,12 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Package is invalid.");
+                await notificationService.PushErrorAsync("Package is invalid.");
             }
 
             ModelState.Remove("Search");
 
-            Sources = _dbContext.NugetSources.FindAll();
+            Sources = dbContext.NugetSources.FindAll();
             PackageListViewModel = new PackageListViewModel
             {
                 SourceId = SourceId,
