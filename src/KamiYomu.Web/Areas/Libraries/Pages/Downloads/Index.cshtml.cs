@@ -1,7 +1,11 @@
 using Hangfire;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.Notifications;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
+using KamiYomu.Web.Infrastructure.Services;
+using KamiYomu.Web.Infrastructure.Services.Interfaces;
+using KamiYomu.Web.Worker;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,10 +14,11 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 {
     public class IndexModel(
         ILogger<IndexModel> logger,
-        DbContext dbContext, 
-        IAgentCrawlerRepository agentCrawlerRepository, 
+        DbContext dbContext,
+        IAgentCrawlerRepository agentCrawlerRepository,
         IBackgroundJobClient jobClient,
-        IHangfireRepository hangfireRepository) : PageModel
+        IHangfireRepository hangfireRepository,
+        INotificationService notificationService) : PageModel
     {
         public IEnumerable<CrawlerAgent> CrawlerAgents { get; set; } = [];
 
@@ -49,18 +54,26 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
             libDbContext.MangaDownloadRecords.Insert(downloadRecord);
 
             var backgroundJobId = jobClient.Create<IMangaDownloaderJob>(
-                p => p.DispatchAsync(library.Id, downloadRecord.Id, manga.Title, null!, CancellationToken.None),
+                p => p.DispatchAsync(library.AgentCrawler.Id, library.Id, downloadRecord.Id, manga.Title, null!, CancellationToken.None),
                 hangfireRepository.GetLeastLoadedMangaDownloadSchedulerQueue()
             );
+
+            RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(
+            library.GetDiscovertyJobId(),
+            Web.Settings.Worker.DiscoveryNewChapterQueues,
+            (job) => job.DispatchAsync(agentCrawler.Id, library.Id, null!, CancellationToken.None),
+            Cron.Hourly());
 
             downloadRecord.Schedule(backgroundJobId);
 
             libDbContext.MangaDownloadRecords.Update(downloadRecord);
 
+            await notificationService.PushInfoAsync($"Title {library.Manga.Title} was added to your collection.");
+
             return Partial("_LibraryCard", library);
         }
 
-        public IActionResult OnPostRemoveFromCollection()
+        public async Task<IActionResult> OnPostRemoveFromCollectionAsync()
         {
             if (!ModelState.IsValid)
             {
@@ -71,11 +84,11 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
                                              .Include(p => p.AgentCrawler)
                                              .FindOne(p => p.Manga.Id == MangaId && p.AgentCrawler.Id == AgentId);
 
-            using var libDbContext = library.GetDbContext(); 
+            using var libDbContext = library.GetDbContext();
 
             var mangaDownload = libDbContext.MangaDownloadRecords.Include(p => p.Library).FindOne(p => p.Library.Id == library.Id);
 
-            if(mangaDownload != null)
+            if (mangaDownload != null)
             {
                 mangaDownload.Cancelled("User remove manga from the library.");
 
@@ -95,12 +108,16 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 
                 libDbContext.MangaDownloadRecords.Update(mangaDownload);
             }
+            var mangaTitle = library.Manga.Title;
+            RecurringJob.RemoveIfExists(library.GetDiscovertyJobId());
 
             library.DropDbContext();
 
             dbContext.Libraries.Delete(library.Id);
 
             logger.LogInformation("Drop Database {database}", libDbContext.DatabaseFilePath());
+
+            await notificationService.PushWarningAsync($"Title {mangaTitle} was removed from your collection.");
 
             return Partial("_LibraryCard", new Entities.Library(library.AgentCrawler, library.Manga));
         }

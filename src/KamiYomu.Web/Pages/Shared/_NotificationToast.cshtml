@@ -1,22 +1,78 @@
-﻿@{
-    var message = TempData["ToastError"] as string;
-}
+﻿
+<div id="toast-container"></div>
 
-@if (!string.IsNullOrEmpty(message))
-{
-    <div id="toast-area" class="position-fixed bottom-0 end-0 p-3" style="z-index:1100;">
-        <div class="toast show text-bg-danger border-0 d-flex align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-body">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i> @message
+<script src="~/lib/microsoft-signalr/signalr.min.js"></script>
+<script>
+        const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/notificationHub")
+        .build();
+
+    connection.on("ReceiveNotification", function (notification) {
+        const container = document.getElementById("toast-container");
+
+        const toast = document.createElement("div");
+        toast.className = `toast align-items-center text-bg-${notification.type.toLowerCase()} border-0 show`;
+        toast.setAttribute("role", "alert");
+        toast.setAttribute("aria-live", "assertive");
+        toast.setAttribute("aria-atomic", "true");
+
+        const type = notification.type.toLowerCase();
+        
+        const icons = {
+            success: "bi-check-circle-fill",
+            info: "bi-info-circle-fill",
+            warning: "bi-exclamation-triangle-fill",
+            error: "bi-x-circle-fill"
+        };
+        
+        const iconClass = icons[type] || "bi-info-circle-fill";
+        
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body d-flex align-items-center gap-2">
+                    <i class="bi ${iconClass}"></i>
+                    <span>${notification.message}</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close"
-                    hx-get="/Toast/Clear" hx-target="#toast-area" hx-swap="outerHTML"></button>
-        </div>
-    </div>
+        `;
 
-    <script>
-        setTimeout(() => {
-            htmx.ajax('GET', '/Toast/Clear', { target: '#toast-area', swap: 'outerHTML' });
-        }, 5000);
-    </script>
-}
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 5000);
+    });
+
+    connection.start().catch(err => console.error(err.toString()));
+
+    document.body.addEventListener("htmx:on:error", function (event) {
+        const message = "Network error or unexpected failure.";
+        const type = "error";
+
+        if (window.connection) {
+            connection.invoke("SendNotification", { message, type });
+        }
+    });
+
+
+    document.body.addEventListener("htmx:responseError", function (event) {
+        const status = event.detail.xhr.status;
+        let message = "An unexpected error occurred.";
+        let type = "error";
+
+        if (status === 403) {
+            message = "Access denied. You don't have permission to perform this action.";
+        } else if (status === 404) {
+            message = "Resource not found.";
+        } else if (status === 500) {
+            message = "Server error. Please try again later.";
+        }
+
+        // SignalR toast trigger
+        if (window.connection) {
+            connection.invoke("SendNotification", { message, type });
+        } else {
+            console.warn("SignalR connection not available.");
+        }
+    });
+
+
+</script>

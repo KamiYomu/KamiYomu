@@ -1,13 +1,17 @@
 using KamiYomu.CrawlerAgents.Core.Inputs;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
+using KamiYomu.Web.Infrastructure.Services;
+using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
 namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
 {
-    public class EditModel(DbContext dbContext, CacheContext cacheContext) : PageModel
+    public class EditModel(DbContext dbContext, 
+                           CacheContext cacheContext, 
+                           INotificationService notificationService) : PageModel
     {
         [BindProperty]
         public CrawlerAgentEditInputModel Input { get; set; } = new CrawlerAgentEditInputModel();
@@ -32,7 +36,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
@@ -42,7 +46,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
             agentCrawler.Update(Input.DisplayName, Input.GetAgentMetadataValues(), Input.ReadOnlyMetadata);
             dbContext.CrawlerAgents.Update(agentCrawler);
             cacheContext.EmptyAgentKeys(agentCrawler.Id);
-            TempData["SuccessMessage"] = I18n.CrawlerAgentSavedSuccessfully;
+            await notificationService.PushSuccessAsync(I18n.CrawlerAgentSavedSuccessfully);
             return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit", new { agentCrawler.Id });
         }
     }

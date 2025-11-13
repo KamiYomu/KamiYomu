@@ -2,6 +2,7 @@ using KamiYomu.CrawlerAgents.Core.Inputs;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
+using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Infrastructure.Storage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,7 +11,7 @@ using System.IO.Compression;
 
 namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
 {
-    public class CreateModel(DbContext dbContext) : PageModel
+    public class CreateModel(DbContext dbContext, INotificationService notificationService) : PageModel
     {
 
         [BindProperty]
@@ -38,14 +39,20 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
         public IActionResult OnPostUpload(IFormFile agentFile, CancellationToken cancellationToken)
         {
             if (agentFile == null || agentFile.Length == 0)
+            {
                 return BadRequest("No file uploaded.");
+            }
+                
 
             var extension = Path.GetExtension(agentFile.FileName).ToLowerInvariant();
             var isNuget = extension == ".nupkg";
             var isDll = extension == ".dll";
 
             if (!isNuget && !isDll)
+            {
                 return BadRequest("Only .dll or .nupkg files are supported.");
+            }
+
 
 
             // Create a temp file with the correct extension
@@ -95,7 +102,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
             });
         }
 
-        public IActionResult OnPostSave()
+        public async Task<IActionResult> OnPostSaveAsync()
         {
             var fileStorage = dbContext.CrawlerAgentFileStorage.FindById(Input.TempFileId);
 
@@ -105,7 +112,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
 
             if (!isNuget && !isDll)
             {
-                ModelState.AddModelError("AgentFile", "Only .dll or .nupkg files are supported.");
+                await notificationService.PushErrorAsync("Only .dll or .nupkg files are supported.");
                 return Page();
             }
             var agentDir = CrawlerAgent.GetAgentDir(fileStorage.Filename);
@@ -125,7 +132,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
 
                 if (dllPath == null)
                 {
-                    ModelState.AddModelError("AgentFile", "No .dll found in NuGet package.");
+                    await notificationService.PushErrorAsync("No .dll found in NuGet package.");
                     return Page();
                 }
             }

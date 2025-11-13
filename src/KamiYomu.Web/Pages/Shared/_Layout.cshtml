@@ -128,7 +128,6 @@
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 @RenderBody()
                 <partial name="_Dialogs" />
-                <partial name="_NotificationToast" />
                 <partial name="_Loading" />
             </main>
         </div>
@@ -140,9 +139,10 @@
             </div>
         </div>
     </div>
+    <partial name="_NotificationToast" />
     <script src="~/js/color-modes.js" asp-append-version="true"></script>
     <script src="~/lib/htmx/htmx.min.js"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -6,35 +6,45 @@
     <h1 class="display-4 fw-bold">@I18n.WelcomeToKamiYomu</h1>
     <p class="lead text-muted">@I18n.WelcomeToKamiYomuDescription</p>
 </div>
+<div class="d-flex flex-column flex-md-row justify-content-center align-items-stretch gap-4">
 
-<div class="row g-4">
-    <div class="col-md-6">
-        <div class="card h-100 border-0 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <i class="bi bi-cloud-download me-2"></i> @I18n.CrawlManga
-                </h5>
-                <p class="card-text">@I18n.CrawlMangaDescription</p>
-                <a asp-area="Libraries" asp-page="Downloads/Index" class="btn btn-outline-primary">
-                    <i class="bi bi-play-circle me-1"></i> @I18n.StartCrawlingNow
-                </a>
-            </div>
+    <!-- Step 1 -->
+    <div class="card border-0 shadow-sm flex-grow-1" style="min-width: 250px; max-width: 300px;">
+        <div class="card-body text-center">
+            <h5 class="card-title">
+                <i class="bi bi-node-plus-fill me-2"></i> @I18n.Addons
+            </h5>
+            <p class="card-text">@I18n.CrawlMangaDescription</p>
+            <a asp-area="Settings" asp-page="Add-ons/Index" class="btn btn-info">
+                <i class="bi bi-node-plus me-1"></i> @I18n.InstallACrawlerAgent
+            </a>
         </div>
     </div>
 
-    <div class="col-md-6">
-        <div class="card h-100 border-0 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <i class="bi bi-book me-2"></i> @I18n.Collection
-                </h5>
-                <p class="card-text">@I18n.ViewLibraryDescription</p>
-                <a asp-area="Libraries" asp-page="Collection/Index" class="btn btn-outline-success">
-                    <i class="bi bi-box-arrow-in-right me-1"></i> @I18n.SeeYourCollection
-                </a>
-            </div>
+    <!-- Step 2 -->
+    <div class="card border-0 shadow-sm flex-grow-1" style="min-width: 250px; max-width: 300px;">
+        <div class="card-body text-center">
+            <h5 class="card-title">
+                <i class="bi bi-cloud-download me-2"></i> @I18n.Download
+            </h5>
+            <p class="card-text">@I18n.CrawlMangaDescription</p>
+            <a asp-area="Libraries" asp-page="Downloads/Index" class="btn btn-outline-primary">
+                <i class="bi bi-play-circle me-1"></i> @I18n.StartDownloadYourMangas
+            </a>
         </div>
     </div>
+
+    <!-- Step 3 -->
+    <div class="card border-0 shadow-sm flex-grow-1" style="min-width: 250px; max-width: 300px;">
+        <div class="card-body text-center">
+            <h5 class="card-title">
+                <i class="bi bi-book me-2"></i> @I18n.Collection
+            </h5>
+            <p class="card-text">@I18n.ViewLibraryDescription</p>
+            <a asp-area="Libraries" asp-page="Collection/Index" class="btn btn-outline-success">
+                <i class="bi bi-box-arrow-in-right me-1"></i> @I18n.SeeYourCollection
+            </a>
+        </div>
+    </div>
+
 </div>
-
-

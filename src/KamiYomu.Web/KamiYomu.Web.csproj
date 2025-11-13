@@ -13,15 +13,16 @@
 		<Description>KamiYomu is a powerful, extensible manga crawler built for manga enthusiasts who want full control over their collection. It scans and downloads manga from supported websites, stores them locally, and lets you host your own private manga reader—no ads, no subscriptions, no limits.</Description>
 		<Company>KamiYomu</Company>
 		<Product>KamiYomu</Product>
-		<Copyright>© KamiYomu. Licensed under GPL-3.0.</Copyright>
+		<Copyright>© KamiYomu. Licensed under AGPL-3.0.</Copyright>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.21" />
 		<PackageReference Include="Hangfire.Storage.SQLite" Version="0.4.2" />
-		<PackageReference Include="KamiYomu.CrawlerAgents.Core" Version="1.1.0" />
+		<PackageReference Include="KamiYomu.CrawlerAgents.Core" Version="1.1.1" />
 		<PackageReference Include="LiteDB" Version="5.0.21" />
 		<PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.3.0" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Http.Polly" Version="9.0.10" />
 		<PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.21" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />

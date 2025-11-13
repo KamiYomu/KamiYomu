@@ -492,4 +492,37 @@
   <data name="AddonExplorer" xml:space="preserve">
     <value>Add-on Explorer</value>
   </data>
+  <data name="InstallACrawlerAgent" xml:space="preserve">
+    <value>Install a Crawler Agent</value>
+  </data>
+  <data name="GoToAddOn" xml:space="preserve">
+    <value>Go to add-on</value>
+  </data>
+  <data name="StartDownloadYourMangas" xml:space="preserve">
+    <value>Start Download Your Mangas</value>
+  </data>
+  <data name="Enjoy" xml:space="preserve">
+    <value>Enjoy</value>
+  </data>
+  <data name="SeeTheLicense" xml:space="preserve">
+    <value>See the license</value>
+  </data>
+  <data name="ProcessingCertainCrawlerAgentaRequireMoreTime" xml:space="preserve">
+    <value>Processing... Certain crawler agents require more time depending on the complexity of the task.</value>
+  </data>
+  <data name="WaitProcessing1" xml:space="preserve">
+    <value>We are still processing, believe in us</value>
+  </data>
+  <data name="WaitProcessing2" xml:space="preserve">
+    <value>We can't wait until it is done</value>
+  </data>
+  <data name="WaitProcessing3" xml:space="preserve">
+    <value>Almost there... maybe</value>
+  </data>
+  <data name="WaitProcessing4" xml:space="preserve">
+    <value>Still spinning... like your favorite vinyl</value>
+  </data>
+  <data name="WaitProcessing5" xml:space="preserve">
+    <value>This spinner is doing its best</value>
+  </data>
 </root>

@@ -4,7 +4,7 @@
     var assembly = typeof(Program).Assembly;
     var coreAssembly = typeof(KamiYomu.CrawlerAgents.Core.AbstractCrawlerAgent).Assembly;
     var name = assembly.GetName();
-    var coreInformationalVersion = coreAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+    var coreInformationalVersion = coreAssembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version;
     var version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
     var company = assembly.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
     var product = assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
@@ -15,10 +15,15 @@
 <div class="mt-4 text-secondary small">
     <div class="d-block text-wrap text-break">@I18n.Version: <strong>@version</strong></div>
     <div class="d-block text-wrap text-break">Core @I18n.Version: <strong>@coreInformationalVersion</strong></div>
-    <div class="d-block text-wrap text-break">@copyright</div>
     <div class="d-block text-wrap text-break">
-        <a href="https://github.com/KamiYomu/KamiYomu.Web" class="text-decoration-none link-secondary" target="_blank" rel="noopener noreferrer">
-           @I18n.SourceCode
+        @copyright
+        <a href="https://raw.githubusercontent.com/KamiYomu/KamiYomu.Web/refs/heads/main/LICENSE.txt" class="text-decoration-none link-secondary" target="_blank" rel="noopener noreferrer">
+            @I18n.License
+        </a>
+    </div>
+    <div class="d-block text-wrap text-break">
+        <a href="https://github.com/KamiYomu/KamiYomu" class="text-decoration-none link-secondary" target="_blank" rel="noopener noreferrer">
+            @I18n.SourceCode
         </a>
     </div>
 </div>

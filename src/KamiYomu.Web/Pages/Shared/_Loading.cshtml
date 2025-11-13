@@ -1,35 +1,60 @@
-﻿<div id="loading-indicator" class="d-none position-fixed top-0 start-0 w-100 h-100 bg-light-subtle bg-opacity-25 z-3 flex-column justify-content-center align-items-center">
-    <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
-        <span class="visually-hidden">Loading...</span>
+﻿<div id="loading-indicator" class="d-none position-fixed top-0 start-0 w-100 h-100 bg-light-subtle bg-opacity-25 z-3 flex-column justify-content-center align-items-center text-center">
+    <div class="spinner-border text-info mb-3" role="status" style="width: 3rem; height: 3rem;">
+        <span class="visually-hidden">@I18n.ProcessingCertainCrawlerAgentaRequireMoreTime</span>
     </div>
+    <div id="loading-message" class="fw-bold text-primary mb-3 fs-5"></div>
     <button id="cancel-request-btn" class="btn btn-outline-danger btn-sm">
         @I18n.Close
     </button>
 </div>
-
 <script>
     const loading = document.getElementById('loading-indicator');
     const cancelBtn = document.getElementById('cancel-request-btn');
+    const messageBox = document.getElementById('loading-message');
     let currentRequest = null;
+    let messageInterval = null;
+
+    const messages = [
+        "@(I18n.ProcessingCertainCrawlerAgentaRequireMoreTime)",
+        "@(I18n.WaitProcessing1) 💪",
+        "@(I18n.WaitProcessing2) 🤞",
+        "Baby shark dodododo 🦈🎶",
+        "Mommy shark dodododo 🦈🎶",
+        "Daddy shark dodododo 🦈🎶",
+        "Grandma shark dodododo 🦈🎶",
+        "Grandpa shark dodododo 🦈🎶",
+        "@(I18n.WaitProcessing3) 🐢",
+        "@(I18n.WaitProcessing4) 🎵",
+        "@(I18n.WaitProcessing5) 🌀"
+    ];
 
     function showLoading() {
-      loading.classList.remove('d-none');
-      loading.classList.add('d-flex');
+        loading.classList.remove('d-none');
+        loading.classList.add('d-flex');
+
+        let index = 0;
+        messageBox.textContent = messages[index];
+        messageInterval = setInterval(() => {
+            index = (index + 1) % messages.length;
+            messageBox.textContent = messages[index];
+        }, 3000);
     }
 
     function hideLoading() {
-      loading.classList.remove('d-flex');
-      loading.classList.add('d-none');
+        loading.classList.remove('d-flex');
+        loading.classList.add('d-none');
+        clearInterval(messageInterval);
+        messageBox.textContent = "";
     }
 
     function cleanupRequest() {
-      currentRequest = null;
-      hideLoading();
+        currentRequest = null;
+        hideLoading();
     }
 
     document.body.addEventListener('htmx:beforeRequest', evt => {
-      currentRequest = evt.detail.xhr;
-      showLoading();
+        currentRequest = evt.detail.xhr;
+        showLoading();
     });
 
     document.body.addEventListener('htmx:afterRequest', cleanupRequest);
@@ -39,9 +64,9 @@
     document.body.addEventListener('htmx:abort', cleanupRequest);
 
     cancelBtn.addEventListener('click', () => {
-      if (currentRequest) {
-        currentRequest.abort();
-        cleanupRequest();
-      }
+        if (currentRequest) {
+            currentRequest.abort();
+            cleanupRequest();
+        }
     });
 </script>

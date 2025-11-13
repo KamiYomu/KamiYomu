@@ -19,8 +19,8 @@
         "quoteArgs": false
       },
       "sourceFileMap": {
-        "/app": "${workspaceFolder}/src/KamiYomu.Web",
-        "/src": "${workspaceFolder}/src"
+        "/app": "${workspaceFolder}/KamiYomu.Web",
+        "/src": "${workspaceFolder}"
       },
       "justMyCode": false,
       "logging": {

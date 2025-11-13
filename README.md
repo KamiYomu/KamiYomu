@@ -25,8 +25,7 @@
 ## 🚀 Why KamiYomu?
 
 Whether you're cataloging rare series, powering a personal manga dashboard, or seeking a cleaner alternative to bloated online readers, KamiYomu puts you in control of how you access and organize manga content. It’s a lightweight, developer-friendly crawler built for clarity, extensibility, and respectful use of publicly accessible sources. Content availability and usage rights depend on the licensing terms of each source — KamiYomu simply provides the tools.
-
----
+ <img src="./screenshots/welcome-page.jpeg" alt="Welcome Page" width="600"/><br/>
 
 ## Requirements
 
@@ -76,32 +75,31 @@ Configure your sources and crawler agents
 
 Download crawler agents from NuGet Package from [here](https://github.com/orgs/KamiYomu/packages) and upload them in [Crawler Agents](http://localhost:8080/Settings/CrawlerAgents).
 
-## 👨‍💻 Contributing
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request against the ``develop`` branch
-
-
 ## 🛠️ Development Setup
 
-We recommend using Visual Studio 2022 or later with the .NET 8 SDK installed. However, you can also run KamiYomu using VsCode.
+We recommend using Visual Studio 2022 or later with the .NET 8 SDK installed. 
+However, you can also run KamiYomu using VsCode.
+
+1. Fork the repository
+2. Select the develop branch (`git checkout develop`)
+3. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+4. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+5. Push to the branch (`git push origin feature/AmazingFeature`)
+6. Open a Pull Request against the ``develop`` branch
 
 ### Using Visual Studio
 
+- Docker: [Download here](https://www.docker.com/get-started)
 - Visual Studio: [Download here](https://visualstudio.microsoft.com/downloads/)
 - .NET 8 SDK: [Download here](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
-- Docker: [Download here](https://www.docker.com/get-started)
-
 
 1. **Clone the repository**
    ```bash
    git clone https://github.com/KamiYomu/KamiYomu.Web.git
 	```
 2. Open the solution in Visual Studio in `/src/KamiYomu.Web.sln`
-3. Set `docker-compose` project as startup project and run it.
-
+3. Set `docker-compose` project as **startup project** (Right-click on project, select `Set As Startup Project.`).
+4. Run it 
 
 ### Using VsCode
 
@@ -109,6 +107,7 @@ To get started with local development using Visual Studio Code, ensure the follo
 
 **Required Tools**
 
+- Docker: [Download here](https://www.docker.com/get-started)
 - Visual Studio Code [Download Here](https://code.visualstudio.com/)
 - C# Dev Kit Extension [Install](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
 - Docker Extension for VS Code [Install](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
@@ -121,12 +120,15 @@ Note: Make sure Docker is installed and running on your machine.
     git clone https://github.com/KamiYomu/KamiYomu.Web.git
 ```
 2. Running the Project in VS Code
-- Open the project folder in VS Code.
-- Navigate to the "Run and Debug" tab (Ctrl+Shift+D).
+- Open the `./src/` folder in VS Code.
+- Navigate to the "Run and Debug" tab (Ctrl+Shift+D) or press `F5`.
 - Select the launch configuration: "Attach to .NET Core in Docker".
 - Click the ▶️ Start Debugging button.
-The project includes predefined tasks to build and run the Docker container automatically.
 
+
+This project includes predefined tasks to build and run the Docker container automatically.
+If you install all required extensions, the project will run and open the browser in http://localhost:8080
+> NOTE:  You may see a window with some error related `=> ERROR [kamiyomu.web internal] load metadata for mcr.microsoft.com/dotnet/sdk:8.0`, just click on `abort` button then try again.
 
 ## 🧠 Tech Stack- .NET 8 Razor Pages
 - Hangfire for job scheduling
@@ -135,7 +137,7 @@ The project includes predefined tasks to build and run the Docker container auto
 - Plugin-based architecture for source extensibility
 
 ## 📜 License
-This project is licensed under GPL-3.0. See the LICENSE file for details.
+This project is licensed under AGPL-3.0. See the LICENSE file for details.
 
 ## 🤝 Contributing
 Pull requests are welcome! If you have ideas for new features, plugin sources, or UI improvements, feel free to open an issue or submit a PR.

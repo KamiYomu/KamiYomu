@@ -489,11 +489,59 @@
   <data name="GotIt" xml:space="preserve">
     <value>J'ai compris</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="AddonExplorer" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="AddonExplorer" xml:space="preserve">
     <value>Explorateur de modules complémentaires</value>
+  </data>
+  <data name="InstallACrawlerAgent" xml:space="preserve">
+    <value>Installer un agent de robot d'exploration</value>
+  </data>
+  <data name="GoToAddOn" xml:space="preserve">
+    <value>Aller au module complémentaire</value>
+  </data>
+  <data name="StartDownloadYourMangas" xml:space="preserve">
+    <value>Commencez à télécharger vos mangas</value>
+  </data>
+  <data name="Enjoy" xml:space="preserve">
+    <value>Apprécier</value>
+  </data>
+  <data name="SeeTheLicense" xml:space="preserve">
+    <value>Voir la licence</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ProcessingCertainCrawlerAgentaRequireMoreTime" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="WaitProcessing1" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="WaitProcessing2" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="WaitProcessing3" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="WaitProcessing4" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="WaitProcessing5" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ProcessingCertainCrawlerAgentaRequireMoreTime" xml:space="preserve">
+    <value>Traitement... Certains agents de robot d'exploration nécessitent plus de temps en fonction de la complexité de la tâche.</value>
+  </data>
+  <data name="WaitProcessing1" xml:space="preserve">
+    <value>Nous sommes toujours en train de traiter, croyez en nous</value>
+  </data>
+  <data name="WaitProcessing2" xml:space="preserve">
+    <value>Nous ne pouvons pas attendre que ce soit fait</value>
+  </data>
+  <data name="WaitProcessing3" xml:space="preserve">
+    <value>J'y suis presque... peut-être</value>
+  </data>
+  <data name="WaitProcessing4" xml:space="preserve">
+    <value>Je tourne toujours... comme ton vinyle préféré</value>
+  </data>
+  <data name="WaitProcessing5" xml:space="preserve">
+    <value>Ce spinner fait de son mieux</value>
   </data>
 </root>

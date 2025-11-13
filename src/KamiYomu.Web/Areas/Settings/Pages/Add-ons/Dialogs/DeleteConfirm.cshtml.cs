@@ -1,13 +1,12 @@
-using KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers;
 using KamiYomu.Web.Entities.Addons;
 using KamiYomu.Web.Infrastructure.Contexts;
+using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using static KamiYomu.Web.Settings;
 
 namespace KamiYomu.Web.Areas.Settings.Pages.Add_ons.Dialogs
 {
-    public class DeleteConfirmModel(DbContext dbContext) : PageModel
+    public class DeleteConfirmModel(DbContext dbContext, INotificationService notificationService) : PageModel
     {
         [BindProperty]
         public Guid Id { get; set; }
@@ -26,6 +25,9 @@ namespace KamiYomu.Web.Areas.Settings.Pages.Add_ons.Dialogs
             dbContext.NugetSources.Delete(Id);
 
             var nugetSources = dbContext.NugetSources.FindAll().ToList();
+
+            notificationService.PushSuccessAsync("Source removed successfully");
+
             return Partial("_PackageList", nugetSources);
         }
     }

@@ -2,9 +2,23 @@
 {
     public class Settings
     {
+        public static class ServiceLocator
+        {
+            private static readonly Lazy<IServiceProvider?> _lazyProvider = new(() => _providerFactory(), true);
+
+            private static Func<IServiceProvider?> _providerFactory = () => null;
+
+            public static void Configure(Func<IServiceProvider?> factory)
+            {
+                _providerFactory = factory;
+            }
+
+            public static IServiceProvider? Instance => _lazyProvider.Value;
+        }
+
         public static class Package
         {
-            public const string KamiYomuCrawlerAgentTag = "crawler-agents";
+            public const string KamiYomuCrawlerAgentTag = "kamiyomu-crawler-agents";
         }
 
         public static class SpecialFolders

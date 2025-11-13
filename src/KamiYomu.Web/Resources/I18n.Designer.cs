@@ -493,6 +493,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enjoy.
+        /// </summary>
+        internal static string Enjoy {
+            get {
+                return ResourceManager.GetString("Enjoy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Examples.
         /// </summary>
         internal static string Examples {
@@ -547,6 +556,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Go to add-on.
+        /// </summary>
+        internal static string GoToAddOn {
+            get {
+                return ResourceManager.GetString("GoToAddOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Has Terms Accepted?.
         /// </summary>
         internal static string HasTermsAccepted {
@@ -579,6 +597,15 @@ namespace KamiYomu.Web.Resources {
         internal static string Install {
             get {
                 return ResourceManager.GetString("Install", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install a Crawler Agent.
+        /// </summary>
+        internal static string InstallACrawlerAgent {
+            get {
+                return ResourceManager.GetString("InstallACrawlerAgent", resourceCulture);
             }
         }
         
@@ -862,6 +889,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Processing... Certain crawler agents require more time depending on the complexity of the task..
+        /// </summary>
+        internal static string ProcessingCertainCrawlerAgentaRequireMoreTime {
+            get {
+                return ResourceManager.GetString("ProcessingCertainCrawlerAgentaRequireMoreTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Product.
         /// </summary>
         internal static string Product {
@@ -943,6 +979,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to See the license.
+        /// </summary>
+        internal static string SeeTheLicense {
+            get {
+                return ResourceManager.GetString("SeeTheLicense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to See Your Collection.
         /// </summary>
         internal static string SeeYourCollection {
@@ -1002,6 +1047,15 @@ namespace KamiYomu.Web.Resources {
         internal static string StartCrawlingNow {
             get {
                 return ResourceManager.GetString("StartCrawlingNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start Download Your Mangas.
+        /// </summary>
+        internal static string StartDownloadYourMangas {
+            get {
+                return ResourceManager.GetString("StartDownloadYourMangas", resourceCulture);
             }
         }
         
@@ -1128,6 +1182,51 @@ namespace KamiYomu.Web.Resources {
         internal static string Volumes {
             get {
                 return ResourceManager.GetString("Volumes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We are still processing, believe in us.
+        /// </summary>
+        internal static string WaitProcessing1 {
+            get {
+                return ResourceManager.GetString("WaitProcessing1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We can&apos;t wait until it is done.
+        /// </summary>
+        internal static string WaitProcessing2 {
+            get {
+                return ResourceManager.GetString("WaitProcessing2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Almost there... maybe.
+        /// </summary>
+        internal static string WaitProcessing3 {
+            get {
+                return ResourceManager.GetString("WaitProcessing3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Still spinning... like your favorite vinyl.
+        /// </summary>
+        internal static string WaitProcessing4 {
+            get {
+                return ResourceManager.GetString("WaitProcessing4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This spinner is doing its best.
+        /// </summary>
+        internal static string WaitProcessing5 {
+            get {
+                return ResourceManager.GetString("WaitProcessing5", resourceCulture);
             }
         }
         
