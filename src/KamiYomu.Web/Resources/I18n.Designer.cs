@@ -1186,6 +1186,51 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to We are still processing, believe in us.
+        /// </summary>
+        internal static string WaitProcessing1 {
+            get {
+                return ResourceManager.GetString("WaitProcessing1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We can&apos;t wait until it is done.
+        /// </summary>
+        internal static string WaitProcessing2 {
+            get {
+                return ResourceManager.GetString("WaitProcessing2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Almost there... maybe.
+        /// </summary>
+        internal static string WaitProcessing3 {
+            get {
+                return ResourceManager.GetString("WaitProcessing3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Still spinning... like your favorite vinyl.
+        /// </summary>
+        internal static string WaitProcessing4 {
+            get {
+                return ResourceManager.GetString("WaitProcessing4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This spinner is doing its best.
+        /// </summary>
+        internal static string WaitProcessing5 {
+            get {
+                return ResourceManager.GetString("WaitProcessing5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Welcome.
         /// </summary>
         internal static string Welcome {

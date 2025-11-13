@@ -511,4 +511,37 @@
   <data name="ProcessingCertainCrawlerAgentaRequireMoreTime" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="WaitProcessing1" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="WaitProcessing2" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="WaitProcessing3" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="WaitProcessing4" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="WaitProcessing5" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ProcessingCertainCrawlerAgentaRequireMoreTime" xml:space="preserve">
+    <value>Traitement... Certains agents de robot d'exploration nécessitent plus de temps en fonction de la complexité de la tâche.</value>
+  </data>
+  <data name="WaitProcessing1" xml:space="preserve">
+    <value>Nous sommes toujours en train de traiter, croyez en nous</value>
+  </data>
+  <data name="WaitProcessing2" xml:space="preserve">
+    <value>Nous ne pouvons pas attendre que ce soit fait</value>
+  </data>
+  <data name="WaitProcessing3" xml:space="preserve">
+    <value>J'y suis presque... peut-être</value>
+  </data>
+  <data name="WaitProcessing4" xml:space="preserve">
+    <value>Je tourne toujours... comme ton vinyle préféré</value>
+  </data>
+  <data name="WaitProcessing5" xml:space="preserve">
+    <value>Ce spinner fait de son mieux</value>
+  </data>
 </root>

@@ -511,4 +511,37 @@
   <data name="ProcessingCertainCrawlerAgentaRequireMoreTime" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="WaitProcessing1" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="WaitProcessing2" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="WaitProcessing3" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="WaitProcessing4" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="WaitProcessing5" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ProcessingCertainCrawlerAgentaRequireMoreTime" xml:space="preserve">
+    <value>Processando... Certos agentes rastreadores requerem mais tempo dependendo da complexidade da tarefa.</value>
+  </data>
+  <data name="WaitProcessing1" xml:space="preserve">
+    <value>Ainda estamos processando, acredite em nós</value>
+  </data>
+  <data name="WaitProcessing2" xml:space="preserve">
+    <value>Mal podemos esperar até que esteja feito</value>
+  </data>
+  <data name="WaitProcessing3" xml:space="preserve">
+    <value>Quase lá... talvez</value>
+  </data>
+  <data name="WaitProcessing4" xml:space="preserve">
+    <value>Ainda girando... como seu vinil favorito</value>
+  </data>
+  <data name="WaitProcessing5" xml:space="preserve">
+    <value>Este spinner está fazendo o seu melhor</value>
+  </data>
 </root>
