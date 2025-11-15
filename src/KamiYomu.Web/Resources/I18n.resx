@@ -540,4 +540,7 @@
   <data name="ConfirmAddNugetOrgSourceExplanation" xml:space="preserve">
     <value>NuGet.org is a public package repository not maintained by KamiYomu. Any developer can publish packages there, including experimental or potentially unsafe ones. Please review each package carefully before installing it into KamiYomu to ensure it meets your security, licensing, and stability requirements.</value>
   </data>
+  <data name="FamilySafeMode" xml:space="preserve">
+    <value>Family Safe Mode</value>
+  </data>
 </root>
