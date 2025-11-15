@@ -47,5 +47,36 @@ namespace KamiYomu.Web.Pages
 
             return Redirect(returnUrl ?? Url.Page("/Index", new { area = "" }));
         }
+
+
+        public IActionResult OnPostFamilySafe(string returnUrl = null)
+        {
+            var culture = CultureInfo.GetCultureInfo(Culture);
+
+            var userPreference = dbContext.UserPreferences.FindOne(x => true);
+
+            if (userPreference != null)
+            {
+                userPreference.SetCulture(culture);
+            }
+            else
+            {
+                userPreference = new UserPreference(culture);
+            }
+
+            dbContext.UserPreferences.Upsert(userPreference);
+
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(Culture))
+            );
+
+            Thread.CurrentThread.CurrentCulture =
+            Thread.CurrentThread.CurrentUICulture =
+            CultureInfo.CurrentCulture =
+            CultureInfo.CurrentUICulture = culture;
+
+            return Redirect(returnUrl ?? Url.Page("/Index", new { area = "" }));
+        }
     }
 }

@@ -26,6 +26,7 @@ using System.Globalization;
 using System.Text.Json.Serialization;
 using KamiYomu.Web.AppOptions;
 using static KamiYomu.Web.AppOptions.Defaults;
+using KamiYomu.Web.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -129,12 +130,19 @@ app.UseRouting();
 using(var appScoped = app.Services.CreateScope())
 {
     var supportedCultures = new[] { "en-US", "pt-BR", "fr" };
+    var dbcontext = appScoped.ServiceProvider.GetRequiredService<DbContext>();
+    var userPreference = dbcontext.UserPreferences.FindOne(p => true);
+    var startupOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<StartupOptions>>().Value;
 
-    var userPreference = appScoped.ServiceProvider.GetService<DbContext>()?.UserPreferences.FindOne(p => true);
-    var startupOptions = appScoped.ServiceProvider.GetService<IOptions<StartupOptions>>()?.Value;
+    if (userPreference == null)
+    {
+        userPreference = new UserPreference(new CultureInfo(startupOptions.DefaultLanguage));
+        appScoped.ServiceProvider.GetService<DbContext>()!.UserPreferences.Insert(userPreference);
+    }
+
     var localizationOptions = new RequestLocalizationOptions
     {
-        DefaultRequestCulture = new RequestCulture(userPreference?.GetCulture() ?? new CultureInfo(startupOptions.DefaultLanguage)),
+        DefaultRequestCulture = new RequestCulture(userPreference!.GetCulture()),
         SupportedCultures = [.. supportedCultures.Select(c => new CultureInfo(c))],
         SupportedUICultures = [.. supportedCultures.Select(c => new CultureInfo(c))],
         FallBackToParentCultures = true,

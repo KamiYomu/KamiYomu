@@ -1,10 +1,17 @@
 ﻿@using System.Globalization
 
 <div class="dropdown">
-    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-        <i class="bi bi-globe"></i> @(CultureInfo.CurrentCulture.IsNeutralCulture? I18n.Language: @CultureInfo.CurrentCulture.NativeName)
+    <button class="btn btn-outline-secondary btn-sm dropdown-toggle d-flex justify-content-center align-items-center px-2 py-1 shadow-sm w-100 position-relative"
+            type="button"
+            data-bs-toggle="dropdown" style="border-width: 1px; font-size: 0.75rem; border-radius: 0.3rem;">
+        <span class="position-absolute start-0 ps-2">
+            <i class="bi bi-globe fs-6"></i>
+        </span>
+        <span class="fw-normal">
+            @(CultureInfo.CurrentCulture.IsNeutralCulture? I18n.Language: CultureInfo.CurrentCulture.NativeName)
+        </span>
     </button>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu w-100">
         <li>
             <form method="post"
                   asp-page="/Index"
@@ -13,9 +20,7 @@
                   asp-route-returnUrl="@Context.Request.Path"
                   novalidate>
                 <input type="hidden" name="Culture" value="@CultureInfo.GetCultureInfo("en-US").Name" />
-                <button type="submit" class="dropdown-item">
-                    🇺🇸 @CultureInfo.GetCultureInfo("en-US").NativeName
-                </button>
+                <button type="submit" class="dropdown-item">🇺🇸 @CultureInfo.GetCultureInfo("en-US").NativeName</button>
             </form>
         </li>
         <li>
@@ -26,9 +31,7 @@
                   asp-route-returnUrl="@Context.Request.Path"
                   novalidate>
                 <input type="hidden" name="Culture" value="@CultureInfo.GetCultureInfo("pt-BR").Name" />
-                <button type="submit" class="dropdown-item">
-                    🇧🇷 @CultureInfo.GetCultureInfo("pt-BR").NativeName
-                </button>
+                <button type="submit" class="dropdown-item">🇧🇷 @CultureInfo.GetCultureInfo("pt-BR").NativeName</button>
             </form>
         </li>
         <li>
@@ -39,9 +42,7 @@
                   asp-route-returnUrl="@Context.Request.Path"
                   novalidate>
                 <input type="hidden" name="Culture" value="@CultureInfo.GetCultureInfo("fr").Name" />
-                <button type="submit" class="dropdown-item">
-                    🇫🇷 @CultureInfo.GetCultureInfo("fr").NativeName
-                </button>
+                <button type="submit" class="dropdown-item">🇫🇷 @CultureInfo.GetCultureInfo("fr").NativeName</button>
             </form>
         </li>
     </ul>

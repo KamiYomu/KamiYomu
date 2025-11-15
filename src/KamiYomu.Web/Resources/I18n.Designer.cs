@@ -547,6 +547,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Family Safe Mode.
+        /// </summary>
+        internal static string FamilySafeMode {
+            get {
+                return ResourceManager.GetString("FamilySafeMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File Version.
         /// </summary>
         internal static string FileVersion {

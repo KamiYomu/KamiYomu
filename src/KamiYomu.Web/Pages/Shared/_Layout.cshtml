@@ -102,7 +102,7 @@
         </div>
     </header>
     <div class="container-fluid">
-        <div class="row">
+        <div class="row min-vh-100">
             <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
                 <div class="offcanvas-md offcanvas-end bg-body-tertiary"
                      tabindex="-1"
@@ -120,23 +120,20 @@
                                 data-bs-target="#sidebarMenu"
                                 aria-label="Close"></button>
                     </div>
-                    <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
+                    <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto h-100">
                         <partial name="_SideMenu" />
                     </div>
                 </div>
             </div>
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 h-100">
                 @RenderBody()
+                <div class="mt-5 text-center">
+                    <partial name="_AppVersion" />
+                </div>
                 <partial name="_Dialogs" />
                 <partial name="_Loading" />
+
             </main>
-        </div>
-        <div class="row">
-            <div class="mt-5 text-center">
-                <p class="text-muted">
-                    <partial name="_AppVersion" />
-                </p>
-            </div>
         </div>
     </div>
     <partial name="_NotificationToast" />
