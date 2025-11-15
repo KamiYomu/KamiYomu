@@ -1,0 +1,36 @@
+﻿@using KamiYomu.Web.AppOptions
+@using KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels
+
+@model SearchBarViewModel
+<form hx-post="/Settings/Add-ons/Index?handler=Search" hx-target="#result" hx-swap="innerHTML" class="mt-3">
+    <div class="mb-3">
+        @Html.AntiForgeryToken()
+        <label asp-for="Search" class="form-label">@I18n.Addons</label>
+        <div class="input-group">
+            <select asp-for="SourceId" id="nuget-source-select" class="form-select" style="max-width: 250px;">
+                <option value="">@I18n.SelectSource</option>
+                @foreach (var source in Model.Sources)
+                {
+                    <option value="@source.Id">@source.DisplayName</option>
+                }
+            </select>
+            <input type="text" asp-for="Search" class="form-control" placeholder="@I18n.Search" required />
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search me-3"></i>
+                @I18n.Search
+            </button>
+        </div>
+        <div class="form-check mt-3">
+            <input class="form-check-input" type="checkbox" asp-for="IncludePrerelease" id="IncludePrerelease">
+            <div class="d-flex flex-column">
+                <label class="form-check-label mb-1" asp-for="IncludePrerelease" for="IncludePrerelease">
+                    @I18n.IncludePreReleaseVersions
+                </label>
+                <small class="form-text text-muted">
+                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+                    @I18n.IncludePreReleaseVersionsExplanation
+                </small>
+            </div>
+        </div>
+    </div>
+</form>

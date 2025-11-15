@@ -1,4 +1,5 @@
 using Hangfire;
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Entities.Notifications;
 using KamiYomu.Web.Infrastructure.Contexts;
@@ -9,11 +10,14 @@ using KamiYomu.Web.Worker;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
+using KamiYomu.Web.AppOptions;
 
 namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 {
     public class IndexModel(
         ILogger<IndexModel> logger,
+        IOptionsSnapshot<WorkerOptions> workerOptions,
         DbContext dbContext,
         IAgentCrawlerRepository agentCrawlerRepository,
         IBackgroundJobClient jobClient,
@@ -60,9 +64,9 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 
             RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(
             library.GetDiscovertyJobId(),
-            Web.Settings.Worker.DiscoveryNewChapterQueues,
+            Defaults.Worker.DiscoveryNewChapterQueues,
             (job) => job.DispatchAsync(agentCrawler.Id, library.Id, null!, CancellationToken.None),
-            Cron.Hourly());
+            Cron.Daily());
 
             downloadRecord.Schedule(backgroundJobId);
 

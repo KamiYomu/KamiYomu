@@ -1,5 +1,6 @@
 ﻿using Hangfire;
 using Hangfire.States;
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 
 namespace KamiYomu.Web.Infrastructure.Repositories
@@ -11,7 +12,7 @@ namespace KamiYomu.Web.Infrastructure.Repositories
             var monitor = JobStorage.Current.GetMonitoringApi();
             var activeQueues = monitor.Queues().ToDictionary(q => q.Name, q => q.Length);
 
-            var allQueuesWithStats = Settings.Worker.DownloadChapterQueues
+            var allQueuesWithStats = Defaults.Worker.DownloadChapterQueues
                 .Select(name => new
                 {
                     Name = name,
@@ -26,7 +27,7 @@ namespace KamiYomu.Web.Infrastructure.Repositories
             var monitor = JobStorage.Current.GetMonitoringApi();
             var activeQueues = monitor.Queues().ToDictionary(q => q.Name, q => q.Length);
 
-            var allQueuesWithStats = Settings.Worker.MangaDownloadSchedulerQueues
+            var allQueuesWithStats = Defaults.Worker.MangaDownloadSchedulerQueues
                 .Select(name => new
                 {
                     Name = name,

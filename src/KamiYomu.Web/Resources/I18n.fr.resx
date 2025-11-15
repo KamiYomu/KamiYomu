@@ -507,25 +507,6 @@
   <data name="SeeTheLicense" xml:space="preserve">
     <value>Voir la licence</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ProcessingCertainCrawlerAgentaRequireMoreTime" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="WaitProcessing1" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="WaitProcessing2" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="WaitProcessing3" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="WaitProcessing4" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="WaitProcessing5" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="ProcessingCertainCrawlerAgentaRequireMoreTime" xml:space="preserve">
     <value>Traitement... Certains agents de robot d'exploration nécessitent plus de temps en fonction de la complexité de la tâche.</value>
   </data>
@@ -543,5 +524,21 @@
   </data>
   <data name="WaitProcessing5" xml:space="preserve">
     <value>Ce spinner fait de son mieux</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="IncludePreReleaseVersions" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="IncludePreReleaseVersionsExplanation" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="AddNugetOrgAsSource" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ConfirmAddNugetOrg" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ConfirmAddNugetOrgSourceExplanation" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

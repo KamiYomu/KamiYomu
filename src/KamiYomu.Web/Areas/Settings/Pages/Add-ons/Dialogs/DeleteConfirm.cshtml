@@ -14,7 +14,8 @@
 <div class="modal-footer">
     <form method="post"
           hx-post="/Settings/Add-ons/Dialogs/DeleteConfirm"
-          hx-target="#result"
+          hx-target="#search-bar"
+          hx-on::after-request="handleNugetSourceUpdate()"
           hx-swap="innerHTML">
         @Html.AntiForgeryToken()
         <input type="hidden" name="Id" value="@Model.NugetSource.Id" />
@@ -24,3 +25,17 @@
 </div>
 
 
+<script>
+    function handleNugetSourceUpdate() {
+        const select = document.getElementById('nuget-source-select');
+        const button = document.getElementById('add-nuget-button');
+
+        if (select && button) {
+            if (select.options.length > 1) {
+                button.classList.add('d-none');
+            } else {
+                button.classList.remove('d-none');
+            }
+        }
+    }
+</script>

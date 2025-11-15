@@ -1,50 +1,51 @@
-using KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents;
+using KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Entities.Addons;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
-using KamiYomu.Web.Infrastructure.Services;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Polly;
 using System.IO.Compression;
 
 namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
 {
-    public class IndexModel(ILogger<IndexModel> logger, 
-                            DbContext dbContext, 
-                            INugetService nugetService, 
+    public class IndexModel(ILogger<IndexModel> logger,
+                            DbContext dbContext,
+                            INugetService nugetService,
                             INotificationService notificationService) : PageModel
     {
-        [BindProperty]
-        public string Search { get; set; } = "";
-
-        [BindProperty]
-        public Guid SourceId { get; set; } = Guid.Empty;
-
-        public IEnumerable<NugetSource> Sources { get; set; } = [];
+        [BindProperty(SupportsGet = true)]
+        public SearchBarViewModel SearchBarViewModel { get; set; } = new();
 
         public IEnumerable<NugetPackageInfo> Packages { get; set; } = [];
 
         public PackageListViewModel PackageListViewModel { get; set; } = new();
 
+        public bool IsNugetAdded { get; set; } = false;
+
         public void OnGet()
         {
-            Sources = dbContext.NugetSources.FindAll();
+
             PackageListViewModel = new PackageListViewModel
             {
-                SourceId = SourceId,
+                SourceId = SearchBarViewModel.SourceId,
                 Packages = Packages
             };
+            SearchBarViewModel = new SearchBarViewModel
+            {
+                SourceId = SearchBarViewModel.SourceId,
+                Sources = dbContext.NugetSources.FindAll()
+            };
+
+            IsNugetAdded = SearchBarViewModel.Sources.Any(p => p.Url.ToString().StartsWith(AppOptions.Defaults.NugetFeeds.NugetFeedUrl, StringComparison.OrdinalIgnoreCase));
         }
 
         public async Task<IActionResult> OnPostSearchAsync()
         {
             try
             {
-                Packages = await nugetService.SearchPackagesAsync(Search, SourceId);
+                Packages = await nugetService.SearchPackagesAsync(SearchBarViewModel.Search, SearchBarViewModel.IncludePrerelease, SearchBarViewModel.SourceId);
             }
             catch (Exception ex)
             {
@@ -55,7 +56,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
 
             return Partial("_PackageList", new PackageListViewModel
             {
-                SourceId = SourceId,
+                SourceId = SearchBarViewModel.SourceId,
                 Packages = Packages
             });
         }
@@ -105,10 +106,10 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
 
             ModelState.Remove("Search");
 
-            Sources = dbContext.NugetSources.FindAll();
+            SearchBarViewModel.Sources = dbContext.NugetSources.FindAll();
             PackageListViewModel = new PackageListViewModel
             {
-                SourceId = SourceId,
+                SourceId = SearchBarViewModel.SourceId,
                 Packages = Packages
             };
 
@@ -116,12 +117,5 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
         }
 
     }
-
-    public class PackageListViewModel
-    {
-        public Guid SourceId { get; set; }
-        public IEnumerable<NugetPackageInfo> Packages { get; set; } = Enumerable.Empty<NugetPackageInfo>();
-    }
-
 
 }

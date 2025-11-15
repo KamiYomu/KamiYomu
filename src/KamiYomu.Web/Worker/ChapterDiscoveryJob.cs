@@ -1,11 +1,10 @@
 ﻿using Hangfire;
 using Hangfire.Server;
 using KamiYomu.CrawlerAgents.Core.Catalog;
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
-using KamiYomu.Web.Entities.Definitions;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
-using KamiYomu.Web.Infrastructure.Repositories;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.Extensions.Options;
@@ -16,7 +15,7 @@ namespace KamiYomu.Web.Worker
     public class ChapterDiscoveryJob : IChapterDiscoveryJob
     {
         private readonly ILogger<ChapterDiscoveryJob> _logger;
-        private readonly Settings.Worker _workerOptions;
+        private readonly WorkerOptions _workerOptions;
         private readonly IBackgroundJobClient _jobClient;
         private readonly IAgentCrawlerRepository _agentCrawlerRepository;
         private readonly IHangfireRepository _hangfireRepository;
@@ -24,7 +23,7 @@ namespace KamiYomu.Web.Worker
 
         public ChapterDiscoveryJob(
             ILogger<ChapterDiscoveryJob> logger,
-            IOptions<Settings.Worker> workerOptions,
+            IOptionsSnapshot<WorkerOptions> workerOptions,
             IBackgroundJobClient jobClient,
             IAgentCrawlerRepository agentCrawlerRepository,
             IHangfireRepository hangfireRepository,
@@ -102,7 +101,7 @@ namespace KamiYomu.Web.Worker
                                                         && p.CrawlerAgent!.Id == crawlerAgent.Id)
                                              ?? new ChapterDownloadRecord(crawlerAgent, mangaDownload, chapter);
 
-                    if (record.IsInProgress() || (record.IsCompleted() && record.LastUpdatedStatusTotalHours() < _workerOptions.ChapterDiscoveryIntervalInHours))
+                    if (record.IsInProgress() || (record.IsCompleted() && record.LastUpdatedStatusTotalDays() < 1))
                     {
                         continue;
                     }

@@ -1,3 +1,4 @@
+using KamiYomu.Web.AppOptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -15,7 +16,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.AuditTrail
 
             Response.Headers["Content-Type"] = "text/event-stream";
 
-            string logFolder = Web.Settings.SpecialFolders.LogDir;
+            string logFolder = Defaults.SpecialFolders.LogDir;
 
             long lastSize = 0;
             string? currentFile = null;

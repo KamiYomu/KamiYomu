@@ -1,6 +1,7 @@
 ﻿using KamiYomu.CrawlerAgents.Core.Inputs;
 using System.ComponentModel;
 using System.Reflection;
+using KamiYomu.Web.AppOptions;
 
 namespace KamiYomu.Web.Entities
 {
@@ -204,7 +205,7 @@ namespace KamiYomu.Web.Entities
         {
             string name = GetAgentDirName(fileName);
 
-            var directory = Path.Combine(Settings.SpecialFolders.AgentsDir, name);
+            var directory = Path.Combine(Defaults.SpecialFolders.AgentsDir, name);
 
             Directory.CreateDirectory(directory);
 
