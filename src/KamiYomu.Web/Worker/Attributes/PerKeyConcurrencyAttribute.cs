@@ -1,20 +1,11 @@
-﻿using Hangfire.Common;
-using Hangfire.Server;
-using Hangfire.States;
-using Hangfire.Storage;
-using System;
-using System.Threading.Tasks;
-using static KamiYomu.Web.Settings;
-
-namespace KamiYomu.Web.Worker.Attributes;
+﻿namespace KamiYomu.Web.Worker.Attributes;
 
 using Hangfire.Common;
 using Hangfire.Server;
-using Hangfire.States;
 using Hangfire.Storage;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using System;
+using static KamiYomu.Web.AppOptions.Defaults;
 
 [AttributeUsage(AttributeTargets.Method)]
 public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter

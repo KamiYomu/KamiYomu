@@ -3,7 +3,7 @@ using KamiYomu.Web.Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.StaticFiles;
-
+using KamiYomu.Web.AppOptions;
 namespace KamiYomu.Web.Areas.Libraries.Pages.Mangas
 {
     public class IndexModel(
@@ -33,7 +33,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Mangas
             // Check if image is already cached
             if (!fs.Exists(uri))
             {
-                using var httpClient = httpClientFactory.CreateClient(KamiYomu.Web.Settings.Worker.HttpClientBackground);
+                using var httpClient = httpClientFactory.CreateClient(Defaults.Worker.HttpClientBackground);
                 try
                 {
                     var imageBytes = await httpClient.GetByteArrayAsync(uri, cancellationToken);

@@ -65,10 +65,10 @@ namespace KamiYomu.Web.Entities
             return DownloadStatus == DownloadStatus.Completed;
         }
 
-        public int LastUpdatedStatusTotalHours()
+        public int LastUpdatedStatusTotalDays()
         {
             if (!StatusUpdateAt.HasValue) return int.MaxValue;
-            return (int)(DateTime.UtcNow - StatusUpdateAt.Value).TotalHours;
+            return (int)(DateTime.UtcNow - StatusUpdateAt.Value).TotalDays;
         }
 
 

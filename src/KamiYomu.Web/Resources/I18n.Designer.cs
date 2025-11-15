@@ -106,6 +106,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Nuget.org As Source.
+        /// </summary>
+        internal static string AddNugetOrgAsSource {
+            get {
+                return ResourceManager.GetString("AddNugetOrgAsSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add NuGet Sources.
         /// </summary>
         internal static string AddNuGetSources {
@@ -291,6 +300,24 @@ namespace KamiYomu.Web.Resources {
         internal static string Company {
             get {
                 return ResourceManager.GetString("Company", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm Add NuGet.org as Source.
+        /// </summary>
+        internal static string ConfirmAddNugetOrg {
+            get {
+                return ResourceManager.GetString("ConfirmAddNugetOrg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NuGet.org is a public package repository not maintained by KamiYomu. Any developer can publish packages there, including experimental or potentially unsafe ones. Please review each package carefully before installing it into KamiYomu to ensure it meets your security, licensing, and stability requirements..
+        /// </summary>
+        internal static string ConfirmAddNugetOrgSourceExplanation {
+            get {
+                return ResourceManager.GetString("ConfirmAddNugetOrgSourceExplanation", resourceCulture);
             }
         }
         
@@ -579,6 +606,24 @@ namespace KamiYomu.Web.Resources {
         internal static string ImportCrawlerAgent {
             get {
                 return ResourceManager.GetString("ImportCrawlerAgent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include Pre-Release Versions.
+        /// </summary>
+        internal static string IncludePreReleaseVersions {
+            get {
+                return ResourceManager.GetString("IncludePreReleaseVersions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pre-release versions include alpha, beta, and release candidate builds that may contain new features but are not yet considered stable. Use with caution..
+        /// </summary>
+        internal static string IncludePreReleaseVersionsExplanation {
+            get {
+                return ResourceManager.GetString("IncludePreReleaseVersionsExplanation", resourceCulture);
             }
         }
         

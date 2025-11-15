@@ -1,4 +1,5 @@
 ﻿using KamiYomu.Web.Entities.Addons;
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using System.Net.Http.Headers;
@@ -54,7 +55,7 @@ namespace KamiYomu.Web.Infrastructure.Services
                 return null;
 
             var packageTypes = result?["tags"]?.ToString();
-            var isCrawlerAgent = packageTypes?.Contains(Settings.Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase) == true;
+            var isCrawlerAgent = packageTypes?.Contains(Defaults.Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase) == true;
 
             if (!isCrawlerAgent)
                 return null;
@@ -63,7 +64,7 @@ namespace KamiYomu.Web.Infrastructure.Services
             return packageInfo;
         }
 
-        public async Task<IEnumerable<NugetPackageInfo>> SearchPackagesAsync(string query, Guid sourceId)
+        public async Task<IEnumerable<NugetPackageInfo>> SearchPackagesAsync(string query, bool includePreRelease, Guid sourceId)
         {
             var source = _dbContext.NugetSources.FindById(sourceId);
             if (source == null)
@@ -93,7 +94,7 @@ namespace KamiYomu.Web.Infrastructure.Services
             if (string.IsNullOrEmpty(searchUrl))
                 throw new InvalidOperationException("SearchQueryService not found in index.json");
 
-            var searchQueryUrl = $"{searchUrl}?q={Uri.EscapeDataString(query)}&prerelease=true&take=20";
+            var searchQueryUrl = $"{searchUrl}?q={Uri.EscapeDataString(query)}&prerelease={includePreRelease}&take=20";
             var searchJson = await client.GetStringAsync(searchQueryUrl);
             var searchResults = JsonNode.Parse(searchJson)?["data"]?.AsArray();
 
@@ -118,7 +119,7 @@ namespace KamiYomu.Web.Infrastructure.Services
                     };
 
                     var isCrawlerAgent = tags.Any(tag =>
-                        tag.Equals(Settings.Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase));
+                        tag.Equals(Defaults.Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase));
                     
                     if (!isCrawlerAgent)
                         continue;

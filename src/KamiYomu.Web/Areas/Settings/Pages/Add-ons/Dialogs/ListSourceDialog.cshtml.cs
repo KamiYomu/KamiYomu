@@ -12,8 +12,5 @@ namespace KamiYomu.Web.Areas.Settings.Pages.Add_ons.Dialogs
         {
             Sources = dbContext.NugetSources.FindAll().ToList();
         }
-
-       
-
     }
 }

@@ -1,3 +1,4 @@
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels;
 using KamiYomu.Web.Entities.Addons;
 using KamiYomu.Web.Infrastructure.Contexts;
@@ -7,25 +8,20 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KamiYomu.Web.Areas.Settings.Pages.Add_ons.Dialogs
 {
-    public class DeleteConfirmModel(DbContext dbContext, INotificationService notificationService) : PageModel
+    public class ConfirmAddNugetOrgModel(DbContext dbContext, INotificationService notificationService) : PageModel
     {
-        [BindProperty]
-        public Guid Id { get; set; }
 
-        public NugetSource? NugetSource { get; set; }
-
-        public IActionResult OnGet(Guid id)
+        public void OnGet()
         {
-            NugetSource = dbContext.NugetSources.FindById(id);
-            if (NugetSource == null) return NotFound();
-            return Page();
         }
 
         public IActionResult OnPost()
         {
-            dbContext.NugetSources.Delete(Id);
+            dbContext.NugetSources.Insert(new NugetSource("NuGet.org", new Uri(Defaults.NugetFeeds.NugetFeedUrl), null!, null!));
 
-            notificationService.PushSuccessAsync("Source removed successfully");
+            var nugetSources = dbContext.NugetSources.FindAll().ToList();
+
+            notificationService.PushSuccessAsync("Source added successfully");
 
             var viewModel = new SearchBarViewModel
             {

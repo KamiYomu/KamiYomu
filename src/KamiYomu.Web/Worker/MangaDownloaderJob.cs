@@ -1,6 +1,7 @@
 ﻿using Hangfire;
 using Hangfire.Server;
 using KamiYomu.CrawlerAgents.Core.Catalog;
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
@@ -14,7 +15,7 @@ namespace KamiYomu.Web.Worker;
 public class MangaDownloaderJob : IMangaDownloaderJob
 {
     private readonly ILogger<MangaDownloaderJob> _logger;
-    private readonly Settings.Worker _workerOptions;
+    private readonly WorkerOptions _workerOptions;
     private readonly DbContext _dbContext;
     private readonly IAgentCrawlerRepository _agentCrawlerRepository;
     private readonly IBackgroundJobClient _jobClient;
@@ -22,7 +23,7 @@ public class MangaDownloaderJob : IMangaDownloaderJob
 
     public MangaDownloaderJob(
         ILogger<MangaDownloaderJob> logger,
-        IOptions<Settings.Worker> workerOptions,
+        IOptionsSnapshot<WorkerOptions> workerOptions,
         DbContext dbContext,
         IAgentCrawlerRepository agentCrawlerRepository,
         IBackgroundJobClient jobClient,

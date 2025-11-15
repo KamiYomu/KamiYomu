@@ -1,5 +1,6 @@
 ﻿using Hangfire.Server;
 using KamiYomu.CrawlerAgents.Core.Catalog;
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
@@ -15,14 +16,14 @@ namespace KamiYomu.Web.Worker
     public class ChapterDownloaderJob : IChapterDownloaderJob
     {
         private readonly ILogger<ChapterDownloaderJob> _logger;
-        private readonly Settings.Worker _workerOptions;
+        private readonly WorkerOptions _workerOptions;
         private readonly DbContext _dbContext;
         private readonly IAgentCrawlerRepository _agentCrawlerRepository;
         private readonly HttpClient _httpClient;
 
         public ChapterDownloaderJob(
             ILogger<ChapterDownloaderJob> logger,
-            IOptions<Settings.Worker> workerOptions,
+            IOptionsSnapshot<WorkerOptions> workerOptions,
             DbContext dbContext,
             IAgentCrawlerRepository agentCrawlerRepository,
             IHttpClientFactory httpClientFactory)
@@ -31,7 +32,7 @@ namespace KamiYomu.Web.Worker
             _workerOptions = workerOptions.Value;
             _dbContext = dbContext;
             _agentCrawlerRepository = agentCrawlerRepository;
-            _httpClient = httpClientFactory.CreateClient(Settings.Worker.HttpClientBackground);
+            _httpClient = httpClientFactory.CreateClient(Defaults.Worker.HttpClientBackground);
         }
 
         public async Task DispatchAsync(Guid crawlerId, Guid libraryId, Guid mangaDownloadId, Guid chapterDownloadId, string title, PerformContext context, CancellationToken cancellationToken)

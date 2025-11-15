@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using KamiYomu.Web.AppOptions;
+using System.Reflection;
 using System.Runtime.Loader;
 
 namespace KamiYomu.Web.Entities
@@ -32,7 +33,7 @@ namespace KamiYomu.Web.Entities
                 return LoadFromAssemblyPath(objPath);
 
             // 4. Try agent/{assemblyNameWithoutDll} folder
-            var agentPath = Path.Combine(Settings.SpecialFolders.AgentsDir, _assemblyNameWithoutDll, $"{assemblyName.Name}.dll");
+            var agentPath = Path.Combine(Defaults.SpecialFolders.AgentsDir, _assemblyNameWithoutDll, $"{assemblyName.Name}.dll");
             if (File.Exists(agentPath))
                 return LoadFromAssemblyPath(agentPath);
 

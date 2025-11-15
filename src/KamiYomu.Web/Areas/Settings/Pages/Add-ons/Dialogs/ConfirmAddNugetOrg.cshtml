@@ -1,0 +1,25 @@
+﻿@page
+@model KamiYomu.Web.Areas.Settings.Pages.Add_ons.Dialogs.ConfirmAddNugetOrgModel
+@{
+    Layout = null;
+}
+
+
+<div class="modal-header">
+    <h5 class="modal-title">@I18n.ConfirmAddNugetOrg</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <p>@I18n.ConfirmAddNugetOrgSourceExplanation</p>
+</div>
+<div class="modal-footer">
+    <form hx-post="/Settings/Add-ons/Dialogs/ConfirmAddNugetOrg"
+          hx-target="#search-bar"
+          hx-on::after-request="document.getElementById('add-nuget-button')?.classList.add('d-none')"
+          hx-swap="innerHTML">
+
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-success" data-bs-dismiss="modal">@I18n.Add</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@I18n.Cancel</button>
+    </form>
+</div>

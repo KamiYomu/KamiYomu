@@ -525,4 +525,19 @@
   <data name="WaitProcessing5" xml:space="preserve">
     <value>This spinner is doing its best</value>
   </data>
+  <data name="IncludePreReleaseVersions" xml:space="preserve">
+    <value>Include Pre-Release Versions</value>
+  </data>
+  <data name="IncludePreReleaseVersionsExplanation" xml:space="preserve">
+    <value>Pre-release versions include alpha, beta, and release candidate builds that may contain new features but are not yet considered stable. Use with caution.</value>
+  </data>
+  <data name="AddNugetOrgAsSource" xml:space="preserve">
+    <value>Add Nuget.org As Source</value>
+  </data>
+  <data name="ConfirmAddNugetOrg" xml:space="preserve">
+    <value>Confirm Add NuGet.org as Source</value>
+  </data>
+  <data name="ConfirmAddNugetOrgSourceExplanation" xml:space="preserve">
+    <value>NuGet.org is a public package repository not maintained by KamiYomu. Any developer can publish packages there, including experimental or potentially unsafe ones. Please review each package carefully before installing it into KamiYomu to ensure it meets your security, licensing, and stability requirements.</value>
+  </data>
 </root>
