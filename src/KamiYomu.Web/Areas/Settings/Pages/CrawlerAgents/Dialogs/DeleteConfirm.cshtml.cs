@@ -21,7 +21,7 @@ namespace KamiYomu.Web.Pages.CrawlerAgents.Dialogs
             return Page();
         }
 
-        public IActionResult OnPost()
+        public IActionResult OnPostAsync(CancellationToken cancellationToken)
         {
             var agentCrawler = dbContext.CrawlerAgents.FindById(Id);
             var libraries = dbContext.Libraries.Find(p => p.AgentCrawler.Id == agentCrawler.Id);
@@ -47,7 +47,7 @@ namespace KamiYomu.Web.Pages.CrawlerAgents.Dialogs
 
             var crawlerAgents = dbContext.CrawlerAgents.FindAll().ToList();
 
-            notificationService.PushSuccessAsync("Crawler Agent removed successfully");
+            notificationService.PushSuccessAsync(I18n.CrawlerAgentRemovedSuccessfully, cancellationToken);
 
             return Partial("_CrawlerAgentList", crawlerAgents);
         }

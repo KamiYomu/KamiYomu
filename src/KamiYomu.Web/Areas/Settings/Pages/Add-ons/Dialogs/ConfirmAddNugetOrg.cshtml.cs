@@ -15,13 +15,13 @@ namespace KamiYomu.Web.Areas.Settings.Pages.Add_ons.Dialogs
         {
         }
 
-        public IActionResult OnPost()
+        public IActionResult OnPostAsync(CancellationToken cancellationToken)
         {
             dbContext.NugetSources.Insert(new NugetSource("NuGet.org", new Uri(Defaults.NugetFeeds.NugetFeedUrl), null!, null!));
 
             var nugetSources = dbContext.NugetSources.FindAll().ToList();
 
-            notificationService.PushSuccessAsync("Source added successfully");
+            notificationService.PushSuccessAsync("Source added successfully", cancellationToken);
 
             var viewModel = new SearchBarViewModel
             {

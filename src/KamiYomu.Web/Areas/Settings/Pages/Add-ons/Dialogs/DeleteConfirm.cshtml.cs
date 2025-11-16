@@ -21,11 +21,11 @@ namespace KamiYomu.Web.Areas.Settings.Pages.Add_ons.Dialogs
             return Page();
         }
 
-        public IActionResult OnPost()
+        public IActionResult OnPostAsync(CancellationToken cancellationToken)
         {
             dbContext.NugetSources.Delete(Id);
 
-            notificationService.PushSuccessAsync("Source removed successfully");
+            notificationService.PushSuccessAsync("Source removed successfully", cancellationToken);
 
             var viewModel = new SearchBarViewModel
             {

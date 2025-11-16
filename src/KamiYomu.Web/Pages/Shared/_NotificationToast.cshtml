@@ -1,4 +1,7 @@
-﻿
+﻿@using KamiYomu.Web.Infrastructure.Services.Interfaces
+@using KamiYomu.Web.AppOptions;
+@inject INotificationService notificationService
+
 <div id="toast-container"></div>
 
 <script src="~/lib/microsoft-signalr/signalr.min.js"></script>
@@ -7,7 +10,7 @@
         .withUrl("/notificationHub")
         .build();
 
-    connection.on("ReceiveNotification", function (notification) {
+    connection.on("@Defaults.UI.PushNotification", function (notification) {
         const container = document.getElementById("toast-container");
 
         const toast = document.createElement("div");
@@ -17,16 +20,16 @@
         toast.setAttribute("aria-atomic", "true");
 
         const type = notification.type.toLowerCase();
-        
+
         const icons = {
             success: "bi-check-circle-fill",
             info: "bi-info-circle-fill",
             warning: "bi-exclamation-triangle-fill",
             error: "bi-x-circle-fill"
         };
-        
+
         const iconClass = icons[type] || "bi-info-circle-fill";
-        
+
         toast.innerHTML = `
             <div class="d-flex">
                 <div class="toast-body d-flex align-items-center gap-2">
@@ -41,14 +44,26 @@
         setTimeout(() => toast.remove(), 5000);
     });
 
-    connection.start().catch(err => console.error(err.toString()));
+    connection.start().then(() => {
+    @{
+        // dequeue existing notifications
+        var notification = notificationService.Dequeue();
+        if(notification != null)
+        {
+                <text>
+                     connection.invoke("SendNotification", { message: "@notification.Message", type: "@notification.Type" });
+                </text>
+        }
+    }
+    }).catch(err => console.error(err.toString()));
+
 
     document.body.addEventListener("htmx:on:error", function (event) {
         const message = "Network error or unexpected failure.";
         const type = "error";
 
         if (window.connection) {
-            connection.invoke("SendNotification", { message, type });
+            connection.invoke("@Defaults.UI.PushNotification", { message, type });
         }
     });
 
@@ -68,11 +83,15 @@
 
         // SignalR toast trigger
         if (window.connection) {
-            connection.invoke("SendNotification", { message, type });
+            connection.invoke("@Defaults.UI.PushNotification", { message, type });
         } else {
             console.warn("SignalR connection not available.");
         }
     });
+
+
+
+
 
 
 </script>

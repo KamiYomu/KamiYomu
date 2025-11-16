@@ -23,6 +23,12 @@ public partial class Defaults
         public const string MyGetFeedUrl = "https://www.myget.org/F/example/api/v3/index.json";
     }
 
+    public class UI
+    {
+        public const string EnqueueNotification = nameof(EnqueueNotification);
+        public const string PushNotification = nameof(PushNotification);
+    }
+
     public static class Package
     {
         public const string KamiYomuCrawlerAgentTag = "kamiyomu-crawler-agents";

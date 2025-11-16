@@ -549,4 +549,22 @@
   <data name="FamilySafeModeDisableMessage" xml:space="preserve">
     <value>Your Family Safe Mode is disabled. Content that may include mature or sensitive material will be shown.</value>
   </data>
+  <data name="FamilySafeModeEnabled" xml:space="preserve">
+    <value>Family Safe Mode Enabled</value>
+  </data>
+  <data name="FamilySafeModeDisabled" xml:space="preserve">
+    <value>Family Safe Mode Disabled</value>
+  </data>
+  <data name="UserInterfaceLanguageChanged" xml:space="preserve">
+    <value>User Interface Language Has Been Changed</value>
+  </data>
+  <data name="SourceRemovedSuccessfully" xml:space="preserve">
+    <value>Source removed successfully</value>
+  </data>
+  <data name="CrawlerAgentRemovedSuccessfully" xml:space="preserve">
+    <value>Crawler Agent Removed Successfully</value>
+  </data>
+  <data name="NugetOrgHasBeenAddedAsANugetSource" xml:space="preserve">
+    <value>Nuget.org has been added as a NuGet Source</value>
+  </data>
 </root>

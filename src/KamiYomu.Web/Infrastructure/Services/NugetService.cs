@@ -1,7 +1,8 @@
-﻿using KamiYomu.Web.Entities.Addons;
-using KamiYomu.Web.AppOptions;
+﻿using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Entities.Addons;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
+using System.IO.Compression;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -17,7 +18,7 @@ namespace KamiYomu.Web.Infrastructure.Services
             _dbContext = dbContext;
         }
 
-        public async Task<NugetPackageInfo?> GetPackageMetadataAsync(string packageName, Guid sourceId)
+        public async Task<NugetPackageInfo?> GetPackageMetadataAsync(string packageName, Guid sourceId, CancellationToken cancellationToken)
         {
             var source = _dbContext.NugetSources.FindById(sourceId);
             if (source == null)
@@ -37,7 +38,7 @@ namespace KamiYomu.Web.Infrastructure.Services
             }
 
             var indexUrl = source.Url.ToString();
-            var indexJson = await client.GetStringAsync(indexUrl);
+            var indexJson = await client.GetStringAsync(indexUrl, cancellationToken);
             var index = JsonNode.Parse(indexJson);
 
             var metadataUrl = index?["resources"]?
@@ -48,7 +49,7 @@ namespace KamiYomu.Web.Infrastructure.Services
                 throw new InvalidOperationException("RegistrationsBaseUrl not found in index.json");
 
             var packageUrl = $"{metadataUrl.TrimEnd('/')}/{packageName.ToLowerInvariant()}/index.json";
-            var packageJson = await client.GetStringAsync(packageUrl);
+            var packageJson = await client.GetStringAsync(packageUrl, cancellationToken);
             var result = JsonNode.Parse(packageJson)?["items"]?.AsArray()?[0]?["items"]?.AsArray()?[0]?["catalogEntry"];
 
             if (result == null)
@@ -64,7 +65,7 @@ namespace KamiYomu.Web.Infrastructure.Services
             return packageInfo;
         }
 
-        public async Task<IEnumerable<NugetPackageInfo>> SearchPackagesAsync(string query, bool includePreRelease, Guid sourceId)
+        public async Task<IEnumerable<NugetPackageInfo>> SearchPackagesAsync(string query, bool includePreRelease, Guid sourceId, CancellationToken cancellationToken)
         {
             var source = _dbContext.NugetSources.FindById(sourceId);
             if (source == null)
@@ -84,7 +85,7 @@ namespace KamiYomu.Web.Infrastructure.Services
             }
 
             // Fetch service index
-            var indexJson = await client.GetStringAsync(source.Url);
+            var indexJson = await client.GetStringAsync(source.Url, cancellationToken);
             var index = JsonNode.Parse(indexJson);
 
             var searchUrl = index?["resources"]?
@@ -95,7 +96,7 @@ namespace KamiYomu.Web.Infrastructure.Services
                 throw new InvalidOperationException("SearchQueryService not found in index.json");
 
             var searchQueryUrl = $"{searchUrl}?q={Uri.EscapeDataString(query)}&prerelease={includePreRelease}&take=20";
-            var searchJson = await client.GetStringAsync(searchQueryUrl);
+            var searchJson = await client.GetStringAsync(searchQueryUrl, cancellationToken);
             var searchResults = JsonNode.Parse(searchJson)?["data"]?.AsArray();
 
             var packages = new List<NugetPackageInfo>();
@@ -155,7 +156,7 @@ namespace KamiYomu.Web.Infrastructure.Services
             return packageInfo;
         }
 
-        public async Task<Stream> OnGetDownloadAsync(Guid sourceId, string packageId, string packageVersion)
+        public async Task<Stream[]> OnGetDownloadAsync(Guid sourceId, string packageId, string packageVersion, CancellationToken cancellationToken)
         {
             var source = _dbContext.NugetSources.FindById(sourceId);
             if (source == null || string.IsNullOrWhiteSpace(packageId) || string.IsNullOrWhiteSpace(packageVersion))
@@ -174,29 +175,76 @@ namespace KamiYomu.Web.Infrastructure.Services
                 client.DefaultRequestHeaders.Add("X-NuGet-ApiKey", source.Password);
             }
 
-            var indexJson = await client.GetStringAsync(source.Url);
+            var indexJson = await client.GetStringAsync(source.Url, cancellationToken);
             var index = JsonNode.Parse(indexJson);
 
             var packageBaseUrl = index?["resources"]?
                 .AsArray()
                 .FirstOrDefault(r => r?["@type"]?.ToString() == "PackageBaseAddress/3.0.0")?["@id"]?.ToString();
 
-            if (string.IsNullOrEmpty(packageBaseUrl))
-                throw new FileNotFoundException("PackageBaseAddress not found.");
+            var registrationBaseUrl = index?["resources"]?
+                .AsArray()
+                .FirstOrDefault(r => r?["@type"]?.ToString() == "RegistrationsBaseUrl/3.6.0")?["@id"]?.ToString();
 
-            var packageIdLower = packageId.ToLowerInvariant();
-            var versionLower = packageVersion.ToLowerInvariant();
-            var packageFileName = $"{packageIdLower}.{versionLower}.nupkg";
-            var packageUrl = $"{packageBaseUrl.TrimEnd('/')}/{packageIdLower}/{versionLower}/{packageFileName}";
+            if (string.IsNullOrEmpty(packageBaseUrl) || string.IsNullOrEmpty(registrationBaseUrl))
+                throw new FileNotFoundException("Required NuGet service endpoints not found.");
 
-            try
+            var visited = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var streams = new List<Stream>();
+
+            async Task DownloadWithDependenciesAsync(string id, string version)
             {
-                return await client.GetStreamAsync(packageUrl);
+                var key = $"{id.ToLowerInvariant()}:{version.ToLowerInvariant()}";
+                if (!visited.Add(key)) return;
+
+                var cleanVersion = version
+                    .Split(',')[0]
+                    .Trim()
+                    .Trim('[', ']', '(', ')');
+
+                var packageUrl = $"{packageBaseUrl.TrimEnd('/')}/{id.ToLowerInvariant()}/{cleanVersion.ToLowerInvariant()}/{id.ToLowerInvariant()}.{cleanVersion.ToLowerInvariant()}.nupkg";
+                var stream = await client.GetStreamAsync(packageUrl, cancellationToken);
+                streams.Add(stream);
+
+                var registrationUrl = $"{registrationBaseUrl.TrimEnd('/')}/{id.ToLowerInvariant()}/index.json";
+                using var response = await client.GetAsync(registrationUrl, cancellationToken);
+                response.EnsureSuccessStatusCode();
+
+                using var regStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+                using var gzipStream = new GZipStream(regStream, CompressionMode.Decompress);
+                using var reader = new StreamReader(gzipStream);
+                var regJson = await reader.ReadToEndAsync();
+                var reg = JsonNode.Parse(regJson);
+
+                var entries = reg?["items"]?.AsArray()
+                    .SelectMany(item => item?["items"]?.AsArray() ?? new JsonArray())
+                    .Where(entry => string.Equals(entry?["catalogEntry"]?["version"]?.ToString(), version, StringComparison.OrdinalIgnoreCase));
+
+                foreach (var entry in entries ?? Enumerable.Empty<JsonNode>())
+                {
+                    var groups = entry?["catalogEntry"]?["dependencyGroups"]?.AsArray();
+                    if (groups == null) continue;
+
+                    foreach (var group in groups)
+                    {
+                        var dependencies = group?["dependencies"]?.AsArray();
+                        if (dependencies == null) continue;
+
+                        foreach (var dep in dependencies)
+                        {
+                            var depId = dep?["id"]?.ToString();
+                            var depVersion = dep?["range"]?.ToString()?.Trim('[', ']');
+                            if (!string.IsNullOrWhiteSpace(depId) && !string.IsNullOrWhiteSpace(depVersion))
+                            {
+                                await DownloadWithDependenciesAsync(depId, depVersion);
+                            }
+                        }
+                    }
+                }
             }
-            catch (HttpRequestException ex)
-            {
-                throw new FileNotFoundException("Package could not be downloaded.", ex);
-            }
+
+            await DownloadWithDependenciesAsync(packageId, packageVersion);
+            return streams.ToArray();
         }
     }
 }

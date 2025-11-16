@@ -41,16 +41,16 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
             IsNugetAdded = SearchBarViewModel.Sources.Any(p => p.Url.ToString().StartsWith(AppOptions.Defaults.NugetFeeds.NugetFeedUrl, StringComparison.OrdinalIgnoreCase));
         }
 
-        public async Task<IActionResult> OnPostSearchAsync()
+        public async Task<IActionResult> OnPostSearchAsync(CancellationToken cancellationToken)
         {
             try
             {
-                Packages = await nugetService.SearchPackagesAsync(SearchBarViewModel.Search, SearchBarViewModel.IncludePrerelease, SearchBarViewModel.SourceId);
+                Packages = await nugetService.SearchPackagesAsync(SearchBarViewModel.Search, SearchBarViewModel.IncludePrerelease, SearchBarViewModel.SourceId, cancellationToken);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error on search packages");
-                await notificationService.PushErrorAsync("Failed to search packages from the source.");
+                await notificationService.PushErrorAsync("Failed to search packages from the source.", cancellationToken);
                 Packages = [];
             }
 
@@ -61,47 +61,69 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
             });
         }
 
-
-        public async Task<IActionResult> OnPostInstallAsync(Guid sourceId, string packageId, string packageVersion)
+        public async Task<IActionResult> OnPostInstallAsync(Guid sourceId, string packageId, string packageVersion, CancellationToken cancellationToken)
         {
             try
             {
-                var stream = await nugetService.OnGetDownloadAsync(sourceId, packageId, packageVersion);
+                var streams = await nugetService.OnGetDownloadAsync(sourceId, packageId, packageVersion, cancellationToken);
 
                 var tempUploadId = Guid.NewGuid();
-                var tempFileName = $"{packageId}.{packageVersion}.nupkg";
-                var tempFilePath = Path.Combine(Path.GetTempPath(), tempFileName);
+                var downloadDir = Path.Combine(Path.GetTempPath(), tempUploadId.ToString());
+                Directory.CreateDirectory(downloadDir);
 
-                dbContext.CrawlerAgentFileStorage.Upload(tempUploadId, tempFileName, stream);
+                var packageFileName = $"{packageId}.{packageVersion}.nupkg";
+                var crawlerAgentDir = CrawlerAgent.GetAgentDir(packageFileName);
 
-                var fileStorage = dbContext.CrawlerAgentFileStorage.FindById(tempUploadId);
-                fileStorage.SaveAs(tempFilePath);
+                if(Directory.Exists(crawlerAgentDir))
+                    Directory.Delete(crawlerAgentDir, recursive: true); 
 
-                var crawlerAgentDir = CrawlerAgent.GetAgentDir(tempFileName);
+                Directory.CreateDirectory(crawlerAgentDir);
 
-                ZipFile.ExtractToDirectory(tempFilePath, crawlerAgentDir, true);
+                var savedPaths = new List<string>();
+                string mainPackagePath = null;
 
-                var dllPath = Directory.EnumerateFiles(crawlerAgentDir, searchPattern: "*.dll", SearchOption.AllDirectories).FirstOrDefault();
+                for (int i = 0; i < streams.Length; i++)
+                {
+                    var fileName = i == 0
+                        ? packageFileName
+                        : $"dependency_{i}.nupkg";
+
+                    var filePath = Path.Combine(downloadDir, fileName);
+                    using var fileStream = System.IO.File.Create(filePath);
+                    await streams[i].CopyToAsync(fileStream, cancellationToken);
+
+                    savedPaths.Add(filePath);
+                    if (i == 0) mainPackagePath = filePath;
+                }
+
+                // Extract main package first into a dedicated subfolder
+                ZipFile.ExtractToDirectory(mainPackagePath, crawlerAgentDir, overwriteFiles: true);
+
+                // Scan only the main package's extracted folder for the DLL
+                var dllPath = Directory.EnumerateFiles(crawlerAgentDir, "*.dll", SearchOption.AllDirectories).FirstOrDefault();
+                if (dllPath == null)
+                    throw new FileNotFoundException("Main package DLL not found.");
+
+                // Extract dependencies into the same root directory
+                foreach (var path in savedPaths.Skip(1))
+                {
+                    ZipFile.ExtractToDirectory(path, crawlerAgentDir, overwriteFiles: true);
+                }
 
                 var assembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
                 var metadata = CrawlerAgent.GetAssemblyMetadata(assembly);
                 var displayName = CrawlerAgent.GetCrawlerDisplayName(assembly);
 
-                // Register agent
-                var crawlerAgent = new CrawlerAgent(dllPath, displayName, new Dictionary<string, object>());
+                var crawlerAgent = new CrawlerAgent(dllPath, displayName, []);
                 dbContext.CrawlerAgents.Insert(crawlerAgent);
 
                 dbContext.CrawlerAgentFileStorage.Delete(tempUploadId);
 
-                return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit", new
-                {
-                    crawlerAgent.Id
-                });
-
+                return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit", new { crawlerAgent.Id });
             }
             catch (Exception ex)
             {
-                await notificationService.PushErrorAsync("Package is invalid.");
+                await notificationService.PushErrorAsync("Package is invalid.", cancellationToken);
             }
 
             ModelState.Remove("Search");
@@ -115,7 +137,5 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
 
             return Page();
         }
-
     }
-
 }

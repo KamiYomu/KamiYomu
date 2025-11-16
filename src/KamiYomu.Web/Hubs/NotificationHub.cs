@@ -1,4 +1,5 @@
-﻿using KamiYomu.Web.Entities.Notifications;
+﻿using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Entities.Notifications;
 using Microsoft.AspNetCore.SignalR;
 
 namespace KamiYomu.Web.Hubs
@@ -7,7 +8,7 @@ namespace KamiYomu.Web.Hubs
     {
         public async Task SendNotification(Notification message)
         {
-            await Clients.All.SendAsync("ReceiveNotification", message);
+            await Clients.All.SendAsync(Defaults.UI.PushNotification, message);
         }
     }
 

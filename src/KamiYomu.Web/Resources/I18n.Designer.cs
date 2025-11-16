@@ -376,6 +376,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crawler Agent Removed Successfully.
+        /// </summary>
+        internal static string CrawlerAgentRemovedSuccessfully {
+            get {
+                return ResourceManager.GetString("CrawlerAgentRemovedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crawler Agents.
         /// </summary>
         internal static string CrawlerAgents {
@@ -556,11 +565,29 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Family Safe Mode Disabled.
+        /// </summary>
+        internal static string FamilySafeModeDisabled {
+            get {
+                return ResourceManager.GetString("FamilySafeModeDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your Family Safe Mode is disabled. Content that may include mature or sensitive material will be shown..
         /// </summary>
         internal static string FamilySafeModeDisableMessage {
             get {
                 return ResourceManager.GetString("FamilySafeModeDisableMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Family Safe Mode Enabled.
+        /// </summary>
+        internal static string FamilySafeModeEnabled {
+            get {
+                return ResourceManager.GetString("FamilySafeModeEnabled", resourceCulture);
             }
         }
         
@@ -880,6 +907,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nuget.org has been added as a NuGet Source.
+        /// </summary>
+        internal static string NugetOrgHasBeenAddedAsANugetSource {
+            get {
+                return ResourceManager.GetString("NugetOrgHasBeenAddedAsANugetSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Required for authenticated sources. Enter either the password for basic auth or an API key for token-based access. This will be used to fetch packages securely..
         /// </summary>
         internal static string NugetSourcePasswordExplanation {
@@ -1105,6 +1141,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Source removed successfully.
+        /// </summary>
+        internal static string SourceRemovedSuccessfully {
+            get {
+                return ResourceManager.GetString("SourceRemovedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sources.
         /// </summary>
         internal static string Sources {
@@ -1173,6 +1218,15 @@ namespace KamiYomu.Web.Resources {
         internal static string TotalDownloads {
             get {
                 return ResourceManager.GetString("TotalDownloads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Interface Language Has Been Changed.
+        /// </summary>
+        internal static string UserInterfaceLanguageChanged {
+            get {
+                return ResourceManager.GetString("UserInterfaceLanguageChanged", resourceCulture);
             }
         }
         

@@ -6,38 +6,48 @@ namespace KamiYomu.Web.Entities
 {
     public class CrawlerAgentLoadContext : AssemblyLoadContext
     {
-        private readonly string _assemblyNameWithoutDll;
+        private readonly string _baseDir;
         private readonly AssemblyDependencyResolver _resolver;
 
         public CrawlerAgentLoadContext(string assemblyPath) : base(isCollectible: true)
         {
-            _assemblyNameWithoutDll = Path.GetFileNameWithoutExtension(assemblyPath);
+            _baseDir = Path.GetDirectoryName(assemblyPath)!;
             _resolver = new AssemblyDependencyResolver(assemblyPath);
         }
 
         protected override Assembly? Load(AssemblyName assemblyName)
         {
-            // 1. Try default resolver
+            // 1. Try application bin path first
+            if (string.Equals(assemblyName.Name, "KamiYomu.CrawlerAgents.Core"))
+                return null;
+
+
+            // 2. Try default resolver
             var resolvedPath = _resolver.ResolveAssemblyToPath(assemblyName);
             if (resolvedPath != null && File.Exists(resolvedPath))
                 return LoadFromAssemblyPath(resolvedPath);
 
-            // 2. Try bin folder
-            var binPath = Path.Combine(AppContext.BaseDirectory, "bin", $"{assemblyName.Name}.dll");
+            // 3. Try same folder as invoker
+            var localPath = Path.Combine(_baseDir, $"{assemblyName.Name}.dll");
+            if (File.Exists(localPath))
+                return LoadFromAssemblyPath(localPath);
+
+            // 4. Try bin folder relative to invoker base
+            var binPath = Path.Combine(_baseDir, "bin", $"{assemblyName.Name}.dll");
             if (File.Exists(binPath))
                 return LoadFromAssemblyPath(binPath);
 
-            // 3. Try obj folder
-            var objPath = Path.Combine(AppContext.BaseDirectory, "obj", $"{assemblyName.Name}.dll");
+            // 5. Try obj folder relative to invoker base
+            var objPath = Path.Combine(_baseDir, "obj", $"{assemblyName.Name}.dll");
             if (File.Exists(objPath))
                 return LoadFromAssemblyPath(objPath);
 
-            // 4. Try agent/{assemblyNameWithoutDll} folder
-            var agentPath = Path.Combine(Defaults.SpecialFolders.AgentsDir, _assemblyNameWithoutDll, $"{assemblyName.Name}.dll");
+            // 6. Try agent folder
+            var agentPath = Path.Combine(Defaults.SpecialFolders.AgentsDir, Path.GetFileName(_baseDir), $"{assemblyName.Name}.dll");
             if (File.Exists(agentPath))
                 return LoadFromAssemblyPath(agentPath);
 
-            return null; // fallback to default context
+            return null;
         }
     }
 

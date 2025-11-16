@@ -43,11 +43,12 @@ namespace KamiYomu.Web.Entities
             var assembly = context.LoadFromAssemblyPath(assemblyPath);
 
             var interfaceType = typeof(ICrawlerAgent);
-            var validTypes = assembly.GetTypes()
-                .Where(t => interfaceType.IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
-                .ToList();
+            var validTypes = assembly.GetTypes().Any(t =>
+                t.IsClass &&
+                !t.IsAbstract &&
+                t.GetInterfaces().Any(i => i.FullName == interfaceType.FullName));
 
-            if (validTypes.Count == 0)
+            if (!validTypes)
                 throw new InvalidOperationException(
                     $"Assembly '{assembly.FullName}' does not contain any non-abstract class implementing '{nameof(ICrawlerAgent)}'.");
             return assembly;
@@ -69,10 +70,30 @@ namespace KamiYomu.Web.Entities
 
         public static ICrawlerAgent GetCrawlerInstance(Assembly assembly, IDictionary<string, object> options)
         {
+            var interfaceName = typeof(ICrawlerAgent).FullName!;
+
             var crawlerType = assembly.GetTypes()
-                .FirstOrDefault(t => typeof(ICrawlerAgent).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract) ?? throw new InvalidOperationException("No valid crawler type found.");
-            var instance = (ICrawlerAgent)Activator.CreateInstance(crawlerType, options)!;
-            return new CrawlerAgentDecorator(instance);
+                .FirstOrDefault(t =>
+                    t.IsClass &&
+                    !t.IsAbstract &&
+                    t.GetInterfaces().Any(i => i.FullName == interfaceName))
+                ?? throw new InvalidOperationException("No valid crawler type found.");
+
+            var instance = Activator.CreateInstance(crawlerType, options)
+                ?? throw new InvalidOperationException("Failed to create crawler instance.");
+
+            // Safe cast only if type identity matches
+            if (instance is ICrawlerAgent typedInstance)
+            {
+                return new CrawlerAgentDecorator(typedInstance);
+            }
+
+            // Fallback: wrap dynamically if cast fails
+            throw new InvalidCastException(
+                $"The type '{crawlerType.FullName}' could not be cast to '{interfaceName}'. " +
+                $"This usually means the interface was loaded in a different AssemblyLoadContext. " +
+                $"Ensure both the main app and the plugin reference the same shared interface assembly, " +
+                $"and that it is loaded only once in the default context.");
         }
 
         public Dictionary<string, string> GetAssemblyMetadata()
@@ -84,10 +105,15 @@ namespace KamiYomu.Web.Entities
         public static string GetCrawlerDisplayName(Assembly assembly)
         {
             var crawlerType = assembly.GetTypes()
-                .FirstOrDefault(t => typeof(ICrawlerAgent).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
+                .FirstOrDefault(t =>
+                    t.IsClass &&
+                    !t.IsAbstract &&
+                    t.GetInterfaces().Any(i => i.FullName == typeof(ICrawlerAgent).FullName))
                 ?? throw new InvalidOperationException("No valid crawler type found.");
 
-            return crawlerType.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? assembly.FullName ?? "Agent";
+            return crawlerType.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName
+                ?? assembly.FullName
+                ?? "Agent";
         }
 
         public IEnumerable<CrawlerSelectAttribute> GetCrawlerSelects()
