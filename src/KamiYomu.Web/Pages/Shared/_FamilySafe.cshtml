@@ -1,6 +1,7 @@
 ﻿@using KamiYomu.Web.AppOptions
 @using KamiYomu.Web.Entities
 @using KamiYomu.Web.Infrastructure.Contexts
+@using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Options
 @inject DbContext dbContext
 @inject IOptionsSnapshot<StartupOptions> startupOptions;
@@ -9,14 +10,41 @@
     var userPreference = dbContext.UserPreferences.FindOne(p => true);
     var isFamilySafe = userPreference?.FamilySafeMode ?? startupOptions.Value.FamilyMode;
 
+    var familySafeModeText = isFamilySafe
+        ? I18n.FamilySafeModeEnableMessage
+        : I18n.FamilySafeModeDisableMessage;
+
     var buttonClass = isFamilySafe ? "btn btn-outline-success no-hover" : "btn btn-outline-secondary no-hover";
     var iconClass = isFamilySafe ? "bi-shield-check text-success" : "bi-shield-exclamation text-danger";
 }
 
-<button class="@buttonClass d-flex justify-content-center align-items-center px-2 py-1 shadow-sm w-100 position-relative"
-        style="border-width: 1px; font-size: 0.75rem; border-radius: 0.3rem;">
-    <span class="position-absolute start-0 ps-2">
-        <i class="@iconClass fs-6"></i>
-    </span>
-    <span class="fw-normal">Family Safe</span>
-</button>
+<form method="post"
+      asp-page="/Index"
+      asp-page-handler="FamilySafe"
+      asp-route-area=""
+      asp-route-returnUrl="@Context.Request.Path"
+      novalidate>
+    <button type="submit"
+            class="@buttonClass d-flex justify-content-center align-items-center px-2 py-1 shadow-sm w-100 position-relative"
+            style="border-width: 1px; font-size: 0.75rem; border-radius: 0.3rem;"
+            data-bs-toggle="popover"
+            data-bs-trigger="hover focus"
+            data-bs-placement="top"
+            data-bs-content="@familySafeModeText"
+            title="@I18n.FamilySafeMode">
+        <span class="position-absolute start-0 ps-2">
+            <i class="@iconClass fs-6"></i>
+        </span>
+        <span class="fw-normal">@I18n.FamilySafeMode</span>
+    </button>
+</form>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+        popoverTriggerList.forEach(function (el) {
+            new bootstrap.Popover(el);
+        });
+    });
+</script>

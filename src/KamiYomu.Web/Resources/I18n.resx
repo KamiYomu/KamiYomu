@@ -543,4 +543,10 @@
   <data name="FamilySafeMode" xml:space="preserve">
     <value>Family Safe Mode</value>
   </data>
+  <data name="FamilySafeModeEnableMessage" xml:space="preserve">
+    <value>Your Family Safe Mode is enabled. Content flagged as explicit or adult-oriented will be hidden.</value>
+  </data>
+  <data name="FamilySafeModeDisableMessage" xml:space="preserve">
+    <value>Your Family Safe Mode is disabled. Content that may include mature or sensitive material will be shown.</value>
+  </data>
 </root>
