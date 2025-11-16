@@ -20,15 +20,19 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Mangas
             {
                 return new EmptyResult();
             }
+            var userPreference = dbContext.UserPreferences.FindOne(p => true);
             var queryResult = await agentCrawlerRepository.SearchAsync(agent, query, new PaginationOptions(0, 30), cancellationToken);
-            Results = queryResult.Data.Select(p => new Entities.Library(agent, p));
+            Results = queryResult.Data.Where(p => p.IsFamilySafe == true || p.IsFamilySafe == userPreference.FamilySafeMode).Select(p => new Entities.Library(agent, p));
             ViewData["ShowAddToLibrary"] = true;
             return Page();
         }
 
         public IActionResult OnGetSearch(string query)
         {
-            Results = dbContext.Libraries.Include(p => p.AgentCrawler).Find(p => query == string.Empty || p.Manga.Title.Contains(query)).ToList();
+            var userPreference = dbContext.UserPreferences.FindOne(p => true);
+            Results = [.. dbContext.Libraries.Include(p => p.AgentCrawler)
+                                             .Find(p => (query == string.Empty || p.Manga.Title.Contains(query))
+                                               && (p.Manga.IsFamilySafe == true || p.Manga.IsFamilySafe == userPreference.FamilySafeMode))];
             ViewData["ShowAddToLibrary"] = false;
             return Page();
         }
