@@ -567,4 +567,10 @@
   <data name="NugetOrgHasBeenAddedAsANugetSource" xml:space="preserve">
     <value>Nuget.org has been added as a NuGet Source</value>
   </data>
+  <data name="NuGetPackageIsInvalid" xml:space="preserve">
+    <value>NuGet Package is Invalid</value>
+  </data>
+  <data name="FailedToSearch" xml:space="preserve">
+    <value>Failed to search packages from the source.</value>
+  </data>
 </root>

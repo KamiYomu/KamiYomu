@@ -568,4 +568,34 @@
   <data name="NugetOrgHasBeenAddedAsANugetSource" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="NuGetPackageIsInvalid" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="FailedToSearch" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="FamilySafeModeEnabled" xml:space="preserve">
+    <value>Mode sans échec familial activé</value>
+  </data>
+  <data name="FamilySafeModeDisabled" xml:space="preserve">
+    <value>Mode sans échec familial désactivé</value>
+  </data>
+  <data name="UserInterfaceLanguageChanged" xml:space="preserve">
+    <value>La langue de l'interface utilisateur a été modifiée</value>
+  </data>
+  <data name="SourceRemovedSuccessfully" xml:space="preserve">
+    <value>Source supprimée avec succès</value>
+  </data>
+  <data name="CrawlerAgentRemovedSuccessfully" xml:space="preserve">
+    <value>Agent du robot d'exploration supprimé avec succès</value>
+  </data>
+  <data name="NugetOrgHasBeenAddedAsANugetSource" xml:space="preserve">
+    <value>Nuget.org a été ajouté en tant que source NuGet</value>
+  </data>
+  <data name="NuGetPackageIsInvalid" xml:space="preserve">
+    <value>Le package NuGet n’est pas valide</value>
+  </data>
+  <data name="FailedToSearch" xml:space="preserve">
+    <value>Échec de la recherche des packages à partir de la source.</value>
+  </data>
 </root>

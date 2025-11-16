@@ -10,6 +10,19 @@ namespace KamiYomu.Web.Infrastructure.Contexts
     public class CacheContext
     {
         public IBarrel Current => Barrel.Current;
+
+        public bool TryGetCached<T>(string key, out T value)
+        {
+            if (!Barrel.Current.IsExpired(key) && Barrel.Current.Exists(key))
+            {
+                var result = Barrel.Current.Get<T>(key, GetCacheSerializationOptions());
+                value = result;
+                return true;
+            }
+            value = default;
+            return false;
+        }
+
         public async Task<T> GetOrSetAsync<T>(string key, Func<Task<T>> valueFactory, TimeSpan? expiration = null)
         {
             // Check if cache exists and is not expired

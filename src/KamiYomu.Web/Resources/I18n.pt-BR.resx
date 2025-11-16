@@ -568,4 +568,34 @@
   <data name="NugetOrgHasBeenAddedAsANugetSource" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="NuGetPackageIsInvalid" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="FailedToSearch" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="FamilySafeModeEnabled" xml:space="preserve">
+    <value>Modo de segurança familiar ativado</value>
+  </data>
+  <data name="FamilySafeModeDisabled" xml:space="preserve">
+    <value>Modo de segurança familiar desativado</value>
+  </data>
+  <data name="UserInterfaceLanguageChanged" xml:space="preserve">
+    <value>O idioma da interface do usuário foi alterado</value>
+  </data>
+  <data name="SourceRemovedSuccessfully" xml:space="preserve">
+    <value>Fonte removida com sucesso</value>
+  </data>
+  <data name="CrawlerAgentRemovedSuccessfully" xml:space="preserve">
+    <value>Agente rastreador removido com sucesso</value>
+  </data>
+  <data name="NugetOrgHasBeenAddedAsANugetSource" xml:space="preserve">
+    <value>Nuget.org foi adicionado como uma fonte NuGet</value>
+  </data>
+  <data name="NuGetPackageIsInvalid" xml:space="preserve">
+    <value>O pacote NuGet é inválido</value>
+  </data>
+  <data name="FailedToSearch" xml:space="preserve">
+    <value>Falha ao pesquisar pacotes na origem.</value>
+  </data>
 </root>

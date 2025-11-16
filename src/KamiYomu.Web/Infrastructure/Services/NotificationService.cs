@@ -50,12 +50,16 @@ namespace KamiYomu.Web.Infrastructure.Services
         #region Enqueue
         public void Enqueue(Notification notification)
         {
-            _cacheDbContext.Current.Add<Notification>(Defaults.UI.EnqueueNotification, notification, expireIn: TimeSpan.FromSeconds(5));
+            _cacheDbContext.Current.Add<Notification>(Defaults.UI.EnqueueNotification, notification, expireIn: TimeSpan.FromSeconds(1));
         }
 
         public Notification? Dequeue()
         {
-            return _cacheDbContext.Current.Get<Notification>(Defaults.UI.EnqueueNotification);
+            if(_cacheDbContext.TryGetCached<Notification>(Defaults.UI.EnqueueNotification, out var notification))
+            {
+                return notification;
+            }
+            return null;
         }
 
         public void EnqueueError(string message)

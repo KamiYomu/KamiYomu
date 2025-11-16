@@ -556,6 +556,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to search packages from the source..
+        /// </summary>
+        internal static string FailedToSearch {
+            get {
+                return ResourceManager.GetString("FailedToSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Family Safe Mode.
         /// </summary>
         internal static string FamilySafeMode {
@@ -912,6 +921,15 @@ namespace KamiYomu.Web.Resources {
         internal static string NugetOrgHasBeenAddedAsANugetSource {
             get {
                 return ResourceManager.GetString("NugetOrgHasBeenAddedAsANugetSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NuGet Package is Invalid.
+        /// </summary>
+        internal static string NuGetPackageIsInvalid {
+            get {
+                return ResourceManager.GetString("NuGetPackageIsInvalid", resourceCulture);
             }
         }
         

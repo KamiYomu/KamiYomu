@@ -50,7 +50,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error on search packages");
-                await notificationService.PushErrorAsync("Failed to search packages from the source.", cancellationToken);
+                notificationService.EnqueueError(I18n.FailedToSearch);
                 Packages = [];
             }
 
@@ -123,7 +123,10 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
             }
             catch (Exception ex)
             {
-                await notificationService.PushErrorAsync("Package is invalid.", cancellationToken);
+
+                logger.LogError(ex, "Error on install package {PackageId} {PackageVersion} from source {SourceId}", packageId, packageVersion, sourceId);
+
+                notificationService.EnqueueError(I18n.NuGetPackageIsInvalid);
             }
 
             ModelState.Remove("Search");
