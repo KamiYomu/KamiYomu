@@ -525,23 +525,28 @@
   <data name="WaitProcessing5" xml:space="preserve">
     <value>Este spinner está fazendo o seu melhor</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="IncludePreReleaseVersions" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="IncludePreReleaseVersions" xml:space="preserve">
+    <value>Incluir versões de pré-lançamento</value>
   </data>
-  <data name="IncludePreReleaseVersionsExplanation" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="IncludePreReleaseVersionsExplanation" xml:space="preserve">
+    <value>As versões de pré-lançamento incluem compilações alfa, beta e release candidate que podem conter novos recursos, mas ainda não são consideradas estáveis. Use com cuidado.</value>
   </data>
-  <data name="AddNugetOrgAsSource" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="AddNugetOrgAsSource" xml:space="preserve">
+    <value>Adicionar Nuget.org como fonte</value>
   </data>
-  <data name="ConfirmAddNugetOrg" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="ConfirmAddNugetOrg" xml:space="preserve">
+    <value>Confirme a adição do NuGet.org como origem</value>
   </data>
-  <data name="ConfirmAddNugetOrgSourceExplanation" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="ConfirmAddNugetOrgSourceExplanation" xml:space="preserve">
+    <value>NuGet.org é um repositório de pacotes público não mantido por KamiYomu. Qualquer desenvolvedor pode publicar pacotes lá, inclusive os experimentais ou potencialmente inseguros. Revise cada pacote cuidadosamente antes de instalá-lo no KamiYomu para garantir que ele atenda aos seus requisitos de segurança, licenciamento e estabilidade.</value>
   </data>
-  <data name="FamilySafeMode" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="FamilySafeMode" xml:space="preserve">
+    <value>Modo de segurança familiar</value>
+  </data>
+  <data name="FamilySafeModeEnableMessage" xml:space="preserve">
+    <value>Seu modo de segurança familiar está ativado. O conteúdo sinalizado como explícito ou voltado para adultos será ocultado.</value>
+  </data>
+  <data name="FamilySafeModeDisableMessage" xml:space="preserve">
+    <value>Seu modo de segurança para a família está desativado. Conteúdo que pode incluir material adulto ou sensível será mostrado.</value>
   </data>
 </root>

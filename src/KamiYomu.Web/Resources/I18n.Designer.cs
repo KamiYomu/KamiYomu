@@ -556,6 +556,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your Family Safe Mode is disabled. Content that may include mature or sensitive material will be shown..
+        /// </summary>
+        internal static string FamilySafeModeDisableMessage {
+            get {
+                return ResourceManager.GetString("FamilySafeModeDisableMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Family Safe Mode is enabled. Content flagged as explicit or adult-oriented will be hidden..
+        /// </summary>
+        internal static string FamilySafeModeEnableMessage {
+            get {
+                return ResourceManager.GetString("FamilySafeModeEnableMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File Version.
         /// </summary>
         internal static string FileVersion {
