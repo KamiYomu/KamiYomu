@@ -62,6 +62,8 @@ builder.Services.AddHangfireServer((services, optionActions) =>
     optionActions.ServerName = nameof(Defaults.Worker.DownloadChapterQueues);
     optionActions.WorkerCount = Environment.ProcessorCount * workerOptions.Value.WorkerCount;
     optionActions.Queues = Defaults.Worker.DownloadChapterQueues;
+    optionActions.HeartbeatInterval = TimeSpan.FromSeconds(30);
+
 });
 
 builder.Services.AddHangfireServer((services, optionActions) =>
@@ -70,6 +72,7 @@ builder.Services.AddHangfireServer((services, optionActions) =>
     optionActions.ServerName = nameof(Defaults.Worker.DiscoveryNewChapterQueues);
     optionActions.WorkerCount = Environment.ProcessorCount * workerOptions.Value.WorkerCount;
     optionActions.Queues = [Defaults.Worker.DiscoveryNewChapterQueues];
+    optionActions.HeartbeatInterval = TimeSpan.FromSeconds(30);
 });
 
 builder.Services.AddHangfireServer((services, optionActions) =>
@@ -78,6 +81,7 @@ builder.Services.AddHangfireServer((services, optionActions) =>
     optionActions.ServerName = nameof(Defaults.Worker.MangaDownloadSchedulerQueues);
     optionActions.WorkerCount = Environment.ProcessorCount * workerOptions.Value.WorkerCount;
     optionActions.Queues = Defaults.Worker.MangaDownloadSchedulerQueues;
+    optionActions.HeartbeatInterval = TimeSpan.FromSeconds(30);
 });
 
 builder.Services.AddTransient<IAgentCrawlerRepository, AgentCrawlerRepository>();

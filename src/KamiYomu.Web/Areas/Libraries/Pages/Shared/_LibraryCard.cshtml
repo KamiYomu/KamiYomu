@@ -25,51 +25,68 @@
             </div>
 
 
-            <div class="mt-auto d-flex gap-2">
-                <button class="btn btn-sm btn-outline-primary"
-                        hx-get="/Libraries/Collection/Dialogs/MangaDetails?agentId=@Model.AgentCrawler.Id&mangaId=@Model.Manga.Id"
-                        hx-target="#modal-body"
-                        hx-swap="innerHTML"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modal">
-                    <i class="bi bi-info-circle me-2"></i> @I18n.Details
-                </button>
-                @if (isNew)
-                {
-                    <form method="post"
-                          hx-post="/Libraries/Downloads/Index?handler=AddToCollection"
-                          hx-target="#@cardId"
-                          hx-swap="innerHTML">
-                        <input type="hidden" name="MangaId" value="@Model.Manga.Id" />
-                        <input type="hidden" name="AgentId" value="@Model.AgentCrawler.Id" />
-
-                        <button type="submit"
-                                class="btn btn-sm btn-success">
-                            <i class="bi bi-plus-circle me-2"></i> @I18n.AddToYourCollection
-                        </button>
-                    </form>
-                }
-                else
-                {
-                    <button class="btn btn-sm btn-outline-danger"
-                            hx-get="/Libraries/Collection/Dialogs/RemoveFromCollection?LibraryId=@Model.Id&RefreshElementId=@cardId"
-                            hx-target="#modal-body"
-                            hx-swap="innerHTML"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modal">
-                        <i class="bi bi-x-circle"></i> @I18n.RemoveFromYourCollection
+            <div class="mt-auto d-flex justify-content-end">
+                <div class="btn-group dropup">
+                    <button type="button"
+                            class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        <i class="bi bi-list"></i> @I18n.Options
                     </button>
-
-                    <button class="btn btn-sm btn-outline-info"
-                            hx-get="/Libraries/Collection/Dialogs/Jobs?libraryId=@Model.Id"
-                            hx-target="#modal-body"
-                            hx-swap="innerHTML"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modal">
-                        <i class="bi bi-cloud-download"></i>
-                    </button>
-                }
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <button class="dropdown-item"
+                                    hx-get="/Libraries/Collection/Dialogs/MangaDetails?agentId=@Model.AgentCrawler.Id&mangaId=@Model.Manga.Id"
+                                    hx-target="#modal-body"
+                                    hx-swap="innerHTML"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modal">
+                                <i class="bi bi-info-circle me-2"></i> @I18n.Details
+                            </button>
+                        </li>
+                        @if (isNew)
+                        {
+                            <li>
+                                <form method="post"
+                                      hx-post="/Libraries/Downloads/Index?handler=AddToCollection"
+                                      hx-target="#@cardId"
+                                      hx-swap="innerHTML">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="MangaId" value="@Model.Manga.Id" />
+                                    <input type="hidden" name="AgentId" value="@Model.AgentCrawler.Id" />
+                                    <button type="submit" class="dropdown-item bg-success text-light">
+                                        <i class="bi bi-plus-circle me-2"></i> @I18n.AddToYourCollection
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <button class="dropdown-item"
+                                        hx-get="/Libraries/Collection/Dialogs/DownloadStatus?libraryId=@Model.Id"
+                                        hx-target="#modal-body"
+                                        hx-swap="innerHTML"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modal">
+                                    <i class="bi bi-cloud-download me-2"></i> @I18n.DownloadStatus
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item bg-danger text-light"
+                                        hx-get="/Libraries/Collection/Dialogs/RemoveFromCollection?LibraryId=@Model.Id&RefreshElementId=@cardId"
+                                        hx-target="#modal-body"
+                                        hx-swap="innerHTML"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modal">
+                                    <i class="bi bi-x-circle me-2"></i> @I18n.RemoveFromYourCollection
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 </div>
+

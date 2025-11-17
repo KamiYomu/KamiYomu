@@ -13,7 +13,7 @@ namespace KamiYomu.Web.Entities
         public Library(CrawlerAgent agentCrawler, Manga manga)
         {
             AgentCrawler = agentCrawler;
-            Manga = string.IsNullOrEmpty(manga?.Title) ? null : manga;
+            Manga = string.IsNullOrEmpty(manga.Title) ? null : manga;
         }
 
         public LibraryDbContext GetDbContext()
@@ -33,7 +33,7 @@ namespace KamiYomu.Web.Entities
 
         public Guid Id { get; private set; }
         public CrawlerAgent AgentCrawler { get; private set; }
-        public Manga? Manga { get; private set; }
+        public Manga Manga { get; private set; }
 
     }
 }

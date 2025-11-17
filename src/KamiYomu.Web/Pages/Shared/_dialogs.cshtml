@@ -1,13 +1,22 @@
 ﻿<div class="modal fade" id="modal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content" id="modal-body">
         </div>
     </div>
 </div>
 
 <div class="modal fade" id="sub-modal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" id="sub-modal-body">
         </div>
     </div>
 </div>
+
+
+<script>
+    document.body.addEventListener("htmx:beforeSwap", function(evt) {
+        if (evt.detail.target.id === "modal-body" || evt.detail.target.id === "sub-modal-body") {
+            evt.detail.target.innerHTML = "";
+        }
+    });
+</script>

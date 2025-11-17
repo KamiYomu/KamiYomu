@@ -1,0 +1,78 @@
+﻿@page
+@using KamiYomu.Web.Entities
+@using KamiYomu.Web.Extensions
+@model KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs.DownloadChapterTableModel
+@{
+    Layout = null;
+}
+
+<div id="downloads-table">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>
+                    <a href="#"
+                       hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = nameof(ChapterDownloadRecord.Chapter), asc = !Model.SortAsc, page = Model.CurrentPage })"
+                       hx-target="#downloads-table" hx-swap="outerHTML" class="text-decoration-none">
+                        @I18n.Chapter
+                        @if (Model.SortColumn == "Chapter")
+                        {
+                            <i class="bi @(Model.SortAsc ? "bi-caret-up-fill" : "bi-caret-down-fill") ms-1"></i>
+                        }
+                    </a>
+                </th>
+
+                <th>
+                    @I18n.Size
+                </th>
+
+                <th>
+                    <a href="#"
+                       hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = nameof(ChapterDownloadRecord.DownloadStatus), asc = !Model.SortAsc, page = Model.CurrentPage })"
+                       hx-target="#downloads-table" hx-swap="outerHTML" class="text-decoration-none">
+                        @I18n.Status
+                        @if (Model.SortColumn == "Status")
+                        {
+                            <i class="bi @(Model.SortAsc ? "bi-caret-up-fill" : "bi-caret-down-fill") ms-1"></i>
+                        }
+                    </a>
+                </th>
+
+                <th>
+                    <a href="#"
+                       hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = nameof(ChapterDownloadRecord.StatusUpdateAt), asc = !Model.SortAsc, page = Model.CurrentPage })"
+                       hx-target="#downloads-table" hx-swap="outerHTML" class="text-decoration-none">
+                        @I18n.LastUpdate
+                        @if (Model.SortColumn == "CreateAt")
+                        {
+                            <i class="bi @(Model.SortAsc ? "bi-caret-up-fill" : "bi-caret-down-fill") ms-1"></i>
+                        }
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in Model.Records)
+            {
+                <partial name="_DownloadChapterTableRow" model="record" />
+            }
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link"
+                       hx-get='@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = Model.SortColumn, asc = Model.SortAsc, pageIndex = i })'
+                       hx-target="#downloads-table"
+                       hx-swap="outerHTML">
+                        @i
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

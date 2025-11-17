@@ -549,31 +549,6 @@
   <data name="FamilySafeModeDisableMessage" xml:space="preserve">
     <value>Seu modo de segurança para a família está desativado. Conteúdo que pode incluir material adulto ou sensível será mostrado.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="FamilySafeModeEnabled" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="FamilySafeModeDisabled" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="UserInterfaceLanguageChanged" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="SourceRemovedSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="CrawlerAgentRemovedSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="NugetOrgHasBeenAddedAsANugetSource" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="NuGetPackageIsInvalid" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="FailedToSearch" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="FamilySafeModeEnabled" xml:space="preserve">
     <value>Modo de segurança familiar ativado</value>
   </data>
@@ -597,5 +572,48 @@
   </data>
   <data name="FailedToSearch" xml:space="preserve">
     <value>Falha ao pesquisar pacotes na origem.</value>
+  </data>
+  <data name="ChapterDownloaded" xml:space="preserve">
+    <value>Capítulo baixado</value>
+  </data>
+  <data name="DownloadActivity" xml:space="preserve">
+    <value>Baixar atividade</value>
+  </data>
+  <data name="DownloadStatus" xml:space="preserve">
+    <value>Baixar status</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Opções</value>
+  </data>
+  <data name="LastUpdate" xml:space="preserve">
+    <value>Última atualização</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Pendente</value>
+  </data>
+  <data name="Scheduled" xml:space="preserve">
+    <value>Agendado</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>Processamento</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Concluído</value>
+  </data>
+  <data name="Cancelled" xml:space="preserve">
+    <value>Cancelado</value>
+  </data>
+  <data name="Reschedule" xml:space="preserve">
+    <value>Reprogramar</value>
+  </data>
+  <data name="DownloadChapterSchedule" xml:space="preserve">
+    <value>O download do capítulo foi agendado</value>
+  </data>
+  <data name="DownloadChapterHasBeenCancelled" xml:space="preserve">
+    <value>O download do capítulo foi cancelado</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Size" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

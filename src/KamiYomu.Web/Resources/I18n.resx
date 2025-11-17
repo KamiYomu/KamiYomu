@@ -573,4 +573,46 @@
   <data name="FailedToSearch" xml:space="preserve">
     <value>Failed to search packages from the source.</value>
   </data>
+  <data name="ChapterDownloaded" xml:space="preserve">
+    <value>Chapter Downloaded</value>
+  </data>
+  <data name="DownloadActivity" xml:space="preserve">
+    <value>Download Activity</value>
+  </data>
+  <data name="DownloadStatus" xml:space="preserve">
+    <value>Download Status</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="LastUpdate" xml:space="preserve">
+    <value>Last Update</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="Scheduled" xml:space="preserve">
+    <value>Scheduled</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>Processing</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="Reschedule" xml:space="preserve">
+    <value>Reschedule</value>
+  </data>
+  <data name="DownloadChapterSchedule" xml:space="preserve">
+    <value>Download Chapter Has Been Scheduled</value>
+  </data>
+  <data name="DownloadChapterHasBeenCancelled" xml:space="preserve">
+    <value>Download Chapter Has Been Cancelled</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
 </root>

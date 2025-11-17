@@ -1,0 +1,72 @@
+﻿@using KamiYomu.Web.Entities
+@using KamiYomu.Web.Extensions
+@model ChapterDownloadRecord
+@{
+    var rowId = $"row-{Model.Id}";
+}
+<tr id="@rowId">
+    <td>@Model.Chapter.GetCbzFileName()</td>
+    <td>@Model.Chapter.GetCbzFileSize()</td>
+    <td>
+        <span class="badge
+    @(Model.IsCompleted() ? "bg-success" :
+                                              Model.IsCancelled() ? "bg-danger" :
+                                              Model.IsInProgress() ? "bg-info" : "bg-secondary")">
+            @Model.DownloadStatus
+        </span>
+    </td>
+    <td>@Model.CreateAt.ToString("g")</td>
+    <td class="text-end">
+        <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-gear"></i> @I18n.Actions
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <!-- Reschedule -->
+                <li>
+                    <form method="post"
+                          hx-post='@Url.Page("DownloadChapterTable",
+                                                                         values: new { handler = "Reschedule", libraryId = Model.MangaDownload.Library.Id, recordId = Model.Id })'
+                          hx-target="#@rowId"
+                          hx-swap="outerHTML">
+                        @Html.AntiForgeryToken()
+                        <button type="submit"
+                                class="dropdown-item d-flex align-items-center gap-2"
+                                @(Model.IsCompleted() || Model.IsCancelled() ? "" : "disabled")>
+                            <i class="bi bi-arrow-repeat"></i> @I18n.Reschedule
+                        </button>
+                    </form>
+                </li>
+
+                <!-- Download -->
+                <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2 @(Model.IsCompleted() ? "" : "disabled")"
+                       href="@(Model.IsCompleted()
+                                                       ? Url.Page("DownloadChapterTable",
+                                                                  values: new { handler = "Download", libraryId = Model.MangaDownload.Library.Id, recordId = Model.Id })
+                                                       : "#")"
+                       target="_blank"
+                       aria-disabled="@(Model.IsCompleted() ? "false" : "true")">
+                        <i class="bi bi-download"></i> @I18n.Download
+                    </a>
+                </li>
+
+                <!-- Cancel -->
+                <li>
+                    <form method="post"
+                          hx-post='@Url.Page("DownloadChapterTable", new { handler = "Cancel", libraryId = Model.MangaDownload.Library.Id, recordId = Model.Id })'
+                          hx-target="#@rowId"
+                          hx-swap="outerHTML">
+                        @Html.AntiForgeryToken()
+                        <button type="submit"
+                                class="dropdown-item d-flex align-items-center gap-2"
+                                @(Model.IsInProgress() ? "" : "disabled")>
+                            <i class="bi bi-x-circle"></i> @I18n.Cancel
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </td>
+</tr>
