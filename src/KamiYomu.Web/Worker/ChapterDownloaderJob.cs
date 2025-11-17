@@ -55,13 +55,13 @@ namespace KamiYomu.Web.Worker
             CultureInfo.CurrentUICulture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
 
             var library = _dbContext.Libraries.FindById(libraryId);
-            if(library == null)
+            if (library == null)
             {
                 _logger.LogWarning("Dispatch \"{title}\" could not proceed — the associated library record no longer exists.", title);
                 return;
             }
 
-            
+
             using var libDbContext = library.GetDbContext();
 
             var mangaDownload = libDbContext.MangaDownloadRecords
@@ -126,7 +126,7 @@ namespace KamiYomu.Web.Worker
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "{crawler}: Failed to download page {Index}/{count} from {Url}", library.AgentCrawler.DisplayName,  index, pageCount, page.ImageUrl);
+                    _logger.LogError(ex, "{crawler}: Failed to download page {Index}/{count} from {Url}", library.AgentCrawler.DisplayName, index, pageCount, page.ImageUrl);
                 }
 
                 index++;
@@ -141,7 +141,13 @@ namespace KamiYomu.Web.Worker
             MoveTempCbzFilesToCollection(mangaDownload.Library.Manga);
             chapterDownload.Complete();
             libDbContext.ChapterDownloadRecords.Update(chapterDownload);
-            await _notificationService.PushSuccessAsync($"{I18n.ChapterDownloaded}: {chapterDownload.Chapter.GetCbzFileName()}", cancellationToken);
+
+            if (userPreference.FamilySafeMode && chapterDownload.MangaDownload.Library.Manga.IsFamilySafe ||
+                !userPreference.FamilySafeMode)
+            {
+                await _notificationService.PushSuccessAsync($"{I18n.ChapterDownloaded}: {chapterDownload.Chapter.GetCbzFileName()}", cancellationToken);
+
+            }
         }
 
         private void CreateCbzFile(ChapterDownloadRecord chapterDownload, string chapterFolder, string seriesFolder)
@@ -183,7 +189,7 @@ namespace KamiYomu.Web.Worker
                 {
                     Directory.CreateDirectory(destinationDir);
                 }
-       
+
                 File.Copy(cbzFile, destinationPath, overwrite: true);
 
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
