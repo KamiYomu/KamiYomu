@@ -5,6 +5,7 @@ using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
+using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.Extensions.Options;
 using System.Globalization;
@@ -20,19 +21,22 @@ namespace KamiYomu.Web.Worker
         private readonly DbContext _dbContext;
         private readonly IAgentCrawlerRepository _agentCrawlerRepository;
         private readonly HttpClient _httpClient;
+        private readonly INotificationService _notificationService;
 
         public ChapterDownloaderJob(
             ILogger<ChapterDownloaderJob> logger,
             IOptionsSnapshot<WorkerOptions> workerOptions,
             DbContext dbContext,
             IAgentCrawlerRepository agentCrawlerRepository,
-            IHttpClientFactory httpClientFactory)
+            IHttpClientFactory httpClientFactory,
+            INotificationService notificationService)
         {
             _logger = logger;
             _workerOptions = workerOptions.Value;
             _dbContext = dbContext;
             _agentCrawlerRepository = agentCrawlerRepository;
             _httpClient = httpClientFactory.CreateClient(Defaults.Worker.HttpClientBackground);
+            _notificationService = notificationService;
         }
 
         public async Task DispatchAsync(Guid crawlerId, Guid libraryId, Guid mangaDownloadId, Guid chapterDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
@@ -56,6 +60,8 @@ namespace KamiYomu.Web.Worker
                 _logger.LogWarning("Dispatch \"{title}\" could not proceed — the associated library record no longer exists.", title);
                 return;
             }
+
+            
             using var libDbContext = library.GetDbContext();
 
             var mangaDownload = libDbContext.MangaDownloadRecords
@@ -69,6 +75,12 @@ namespace KamiYomu.Web.Worker
                 _logger.LogError("ChapterDownloadRecord not found: {ChapterDownloadId}", chapterDownloadId);
                 return;
             }
+
+            if (File.Exists(chapterDownload.Chapter.GetCbzFilePath()))
+            {
+                return;
+            }
+
 
             chapterDownload.Processing();
             libDbContext.ChapterDownloadRecords.Update(chapterDownload);
@@ -126,9 +138,10 @@ namespace KamiYomu.Web.Worker
 
             CreateCbzFile(chapterDownload, chapterFolderPath, seriesFolder);
 
-            MoveTempCbzFilesToCollection(mangaDownload!.Library!.Manga!);
+            MoveTempCbzFilesToCollection(mangaDownload.Library.Manga);
             chapterDownload.Complete();
             libDbContext.ChapterDownloadRecords.Update(chapterDownload);
+            await _notificationService.PushSuccessAsync($"{I18n.ChapterDownloaded}: {chapterDownload.Chapter.GetCbzFileName()}", cancellationToken);
         }
 
         private void CreateCbzFile(ChapterDownloadRecord chapterDownload, string chapterFolder, string seriesFolder)

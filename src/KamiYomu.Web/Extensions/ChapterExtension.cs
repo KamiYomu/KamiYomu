@@ -14,6 +14,8 @@ namespace KamiYomu.Web.Extensions
                 new XElement("Number", chapter?.Number.ToString() ?? string.Empty),
                 new XElement("Volume", chapter?.Volume.ToString() ?? string.Empty),
                 new XElement("Writer", string.Join(", ", chapter?.ParentManga?.Authors ?? [])),
+                new XElement("Penciller", string.Join(", ", chapter?.ParentManga?.Artists ?? [])),
+                new XElement("CoverArtist", string.Join(", ", chapter?.ParentManga?.Artists ?? [])),
                 new XElement("LanguageISO", chapter?.ParentManga?.OriginalLanguage ?? string.Empty),
                 new XElement("Genre", string.Join(", ", chapter?.ParentManga?.Tags ?? [])),
                 new XElement("ScanInformation", "KamiYomu"),

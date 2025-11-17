@@ -11,3 +11,12 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    document.body.addEventListener("htmx:beforeSwap", function(evt) {
+        if (evt.detail.target.id === "modal-body" || evt.detail.target.id === "sub-modal-body") {
+            evt.detail.target.innerHTML = "";
+        }
+    });
+</script>

@@ -1,11 +1,11 @@
 ﻿@page
 @using KamiYomu.Web.Extensions
-@model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.JobsModel
+@model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.DownloadStatusModel
 @{
     Layout = null;
 }
 <div class="modal-header">
-    <h5 class="modal-title">Manga Details</h5>
+    <h5 class="modal-title">@I18n.DownloadStatus</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body">
@@ -45,6 +45,28 @@
                     <div class="col-sm-6">
                         <label class="form-label fw-semibold">@I18n.Downloaded</label>
                         <div class="form-control-plaintext">@Model.Completed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="accordion g-4" id="downloadAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTable">
+                    <button class="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseTable"
+                            hx-get="@Url.Page("DownloadChapterTable")?libraryId=@Model.Library.Id"
+                            hx-trigger="click"
+                            hx-target="#collapseTable"
+                            hx-swap="innerHTML">
+                        @I18n.DownloadActivity
+                    </button>
+                </h2>
+                <div id="collapseTable"
+                     class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <div class="text-muted">Loading table…</div>
                     </div>
                 </div>
             </div>

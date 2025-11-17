@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs
 {
-    public class JobsModel(DbContext dbContext) : PageModel
+    public class DownloadStatusModel(DbContext dbContext) : PageModel
     {
         public Entities.Library Library { get; set; }
         public decimal Completed { get; set; } = 0;
