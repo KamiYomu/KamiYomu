@@ -15,14 +15,14 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
         public string SortColumn { get; set; } = nameof(ChapterDownloadRecord.StatusUpdateAt);
         public bool SortAsc { get; set; } = true;
 
-        public void OnGet(Guid libraryId, string sort = nameof(ChapterDownloadRecord.StatusUpdateAt), bool asc = true, int page = 1, int pageSize = 10)
+        public void OnGet(Guid libraryId, string sort = nameof(ChapterDownloadRecord.StatusUpdateAt), bool asc = true, int pageIndex = 1, int pageSize = 10)
         {
             if (libraryId == Guid.Empty) return;
 
             LibraryId = libraryId;
             SortColumn = sort;
             SortAsc = asc;
-            CurrentPage = page;
+            CurrentPage = pageIndex;
 
             var downloadChapterRecords = dbContext.Libraries.FindById(LibraryId);
             using var db = downloadChapterRecords.GetDbContext();
@@ -43,7 +43,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
             int totalCount = query.Count();
             TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-            Records = [.. query.Skip((page - 1) * pageSize).Take(pageSize)];
+            Records = [.. query.Skip((pageIndex - 1) * pageSize).Take(pageSize)];
         }
 
         public async Task<IActionResult> OnGetDownloadAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)

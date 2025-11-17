@@ -119,8 +119,11 @@
             {
                 <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
                     <a class="page-link"
-                       hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = Model.SortColumn, asc = Model.SortAsc, page = i })"
-                       hx-target="#downloads-table" hx-swap="outerHTML">@i</a>
+                       hx-get='@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = Model.SortColumn, asc = Model.SortAsc, pageIndex = i })'
+                       hx-target="#downloads-table"
+                       hx-swap="outerHTML">
+                        @i
+                    </a>
                 </li>
             }
         </ul>
