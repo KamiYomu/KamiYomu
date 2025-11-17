@@ -606,4 +606,13 @@
   <data name="Reschedule" xml:space="preserve">
     <value>Reschedule</value>
   </data>
+  <data name="DownloadChapterSchedule" xml:space="preserve">
+    <value>Download Chapter Has Been Scheduled</value>
+  </data>
+  <data name="DownloadChapterHasBeenCancelled" xml:space="preserve">
+    <value>Download Chapter Has Been Cancelled</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
 </root>

@@ -1,4 +1,5 @@
 ﻿@page
+@using KamiYomu.Web.Entities
 @using KamiYomu.Web.Extensions
 @model KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs.DownloadChapterTableModel
 @{
@@ -11,7 +12,7 @@
             <tr>
                 <th>
                     <a href="#"
-                       hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = "Chapter", asc = !Model.SortAsc, page = Model.CurrentPage })"
+                       hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = nameof(ChapterDownloadRecord.Chapter), asc = !Model.SortAsc, page = Model.CurrentPage })"
                        hx-target="#downloads-table" hx-swap="outerHTML" class="text-decoration-none">
                         @I18n.Chapter
                         @if (Model.SortColumn == "Chapter")
@@ -22,8 +23,12 @@
                 </th>
 
                 <th>
+                    @I18n.Size
+                </th>
+
+                <th>
                     <a href="#"
-                       hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = "Status", asc = !Model.SortAsc, page = Model.CurrentPage })"
+                       hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = nameof(ChapterDownloadRecord.DownloadStatus), asc = !Model.SortAsc, page = Model.CurrentPage })"
                        hx-target="#downloads-table" hx-swap="outerHTML" class="text-decoration-none">
                         @I18n.Status
                         @if (Model.SortColumn == "Status")
@@ -35,7 +40,7 @@
 
                 <th>
                     <a href="#"
-                       hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = "CreateAt", asc = !Model.SortAsc, page = Model.CurrentPage })"
+                       hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = nameof(ChapterDownloadRecord.StatusUpdateAt), asc = !Model.SortAsc, page = Model.CurrentPage })"
                        hx-target="#downloads-table" hx-swap="outerHTML" class="text-decoration-none">
                         @I18n.LastUpdate
                         @if (Model.SortColumn == "CreateAt")
@@ -49,66 +54,8 @@
         <tbody>
             @foreach (var record in Model.Records)
             {
-                <tr>
-                    <td>@record.Chapter.GetCbzFileName()</td>
-                    <td>
-                        <span class="badge
-                    @(record.IsCompleted() ? "bg-success" :
-                                                record.IsCancelled() ? "bg-danger" :
-                                                record.IsInProgress() ? "bg-info" : "bg-secondary")">
-                        @record.DownloadStatus
-                    </span>
-                </td>
-                <td>@record.CreateAt.ToString("g")</td>
-                <td class="text-end">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-gear"></i> @I18n.Actions
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <!-- Reschedule -->
-                            <li>
-                                <button class="dropdown-item d-flex align-items-center gap-2"
-                                        hx-post="/Libraries/Collection/Reschedule?recordId=@record.Id"
-                                        hx-target="#downloads-table"
-                                        hx-swap="outerHTML"
-                                        @(record.IsCompleted() || record.IsCancelled() ? "" : "disabled")>
-                                    <i class="bi bi-arrow-repeat"></i> @I18n.Reschedule
-                                </button>
-                            </li>
-
-                                <!-- Download -->
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center gap-2"
-                                       href="@Url.Page(
-                                           "DownloadChapterTable",
-                                           values: new { 
-                                               handler = "Download",
-                                               libraryId = record.MangaDownload.Library.Id, 
-                                               recordId = record.Id 
-                                           })"
-                                       target="_blank"
-                                       @(record.IsCompleted() ? "" : "disabled")>
-                                        <i class="bi bi-download"></i> @I18n.Download
-                                    </a>
-                                </li>
-
-                                <!-- Cancel -->
-                                <li>
-                                    <button class="dropdown-item d-flex align-items-center gap-2"
-                                            hx-post="/Libraries/Collection/Cancel?recordId=@record.Id"
-                                            hx-target="#downloads-table"
-                                            hx-swap="outerHTML"
-                                            @(record.IsInProgress() ? "" : "disabled")>
-                                        <i class="bi bi-x-circle"></i> @I18n.Cancel
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-                        }
+                <partial name="_DownloadChapterTableRow" model="record" />
+            }
         </tbody>
     </table>
 

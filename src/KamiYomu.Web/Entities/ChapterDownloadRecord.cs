@@ -43,6 +43,7 @@ namespace KamiYomu.Web.Entities
 
         public void Cancelled(string cancellationReason)
         {
+            BackgroundJobId = string.Empty;
             DownloadStatus = DownloadStatus.Cancelled;
             StatusUpdateAt = DateTime.UtcNow;
         }

@@ -603,8 +603,17 @@
   <data name="Cancelled" xml:space="preserve">
     <value>Cancelado</value>
   </data>
+  <data name="Reschedule" xml:space="preserve">
+    <value>Reprogramar</value>
+  </data>
+  <data name="DownloadChapterSchedule" xml:space="preserve">
+    <value>O download do capítulo foi agendado</value>
+  </data>
+  <data name="DownloadChapterHasBeenCancelled" xml:space="preserve">
+    <value>O download do capítulo foi cancelado</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Reschedule" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="Size" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
 </root>

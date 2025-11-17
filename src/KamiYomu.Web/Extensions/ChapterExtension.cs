@@ -60,5 +60,25 @@ namespace KamiYomu.Web.Extensions
             return Path.Combine(chapter.GetVolumeFolderName(seriesFolder), chapter.GetChapterFolderName());
         }
 
+
+        public static string GetCbzFileSize(this Chapter chapter)
+        {
+            var fileInfo = new FileInfo(chapter.GetCbzFilePath()); 
+            
+            if(!fileInfo.Exists)
+                return "Not Stated";
+
+            long bytes = fileInfo.Length;
+
+            if (bytes < 1024)
+                return $"{bytes} B";
+            else if (bytes < 1024 * 1024)
+                return $"{bytes / 1024.0:F2} KB";
+            else if (bytes < 1024 * 1024 * 1024)
+                return $"{bytes / (1024.0 * 1024.0):F2} MB";
+            else
+                return $"{bytes / (1024.0 * 1024.0 * 1024.0):F2} GB";
+        }
+
     }
 }

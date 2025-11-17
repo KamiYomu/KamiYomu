@@ -520,6 +520,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Download Chapter Has Been Cancelled.
+        /// </summary>
+        internal static string DownloadChapterHasBeenCancelled {
+            get {
+                return ResourceManager.GetString("DownloadChapterHasBeenCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download Chapter Has Been Scheduled.
+        /// </summary>
+        internal static string DownloadChapterSchedule {
+            get {
+                return ResourceManager.GetString("DownloadChapterSchedule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Downloaded.
         /// </summary>
         internal static string Downloaded {
@@ -1245,6 +1263,15 @@ namespace KamiYomu.Web.Resources {
         internal static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size.
+        /// </summary>
+        internal static string Size {
+            get {
+                return ResourceManager.GetString("Size", resourceCulture);
             }
         }
         
