@@ -133,6 +133,71 @@ This project includes predefined tasks to build and run the Docker container aut
 If you install all required extensions, the project will run and open the browser in http://localhost:8080
 > NOTE:  You may see a window with some error related `=> ERROR [kamiyomu.web internal] load metadata for mcr.microsoft.com/dotnet/sdk:8.0`, just click on `abort` button then try again.
 
+## 🧩 Create your First Crawler Agent
+
+
+To create your first crawler agent, follow these steps:
+1. **Set Up a New Project**: Create a new Class Library project in Visual Studio or your preferred IDE.
+1. **Add References**: Add references to the necessary KamiYomu packages from NuGet `KamiYomu.CrawlerAgents.Core`.
+1. **Implement the 5 methods from ICrawlerAgent Interface**: Create a class that implements the `ICrawlerAgent` interface. This class will contain the logic for crawling a specific manga source.
+
+```csharp
+
+/// <summary>
+/// Defines a contract for manga crawling agents that support search, retrieval, and metadata extraction.
+/// </summary>
+public interface ICrawlerAgent : IDisposable
+{
+    /// <summary>
+    /// Asynchronously retrieves the favicon URI associated with the crawler's target site.
+    /// </summary>
+    /// <param name="cancellationToken">Optional token to cancel the operation.</param>
+    /// <returns>A <see cref="Task{Uri}"/> representing the favicon location.</returns>
+    Task<Uri> GetFaviconAsync(CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Searches for manga titles matching the specified name, using either traditional pagination or a continuation token.
+    /// </summary>
+    /// <param name="titleName">The title or keyword to search for.</param>
+    /// <param name="paginationOptions">Pagination parameters, supporting both page-based and continuation token-based pagination.</param>
+    /// <param name="cancellationToken">Optional token to cancel the operation.</param>
+    /// <returns>A paged result containing a collection of matching <see cref="Manga"/> entries.</returns>
+    Task<PagedResult<Manga>> SearchAsync(string titleName, PaginationOptions paginationOptions, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Retrieves detailed information about a specific manga by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique ID of the manga.</param>
+    /// <param name="cancellationToken">Optional token to cancel the operation.</param>
+    /// <returns>A <see cref="Task{Manga}"/> containing the manga details.</returns>
+    Task<Manga> GetByIdAsync(string id, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Retrieves a paged list of chapters for the specified manga.
+    /// </summary>
+    /// <param name="manga">The manga object.</param>
+    /// <param name="paginationOptions">Pagination parameters, supporting both page-based and continuation token-based pagination.</param>
+    /// <returns>A paged result containing a collection of <see cref="Chapter"/> entries.</returns>
+    Task<PagedResult<Chapter>> GetChaptersAsync(Manga manga, PaginationOptions paginationOptions, CancellationToken cancellationToken);
+    /// <summary>
+    /// Retrieves the list of page images associated with a given manga chapter.
+    /// </summary>
+    /// <param name="chapter">The chapter entity containing metadata and identifiers.</param>
+    /// <param name="cancellationToken">Optional token to cancel the operation.</param>
+    /// <returns>A collection of <see cref="Page"/> objects representing individual chapter pages.</returns>
+    Task<IEnumerable<Page>> GetChapterPagesAsync(Chapter chapter, CancellationToken cancellationToken);
+}
+```
+1. **Build the Project**: Compile your project to generate the DLL file.
+1. **Deploy the Crawler Agent**: Upload the compiled DLL to the KamiYomu web interface under the "Crawler Agents" section. Or publish the package in NuGet.Org
+1. **Configure and Use**: Once uploaded, configure the crawler agent in KamiYomu and start crawling manga from the supported source.
+
+Do you want a reference implementation? Check:
+- [KamiYomu.CrawlerAgents.MangaDex](https://github.com/KamiYomu/KamiYomu.CrawlerAgents.MangaDex) if you crawler will consume a web api.
+- [KamiYomu.CrawlerAgents.MangaKatana](https://github.com/KamiYomu/KamiYomu.CrawlerAgents.MangaKatana)  if you crawler will consume a web page.
+> NOTE: Make sure to use a Validator console app to ensure your crawler agent meets all requirements before deploying it to KamiYomu.
+
+
 ## 🧠 Tech Stack- .NET 8 Razor Pages
 - Hangfire for job scheduling
 - LiteDB for lightweight persistence
