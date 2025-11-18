@@ -643,4 +643,7 @@
   <data name="LibraryNotFound" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="SearchForChaptersCompleted" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
 </root>

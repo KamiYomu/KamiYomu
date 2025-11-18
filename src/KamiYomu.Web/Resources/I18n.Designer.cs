@@ -1276,6 +1276,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search for chapters is completed.
+        /// </summary>
+        internal static string SearchForChaptersCompleted {
+            get {
+                return ResourceManager.GetString("SearchForChaptersCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search manga....
         /// </summary>
         internal static string SearchManga {

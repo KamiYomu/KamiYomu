@@ -642,4 +642,7 @@
   <data name="LibraryNotFound" xml:space="preserve">
     <value>Library Not Found</value>
   </data>
+  <data name="SearchForChaptersCompleted" xml:space="preserve">
+    <value>Search for chapters is completed</value>
+  </data>
 </root>

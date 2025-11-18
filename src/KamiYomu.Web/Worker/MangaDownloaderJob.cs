@@ -6,6 +6,8 @@ using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
+using KamiYomu.Web.Infrastructure.Services;
+using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Options;
@@ -21,6 +23,7 @@ public class MangaDownloaderJob : IMangaDownloaderJob
     private readonly IAgentCrawlerRepository _agentCrawlerRepository;
     private readonly IBackgroundJobClient _jobClient;
     private readonly IHangfireRepository _hangfireRepository;
+    private readonly INotificationService _notificationService;
 
     public MangaDownloaderJob(
         ILogger<MangaDownloaderJob> logger,
@@ -28,7 +31,8 @@ public class MangaDownloaderJob : IMangaDownloaderJob
         DbContext dbContext,
         IAgentCrawlerRepository agentCrawlerRepository,
         IBackgroundJobClient jobClient,
-        IHangfireRepository hangfireRepository)
+        IHangfireRepository hangfireRepository,
+        INotificationService notificationService)
     {
 
         _logger = logger;
@@ -37,10 +41,17 @@ public class MangaDownloaderJob : IMangaDownloaderJob
         _agentCrawlerRepository = agentCrawlerRepository;
         _jobClient = jobClient;
         _hangfireRepository = hangfireRepository;
+        _notificationService = notificationService;
     }
 
     public async Task DispatchAsync(Guid crawlerId, Guid libraryId, Guid mangaDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
     {
+        var userPreference = _dbContext.UserPreferences.FindOne(p => true);
+        var culture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
+
+        Thread.CurrentThread.CurrentCulture = culture;
+        Thread.CurrentThread.CurrentUICulture = culture;
+
         var library = _dbContext.Libraries.FindById(libraryId);
         if(library == null)
         {
@@ -115,6 +126,11 @@ public class MangaDownloaderJob : IMangaDownloaderJob
             mangaDownload.Complete();
 
             libDbContext.MangaDownloadRecords.Update(mangaDownload);
+
+            if (userPreference.FamilySafeMode && mangaDownload.Library.Manga.IsFamilySafe || !userPreference.FamilySafeMode)
+            {
+                await _notificationService.PushSuccessAsync($"{mangaDownload.Library.Manga.Title}: {I18n.SearchForChaptersCompleted}.", cancellationToken);
+            }
 
         }
         catch (Exception ex)
