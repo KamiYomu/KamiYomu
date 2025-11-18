@@ -78,6 +78,9 @@ namespace KamiYomu.Web.Worker
 
             if (File.Exists(chapterDownload.Chapter.GetCbzFilePath()))
             {
+                chapterDownload.Complete();
+                libDbContext.ChapterDownloadRecords.Update(chapterDownload);
+                _logger.LogError("{file} was found, download chapter marked as completed.", chapterDownload.Chapter.GetCbzFileName());
                 return;
             }
 

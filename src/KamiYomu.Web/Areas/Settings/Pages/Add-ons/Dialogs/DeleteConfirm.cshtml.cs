@@ -25,7 +25,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.Add_ons.Dialogs
         {
             dbContext.NugetSources.Delete(Id);
 
-            notificationService.PushSuccessAsync("Source removed successfully", cancellationToken);
+            notificationService.PushSuccessAsync(I18n.SourceRemovedSuccessfully, cancellationToken);
 
             var viewModel = new SearchBarViewModel
             {

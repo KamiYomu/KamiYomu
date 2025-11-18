@@ -20,7 +20,6 @@ namespace KamiYomu.Web.Pages
 
         }
 
-
         public IActionResult OnPostLanguageSetAsync(string? returnUrl = null, CancellationToken cancellationToken = default)
         {
             var culture = CultureInfo.GetCultureInfo(Culture);
@@ -48,11 +47,10 @@ namespace KamiYomu.Web.Pages
             CultureInfo.CurrentCulture =
             CultureInfo.CurrentUICulture = culture;
 
-
             notificationService.EnqueueSuccess(I18n.UserInterfaceLanguageChanged);
+
             return Redirect(returnUrl ?? Url.Page("/Index", new { area = "" }));
         }
-
 
         public IActionResult OnPostFamilySafeAsync(string? returnUrl = null, CancellationToken cancellationToken = default)
         {

@@ -700,6 +700,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Full Scan Status.
+        /// </summary>
+        internal static string FullScanStatus {
+            get {
+                return ResourceManager.GetString("FullScanStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Got it.
         /// </summary>
         internal static string GotIt {
@@ -979,6 +988,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No .dll found in NuGet package..
+        /// </summary>
+        internal static string NoDllFoundInNugetPackage {
+            get {
+                return ResourceManager.GetString("NoDllFoundInNugetPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No file was found..
+        /// </summary>
+        internal static string NoFileWasFound {
+            get {
+                return ResourceManager.GetString("NoFileWasFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Sources.
         /// </summary>
         internal static string NoSources {
@@ -993,6 +1020,15 @@ namespace KamiYomu.Web.Resources {
         internal static string NugetOrgHasBeenAddedAsANugetSource {
             get {
                 return ResourceManager.GetString("NugetOrgHasBeenAddedAsANugetSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NuGet Package Installed Successfully.
+        /// </summary>
+        internal static string NuGetPackageInstalledSuccessfully {
+            get {
+                return ResourceManager.GetString("NuGetPackageInstalledSuccessfully", resourceCulture);
             }
         }
         
@@ -1029,6 +1065,15 @@ namespace KamiYomu.Web.Resources {
         internal static string OfficialNuGetOrg {
             get {
                 return ResourceManager.GetString("OfficialNuGetOrg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only .dll or .nupkg files are supported..
+        /// </summary>
+        internal static string OnlyDllOrNupkgSupported {
+            get {
+                return ResourceManager.GetString("OnlyDllOrNupkgSupported", resourceCulture);
             }
         }
         
@@ -1348,6 +1393,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Title added to your collection.
+        /// </summary>
+        internal static string TitleAddedToYourCollection {
+            get {
+                return ResourceManager.GetString("TitleAddedToYourCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Toggle Theme.
         /// </summary>
         internal static string ToggleTheme {
@@ -1551,6 +1605,15 @@ namespace KamiYomu.Web.Resources {
         internal static string YourCollection {
             get {
                 return ResourceManager.GetString("YourCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your collection no longer includes.
+        /// </summary>
+        internal static string YourCollectionNoLongerIncludes {
+            get {
+                return ResourceManager.GetString("YourCollectionNoLongerIncludes", resourceCulture);
             }
         }
     }

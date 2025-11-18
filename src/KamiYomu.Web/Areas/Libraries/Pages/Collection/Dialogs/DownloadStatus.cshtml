@@ -3,6 +3,14 @@
 @model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.DownloadStatusModel
 @{
     Layout = null;
+    var badgeClass = Model.Record.DownloadStatus switch
+    {
+        Entities.Definitions.DownloadStatus.Completed => "bg-success",
+        Entities.Definitions.DownloadStatus.Cancelled => "bg-danger",
+        Entities.Definitions.DownloadStatus.Scheduled => "bg-info",
+        Entities.Definitions.DownloadStatus.Processing => "bg-info",
+        _ => "bg-secondary"
+    };
 }
 <div class="modal-header">
     <h5 class="modal-title">@I18n.DownloadStatus</h5>
@@ -22,6 +30,18 @@
 
             <div class="col-md-8">
                 <h2 class="fw-bold mb-3">@Model.Library.Manga.Title</h2>
+                <div class="d-flex align-items-center mb-3">
+                    <label class="form-label fw-semibold mb-0 me-2">
+                        @I18n.FullScanStatus:
+                    </label>
+                    <span class="badge @badgeClass" 
+                          data-bs-toggle="popover"
+                          data-bs-trigger="hover focus"
+                          data-bs-placement="top"
+                          @(string.IsNullOrWhiteSpace(Model.Record.StatusReason) ? "" : $"data-bs-content='{Model.Record.StatusReason}'")>
+                          @(I18n.ResourceManager.GetString(Model.Record.DownloadStatus.ToString()) ?? Model.Record.DownloadStatus.ToString())
+                    </span>
+                </div>
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Download Progress</label>

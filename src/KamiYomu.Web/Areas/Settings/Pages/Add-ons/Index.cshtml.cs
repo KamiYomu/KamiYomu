@@ -100,9 +100,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
                 ZipFile.ExtractToDirectory(mainPackagePath, crawlerAgentDir, overwriteFiles: true);
 
                 // Scan only the main package's extracted folder for the DLL
-                var dllPath = Directory.EnumerateFiles(crawlerAgentDir, "*.dll", SearchOption.AllDirectories).FirstOrDefault();
-                if (dllPath == null)
-                    throw new FileNotFoundException("Main package DLL not found.");
+                var dllPath = Directory.EnumerateFiles(crawlerAgentDir, "*.dll", SearchOption.AllDirectories).FirstOrDefault() ?? throw new FileNotFoundException("Main package DLL not found.");
 
                 // Extract dependencies into the same root directory
                 foreach (var path in savedPaths.Skip(1))
@@ -118,6 +116,8 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
                 dbContext.CrawlerAgents.Insert(crawlerAgent);
 
                 dbContext.CrawlerAgentFileStorage.Delete(tempUploadId);
+
+                notificationService.EnqueueSuccess(I18n.NuGetPackageInstalledSuccessfully);
 
                 return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit", new { crawlerAgent.Id });
             }

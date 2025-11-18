@@ -616,4 +616,49 @@
   <data name="Size" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="YourCollectionNoLongerIncludes" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="NuGetPackageInstalledSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="NoDllFoundInNugetPackage" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="OnlyDllOrNupkgSupported" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="NoFileWasFound" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="FullScanStatus" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="TitleAddedToYourCollection" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Taille</value>
+  </data>
+  <data name="YourCollectionNoLongerIncludes" xml:space="preserve">
+    <value>Votre collection ne comprend plus</value>
+  </data>
+  <data name="NuGetPackageInstalledSuccessfully" xml:space="preserve">
+    <value>Package NuGet installé avec succès</value>
+  </data>
+  <data name="NoDllFoundInNugetPackage" xml:space="preserve">
+    <value>Aucun fichier .dll trouvé dans le package NuGet.</value>
+  </data>
+  <data name="OnlyDllOrNupkgSupported" xml:space="preserve">
+    <value>Seuls les fichiers .dll ou .nupkg sont pris en charge.</value>
+  </data>
+  <data name="NoFileWasFound" xml:space="preserve">
+    <value>Aucun fichier n'a été trouvé.</value>
+  </data>
+  <data name="FullScanStatus" xml:space="preserve">
+    <value>État de l'analyse complète</value>
+  </data>
+  <data name="TitleAddedToYourCollection" xml:space="preserve">
+    <value>Titre ajouté à votre collection</value>
+  </data>
 </root>

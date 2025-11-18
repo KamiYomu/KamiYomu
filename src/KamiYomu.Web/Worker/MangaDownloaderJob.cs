@@ -56,7 +56,7 @@ public class MangaDownloaderJob : IMangaDownloaderJob
 
         using var libDbContext = library.GetDbContext();
 
-        var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Id == mangaDownloadId && p.DownloadStatus == Entities.Definitions.DownloadStatus.Pending);
+        var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Id == mangaDownloadId && (p.DownloadStatus == Entities.Definitions.DownloadStatus.Scheduled || p.DownloadStatus == Entities.Definitions.DownloadStatus.Pending));
         if (mangaDownload == null) return;
         try
         {
@@ -117,12 +117,15 @@ public class MangaDownloaderJob : IMangaDownloaderJob
             } while (offset < total);
 
             _logger.LogInformation("Finished dispatch for manga: {MangaId}. Total chapters: {Total}", mangaId, total);
+            mangaDownload.Complete();
+
+            libDbContext.MangaDownloadRecords.Update(mangaDownload);
 
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Dispatch completed with error {Message}.", ex.Message);
-            mangaDownload.Pending();
+            mangaDownload.Pending(ex.Message);
             libDbContext.MangaDownloadRecords.Update(mangaDownload);
             throw;
         }
