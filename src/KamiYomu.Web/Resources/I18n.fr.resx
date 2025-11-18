@@ -612,31 +612,6 @@
   <data name="DownloadChapterHasBeenCancelled" xml:space="preserve">
     <value>Le téléchargement du chapitre a été annulé</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Size" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="YourCollectionNoLongerIncludes" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="NuGetPackageInstalledSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="NoDllFoundInNugetPackage" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="OnlyDllOrNupkgSupported" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="NoFileWasFound" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="FullScanStatus" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="TitleAddedToYourCollection" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="Size" xml:space="preserve">
     <value>Taille</value>
   </data>
@@ -660,5 +635,12 @@
   </data>
   <data name="TitleAddedToYourCollection" xml:space="preserve">
     <value>Titre ajouté à votre collection</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="InProgress" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="InProgress" xml:space="preserve">
+    <value>En cours</value>
   </data>
 </root>

@@ -32,7 +32,7 @@ namespace KamiYomu.Web.Entities
         public void Processing()
         {
             StatusReason = null;
-            DownloadStatus = DownloadStatus.Processing;
+            DownloadStatus = DownloadStatus.InProgress;
             StatusUpdateAt = DateTime.UtcNow;
         }
         public void Complete()

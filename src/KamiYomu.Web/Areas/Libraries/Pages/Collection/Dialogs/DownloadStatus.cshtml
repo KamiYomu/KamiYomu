@@ -1,5 +1,6 @@
 ﻿@page
 @using KamiYomu.Web.Extensions
+@using System.Text
 @model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.DownloadStatusModel
 @{
     Layout = null;
@@ -7,16 +8,23 @@
     {
         Entities.Definitions.DownloadStatus.Completed => "bg-success",
         Entities.Definitions.DownloadStatus.Cancelled => "bg-danger",
-        Entities.Definitions.DownloadStatus.Scheduled => "bg-info",
-        Entities.Definitions.DownloadStatus.Processing => "bg-info",
+        Entities.Definitions.DownloadStatus.Scheduled => "bg-primary",
+        Entities.Definitions.DownloadStatus.InProgress => "bg-info",
         _ => "bg-secondary"
     };
+    var lastUpdateBuilder = new StringBuilder();
+    lastUpdateBuilder.AppendLine($"{I18n.LastUpdate}: {Model.Record.StatusUpdateAt}.");
+    if(!string.IsNullOrWhiteSpace(Model.Record.StatusReason))
+    {
+        lastUpdateBuilder.AppendLine(Model.Record.StatusReason);
+    }
+    
 }
 <div class="modal-header">
     <h5 class="modal-title">@I18n.DownloadStatus</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-<div class="modal-body">
+<div class="modal-body" id="DownloadStatusContainer">
     <div class="container-fluid">
         <div class="row g-4">
             <div class="col-md-4">
@@ -34,12 +42,13 @@
                     <label class="form-label fw-semibold mb-0 me-2">
                         @I18n.FullScanStatus:
                     </label>
-                    <span class="badge @badgeClass" 
+                    <span class="badge @badgeClass"
                           data-bs-toggle="popover"
                           data-bs-trigger="hover focus"
                           data-bs-placement="top"
-                          @(string.IsNullOrWhiteSpace(Model.Record.StatusReason) ? "" : $"data-bs-content='{Model.Record.StatusReason}'")>
-                          @(I18n.ResourceManager.GetString(Model.Record.DownloadStatus.ToString()) ?? Model.Record.DownloadStatus.ToString())
+                          data-bs-content="@lastUpdateBuilder.ToString()">
+                        @(I18n.ResourceManager.GetString(Model.Record.DownloadStatus.ToString())
+                                                ?? Model.Record.DownloadStatus.ToString())
                     </span>
                 </div>
 
@@ -97,3 +106,17 @@
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 </div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const popoverTriggerList = [].slice.call(
+        document.querySelectorAll('#DownloadStatusContainer [data-bs-toggle="popover"]')
+      );
+      popoverTriggerList.forEach(function (el) {
+        new bootstrap.Popover(el, {
+          container: '#DownloadStatusContainer'
+        });
+      });
+    });
+</script>

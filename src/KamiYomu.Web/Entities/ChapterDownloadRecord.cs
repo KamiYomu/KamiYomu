@@ -35,7 +35,7 @@ namespace KamiYomu.Web.Entities
         public void Processing()
         {
             StatusReason = null;
-            DownloadStatus = DownloadStatus.Processing;
+            DownloadStatus = DownloadStatus.InProgress;
             StatusUpdateAt = DateTime.UtcNow;
         }
 
@@ -57,7 +57,7 @@ namespace KamiYomu.Web.Entities
 
         public bool IsInProgress()
         {
-            return DownloadStatus == DownloadStatus.Scheduled || DownloadStatus == DownloadStatus.Processing;
+            return DownloadStatus == DownloadStatus.Scheduled || DownloadStatus == DownloadStatus.InProgress;
         }
 
         public bool IsCancelled()

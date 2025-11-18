@@ -3,7 +3,7 @@
     public class NugetSource
     {
         protected NugetSource() { }
-        public NugetSource(string displayName, Uri url, string userName, string password)
+        public NugetSource(string displayName, Uri url, string? userName, string? password)
         {
             DisplayName = displayName;
             Url = url;

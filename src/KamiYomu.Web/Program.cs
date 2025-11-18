@@ -23,8 +23,11 @@ using Serilog;
 using SQLite;
 using System.Globalization;
 using System.Text.Json.Serialization;
+using static KamiYomu.Web.AppOptions.Defaults;
 
 var builder = WebApplication.CreateBuilder(args);
+
+LiteDbConfig.Configure();
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
@@ -139,7 +142,6 @@ builder.Services.AddHttpClient(Defaults.Worker.HttpClientBackground, client =>
 
 
 var app = builder.Build();
-
 
 if (!app.Environment.IsDevelopment())
 {

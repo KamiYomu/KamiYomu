@@ -17,7 +17,8 @@ namespace KamiYomu.Web.Areas.Settings.Pages.Add_ons.Dialogs
 
         public IActionResult OnPostAsync(CancellationToken cancellationToken)
         {
-            dbContext.NugetSources.Insert(new NugetSource("NuGet.org", new Uri(Defaults.NugetFeeds.NugetFeedUrl), null!, null!));
+            var source = new NugetSource("NuGet.org", new Uri(Defaults.NugetFeeds.NugetFeedUrl), null, null);
+            dbContext.NugetSources.Insert(source);
 
             var nugetSources = dbContext.NugetSources.FindAll().ToList();
 
@@ -25,6 +26,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.Add_ons.Dialogs
 
             var viewModel = new SearchBarViewModel
             {
+                SourceId = source.Id,
                 Sources = dbContext.NugetSources.FindAll(),
                 IncludePrerelease = false
             };

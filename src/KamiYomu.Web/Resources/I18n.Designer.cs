@@ -772,6 +772,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to In Progress.
+        /// </summary>
+        internal static string InProgress {
+            get {
+                return ResourceManager.GetString("InProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Install.
         /// </summary>
         internal static string Install {

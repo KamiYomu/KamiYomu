@@ -580,7 +580,7 @@
     <value>Baixar atividade</value>
   </data>
   <data name="DownloadStatus" xml:space="preserve">
-    <value>Baixar status</value>
+    <value>Download Status</value>
   </data>
   <data name="Options" xml:space="preserve">
     <value>Opções</value>
@@ -612,31 +612,6 @@
   <data name="DownloadChapterHasBeenCancelled" xml:space="preserve">
     <value>O download do capítulo foi cancelado</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Size" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="YourCollectionNoLongerIncludes" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="NuGetPackageInstalledSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="NoDllFoundInNugetPackage" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="OnlyDllOrNupkgSupported" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="NoFileWasFound" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="FullScanStatus" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="TitleAddedToYourCollection" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="Size" xml:space="preserve">
     <value>Tamanho</value>
   </data>
@@ -660,5 +635,12 @@
   </data>
   <data name="TitleAddedToYourCollection" xml:space="preserve">
     <value>Título adicionado à sua coleção</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="InProgress" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="InProgress" xml:space="preserve">
+    <value>Em andamento</value>
   </data>
 </root>

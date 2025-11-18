@@ -4,7 +4,7 @@
     {
         Pending = 0,
         Scheduled = 1,
-        Processing = 2,
+        InProgress = 2,
         Completed = 3,
         Cancelled = 4,
     }

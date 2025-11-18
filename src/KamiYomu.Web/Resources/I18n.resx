@@ -636,4 +636,7 @@
   <data name="TitleAddedToYourCollection" xml:space="preserve">
     <value>Title added to your collection</value>
   </data>
+  <data name="InProgress" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
 </root>

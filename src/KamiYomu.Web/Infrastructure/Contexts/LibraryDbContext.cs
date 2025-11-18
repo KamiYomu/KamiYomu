@@ -13,16 +13,6 @@ namespace KamiYomu.Web.Infrastructure.Contexts
         {
             _libraryId = libraryId;
             _database = new($"Filename={DatabaseFilePath()};Connection=shared;");
-            _database.Mapper.RegisterType<Uri>(
-                uri => uri != null ? new BsonValue(uri.ToString()) : BsonValue.Null,
-                bson =>
-                {
-                    var str = bson.AsString;
-                    if (string.IsNullOrWhiteSpace(str)) return null;
-
-                    return Uri.TryCreate(str, UriKind.RelativeOrAbsolute, out var uri) ? uri : null;
-                }
-            );
         }
         public ILiteCollection<ChapterDownloadRecord> ChapterDownloadRecords => _database.GetCollection<ChapterDownloadRecord>("chapter_download_records");
         public ILiteCollection<MangaDownloadRecord> MangaDownloadRecords => _database.GetCollection<MangaDownloadRecord>("manga_download_records");
