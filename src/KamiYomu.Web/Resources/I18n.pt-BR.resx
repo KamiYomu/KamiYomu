@@ -636,11 +636,11 @@
   <data name="TitleAddedToYourCollection" xml:space="preserve">
     <value>Título adicionado à sua coleção</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="InProgress" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="InProgress" xml:space="preserve">
     <value>Em andamento</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="LibraryNotFound" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

@@ -7,6 +7,7 @@ using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
+using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Options;
 using System.Globalization;
 
@@ -40,40 +41,34 @@ public class MangaDownloaderJob : IMangaDownloaderJob
 
     public async Task DispatchAsync(Guid crawlerId, Guid libraryId, Guid mangaDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
     {
-        if (cancellationToken.IsCancellationRequested)
-        {
-            _logger.LogWarning("Dispatch {jobName} cancelled before processing manga: {mangaDownloadId}", nameof(MangaDownloaderJob), mangaDownloadId);
-            return;
-        }
-
         var library = _dbContext.Libraries.FindById(libraryId);
-
-        if (library == null)
+        if(library == null)
         {
-            _logger.LogWarning("Dispatch \"{title}\" could not proceed — the associated library record no longer exists.", title);
+            _logger.LogError("Library no longer exists");
             return;
         }
-
         using var libDbContext = library.GetDbContext();
-
         var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Id == mangaDownloadId);
-
-        if (mangaDownload.DownloadStatus != Entities.Definitions.DownloadStatus.Scheduled &&
-            mangaDownload.DownloadStatus != Entities.Definitions.DownloadStatus.Pending)
-        {
-            return;
-        }
-
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (library == null)
+            {
+                _logger.LogWarning("Dispatch \"{title}\" could not proceed — the associated library record no longer exists.", title);
+                return;
+            }
+
+            if (mangaDownload.DownloadStatus != Entities.Definitions.DownloadStatus.Scheduled &&
+                mangaDownload.DownloadStatus != Entities.Definitions.DownloadStatus.Pending)
+            {
+                return;
+            }
+
             _logger.LogInformation("Dispatch started. JobId: {JobId}", context.BackgroundJob?.Id);
 
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                _logger.LogWarning("Dispatch cancelled before processing manga: {MangaId}", mangaDownload.Library.Manga.Id);
-                return;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             mangaDownload.Processing();
 
@@ -90,13 +85,7 @@ public class MangaDownloaderJob : IMangaDownloaderJob
 
             do
             {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    _logger.LogWarning("Dispatch cancelled during chapter fetch for manga: {MangaId}", mangaId);
-                    mangaDownload.Cancelled($"Cancelled during the running job: {mangaId}");
-                    libDbContext.MangaDownloadRecords.Update(mangaDownload);
-                    return;
-                }
+                cancellationToken.ThrowIfCancellationRequested();
 
                 var page = await _agentCrawlerRepository.GetMangaChaptersAsync(
                     agentCrawler, mangaId, new PaginationOptions(offset, limit), cancellationToken);

@@ -844,6 +844,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Library Not Found.
+        /// </summary>
+        internal static string LibraryNotFound {
+            get {
+                return ResourceManager.GetString("LibraryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to License.
         /// </summary>
         internal static string License {
