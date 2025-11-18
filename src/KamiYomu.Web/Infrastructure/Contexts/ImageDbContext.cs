@@ -9,16 +9,6 @@ namespace KamiYomu.Web.Infrastructure.Contexts
         public ImageDbContext(string connectionString)
         {
             _database = new(connectionString);
-            _database.Mapper.RegisterType<Uri>(
-                uri => uri != null ? new BsonValue(uri.ToString()) : BsonValue.Null,
-                bson =>
-                {
-                    var str = bson.AsString;
-                    if (string.IsNullOrWhiteSpace(str)) return null;
-
-                    return Uri.TryCreate(str, UriKind.RelativeOrAbsolute, out var uri) ? uri : null;
-                }
-            );
         }
 
         public ILiteStorage<Uri> CoverImageFileStorage => _database.GetStorage<Uri>("_cover_image_file_store", "_cover_images");

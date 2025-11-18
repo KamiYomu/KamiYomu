@@ -580,7 +580,7 @@
     <value>Baixar atividade</value>
   </data>
   <data name="DownloadStatus" xml:space="preserve">
-    <value>Baixar status</value>
+    <value>Download Status</value>
   </data>
   <data name="Options" xml:space="preserve">
     <value>Opções</value>
@@ -612,8 +612,38 @@
   <data name="DownloadChapterHasBeenCancelled" xml:space="preserve">
     <value>O download do capítulo foi cancelado</value>
   </data>
+  <data name="Size" xml:space="preserve">
+    <value>Tamanho</value>
+  </data>
+  <data name="YourCollectionNoLongerIncludes" xml:space="preserve">
+    <value>Sua coleção não inclui mais</value>
+  </data>
+  <data name="NuGetPackageInstalledSuccessfully" xml:space="preserve">
+    <value>Pacote NuGet instalado com sucesso</value>
+  </data>
+  <data name="NoDllFoundInNugetPackage" xml:space="preserve">
+    <value>Nenhum .dll encontrado no pacote NuGet.</value>
+  </data>
+  <data name="OnlyDllOrNupkgSupported" xml:space="preserve">
+    <value>Somente arquivos .dll ou .nupkg são suportados.</value>
+  </data>
+  <data name="NoFileWasFound" xml:space="preserve">
+    <value>Nenhum arquivo foi encontrado.</value>
+  </data>
+  <data name="FullScanStatus" xml:space="preserve">
+    <value>Status de verificação completa</value>
+  </data>
+  <data name="TitleAddedToYourCollection" xml:space="preserve">
+    <value>Título adicionado à sua coleção</value>
+  </data>
+  <data name="InProgress" xml:space="preserve">
+    <value>Em andamento</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Size" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="LibraryNotFound" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="SearchForChaptersCompleted" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
 </root>

@@ -95,6 +95,8 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                 return NotFound();
             }
 
+            record.DeleteDownloadedFileIfExists();
+
             var jobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(worker => worker.DispatchAsync(record.CrawlerAgent.Id,
                                                                                         record.MangaDownload.Library.Id,
                                                                                         record.MangaDownload.Id,

@@ -1,18 +1,35 @@
 ﻿@using KamiYomu.Web.Entities
 @using KamiYomu.Web.Extensions
+@using System.Text
 @model ChapterDownloadRecord
 @{
     var rowId = $"row-{Model.Id}";
+    var badgeClass = Model.DownloadStatus switch
+    {
+        Entities.Definitions.DownloadStatus.Completed => "bg-success",
+        Entities.Definitions.DownloadStatus.Cancelled => "bg-danger",
+        Entities.Definitions.DownloadStatus.Scheduled => "bg-primary",
+        Entities.Definitions.DownloadStatus.InProgress => "bg-info",
+        _ => "bg-secondary"
+    };
+    var lastUpdateBuilder = new StringBuilder();
+    lastUpdateBuilder.AppendLine($"{I18n.LastUpdate}: {Model.StatusUpdateAt}.");
+    if (!string.IsNullOrWhiteSpace(Model.StatusReason))
+    {
+        lastUpdateBuilder.AppendLine(Model.StatusReason);
+    }
 }
 <tr id="@rowId">
     <td>@Model.Chapter.GetCbzFileName()</td>
     <td>@Model.Chapter.GetCbzFileSize()</td>
     <td>
-        <span class="badge
-    @(Model.IsCompleted() ? "bg-success" :
-                                              Model.IsCancelled() ? "bg-danger" :
-                                              Model.IsInProgress() ? "bg-info" : "bg-secondary")">
-            @Model.DownloadStatus
+        <span class="badge @badgeClass"
+              data-bs-toggle="popover"
+              data-bs-trigger="hover focus"
+              data-bs-placement="top"
+              data-bs-content="@lastUpdateBuilder.ToString()">
+            @(I18n.ResourceManager.GetString(Model.DownloadStatus.ToString())
+                        ?? Model.DownloadStatus.ToString())
         </span>
     </td>
     <td>@Model.CreateAt.ToString("g")</td>

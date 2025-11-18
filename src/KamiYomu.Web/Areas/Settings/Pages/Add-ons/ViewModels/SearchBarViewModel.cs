@@ -6,7 +6,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels
     public class SearchBarViewModel
     {
         [BindProperty]
-        public string Search { get; set; } = "";
+        public string Search { get; set; } = "KamiYomu";
 
         [BindProperty]
         public bool IncludePrerelease { get; set; } = false;

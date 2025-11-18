@@ -1,3 +1,4 @@
+using KamiYomu.Web.Entities;
 using KamiYomu.Web.Entities.Definitions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,6 +11,8 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs
         public decimal Completed { get; set; } = 0;
         public decimal Total { get; set; } = 0;
         public decimal Progress { get; set; } = 0;
+        public MangaDownloadRecord Record { get; set; } = null;
+
 
         public void OnGet(Guid libraryId)
         {
@@ -19,6 +22,8 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs
             var downloadManga = libDbContext.MangaDownloadRecords.FindOne(p => p.Library.Id == Library.Id);
 
             if (downloadManga == null) return;
+
+            Record = downloadManga;
 
             var downloadChapters = libDbContext.ChapterDownloadRecords.Find(p => p.MangaDownload.Id == downloadManga.Id).OrderBy(p => p.Chapter.Number).ToList();
             Completed = downloadChapters.Count(p => p.DownloadStatus == DownloadStatus.Completed);

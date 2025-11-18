@@ -40,7 +40,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
         {
             if (agentFile == null || agentFile.Length == 0)
             {
-                return BadRequest("No file uploaded.");
+                return BadRequest(I18n.NoFileWasFound);
             }
                 
 
@@ -50,7 +50,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
 
             if (!isNuget && !isDll)
             {
-                return BadRequest("Only .dll or .nupkg files are supported.");
+                return BadRequest(I18n.OnlyDllOrNupkgSupported);
             }
 
 
@@ -75,7 +75,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
 
                 if (dllPath == null)
                 {
-                    return BadRequest("No .dll found in NuGet package.");
+                    return BadRequest(I18n.NoDllFoundInNugetPackage);
                 }
             }
             else
@@ -112,7 +112,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
 
             if (!isNuget && !isDll)
             {
-                await notificationService.PushErrorAsync("Only .dll or .nupkg files are supported.", cancellationToken);
+                notificationService.EnqueueError(I18n.OnlyDllOrNupkgSupported);
                 return Page();
             }
             var agentDir = CrawlerAgent.GetAgentDir(fileStorage.Filename);
@@ -132,7 +132,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
 
                 if (dllPath == null)
                 {
-                    await notificationService.PushErrorAsync("No .dll found in NuGet package.", cancellationToken);
+                    notificationService.EnqueueError(I18n.NoDllFoundInNugetPackage);
                     return Page();
                 }
             }

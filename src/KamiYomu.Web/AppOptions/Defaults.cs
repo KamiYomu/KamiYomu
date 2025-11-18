@@ -1,4 +1,10 @@
-﻿namespace KamiYomu.Web.AppOptions;
+﻿using KamiYomu.CrawlerAgents.Core.Catalog.Definitions;
+using KamiYomu.Web.Entities.Definitions;
+using KamiYomu.Web.Entities.Notifications.Definitions;
+using LiteDB;
+
+
+namespace KamiYomu.Web.AppOptions;
 
 public partial class Defaults
 {
@@ -70,4 +76,39 @@ public partial class Defaults
         public const string HttpClientBackground = nameof(HttpClientBackground);
 
     }
+
+    public static class LiteDbConfig
+    {
+        public static void Configure()
+        {
+            var mapper = BsonMapper.Global;
+
+            mapper.RegisterType<Uri>(
+                uri => uri != null ? new BsonValue(uri.ToString()) : BsonValue.Null,
+                bson =>
+                {
+                    var str = bson.AsString;
+                    if (string.IsNullOrWhiteSpace(str)) return null;
+
+                    return Uri.TryCreate(str, UriKind.RelativeOrAbsolute, out Uri? uri) ? uri : null;
+                }
+            );
+
+            mapper.RegisterType<DownloadStatus>(
+                serialize: status => new BsonValue((int)status),
+                deserialize: bson => (DownloadStatus)bson.AsInt32
+            );
+
+            mapper.RegisterType<NotificationType>(
+                serialize: status => new BsonValue((int)status),
+                deserialize: bson => (NotificationType)bson.AsInt32
+            );
+
+            mapper.RegisterType<ReleaseStatus>(
+                serialize: status => new BsonValue((int)status),
+                deserialize: bson => (ReleaseStatus)bson.AsInt32
+            );
+        }
+    }
+
 }

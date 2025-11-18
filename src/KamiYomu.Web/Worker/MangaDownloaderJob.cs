@@ -6,7 +6,10 @@ using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
+using KamiYomu.Web.Infrastructure.Services;
+using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
+using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Options;
 using System.Globalization;
 
@@ -20,6 +23,7 @@ public class MangaDownloaderJob : IMangaDownloaderJob
     private readonly IAgentCrawlerRepository _agentCrawlerRepository;
     private readonly IBackgroundJobClient _jobClient;
     private readonly IHangfireRepository _hangfireRepository;
+    private readonly INotificationService _notificationService;
 
     public MangaDownloaderJob(
         ILogger<MangaDownloaderJob> logger,
@@ -27,7 +31,8 @@ public class MangaDownloaderJob : IMangaDownloaderJob
         DbContext dbContext,
         IAgentCrawlerRepository agentCrawlerRepository,
         IBackgroundJobClient jobClient,
-        IHangfireRepository hangfireRepository)
+        IHangfireRepository hangfireRepository,
+        INotificationService notificationService)
     {
 
         _logger = logger;
@@ -36,38 +41,45 @@ public class MangaDownloaderJob : IMangaDownloaderJob
         _agentCrawlerRepository = agentCrawlerRepository;
         _jobClient = jobClient;
         _hangfireRepository = hangfireRepository;
+        _notificationService = notificationService;
     }
 
     public async Task DispatchAsync(Guid crawlerId, Guid libraryId, Guid mangaDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
     {
-        if (cancellationToken.IsCancellationRequested)
-        {
-            _logger.LogWarning("Dispatch {jobName} cancelled before processing manga: {mangaDownloadId}", nameof(MangaDownloaderJob), mangaDownloadId);
-            return;
-        }
-       
+        var userPreference = _dbContext.UserPreferences.FindOne(p => true);
+        var culture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
+
+        Thread.CurrentThread.CurrentCulture = culture;
+        Thread.CurrentThread.CurrentUICulture = culture;
+
         var library = _dbContext.Libraries.FindById(libraryId);
-
-        if (library == null)
+        if(library == null)
         {
-            _logger.LogWarning("Dispatch \"{title}\" could not proceed — the associated library record no longer exists.", title);
+            _logger.LogError("Library no longer exists");
             return;
         }
-
         using var libDbContext = library.GetDbContext();
-
-        var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Id == mangaDownloadId && p.DownloadStatus == Entities.Definitions.DownloadStatus.Pending);
-        if (mangaDownload == null) return;
+        var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Id == mangaDownloadId);
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (library == null)
+            {
+                _logger.LogWarning("Dispatch \"{title}\" could not proceed — the associated library record no longer exists.", title);
+                return;
+            }
+
+            if (mangaDownload.DownloadStatus != Entities.Definitions.DownloadStatus.Scheduled &&
+                mangaDownload.DownloadStatus != Entities.Definitions.DownloadStatus.Pending)
+            {
+                return;
+            }
+
             _logger.LogInformation("Dispatch started. JobId: {JobId}", context.BackgroundJob?.Id);
 
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                _logger.LogWarning("Dispatch cancelled before processing manga: {MangaId}", mangaDownload.Library.Manga.Id);
-                return;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             mangaDownload.Processing();
 
@@ -84,13 +96,7 @@ public class MangaDownloaderJob : IMangaDownloaderJob
 
             do
             {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    _logger.LogWarning("Dispatch cancelled during chapter fetch for manga: {MangaId}", mangaId);
-                    mangaDownload.Cancelled($"Cancelled during the running job: {mangaId}");
-                    libDbContext.MangaDownloadRecords.Update(mangaDownload);
-                    return;
-                }
+                cancellationToken.ThrowIfCancellationRequested();
 
                 var page = await _agentCrawlerRepository.GetMangaChaptersAsync(
                     agentCrawler, mangaId, new PaginationOptions(offset, limit), cancellationToken);
@@ -117,12 +123,20 @@ public class MangaDownloaderJob : IMangaDownloaderJob
             } while (offset < total);
 
             _logger.LogInformation("Finished dispatch for manga: {MangaId}. Total chapters: {Total}", mangaId, total);
+            mangaDownload.Complete();
+
+            libDbContext.MangaDownloadRecords.Update(mangaDownload);
+
+            if (userPreference.FamilySafeMode && mangaDownload.Library.Manga.IsFamilySafe || !userPreference.FamilySafeMode)
+            {
+                await _notificationService.PushSuccessAsync($"{mangaDownload.Library.Manga.Title}: {I18n.SearchForChaptersCompleted}.", cancellationToken);
+            }
 
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Dispatch completed with error {Message}.", ex.Message);
-            mangaDownload.Pending();
+            mangaDownload.Pending(ex.Message);
             libDbContext.MangaDownloadRecords.Update(mangaDownload);
             throw;
         }

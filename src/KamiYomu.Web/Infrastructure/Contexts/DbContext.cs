@@ -10,16 +10,6 @@ namespace KamiYomu.Web.Infrastructure.Contexts
         private readonly LiteDatabase _database;
         public DbContext(string connectionString) {
             _database = new(connectionString);
-            _database.Mapper.RegisterType<Uri>(
-                uri => uri != null ? new BsonValue(uri.ToString()) : BsonValue.Null,
-                bson =>
-                {
-                    var str = bson.AsString;
-                    if (string.IsNullOrWhiteSpace(str)) return null;
-
-                    return Uri.TryCreate(str, UriKind.RelativeOrAbsolute, out Uri? uri) ? uri : null;
-                }
-            );
         }
 
         public ILiteCollection<CrawlerAgent> CrawlerAgents => _database.GetCollection<CrawlerAgent>("agent_crawlers");

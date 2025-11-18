@@ -615,4 +615,34 @@
   <data name="Size" xml:space="preserve">
     <value>Size</value>
   </data>
+  <data name="YourCollectionNoLongerIncludes" xml:space="preserve">
+    <value>Your collection no longer includes</value>
+  </data>
+  <data name="NuGetPackageInstalledSuccessfully" xml:space="preserve">
+    <value>NuGet Package Installed Successfully</value>
+  </data>
+  <data name="NoDllFoundInNugetPackage" xml:space="preserve">
+    <value>No .dll found in NuGet package.</value>
+  </data>
+  <data name="OnlyDllOrNupkgSupported" xml:space="preserve">
+    <value>Only .dll or .nupkg files are supported.</value>
+  </data>
+  <data name="NoFileWasFound" xml:space="preserve">
+    <value>No file was found.</value>
+  </data>
+  <data name="FullScanStatus" xml:space="preserve">
+    <value>Full Scan Status</value>
+  </data>
+  <data name="TitleAddedToYourCollection" xml:space="preserve">
+    <value>Title added to your collection</value>
+  </data>
+  <data name="InProgress" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="LibraryNotFound" xml:space="preserve">
+    <value>Library Not Found</value>
+  </data>
+  <data name="SearchForChaptersCompleted" xml:space="preserve">
+    <value>Search for chapters is completed</value>
+  </data>
 </root>

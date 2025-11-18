@@ -39,18 +39,17 @@ namespace KamiYomu.Web.Worker
 
         public async Task DispatchAsync(Guid crawlerId, Guid libraryId, PerformContext context, CancellationToken cancellationToken)
         {
+            var userPreference = _dbContext.UserPreferences.FindOne(p => true);
+            var culture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
+
+            Thread.CurrentThread.CurrentCulture = culture;
+            Thread.CurrentThread.CurrentUICulture = culture;
+
             if (cancellationToken.IsCancellationRequested)
             {
                 _logger.LogWarning("Dispatch cancelled {JobName}", nameof(ChapterDiscoveryJob));
                 return;
             }
-
-            var userPreference = _dbContext.UserPreferences.FindOne(p => true);
-
-            Thread.CurrentThread.CurrentCulture =
-            Thread.CurrentThread.CurrentUICulture =
-            CultureInfo.CurrentCulture =
-            CultureInfo.CurrentUICulture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
 
             var library = _dbContext.Libraries.FindById(libraryId);
 

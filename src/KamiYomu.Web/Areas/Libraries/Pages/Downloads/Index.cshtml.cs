@@ -61,14 +61,14 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
             RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(
             library.GetDiscovertyJobId(),
             Defaults.Worker.DiscoveryNewChapterQueues,
-            (job) => job.DispatchAsync(agentCrawler.Id, library.Id, null!, cancellationToken),
+            (job) => job.DispatchAsync(agentCrawler.Id, library.Id, null!, CancellationToken.None),
             Cron.Daily());
 
             downloadRecord.Schedule(backgroundJobId);
 
             libDbContext.MangaDownloadRecords.Update(downloadRecord);
 
-            await notificationService.PushInfoAsync($"Title {library.Manga.Title} was added to your collection.", cancellationToken);
+            await notificationService.PushSuccessAsync($"{I18n.TitleAddedToYourCollection}: {library.Manga.Title} ", cancellationToken);
 
             return Partial("_LibraryCard", library);
         }
@@ -117,7 +117,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 
             logger.LogInformation("Drop Database {database}", libDbContext.DatabaseFilePath());
 
-            await notificationService.PushWarningAsync($"Title {mangaTitle} was removed from your collection.", cancellationToken);
+            await notificationService.PushSuccessAsync($"{I18n.YourCollectionNoLongerIncludes}: {mangaTitle}.", cancellationToken);
 
             return Partial("_LibraryCard", new Library(library.AgentCrawler, library.Manga));
         }
