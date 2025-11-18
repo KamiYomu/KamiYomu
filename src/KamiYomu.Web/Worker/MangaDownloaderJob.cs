@@ -45,7 +45,7 @@ public class MangaDownloaderJob : IMangaDownloaderJob
             _logger.LogWarning("Dispatch {jobName} cancelled before processing manga: {mangaDownloadId}", nameof(MangaDownloaderJob), mangaDownloadId);
             return;
         }
-       
+
         var library = _dbContext.Libraries.FindById(libraryId);
 
         if (library == null)
@@ -56,8 +56,14 @@ public class MangaDownloaderJob : IMangaDownloaderJob
 
         using var libDbContext = library.GetDbContext();
 
-        var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Id == mangaDownloadId && (p.DownloadStatus == Entities.Definitions.DownloadStatus.Scheduled || p.DownloadStatus == Entities.Definitions.DownloadStatus.Pending));
-        if (mangaDownload == null) return;
+        var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Id == mangaDownloadId);
+
+        if (mangaDownload.DownloadStatus != Entities.Definitions.DownloadStatus.Scheduled &&
+            mangaDownload.DownloadStatus != Entities.Definitions.DownloadStatus.Pending)
+        {
+            return;
+        }
+
         try
         {
             _logger.LogInformation("Dispatch started. JobId: {JobId}", context.BackgroundJob?.Id);
