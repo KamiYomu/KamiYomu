@@ -48,12 +48,12 @@ namespace KamiYomu.Web.Infrastructure.Services
         #endregion
 
         #region Enqueue
-        public void Enqueue(Notification notification)
+        public void EnqueueForNextPage(Notification notification)
         {
             _cacheDbContext.Current.Add<Notification>(Defaults.UI.EnqueueNotification, notification, expireIn: TimeSpan.FromSeconds(1));
         }
 
-        public Notification? Dequeue()
+        public Notification? DequeuePendingNotification()
         {
             if(_cacheDbContext.TryGetCached<Notification>(Defaults.UI.EnqueueNotification, out var notification))
             {
@@ -62,27 +62,26 @@ namespace KamiYomu.Web.Infrastructure.Services
             return null;
         }
 
-        public void EnqueueError(string message)
+        public void EnqueueErrorForNextPage(string message)
         {
-            Enqueue(Notification.Error(message));
+            EnqueueForNextPage(Notification.Error(message));
         }
 
-        public void EnqueueWarning(string message)
+        public void EnqueueWarningForNextPage(string message)
         {
-            Enqueue(Notification.Warning(message));
+            EnqueueForNextPage(Notification.Warning(message));
         }
 
-        public void EnqueueInfo(string message)
+        public void EnqueueInfoForNextPage(string message)
         {
-            Enqueue(Notification.Info(message));
+            EnqueueForNextPage(Notification.Info(message));
         }
 
-        public void EnqueueSuccess(string message)
+        public void EnqueueSuccessForNextPage(string message)
         {
-            Enqueue(Notification.Success(message));
+            EnqueueForNextPage(Notification.Success(message));
         }
         #endregion
-
     }
 
 }

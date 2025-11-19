@@ -50,7 +50,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error on search packages");
-                notificationService.EnqueueError(I18n.FailedToSearch);
+                notificationService.EnqueueErrorForNextPage(I18n.FailedToSearch);
                 Packages = [];
             }
 
@@ -117,7 +117,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
 
                 dbContext.CrawlerAgentFileStorage.Delete(tempUploadId);
 
-                notificationService.EnqueueSuccess(I18n.NuGetPackageInstalledSuccessfully);
+                notificationService.EnqueueSuccessForNextPage(I18n.NuGetPackageInstalledSuccessfully);
 
                 return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit", new { crawlerAgent.Id });
             }
@@ -126,7 +126,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
 
                 logger.LogError(ex, "Error on install package {PackageId} {PackageVersion} from source {SourceId}", packageId, packageVersion, sourceId);
 
-                notificationService.EnqueueError(I18n.NuGetPackageIsInvalid);
+                notificationService.EnqueueErrorForNextPage(I18n.NuGetPackageIsInvalid);
             }
 
             ModelState.Remove("Search");

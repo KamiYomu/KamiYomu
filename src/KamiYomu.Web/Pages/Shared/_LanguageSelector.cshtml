@@ -19,6 +19,7 @@
                   asp-route-area=""
                   asp-route-returnUrl="@Context.Request.Path"
                   novalidate>
+                  @Html.AntiForgeryToken()
                 <input type="hidden" name="Culture" value="@CultureInfo.GetCultureInfo("en-US").Name" />
                 <button type="submit" class="dropdown-item">🇺🇸 @CultureInfo.GetCultureInfo("en-US").NativeName</button>
             </form>
@@ -30,6 +31,7 @@
                   asp-route-area=""
                   asp-route-returnUrl="@Context.Request.Path"
                   novalidate>
+                @Html.AntiForgeryToken()
                 <input type="hidden" name="Culture" value="@CultureInfo.GetCultureInfo("pt-BR").Name" />
                 <button type="submit" class="dropdown-item">🇧🇷 @CultureInfo.GetCultureInfo("pt-BR").NativeName</button>
             </form>
@@ -41,6 +43,7 @@
                   asp-route-area=""
                   asp-route-returnUrl="@Context.Request.Path"
                   novalidate>
+                @Html.AntiForgeryToken()
                 <input type="hidden" name="Culture" value="@CultureInfo.GetCultureInfo("fr").Name" />
                 <button type="submit" class="dropdown-item">🇫🇷 @CultureInfo.GetCultureInfo("fr").NativeName</button>
             </form>

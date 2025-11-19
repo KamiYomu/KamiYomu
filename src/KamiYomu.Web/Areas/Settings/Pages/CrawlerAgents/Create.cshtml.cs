@@ -112,7 +112,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
 
             if (!isNuget && !isDll)
             {
-                notificationService.EnqueueError(I18n.OnlyDllOrNupkgSupported);
+                notificationService.EnqueueErrorForNextPage(I18n.OnlyDllOrNupkgSupported);
                 return Page();
             }
             var agentDir = CrawlerAgent.GetAgentDir(fileStorage.Filename);
@@ -120,7 +120,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
 
             fileStorage.SaveAs(agentPath, true);
 
-            string dllPath = string.Empty;
+            string? dllPath = string.Empty;
             if (isNuget && NugetHelper.IsNugetPackage(agentPath))
             {
                 Directory.CreateDirectory(agentDir);
@@ -128,19 +128,18 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
                 ZipFile.ExtractToDirectory(agentPath, agentDir, true);
 
                 dllPath = Directory.EnumerateFiles(agentDir, searchPattern: "*.dll", SearchOption.AllDirectories)
-                                   .FirstOrDefault();
+                                   .FirstOrDefault(p => p.EndsWith($"{CrawlerAgent.GetAgentDirName(fileStorage.Filename)}.dll", StringComparison.OrdinalIgnoreCase));
 
+               
                 if (dllPath == null)
                 {
-                    notificationService.EnqueueError(I18n.NoDllFoundInNugetPackage);
+                    notificationService.EnqueueErrorForNextPage(I18n.NoDllFoundInNugetPackage);
                     return Page();
                 }
             }
             else
             {
-                // Direct DLL upload
-                Directory.CreateDirectory(agentDir);
-                using var stream = new FileStream(agentPath, FileMode.Create);
+                dllPath = agentPath;
             }
 
             // Register agent

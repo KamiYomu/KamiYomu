@@ -645,4 +645,28 @@
   <data name="SearchForChaptersCompleted" xml:space="preserve">
     <value>Search for chapters is completed</value>
   </data>
+  <data name="Following" xml:space="preserve">
+    <value>Following</value>
+  </data>
+  <data name="Follow" xml:space="preserve">
+    <value>Follow</value>
+  </data>
+  <data name="YouAreNoLongerFollowingThisTitle" xml:space="preserve">
+    <value>You’ve stopped following this title. New chapters will no longer be checked automatically.</value>
+  </data>
+  <data name="YouStartedFollowingThisTitle" xml:space="preserve">
+    <value>You’re now following this title. We’ll automatically check for new chapters.</value>
+  </data>
+  <data name="NotStated" xml:space="preserve">
+    <value>Not Stated</value>
+  </data>
+  <data name="NotStarted" xml:space="preserve">
+    <value>Not Started</value>
+  </data>
+  <data name="SearchForChapters" xml:space="preserve">
+    <value>Search For Chapters</value>
+  </data>
+  <data name="ChapterSearchStatus" xml:space="preserve">
+    <value>Chapter Search Status</value>
+  </data>
 </root>

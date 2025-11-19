@@ -24,6 +24,7 @@
       asp-route-area=""
       asp-route-returnUrl="@Context.Request.Path"
       novalidate>
+    @Html.AntiForgeryToken()
     <button type="submit"
             class="@buttonClass d-flex justify-content-center align-items-center px-2 py-1 shadow-sm w-100 position-relative"
             style="border-width: 1px; font-size: 0.75rem; border-radius: 0.3rem;"

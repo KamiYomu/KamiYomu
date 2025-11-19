@@ -277,6 +277,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chapter Search Status.
+        /// </summary>
+        internal static string ChapterSearchStatus {
+            get {
+                return ResourceManager.GetString("ChapterSearchStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chapters Found.
         /// </summary>
         internal static string ChaptersFound {
@@ -691,6 +700,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Follow.
+        /// </summary>
+        internal static string Follow {
+            get {
+                return ResourceManager.GetString("Follow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Following.
+        /// </summary>
+        internal static string Following {
+            get {
+                return ResourceManager.GetString("Following", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to From KamiYomu NuGet Repository - requires api key.
         /// </summary>
         internal static string FromKamiYomuNuGetRepository {
@@ -1033,6 +1060,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not Started.
+        /// </summary>
+        internal static string NotStarted {
+            get {
+                return ResourceManager.GetString("NotStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Stated.
+        /// </summary>
+        internal static string NotStated {
+            get {
+                return ResourceManager.GetString("NotStated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nuget.org has been added as a NuGet Source.
         /// </summary>
         internal static string NugetOrgHasBeenAddedAsANugetSource {
@@ -1272,6 +1317,15 @@ namespace KamiYomu.Web.Resources {
         internal static string SearchCrawlerAgents {
             get {
                 return ResourceManager.GetString("SearchCrawlerAgents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search For Chapters.
+        /// </summary>
+        internal static string SearchForChapters {
+            get {
+                return ResourceManager.GetString("SearchForChapters", resourceCulture);
             }
         }
         
@@ -1627,6 +1681,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You’ve stopped following this title. New chapters will no longer be checked automatically..
+        /// </summary>
+        internal static string YouAreNoLongerFollowingThisTitle {
+            get {
+                return ResourceManager.GetString("YouAreNoLongerFollowingThisTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your Collection.
         /// </summary>
         internal static string YourCollection {
@@ -1641,6 +1704,15 @@ namespace KamiYomu.Web.Resources {
         internal static string YourCollectionNoLongerIncludes {
             get {
                 return ResourceManager.GetString("YourCollectionNoLongerIncludes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You’re now following this title. We’ll automatically check for new chapters..
+        /// </summary>
+        internal static string YouStartedFollowingThisTitle {
+            get {
+                return ResourceManager.GetString("YouStartedFollowingThisTitle", resourceCulture);
             }
         }
     }

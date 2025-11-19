@@ -639,11 +639,38 @@
   <data name="InProgress" xml:space="preserve">
     <value>En cours</value>
   </data>
+  <data name="LibraryNotFound" xml:space="preserve">
+    <value>Bibliothèque introuvable</value>
+  </data>
+  <data name="SearchForChaptersCompleted" xml:space="preserve">
+    <value>La recherche de chapitres est terminée</value>
+  </data>
+  <data name="Following" xml:space="preserve">
+    <value>Suivant</value>
+  </data>
+  <data name="Follow" xml:space="preserve">
+    <value>Suivre</value>
+  </data>
+  <data name="YouAreNoLongerFollowingThisTitle" xml:space="preserve">
+    <value>Vous avez arrêté de suivre ce titre. Les nouveaux chapitres ne seront plus vérifiés automatiquement.</value>
+  </data>
+  <data name="YouStartedFollowingThisTitle" xml:space="preserve">
+    <value>Vous suivez désormais ce titre. Nous vérifierons automatiquement les nouveaux chapitres.</value>
+  </data>
+  <data name="NotStated" xml:space="preserve">
+    <value>Non déclaré</value>
+  </data>
+  <data name="NotStarted" xml:space="preserve">
+    <value>Non démarré</value>
+  </data>
+  <data name="SearchForChapters" xml:space="preserve">
+    <value>Rechercher des chapitres</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="LibraryNotFound" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="ChapterSearchStatus" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
-  <data name="SearchForChaptersCompleted" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="ChapterSearchStatus" xml:space="preserve">
+    <value>Statut de recherche de chapitre</value>
   </data>
 </root>
