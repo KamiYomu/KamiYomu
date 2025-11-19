@@ -666,11 +666,14 @@
   <data name="SearchForChapters" xml:space="preserve">
     <value>Rechercher des chapitres</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ChapterSearchStatus" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="ChapterSearchStatus" xml:space="preserve">
     <value>Statut de recherche de chapitre</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="InstallCrawlerAgentDescription" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="InstallCrawlerAgentDescription" xml:space="preserve">
+    <value>Améliorez KamiYomu en installant des agents d'exploration qui suivent et récupèrent automatiquement votre manga dès qu'il est disponible.</value>
   </data>
 </root>
