@@ -691,6 +691,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Follow.
+        /// </summary>
+        internal static string Follow {
+            get {
+                return ResourceManager.GetString("Follow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Following.
+        /// </summary>
+        internal static string Following {
+            get {
+                return ResourceManager.GetString("Following", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to From KamiYomu NuGet Repository - requires api key.
         /// </summary>
         internal static string FromKamiYomuNuGetRepository {
@@ -1627,6 +1645,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You are no longer following this title..
+        /// </summary>
+        internal static string YouAreNoLongerFollowingThisTitle {
+            get {
+                return ResourceManager.GetString("YouAreNoLongerFollowingThisTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your Collection.
         /// </summary>
         internal static string YourCollection {
@@ -1641,6 +1668,15 @@ namespace KamiYomu.Web.Resources {
         internal static string YourCollectionNoLongerIncludes {
             get {
                 return ResourceManager.GetString("YourCollectionNoLongerIncludes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have started following this title..
+        /// </summary>
+        internal static string YouStartedFollowingThisTitle {
+            get {
+                return ResourceManager.GetString("YouStartedFollowingThisTitle", resourceCulture);
             }
         }
     }

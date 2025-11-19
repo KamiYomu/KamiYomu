@@ -50,11 +50,6 @@ namespace KamiYomu.Web.Entities
             StatusUpdateAt = DateTime.UtcNow;
         }
 
-        public string RecurringJobIdentifier()
-        {
-            return $"{nameof(MangaDownloadRecord)}-{Id}";
-        }
-
         public Guid Id { get; private set; }
         public string BackgroundJobId { get; private set; }
         public Library Library { get; private set; }

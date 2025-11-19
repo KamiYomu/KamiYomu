@@ -645,4 +645,16 @@
   <data name="SearchForChaptersCompleted" xml:space="preserve">
     <value>Search for chapters is completed</value>
   </data>
+  <data name="Following" xml:space="preserve">
+    <value>Following</value>
+  </data>
+  <data name="Follow" xml:space="preserve">
+    <value>Follow</value>
+  </data>
+  <data name="YouAreNoLongerFollowingThisTitle" xml:space="preserve">
+    <value>You are no longer following this title.</value>
+  </data>
+  <data name="YouStartedFollowingThisTitle" xml:space="preserve">
+    <value>You have started following this title.</value>
+  </data>
 </root>

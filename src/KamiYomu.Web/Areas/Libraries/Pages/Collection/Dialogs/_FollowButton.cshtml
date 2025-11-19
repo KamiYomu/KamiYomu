@@ -1,0 +1,18 @@
+﻿@using KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs
+@model FollowButtonViewModel
+<form id="followForm"
+      hx-post="/Libraries/Collection/Dialogs/DownloadStatus?handler=ToggleFollowing"
+      hx-trigger="submit"
+      hx-target="#followForm"
+      hx-swap="outerHTML">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="FollowButtonViewModel.LibraryId" asp-for="LibraryId" />
+    <input type="hidden" name="FollowButtonViewModel.IsFollowing" asp-for="IsFollowing" />
+
+    <button id="followBtn"
+            type="submit"
+            class="btn @(Model.IsFollowing ? "btn-success" : "btn-outline-secondary")">
+        <i class="bi @(Model.IsFollowing ? "bi-eye-fill" : "bi-eye") me-2"></i>
+        @(Model.IsFollowing? I18n.Following: I18n.Follow)
+    </button>
+</form>
