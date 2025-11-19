@@ -66,7 +66,7 @@ namespace KamiYomu.Web.Extensions
             var fileInfo = new FileInfo(chapter.GetCbzFilePath()); 
             
             if(!fileInfo.Exists)
-                return "Not Stated";
+                return I18n.NotStarted;
 
             long bytes = fileInfo.Length;
 

@@ -127,6 +127,7 @@ builder.Services.AddRazorPages()
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization();
 
+
 var retryPolicy = HttpPolicyExtensions
     .HandleTransientHttpError()
     .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
@@ -142,21 +143,12 @@ builder.Services.AddHttpClient(Defaults.Worker.HttpClientBackground, client =>
 
 
 var app = builder.Build();
-
-app.Use(async (context, next) =>
-{
-    context.Response.Headers["X-Frame-Options"] = "ALLOWALL";
-    await next();
-});
+Defaults.ServiceLocator.Configure(() => app.Services);
 
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
 }
-
-app.UseStaticFiles();
-
-
 using(var appScoped = app.Services.CreateScope())
 {
     var startupOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<StartupOptions>>().Value;
@@ -175,8 +167,8 @@ using(var appScoped = app.Services.CreateScope())
     app.UseRequestLocalization(localizationOptions.Value);
 }
 
+app.UseStaticFiles();
 app.UseRouting();
-
 app.UseHangfireDashboard("/worker", new DashboardOptions
 {
     DisplayStorageConnectionString = false,
@@ -186,9 +178,6 @@ app.UseHangfireDashboard("/worker", new DashboardOptions
     Authorization = [new AllowAllDashboardAuthorizationFilter()]
 });
 
-var hangfireRepository = app.Services.GetService<IHangfireRepository>();
-
-Defaults.ServiceLocator.Configure(() => app.Services);
 app.MapRazorPages();
 app.UseMiddleware<ExceptionNotificationMiddleware>();
 app.MapHub<NotificationHub>("/notificationHub");

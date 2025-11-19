@@ -657,4 +657,16 @@
   <data name="YouStartedFollowingThisTitle" xml:space="preserve">
     <value>You’re now following this title. We’ll automatically check for new chapters.</value>
   </data>
+  <data name="NotStated" xml:space="preserve">
+    <value>Not Stated</value>
+  </data>
+  <data name="NotStarted" xml:space="preserve">
+    <value>Not Started</value>
+  </data>
+  <data name="SearchForChapters" xml:space="preserve">
+    <value>Search For Chapters</value>
+  </data>
+  <data name="ChapterSearchStatus" xml:space="preserve">
+    <value>Chapter Search Status</value>
+  </data>
 </root>

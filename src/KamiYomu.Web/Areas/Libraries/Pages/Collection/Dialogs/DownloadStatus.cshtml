@@ -43,9 +43,10 @@
                     <partial name="_FollowButton" model="Model.FollowButtonViewModel" />
                     <div>
                         <label class="form-label fw-semibold mb-0 me-2">
-                            @I18n.FullScanStatus:
+                            @I18n.ChapterSearchStatus:
                         </label>
                         <span class="badge @badgeClass"
+                              title="@lastUpdateBuilder.ToString()"
                               data-bs-toggle="popover"
                               data-bs-trigger="hover focus"
                               data-bs-placement="top"

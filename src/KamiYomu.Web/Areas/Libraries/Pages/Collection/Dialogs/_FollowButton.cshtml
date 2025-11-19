@@ -11,7 +11,7 @@
 
     <button id="followBtn"
             type="submit"
-            class="btn @(Model.IsFollowing ? "btn-success" : "btn-outline-secondary")">
+            class="btn btn-sm @(Model.IsFollowing ? "btn-success" : "btn-outline-secondary")">
         <i class="bi @(Model.IsFollowing ? "bi-eye-fill" : "bi-eye") me-2"></i>
         @(Model.IsFollowing? I18n.Following: I18n.Follow)
     </button>

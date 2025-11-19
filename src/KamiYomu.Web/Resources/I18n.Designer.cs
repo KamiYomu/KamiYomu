@@ -277,6 +277,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chapter Search Status.
+        /// </summary>
+        internal static string ChapterSearchStatus {
+            get {
+                return ResourceManager.GetString("ChapterSearchStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chapters Found.
         /// </summary>
         internal static string ChaptersFound {
@@ -1051,6 +1060,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not Started.
+        /// </summary>
+        internal static string NotStarted {
+            get {
+                return ResourceManager.GetString("NotStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Stated.
+        /// </summary>
+        internal static string NotStated {
+            get {
+                return ResourceManager.GetString("NotStated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nuget.org has been added as a NuGet Source.
         /// </summary>
         internal static string NugetOrgHasBeenAddedAsANugetSource {
@@ -1290,6 +1317,15 @@ namespace KamiYomu.Web.Resources {
         internal static string SearchCrawlerAgents {
             get {
                 return ResourceManager.GetString("SearchCrawlerAgents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search For Chapters.
+        /// </summary>
+        internal static string SearchForChapters {
+            get {
+                return ResourceManager.GetString("SearchForChapters", resourceCulture);
             }
         }
         
