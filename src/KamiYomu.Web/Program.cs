@@ -143,6 +143,12 @@ builder.Services.AddHttpClient(Defaults.Worker.HttpClientBackground, client =>
 
 var app = builder.Build();
 
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["X-Frame-Options"] = "ALLOWALL";
+    await next();
+});
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
