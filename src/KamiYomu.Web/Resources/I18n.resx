@@ -669,4 +669,7 @@
   <data name="ChapterSearchStatus" xml:space="preserve">
     <value>Chapter Search Status</value>
   </data>
+  <data name="InstallCrawlerAgentDescription" xml:space="preserve">
+    <value>Enhance KamiYomu by installing crawler agents that automatically track and retrieve your manga as soon as it becomes available.</value>
+  </data>
 </root>

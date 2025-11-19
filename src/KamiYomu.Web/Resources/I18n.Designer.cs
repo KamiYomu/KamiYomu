@@ -826,6 +826,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enhance KamiYomu by installing crawler agents that automatically track and retrieve your manga as soon as it becomes available..
+        /// </summary>
+        internal static string InstallCrawlerAgentDescription {
+            get {
+                return ResourceManager.GetString("InstallCrawlerAgentDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language.
         /// </summary>
         internal static string Language {
