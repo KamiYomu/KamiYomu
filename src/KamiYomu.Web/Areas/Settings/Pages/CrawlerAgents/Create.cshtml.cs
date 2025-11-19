@@ -139,9 +139,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
             }
             else
             {
-                // Direct DLL upload
-                Directory.CreateDirectory(agentDir);
-                using var stream = new FileStream(agentPath, FileMode.Create);
+                dllPath = agentPath;
             }
 
             // Register agent
