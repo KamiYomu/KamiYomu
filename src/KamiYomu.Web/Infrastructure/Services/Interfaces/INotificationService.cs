@@ -9,11 +9,11 @@ namespace KamiYomu.Web.Infrastructure.Services.Interfaces
         Task PushInfoAsync(string message, CancellationToken cancellationToken);
         Task PushWarningAsync(string message, CancellationToken cancellationToken);
         Task PushErrorAsync(string message, CancellationToken cancellationToken);
-        Notification? Dequeue();
-        void Enqueue(Notification notification);
-        void EnqueueError(string message);
-        void EnqueueWarning(string message);
-        void EnqueueInfo(string message);
-        void EnqueueSuccess(string message);
+        Notification? DequeuePendingNotification();
+        void EnqueueForNextPage(Notification notification);
+        void EnqueueErrorForNextPage(string message);
+        void EnqueueWarningForNextPage(string message);
+        void EnqueueInfoForNextPage(string message);
+        void EnqueueSuccessForNextPage(string message);
     }
 }

@@ -1645,7 +1645,7 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You are no longer following this title..
+        ///   Looks up a localized string similar to You’ve stopped following this title. New chapters will no longer be checked automatically..
         /// </summary>
         internal static string YouAreNoLongerFollowingThisTitle {
             get {
@@ -1672,7 +1672,7 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You have started following this title..
+        ///   Looks up a localized string similar to You’re now following this title. We’ll automatically check for new chapters..
         /// </summary>
         internal static string YouStartedFollowingThisTitle {
             get {

@@ -8,7 +8,11 @@
         <label asp-for="Search" class="form-label">@I18n.Addons</label>
         <div class="input-group">
             <select asp-for="SourceId" id="nuget-source-select" class="form-select" style="max-width: 250px;">
-                <option value="">@I18n.SelectSource</option>
+                @if(!Model.Sources.Any())
+                {
+                    <option value="">@I18n.SelectSource</option>
+                }
+
                 @foreach (var source in Model.Sources)
                 {
                     <option value="@source.Id">@source.DisplayName</option>

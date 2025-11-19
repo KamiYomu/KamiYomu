@@ -47,7 +47,7 @@
     connection.start().then(() => {
     @{
         // dequeue existing notifications
-        var notification = notificationService.Dequeue();
+        var notification = notificationService.DequeuePendingNotification();
         if(notification != null)
         {
                 <text>

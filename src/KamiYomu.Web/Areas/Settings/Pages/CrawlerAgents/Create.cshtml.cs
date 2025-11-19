@@ -112,7 +112,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
 
             if (!isNuget && !isDll)
             {
-                notificationService.EnqueueError(I18n.OnlyDllOrNupkgSupported);
+                notificationService.EnqueueErrorForNextPage(I18n.OnlyDllOrNupkgSupported);
                 return Page();
             }
             var agentDir = CrawlerAgent.GetAgentDir(fileStorage.Filename);
@@ -132,7 +132,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
 
                 if (dllPath == null)
                 {
-                    notificationService.EnqueueError(I18n.NoDllFoundInNugetPackage);
+                    notificationService.EnqueueErrorForNextPage(I18n.NoDllFoundInNugetPackage);
                     return Page();
                 }
             }

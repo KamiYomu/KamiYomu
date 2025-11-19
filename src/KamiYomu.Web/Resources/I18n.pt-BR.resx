@@ -658,4 +658,22 @@
   <data name="YouStartedFollowingThisTitle" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="LibraryNotFound" xml:space="preserve">
+    <value>Biblioteca não encontrada</value>
+  </data>
+  <data name="SearchForChaptersCompleted" xml:space="preserve">
+    <value>A busca por capítulos foi concluída</value>
+  </data>
+  <data name="Following" xml:space="preserve">
+    <value>Seguindo</value>
+  </data>
+  <data name="Follow" xml:space="preserve">
+    <value>Seguir</value>
+  </data>
+  <data name="YouAreNoLongerFollowingThisTitle" xml:space="preserve">
+    <value>Você parou de seguir este título. Novos capítulos não serão mais verificados automaticamente.</value>
+  </data>
+  <data name="YouStartedFollowingThisTitle" xml:space="preserve">
+    <value>Agora você está seguindo este título. Verificaremos automaticamente se há novos capítulos.</value>
+  </data>
 </root>
