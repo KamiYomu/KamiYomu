@@ -120,7 +120,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
 
             fileStorage.SaveAs(agentPath, true);
 
-            string dllPath = string.Empty;
+            string? dllPath = string.Empty;
             if (isNuget && NugetHelper.IsNugetPackage(agentPath))
             {
                 Directory.CreateDirectory(agentDir);
@@ -128,8 +128,9 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
                 ZipFile.ExtractToDirectory(agentPath, agentDir, true);
 
                 dllPath = Directory.EnumerateFiles(agentDir, searchPattern: "*.dll", SearchOption.AllDirectories)
-                                   .FirstOrDefault();
+                                   .FirstOrDefault(p => p.EndsWith($"{CrawlerAgent.GetAgentDirName(fileStorage.Filename)}.dll", StringComparison.OrdinalIgnoreCase));
 
+               
                 if (dllPath == null)
                 {
                     notificationService.EnqueueErrorForNextPage(I18n.NoDllFoundInNugetPackage);
