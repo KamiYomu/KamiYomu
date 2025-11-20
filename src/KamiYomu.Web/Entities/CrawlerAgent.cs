@@ -116,64 +116,19 @@ namespace KamiYomu.Web.Entities
                 ?? "Agent";
         }
 
-        public IEnumerable<CrawlerSelectAttribute> GetCrawlerSelects()
+        public IEnumerable<AbstractInputAttribute> GetCrawlerInputs()
         {
             _assembly ??= GetIsolatedAssembly(AssemblyPath);
-            return GetCrawlerSelects(_assembly);
+            return GetCrawlerInputs(_assembly);
         }
 
-        public static IEnumerable<CrawlerSelectAttribute> GetCrawlerSelects(Assembly assembly)
-        {
-            var crawlerType = assembly.GetTypes()
-                    .FirstOrDefault(t => typeof(ICrawlerAgent).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
-                    ?? throw new InvalidOperationException("No valid crawler type found.");
-
-            return crawlerType.GetCustomAttributes<CrawlerSelectAttribute>(false);
-        }
-
-        public IEnumerable<CrawlerCheckBoxAttribute> GetCrawlerCheckBoxs()
-        {
-            _assembly ??= GetIsolatedAssembly(AssemblyPath);
-            return GetCrawlerCheckBoxs(_assembly);
-        }
-
-        public static IEnumerable<CrawlerCheckBoxAttribute> GetCrawlerCheckBoxs(Assembly assembly)
+        public static IEnumerable<AbstractInputAttribute> GetCrawlerInputs(Assembly assembly)
         {
             var crawlerType = assembly.GetTypes()
                 .FirstOrDefault(t => typeof(ICrawlerAgent).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
                 ?? throw new InvalidOperationException("No valid crawler type found.");
 
-            return crawlerType.GetCustomAttributes<CrawlerCheckBoxAttribute>(false);
-        }
-
-        public IEnumerable<CrawlerTextAttribute> GetCrawlerTexts()
-        {
-            _assembly ??= GetIsolatedAssembly(AssemblyPath);
-            return GetCrawlerTexts(_assembly);
-        }
-
-        public static IEnumerable<CrawlerTextAttribute> GetCrawlerTexts(Assembly assembly)
-        {
-            var crawlerType = assembly.GetTypes()
-                .FirstOrDefault(t => typeof(ICrawlerAgent).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
-                ?? throw new InvalidOperationException("No valid crawler type found.");
-
-            return crawlerType.GetCustomAttributes<CrawlerTextAttribute>(false);
-        }
-
-        public IEnumerable<CrawlerPasswordAttribute> GetCrawlerPasswords()
-        {
-            _assembly ??= GetIsolatedAssembly(AssemblyPath);
-            return GetCrawlerPasswords(_assembly);
-        }
-
-        public static IEnumerable<CrawlerPasswordAttribute> GetCrawlerPasswords(Assembly assembly)
-        {
-            var crawlerType = assembly.GetTypes()
-                .FirstOrDefault(t => typeof(ICrawlerAgent).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
-                ?? throw new InvalidOperationException("No valid crawler type found.");
-
-            return crawlerType.GetCustomAttributes<CrawlerPasswordAttribute>(false);
+            return crawlerType.GetCustomAttributes<AbstractInputAttribute>(false);
         }
 
 
@@ -257,7 +212,5 @@ namespace KamiYomu.Web.Entities
             AgentMetadata = agentMetadata;
             AssemblyProperties = assemblyProperties;
         }
-
-
     }
 }

@@ -1,7 +1,5 @@
 ﻿using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Infrastructure.Contexts;
-using KamiYomu.Web.Worker;
-using System.Xml.Linq;
 
 namespace KamiYomu.Web.Entities
 {
@@ -34,6 +32,5 @@ namespace KamiYomu.Web.Entities
         public Guid Id { get; private set; }
         public CrawlerAgent AgentCrawler { get; private set; }
         public Manga Manga { get; private set; }
-
     }
 }

@@ -10,7 +10,7 @@
       novalidate>
     @Html.AntiForgeryToken()
 
-    <input type="hidden" asp-for="TempFileId" />
+    <input type="hidden" name="Input.TempFileId" asp-for="TempFileId" />
 
     <div class="mb-3">
         <label asp-for="DisplayName" class="form-label"></label>
@@ -20,79 +20,7 @@
     <fieldset class="border rounded p-3 mb-4">
         <legend class="float-none w-auto px-2 fs-5 fw-semibold text-primary">@I18n.CrawlerSettings</legend>
 
-        @foreach (var option in Model.CrawlerTexts)
-        {
-            <div class="mb-3">
-                <label class="form-label fw-semibold" for="input-@option.Name">@option.Name</label>
-
-                @if (!string.IsNullOrWhiteSpace(option.Legend))
-                {
-                    <small class="form-text text-muted d-block mb-1">@option.Legend</small>
-                }
-
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="bi bi-card-text"></i>
-                    </span>
-                    <input type="text"
-                           class="form-control"
-                           id="input-@option.Name"
-                           name="AgentMetadata[@option.Name]" />
-                </div>
-            </div>
-        }
-
-        @foreach (var option in Model.CrawlerPasswords)
-        {
-            <div class="mb-3">
-                <label class="form-label fw-semibold" for="input-@option.Name">@option.Name</label>
-
-                @if (!string.IsNullOrWhiteSpace(option.Legend))
-                {
-                    <small class="form-text text-muted d-block mb-1">@option.Legend</small>
-                }
-
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="bi bi-key"></i> 
-                    </span>
-                    <input type="password"
-                           class="form-control"
-                           id="input-@option.Name"
-                           name="AgentMetadata[@option.Name]" />
-                </div>
-            </div>
-        }
-
-        @foreach (var option in Model.CrawlerCheckBoxs)
-        {
-            <fieldset class="mb-3">
-                <legend class="fs-6 fw-semibold">@option.Name</legend>
-                @if (!string.IsNullOrWhiteSpace(option.Legend))
-                {
-                    <small class="form-text text-muted d-block mb-1">@option.Legend</small>
-                }
-
-                @foreach (var item in option.Options)
-                {
-                    var key = item;
-                    var isChecked = (Model.AgentMetadata.TryGetValue(key, out var value)
-                    && bool.TryParse(value, out var boolValue)
-                    && boolValue);
-
-                    <div class="form-check mb-1">
-                        <input type="checkbox"
-                               class="form-check-input"
-                               name="AgentMetadata[@($"{option.Name}.{key}")]"
-                               value="true"
-                               @(isChecked ? "checked" : "") />
-                        <input type="hidden" name="AgentMetadata[@($"{option.Name}.{key}")]" value="false" />
-                        <label class="form-check-label">@key</label>
-                    </div>
-                }
-            </fieldset>
-        }
-
+        <partial name="_CrawlerInputs" model="Model.CrawlerInputsViewModel" />
     </fieldset>
 
     <div class="accordion mb-3" id="assemblyAccordion">

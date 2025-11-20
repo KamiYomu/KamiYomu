@@ -1,0 +1,113 @@
+﻿@using KamiYomu.CrawlerAgents.Core.Inputs
+@using KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
+@model CrawlerInputsViewModel
+
+@foreach (var inputField in Model.CrawlerInputs)
+{
+    @if (inputField is CrawlerTextAttribute crawlerText)
+    {
+        <div class="mb-3">
+            <label class="form-label fw-semibold" for="input-@crawlerText.Name">@crawlerText.Name</label>
+
+            @if (!string.IsNullOrWhiteSpace(crawlerText.Legend))
+            {
+                <small class="form-text text-muted d-block mb-1">@crawlerText.Legend</small>
+            }
+
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="bi bi-card-text"></i>
+                </span>
+                <input type="text"
+                       class="form-control"
+                       id="input-@crawlerText.Name"
+                       name="Input.CrawlerInputsViewModel.AgentMetadata[@crawlerText.Name]"
+                       asp-for="AgentMetadata[@crawlerText.Name]" />
+            </div>
+        </div>
+    }
+    else if (inputField is CrawlerPasswordAttribute crawlerPassword)
+    {
+        <div class="mb-3">
+            <label class="form-label fw-semibold" for="input-@crawlerPassword.Name">@crawlerPassword.Name</label>
+
+            @if (!string.IsNullOrWhiteSpace(crawlerPassword.Legend))
+            {
+                <small class="form-text text-muted d-block mb-1">@crawlerPassword.Legend</small>
+            }
+
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="bi bi-card-text"></i>
+                </span>
+                <input type="password"
+                       class="form-control"
+                       id="input-@crawlerPassword.Name"
+                       name="Input.CrawlerInputsViewModel.AgentMetadata[@crawlerPassword.Name]"
+                       asp-for="AgentMetadata[@crawlerPassword.Name]" />
+            </div>
+        </div>
+    }
+    else if (inputField is CrawlerSelectAttribute crawlerSelect)
+    {
+        var selected = Model.AgentMetadata.TryGetValue(crawlerSelect.Name, out var value)
+        && value is string stringValue
+        && !string.IsNullOrWhiteSpace(stringValue)
+        ? stringValue
+        : string.Empty;
+
+        var fieldId = $"select-{Regex.Replace(crawlerSelect.Name.ToLowerInvariant(), @"[^a-z0-9]+", "-")}";
+
+        <div class="mb-3">
+            <label for="@fieldId" class="form-label fw-semibold">@crawlerSelect.Name</label>
+            @if (!string.IsNullOrWhiteSpace(crawlerSelect.Legend))
+            {
+                <small class="form-text text-muted d-block mb-1">@crawlerSelect.Legend</small>
+            }
+
+            <select id="@fieldId"
+                    class="form-select"
+                    name="Input.CrawlerInputsViewModel.AgentMetadata[@crawlerSelect.Name]">
+                @foreach (var item in crawlerSelect.Options)
+                {
+                    <option value="@item" selected="@(item == selected ? "selected" : null)">@item</option>
+                }
+            </select>
+        </div>
+
+    }
+    else if (inputField is CrawlerCheckBoxAttribute crawlerCheckbox)
+    {
+        <fieldset class="mb-3">
+            <legend class="fs-6 fw-semibold">@crawlerCheckbox.Name</legend>
+            <span class="text-sm-start">@crawlerCheckbox.Legend</span>
+
+            @foreach (var key in crawlerCheckbox.Options)
+            {
+                var isChecked = Model.AgentMetadata.TryGetValue($"{crawlerCheckbox.Name}.{key}", out var value)
+                && bool.TryParse(value, out var boolValue)
+                && boolValue;
+
+                var safeKey = Regex.Replace(key.ToLowerInvariant(), @"[^a-z0-9\-]", "-");
+                var inputId = $"checkbox-{safeKey}";
+
+                <div class="form-check mb-1">
+                    <input type="checkbox"
+                           class="form-check-input"
+                           id="@inputId"
+                           name="Input.CrawlerInputsViewModel.AgentMetadata[@($"{crawlerCheckbox.Name}.{key}")]"
+                           value="true"
+                           @(isChecked ? "checked" : null) />
+
+                    <input type="hidden"
+                           name="Input.CrawlerInputsViewModel.AgentMetadata[@($"{crawlerCheckbox.Name}.{key}")]"
+                           value="false" />
+
+                    <label class="form-check-label" for="@inputId">@key</label>
+                </div>
+            }
+        </fieldset>
+
+    }
+
+}

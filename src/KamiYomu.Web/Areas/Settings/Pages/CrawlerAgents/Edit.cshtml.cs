@@ -5,6 +5,7 @@ using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Eventing.Reader;
 
 namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
 {
@@ -24,13 +25,14 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
             {
                 Id = id,
                 DisplayName = crawlerAgent.DisplayName,
-                AgentMetadata = CrawlerAgentEditInputModel.GetAgentMetadataValues(crawlerAgent.AgentMetadata),
-                CrawlerTexts = crawlerAgent.GetCrawlerTexts(),
-                CrawlerPasswords = crawlerAgent.GetCrawlerPasswords(),
-                CrawlerCheckBoxs = crawlerAgent.GetCrawlerCheckBoxs(),
-                CrawlerSelects = crawlerAgent.GetCrawlerSelects(),
-                ReadOnlyMetadata = crawlerAgent.GetAssemblyMetadata()
+                ReadOnlyMetadata = crawlerAgent.GetAssemblyMetadata(),
+                CrawlerInputsViewModel = new CrawlerInputsViewModel
+                {
+                    CrawlerInputs = crawlerAgent.GetCrawlerInputs(),
+                    AgentMetadata = CrawlerInputsViewModel.GetAgentMetadataValues(crawlerAgent.AgentMetadata)
+                }
             };
+
 
             return Page();
         }
@@ -42,7 +44,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
                 return Page();
             }
             var agentCrawler = dbContext.CrawlerAgents.FindById(Input.Id);
-            agentCrawler.Update(Input.DisplayName, Input.GetAgentMetadataValues(), Input.ReadOnlyMetadata);
+            agentCrawler.Update(Input.DisplayName, Input.CrawlerInputsViewModel.GetAgentMetadataValues(), Input.ReadOnlyMetadata);
             dbContext.CrawlerAgents.Update(agentCrawler);
             cacheContext.EmptyAgentKeys(agentCrawler.Id);
             await notificationService.PushSuccessAsync(I18n.CrawlerAgentSavedSuccessfully, cancellationToken);
@@ -61,43 +63,10 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
         public string? DisplayName { get; set; }
 
         [BindProperty]
-        public IEnumerable<CrawlerPasswordAttribute> CrawlerPasswords { get; set; } = [];
-        [BindProperty]
-        public IEnumerable<CrawlerTextAttribute> CrawlerTexts { get; set; } = [];
-        [BindProperty]
-        public IEnumerable<CrawlerSelectAttribute> CrawlerSelects { get; set; } = [];
-        [BindProperty]
-        public IEnumerable<CrawlerCheckBoxAttribute> CrawlerCheckBoxs { get; set; } = [];
-        [BindProperty]
-        public Dictionary<string, string> AgentMetadata { get; set; } = [];
+        public CrawlerInputsViewModel CrawlerInputsViewModel { get; set; } = new();
+
         [BindProperty]
         public Dictionary<string, string> ReadOnlyMetadata { get; set; } = [];
 
-        public Dictionary<string, object> GetAgentMetadataValues()
-        {
-            Dictionary<string, object> metadata = [];
-            foreach (var item in AgentMetadata)
-            {
-                if (bool.TryParse(item.Value, out var boolValue))
-                {
-                    metadata[item.Key] = boolValue;
-                }
-                else
-                {
-                    metadata[item.Key] = item.Value;
-                }
-            }
-            return metadata;
-        }
-
-        public static Dictionary<string, string> GetAgentMetadataValues(Dictionary<string, object> values)
-        {
-            Dictionary<string, string> metadata = [];
-            foreach (var item in values)
-            {
-                metadata[item.Key] = item.Value?.ToString();
-            }
-            return metadata;
-        }
     }
 }
