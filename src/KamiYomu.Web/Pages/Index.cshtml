@@ -1,8 +1,11 @@
 ﻿@page
 @model IndexModel
 
-<div class="text-center mb-5">
-    <img src="~/images/logo.svg" alt="KamiYomu Owl" class="m-3 svg-black" style="width: 150px;">
+<div class="text-center mb-5 logo-theme">
+    <svg class="d-block mx-auto mb-4" style="width:250px; height:auto;">
+        <use href="#logo-owl"></use>
+    </svg>
+
     <h1 class="display-4 fw-bold">@I18n.WelcomeToKamiYomu</h1>
     <p class="lead text-muted">@I18n.WelcomeToKamiYomuDescription</p>
 </div>

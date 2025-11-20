@@ -2,17 +2,19 @@ using Hangfire;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
+using KamiYomu.Web.Infrastructure.Reports;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net;
+using QuestPDF.Fluent;
+using System.IO.Compression;
 
 namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 {
     public class DownloadChapterTableModel(DbContext dbContext,
                                            INotificationService notificationService,
-                                           IBackgroundJobClient jobClient) : PageModel
+                                           IWebHostEnvironment webHostEnvironment) : PageModel
     {
         public IEnumerable<ChapterDownloadRecord> Records { get; set; } = [];
         public int CurrentPage { get; set; } = 0;
@@ -52,7 +54,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
             Records = [.. query.Skip((pageIndex - 1) * pageSize).Take(pageSize)];
         }
 
-        public async Task<IActionResult> OnGetDownloadAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
+        public async Task<IActionResult> OnGetDownloadCbzAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
         {
             var downloadChapterRecords = dbContext.Libraries.FindById(libraryId);
             if (downloadChapterRecords == null)
@@ -79,6 +81,77 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
             var fileName = System.IO.Path.GetFileName(filePath);
             return File(fileBytes, "application/x-cbz", fileName);
         }
+
+        public async Task<IActionResult> OnGetDownloadZipAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
+        {
+            var downloadChapterRecords = dbContext.Libraries.FindById(libraryId);
+            if (downloadChapterRecords == null)
+            {
+                return NotFound();
+            }
+
+            using var db = downloadChapterRecords.GetDbContext();
+
+            var record = db.ChapterDownloadRecords.FindById(recordId);
+            if (record == null || !record.IsCompleted())
+            {
+                return NotFound();
+            }
+
+            var filePath = record.Chapter.GetCbzFilePath();
+            if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath))
+            {
+                return NotFound();
+            }
+
+            var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath, cancellationToken);
+
+            var fileName = Path.GetFileNameWithoutExtension(filePath) + ".zip";
+            return File(fileBytes, "application/zip", fileName);
+        }
+
+        public async Task<IActionResult> OnGetDownloadPdfAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
+        {
+            var downloadChapterRecords = dbContext.Libraries.FindById(libraryId);
+            if (downloadChapterRecords == null)
+            {
+                return NotFound();
+            }
+
+            using var db = downloadChapterRecords.GetDbContext();
+
+            var record = db.ChapterDownloadRecords.FindById(recordId);
+            if (record == null || !record.IsCompleted())
+            {
+                return NotFound();
+            }
+
+            var filePath = record.Chapter.GetCbzFilePath();
+            if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath))
+            {
+                return NotFound();
+            }
+
+            var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            Directory.CreateDirectory(tempDir);
+
+            ZipFile.ExtractToDirectory(filePath, tempDir);
+
+            var images = Directory.GetFiles(tempDir, "*.*")
+                                  .Where(f => f.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                                              f.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                                              f.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                                              f.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase))
+                                  .OrderBy(f => f)
+                                  .ToList();
+
+            var logoPath = Path.Combine(webHostEnvironment.ContentRootPath, "wwwroot", "images", "logo.svg");
+            var document = new MangaChaptersPdfReport(images, Path.GetFileNameWithoutExtension(filePath), logoPath);
+            var fileBytes = document.GeneratePdf();
+
+            return File(fileBytes, "application/pdf", Path.GetFileNameWithoutExtension(filePath) + ".pdf");
+        }
+
 
         public async Task<IActionResult> OnPostRescheduleAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
         {

@@ -1,3 +1,4 @@
-﻿.svg-black path {
-    fill: black;
+﻿.logo-theme {
+    color: var(--bs-body-color); /* text color adapts to theme */
+    background-color: var(--bs-body-bg); /* background adapts to theme */
 }

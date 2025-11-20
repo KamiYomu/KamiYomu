@@ -19,6 +19,7 @@ using MonkeyCache;
 using MonkeyCache.LiteDB;
 using Polly;
 using Polly.Extensions.Http;
+using QuestPDF.Infrastructure;
 using Serilog;
 using SQLite;
 using System.Globalization;
@@ -27,6 +28,7 @@ using static KamiYomu.Web.AppOptions.Defaults;
 
 var builder = WebApplication.CreateBuilder(args);
 
+QuestPDF.Settings.License = LicenseType.Community;
 LiteDbConfig.Configure();
 
 Log.Logger = new LoggerConfiguration()
@@ -147,6 +149,7 @@ Defaults.ServiceLocator.Configure(() => app.Services);
 
 if (!app.Environment.IsDevelopment())
 {
+    QuestPDF.Settings.EnableDebugging = true;
     app.UseExceptionHandler("/Error");
 }
 using(var appScoped = app.Services.CreateScope())

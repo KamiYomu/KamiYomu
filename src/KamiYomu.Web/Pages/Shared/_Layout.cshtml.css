@@ -4,27 +4,30 @@
     fill: currentColor;
 }
 
+/* Horizontal nav scroller */
 .nav-scroller {
     position: relative;
     z-index: 2;
     height: 2.75rem;
-    overflow-y: hidden;
+    overflow-y: hidden; /* lock vertical scroll */
 }
 
     .nav-scroller .nav {
         display: flex;
-        flex-wrap: nowrap;
-        padding-bottom: 1rem;
+        flex-wrap: nowrap; /* keep items in a single row */
+        overflow-x: auto; /* allow horizontal scroll if needed */
+        -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+        white-space: nowrap; /* prevent wrapping */
         margin-top: -1px;
-        overflow-x: auto;
+        padding-bottom: 0.5rem; /* reduced padding for tighter fit */
+        gap: 0.5rem; /* spacing between nav items */
         text-align: center;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
     }
 
+/* Custom violet primary button */
 .btn-bd-primary {
     --bd-violet-bg: #712cf9;
-    --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+    --bd-violet-rgb: 112.52, 44.06, 249.44;
     --bs-btn-font-weight: 600;
     --bs-btn-color: var(--bs-white);
     --bs-btn-bg: var(--bd-violet-bg);
@@ -33,7 +36,7 @@
     --bs-btn-hover-bg: #6528e0;
     --bs-btn-hover-border-color: #6528e0;
     --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
-    --bs-btn-active-color: var(--bs-btn-hover-color);
+    --bs-btn-active-color: var(--bs-white);
     --bs-btn-active-bg: #5a23c8;
     --bs-btn-active-border-color: #5a23c8;
 }

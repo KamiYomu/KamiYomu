@@ -147,8 +147,7 @@ namespace KamiYomu.Web.Worker
                 if (userPreference.FamilySafeMode && chapterDownload.MangaDownload.Library.Manga.IsFamilySafe ||
                     !userPreference.FamilySafeMode)
                 {
-                    await _notificationService.PushSuccessAsync($"{I18n.ChapterDownloaded}: {chapterDownload.Chapter.GetCbzFileName()}", cancellationToken);
-
+                    await _notificationService.PushSuccessAsync($"{I18n.ChapterDownloaded}: {Path.GetFileNameWithoutExtension(chapterDownload.Chapter.GetCbzFileName())}", cancellationToken);
                 }
             }
             catch (Exception ex)

@@ -23,6 +23,13 @@
     <div class="btn-toolbar">
         <div class="btn-group">
             <a asp-area="Settings"
+               asp-page="/Add-ons/Index"
+               class="btn btn-sm btn-outline-secondary"
+               title="@I18n.Addons"
+               aria-label="@I18n.Addons">
+                <i class="bi bi-node-plus me-2"></i> @I18n.Addons
+            </a>
+            <a asp-area="Settings"
                asp-page="/CrawlerAgents/Index"
                class="btn btn-sm btn-outline-secondary"
                title="@I18n.CrawlerAgents"
@@ -43,10 +50,18 @@
 <div class="container py-4">
 
     <div class="mb-4">
-        <div class="input-group input-group-lg flex-wrap">
+        <form class="input-group input-group-lg flex-wrap"
+              hx-get="/Libraries/Collection/SearchResults?handler=crawler"
+              hx-target="#search-results"
+              hx-include="#selectedAgent">
+            @Html.AntiForgeryToken()
+            <!-- Dropdown agent selector -->
             <div class="dropdown input-group-text">
-                <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center px-3 " type="button"
-                        data-bs-toggle="dropdown" aria-expanded="false" style="min-width: 180px;">
+                <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center px-3"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        style="min-width: 180px;">
                     <img src="/images/favicon.png" id="selectedAgentFavicon" width="20" class="me-2" />
                     <span id="selectedAgentLabel" class="text-truncate">@I18n.SelectCrawlerAgent</span>
                 </button>
@@ -72,20 +87,16 @@
                    placeholder="@I18n.SearchManga"
                    name="query"
                    id="searchInput"
-                   hx-get="/Libraries/Collection/SearchResults?handler=crawler"
-                   hx-target="#search-results"
-                   hx-trigger="keyup changed delay:1000ms"
-                   hx-include="#selectedAgent"
-                   oninput="if (!document.getElementById('selectedAgent').value) this.removeAttribute('hx-get'); else this.setAttribute('hx-get', '/Library/SearchResults');" />
+                   oninput="if (!document.getElementById('selectedAgent').value) this.form.removeAttribute('hx-get'); else this.form.setAttribute('hx-get', '/Library/SearchResults');" />
 
             <!-- Search button -->
-            <button class="btn btn-outline-primary" type="button" onclick="htmx.trigger('#searchInput', 'change')">
+            <button class="btn btn-outline-primary" type="submit">
                 <i class="bi bi-search"></i>
             </button>
 
             <!-- Hidden agent input -->
             <input type="hidden" name="selectedAgent" id="selectedAgent" />
-        </div>
+        </form>
     </div>
 
     <div id="search-results" class="row row-cols-1 row-cols-md-3 g-4 mb-5" hx-swap="innerHTML"></div>

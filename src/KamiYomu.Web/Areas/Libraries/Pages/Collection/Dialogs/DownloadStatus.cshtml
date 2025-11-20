@@ -13,7 +13,7 @@
         _ => "bg-secondary"
     };
     var lastUpdateBuilder = new StringBuilder();
-    lastUpdateBuilder.AppendLine($"{I18n.LastUpdate}: {Model.Record.StatusUpdateAt}.");
+    lastUpdateBuilder.AppendLine($"{I18n.LastUpdate}: {Model.Record.StatusUpdateAt?.ToLocalTime()}.");
     if (!string.IsNullOrWhiteSpace(Model.Record.StatusReason))
     {
         lastUpdateBuilder.AppendLine(Model.Record.StatusReason);
