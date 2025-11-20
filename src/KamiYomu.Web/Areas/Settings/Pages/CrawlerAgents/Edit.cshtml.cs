@@ -33,7 +33,6 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
                 }
             };
 
-
             return Page();
         }
 
