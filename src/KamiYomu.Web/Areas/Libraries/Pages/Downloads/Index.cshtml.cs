@@ -13,9 +13,9 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 {
     public class IndexModel(
         ILogger<IndexModel> logger,
-        IOptionsSnapshot<WorkerOptions> workerOptions,
+        IOptions<WorkerOptions> workerOptions,
         DbContext dbContext,
-        IAgentCrawlerRepository agentCrawlerRepository,
+        ICrawlerAgentRepository agentCrawlerRepository,
         IBackgroundJobClient jobClient,
         IHangfireRepository hangfireRepository,
         INotificationService notificationService) : PageModel

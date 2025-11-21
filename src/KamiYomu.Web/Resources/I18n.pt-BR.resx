@@ -669,11 +669,26 @@
   <data name="ChapterSearchStatus" xml:space="preserve">
     <value>Status de pesquisa de capítulo</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="InstallCrawlerAgentDescription" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="InstallCrawlerAgentDescription" xml:space="preserve">
     <value>Aprimore KamiYomu instalando agentes rastreadores que rastreiam e recuperam automaticamente seu mangá assim que ele estiver disponível.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="AreYouCertainYouWantPermanentlyDeleteThisRecord" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="UserAgentExplanation" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="TimeoutExplanation" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="AreYouCertainYouWantPermanentlyDeleteThisRecord" xml:space="preserve">
+    <value>Tem certeza de que deseja excluir permanentemente este registro?</value>
+  </data>
+  <data name="TimeoutExplanation" xml:space="preserve">
+    <value>Um tempo limite é o tempo máximo que um cliente aguardará a conclusão de uma operação antes de desistir. (em milissegundos)</value>
+  </data>
+  <data name="UserAgentExplanation" xml:space="preserve">
+    <value>Um User-Agent é uma string de texto que um navegador da web ou cliente HTTP envia junto com suas solicitações para um servidor.</value>
   </data>
 </root>

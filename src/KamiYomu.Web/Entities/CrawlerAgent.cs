@@ -57,8 +57,11 @@ namespace KamiYomu.Web.Entities
         public ICrawlerAgent GetCrawlerInstance()
         {
             if (_crawler != null) return _crawler;
+            var logger = Defaults.ServiceLocator.Instance.GetRequiredService<ILogger<CrawlerAgent>>() as ILogger;
+            var metadata = new Dictionary<string, object>(AgentMetadata);
+            metadata[CrawlerAgentSettings.DefaultInputs.KamiYomuILogger] = logger;
 
-            _crawler = GetCrawlerInstance(AssemblyPath, AgentMetadata);
+            _crawler = GetCrawlerInstance(AssemblyPath, metadata);
             return _crawler;
         }
 
@@ -128,7 +131,15 @@ namespace KamiYomu.Web.Entities
                 .FirstOrDefault(t => typeof(ICrawlerAgent).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
                 ?? throw new InvalidOperationException("No valid crawler type found.");
 
-            return crawlerType.GetCustomAttributes<AbstractInputAttribute>(false);
+            var fields = crawlerType.GetCustomAttributes<AbstractInputAttribute>(false).ToList();
+
+            fields.AddRange(new List<AbstractInputAttribute>
+            {
+                new CrawlerTextAttribute(CrawlerAgentSettings.DefaultInputs.BrowserUserAgent, I18n.UserAgentExplanation, true, CrawlerAgentSettings.HttpUserAgent, 900),
+                new CrawlerTextAttribute(CrawlerAgentSettings.DefaultInputs.HttpClientTimeout, I18n.TimeoutExplanation, true, CrawlerAgentSettings.TimeoutMilliseconds.ToString(), 901),
+            });
+
+            return fields;
         }
 
 

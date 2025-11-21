@@ -29,7 +29,7 @@
                                     <i class="bi bi-info-circle me-1"></i> @I18n.Details
                                 </button>
 
-                                <a asp-area="Settings" asp-page="/CrawlerAgents/Edit" asp-route-id="@item.Id"
+                                <a asp-area="Settings" asp-page="/CrawlerAgents/Edit/Index" asp-route-id="@item.Id"
                                    class="btn btn-sm btn-outline-secondary"
                                    title="@I18n.Edit"
                                    aria-label="@I18n.Edit">
@@ -60,7 +60,7 @@
                         <p class="text-muted mb-2">
                             @I18n.NoCrawlerAgent
                         </p>
-                        <a asp-area="Settings" asp-page="Create" class="btn btn-outline-primary btn-sm">
+                        <a asp-area="Settings" asp-page="/CrawlerAgents/Create/Index" class="btn btn-outline-primary btn-sm">
                             @I18n.AddCrawlerAgentToGetStarted
                         </a>
                     </div>

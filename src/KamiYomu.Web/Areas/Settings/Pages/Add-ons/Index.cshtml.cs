@@ -119,7 +119,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
 
                 notificationService.EnqueueSuccessForNextPage(I18n.NuGetPackageInstalledSuccessfully);
 
-                return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit", new { crawlerAgent.Id });
+                return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit/Index", new { crawlerAgent.Id });
             }
             catch (Exception ex)
             {

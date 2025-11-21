@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace KamiYomu.Web.Infrastructure.Repositories
 {
-    public class AgentCrawlerRepository(DbContext dbContext, CacheContext cacheContext) : IAgentCrawlerRepository
+    public class CrawlerAgentRepository(DbContext dbContext, CacheContext cacheContext) : ICrawlerAgentRepository
     {
         public Task<Manga> GetMangaAsync(CrawlerAgent agentCrawler, string mangaId, CancellationToken cancellationToken)
         {

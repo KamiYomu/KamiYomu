@@ -1,4 +1,4 @@
-using KamiYomu.CrawlerAgents.Core.Inputs;
+using KamiYomu.Web.Areas.Settings.Pages.Shared;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
@@ -9,13 +9,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel;
 using System.IO.Compression;
 
-namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents;
+namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.Create;
 
-public class CreateModel(DbContext dbContext, INotificationService notificationService) : PageModel
+public class IndexModel(DbContext dbContext, INotificationService notificationService) : PageModel
 {
 
     [BindProperty]
-    public CrawlerAgentCreateInputModel Input { get; set; }
+    public InputModel Input { get; set; }
 
 
     public void OnGet(Guid? id)
@@ -23,17 +23,16 @@ public class CreateModel(DbContext dbContext, INotificationService notificationS
         CrawlerAgent? crawlerAgent = id != null ? dbContext.CrawlerAgents.FindById(id) : null;
         if (crawlerAgent == null)
         {
-            Input = new CrawlerAgentCreateInputModel();
+            Input = new InputModel();
         }
         else
         {
-            Input = new CrawlerAgentCreateInputModel()
+            Input = new InputModel()
             {
                 Id = id,
                 DisplayName = crawlerAgent.AssemblyName
             };
         }
-
     }
 
     public IActionResult OnPostUpload(IFormFile agentFile, CancellationToken cancellationToken)
@@ -86,7 +85,7 @@ public class CreateModel(DbContext dbContext, INotificationService notificationS
         var assembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
         var metadata = CrawlerAgent.GetAssemblyMetadata(assembly);
 
-        return Partial("_CrawlerAgentCreateForm", new CrawlerAgentCreateInputModel
+        return Partial("_CreateForm", new InputModel
         {
             DisplayName = CrawlerAgent.GetCrawlerDisplayName(assembly),
             CrawlerInputsViewModel = new CrawlerInputsViewModel
@@ -145,14 +144,14 @@ public class CreateModel(DbContext dbContext, INotificationService notificationS
 
         dbContext.CrawlerAgentFileStorage.Delete(Input.TempFileId);
 
-        return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit", new
+        return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit/Index", new
         {
             crawlerAgent.Id
         });
     }
 }
 
-public class CrawlerAgentCreateInputModel
+public class InputModel
 {
     [BindProperty]
     public Guid? Id { get; set; }
@@ -167,38 +166,4 @@ public class CrawlerAgentCreateInputModel
 
     [BindProperty]
     public Dictionary<string, string> ReadOnlyMetadata { get; set; } = [];
-
-
-}
-
-public class CrawlerInputsViewModel
-{
-    public IEnumerable<AbstractInputAttribute> CrawlerInputs { get; set; } = [];
-    public Dictionary<string, string> AgentMetadata { get; set; } = [];
-    public Dictionary<string, object> GetAgentMetadataValues()
-    {
-        Dictionary<string, object> metadata = [];
-        foreach (var item in AgentMetadata)
-        {
-            if (bool.TryParse(item.Value, out var boolValue))
-            {
-                metadata[item.Key] = boolValue;
-            }
-            else
-            {
-                metadata[item.Key] = item.Value;
-            }
-        }
-        return metadata;
-    }
-
-    public static Dictionary<string, string> GetAgentMetadataValues(Dictionary<string, object> values)
-    {
-        Dictionary<string, string> metadata = [];
-        foreach (var item in values)
-        {
-            metadata[item.Key] = item.Value?.ToString();
-        }
-        return metadata;
-    }
 }

@@ -26,10 +26,6 @@
     {
       "library": "microsoft-signalr@9.0.6",
       "destination": "wwwroot/lib/microsoft-signalr/"
-    },
-    {
-      "library": "simple-icons@15.16.0",
-      "destination": "wwwroot/lib/simple-icons/"
     }
   ]
 }

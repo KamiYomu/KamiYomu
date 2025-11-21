@@ -19,15 +19,15 @@ namespace KamiYomu.Web.Worker
         private readonly ILogger<ChapterDownloaderJob> _logger;
         private readonly WorkerOptions _workerOptions;
         private readonly DbContext _dbContext;
-        private readonly IAgentCrawlerRepository _agentCrawlerRepository;
+        private readonly ICrawlerAgentRepository _agentCrawlerRepository;
         private readonly HttpClient _httpClient;
         private readonly INotificationService _notificationService;
 
         public ChapterDownloaderJob(
             ILogger<ChapterDownloaderJob> logger,
-            IOptionsSnapshot<WorkerOptions> workerOptions,
+            IOptions<WorkerOptions> workerOptions,
             DbContext dbContext,
-            IAgentCrawlerRepository agentCrawlerRepository,
+            ICrawlerAgentRepository agentCrawlerRepository,
             IHttpClientFactory httpClientFactory,
             INotificationService notificationService)
         {

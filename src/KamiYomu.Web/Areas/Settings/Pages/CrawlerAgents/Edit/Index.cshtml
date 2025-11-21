@@ -1,6 +1,6 @@
 ﻿@page
 
-@model KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.EditModel
+@model KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.Edit.IndexModel
 @{
     ViewData["Title"] = I18n.EditCrawlerAgent;
 }
@@ -13,6 +13,6 @@
 </div>
 
 
-<partial name="_CrawlerAgentEditForm" model="Model.Input" />
+<partial name="_EditForm" model="Model.Input" />
 
 <div asp-validation-summary="All" class="text-danger"></div>

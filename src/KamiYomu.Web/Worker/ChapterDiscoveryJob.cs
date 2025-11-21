@@ -17,15 +17,15 @@ namespace KamiYomu.Web.Worker
         private readonly ILogger<ChapterDiscoveryJob> _logger;
         private readonly WorkerOptions _workerOptions;
         private readonly IBackgroundJobClient _jobClient;
-        private readonly IAgentCrawlerRepository _agentCrawlerRepository;
+        private readonly ICrawlerAgentRepository _agentCrawlerRepository;
         private readonly IHangfireRepository _hangfireRepository;
         private readonly DbContext _dbContext;
 
         public ChapterDiscoveryJob(
             ILogger<ChapterDiscoveryJob> logger,
-            IOptionsSnapshot<WorkerOptions> workerOptions,
+            IOptions<WorkerOptions> workerOptions,
             IBackgroundJobClient jobClient,
-            IAgentCrawlerRepository agentCrawlerRepository,
+            ICrawlerAgentRepository agentCrawlerRepository,
             IHangfireRepository hangfireRepository,
             DbContext dbContext)
         {

@@ -3,7 +3,7 @@ using KamiYomu.Web.Entities;
 
 namespace KamiYomu.Web.Infrastructure.Repositories.Interfaces
 {
-    public interface IAgentCrawlerRepository
+    public interface ICrawlerAgentRepository
     {
         Task<Manga> GetMangaAsync(Guid agentCrawlerId, string mangaId, CancellationToken cancellationToken);
         Task<Manga> GetMangaAsync(CrawlerAgent agentCrawler, string mangaId, CancellationToken cancellationToken);

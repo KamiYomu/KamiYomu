@@ -196,6 +196,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you certain you want to permanently delete this record?.
+        /// </summary>
+        internal static string AreYouCertainYouWantPermanentlyDeleteThisRecord {
+            get {
+                return ResourceManager.GetString("AreYouCertainYouWantPermanentlyDeleteThisRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Assembly Properties.
         /// </summary>
         internal static string AssemblyProperties {
@@ -1474,6 +1483,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A timeout is the maximum amount of time a client will wait for an operation to finish before giving up. (in milliseconds).
+        /// </summary>
+        internal static string TimeoutExplanation {
+            get {
+                return ResourceManager.GetString("TimeoutExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Title.
         /// </summary>
         internal static string Title {
@@ -1506,6 +1524,15 @@ namespace KamiYomu.Web.Resources {
         internal static string TotalDownloads {
             get {
                 return ResourceManager.GetString("TotalDownloads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A User-Agent is a text string that a web browser or HTTP client sends along with its requests to a server..
+        /// </summary>
+        internal static string UserAgentExplanation {
+            get {
+                return ResourceManager.GetString("UserAgentExplanation", resourceCulture);
             }
         }
         

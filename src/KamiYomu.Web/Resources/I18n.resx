@@ -672,4 +672,13 @@
   <data name="InstallCrawlerAgentDescription" xml:space="preserve">
     <value>Enhance KamiYomu by installing crawler agents that automatically track and retrieve your manga as soon as it becomes available.</value>
   </data>
+  <data name="AreYouCertainYouWantPermanentlyDeleteThisRecord" xml:space="preserve">
+    <value>Are you certain you want to permanently delete this record?</value>
+  </data>
+  <data name="TimeoutExplanation" xml:space="preserve">
+    <value>A timeout is the maximum amount of time a client will wait for an operation to finish before giving up. (in milliseconds)</value>
+  </data>
+  <data name="UserAgentExplanation" xml:space="preserve">
+    <value>A User-Agent is a text string that a web browser or HTTP client sends along with its requests to a server.</value>
+  </data>
 </root>

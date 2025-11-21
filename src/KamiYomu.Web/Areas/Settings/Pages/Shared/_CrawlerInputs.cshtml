@@ -1,11 +1,16 @@
 ﻿@using KamiYomu.CrawlerAgents.Core.Inputs
 @using KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
+@using KamiYomu.Web.Areas.Settings.Pages.Shared
 @model CrawlerInputsViewModel
 
-@foreach (var inputField in Model.CrawlerInputs)
+@foreach (var inputField in Model.CrawlerInputs.OrderBy(p => p.Order))
 {
     @if (inputField is CrawlerTextAttribute crawlerText)
     {
+        var formValue = Model.AgentMetadata.TryGetValue(crawlerText.Name, out var value)
+            ? value?.ToString() ?? string.Empty
+            : crawlerText.DefaultValue;
+
         <div class="mb-3">
             <label class="form-label fw-semibold" for="input-@crawlerText.Name">@crawlerText.Name</label>
 
@@ -22,12 +27,16 @@
                        class="form-control"
                        id="input-@crawlerText.Name"
                        name="Input.CrawlerInputsViewModel.AgentMetadata[@crawlerText.Name]"
-                       asp-for="AgentMetadata[@crawlerText.Name]" />
+                       value="@formValue" />
             </div>
         </div>
     }
     else if (inputField is CrawlerPasswordAttribute crawlerPassword)
     {
+        var formValue = Model.AgentMetadata.TryGetValue(crawlerPassword.Name, out var value)
+        ? value?.ToString() ?? string.Empty
+        : crawlerPassword.DefaultValue;
+
         <div class="mb-3">
             <label class="form-label fw-semibold" for="input-@crawlerPassword.Name">@crawlerPassword.Name</label>
 
@@ -44,17 +53,18 @@
                        class="form-control"
                        id="input-@crawlerPassword.Name"
                        name="Input.CrawlerInputsViewModel.AgentMetadata[@crawlerPassword.Name]"
-                       asp-for="AgentMetadata[@crawlerPassword.Name]" />
+                       value="@formValue" />
             </div>
         </div>
     }
     else if (inputField is CrawlerSelectAttribute crawlerSelect)
     {
+
         var selected = Model.AgentMetadata.TryGetValue(crawlerSelect.Name, out var value)
         && value is string stringValue
         && !string.IsNullOrWhiteSpace(stringValue)
         ? stringValue
-        : string.Empty;
+        : crawlerSelect.DefaultValue;
 
         var fieldId = $"select-{Regex.Replace(crawlerSelect.Name.ToLowerInvariant(), @"[^a-z0-9]+", "-")}";
 
@@ -86,7 +96,8 @@
             {
                 var isChecked = Model.AgentMetadata.TryGetValue($"{crawlerCheckbox.Name}.{key}", out var value)
                 && bool.TryParse(value, out var boolValue)
-                && boolValue;
+                && (boolValue || (crawlerCheckbox.DefaultValue.Contains(key) && value == null))
+            ;
 
                 var safeKey = Regex.Replace(key.ToLowerInvariant(), @"[^a-z0-9\-]", "-");
                 var inputId = $"checkbox-{safeKey}";
@@ -107,7 +118,5 @@
                 </div>
             }
         </fieldset>
-
     }
-
 }

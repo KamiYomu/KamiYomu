@@ -89,7 +89,7 @@ builder.Services.AddHangfireServer((services, optionActions) =>
     optionActions.HeartbeatInterval = TimeSpan.FromSeconds(30);
 });
 
-builder.Services.AddTransient<IAgentCrawlerRepository, AgentCrawlerRepository>();
+builder.Services.AddTransient<ICrawlerAgentRepository, CrawlerAgentRepository>();
 builder.Services.AddTransient<IHangfireRepository, HangfireRepository>();
 builder.Services.AddTransient<IChapterDiscoveryJob, ChapterDiscoveryJob>();
 builder.Services.AddTransient<IChapterDownloaderJob, ChapterDownloaderJob>();

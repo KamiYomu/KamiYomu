@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KamiYomu.Web.Areas.Libraries.Pages.Mangas
 {
-    public class SearchResultsModel(DbContext dbContext, IAgentCrawlerRepository agentCrawlerRepository) : PageModel
+    public class SearchResultsModel(DbContext dbContext, ICrawlerAgentRepository agentCrawlerRepository) : PageModel
     {
         public IEnumerable<Entities.Library> Results { get; set; } = [];
 

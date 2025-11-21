@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs
 {
-    public class MangaDetailsModel(DbContext agentDbContext, CacheContext cacheContext, IAgentCrawlerRepository agentCrawlerRepository) : PageModel
+    public class MangaDetailsModel(DbContext agentDbContext, CacheContext cacheContext, ICrawlerAgentRepository agentCrawlerRepository) : PageModel
     {
         public Manga? Manga { get; set; } = default;
         public async Task OnGetAsync(Guid agentId, string mangaId, CancellationToken cancellationToken)

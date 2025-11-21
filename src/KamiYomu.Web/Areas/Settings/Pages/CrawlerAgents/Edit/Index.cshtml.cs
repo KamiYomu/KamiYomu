@@ -1,27 +1,26 @@
-using KamiYomu.CrawlerAgents.Core.Inputs;
+using KamiYomu.Web.Areas.Settings.Pages.Shared;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.Eventing.Reader;
 
-namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
+namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.Edit
 {
-    public class EditModel(DbContext dbContext, 
+    public class IndexModel(DbContext dbContext, 
                            CacheContext cacheContext, 
                            INotificationService notificationService) : PageModel
     {
         [BindProperty]
-        public CrawlerAgentEditInputModel Input { get; set; } = new CrawlerAgentEditInputModel();
+        public InputModel Input { get; set; } = new InputModel();
         public IActionResult OnGet(Guid id)
         {
             var crawlerAgent = dbContext.CrawlerAgents.FindById(id);
 
             if (crawlerAgent == null) return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Index");
 
-            Input = new CrawlerAgentEditInputModel()
+            Input = new InputModel()
             {
                 Id = id,
                 DisplayName = crawlerAgent.DisplayName,
@@ -47,12 +46,11 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents
             dbContext.CrawlerAgents.Update(agentCrawler);
             cacheContext.EmptyAgentKeys(agentCrawler.Id);
             await notificationService.PushSuccessAsync(I18n.CrawlerAgentSavedSuccessfully, cancellationToken);
-            return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit", new { agentCrawler.Id });
+            return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit/Index", new { agentCrawler.Id });
         }
     }
 
-
-    public class CrawlerAgentEditInputModel
+    public class InputModel
     {
         [BindProperty]
         public Guid? Id { get; set; }

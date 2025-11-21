@@ -20,16 +20,16 @@ public class MangaDownloaderJob : IMangaDownloaderJob
     private readonly ILogger<MangaDownloaderJob> _logger;
     private readonly WorkerOptions _workerOptions;
     private readonly DbContext _dbContext;
-    private readonly IAgentCrawlerRepository _agentCrawlerRepository;
+    private readonly ICrawlerAgentRepository _agentCrawlerRepository;
     private readonly IBackgroundJobClient _jobClient;
     private readonly IHangfireRepository _hangfireRepository;
     private readonly INotificationService _notificationService;
 
     public MangaDownloaderJob(
         ILogger<MangaDownloaderJob> logger,
-        IOptionsSnapshot<WorkerOptions> workerOptions,
+        IOptions<WorkerOptions> workerOptions,
         DbContext dbContext,
-        IAgentCrawlerRepository agentCrawlerRepository,
+        ICrawlerAgentRepository agentCrawlerRepository,
         IBackgroundJobClient jobClient,
         IHangfireRepository hangfireRepository,
         INotificationService notificationService)
