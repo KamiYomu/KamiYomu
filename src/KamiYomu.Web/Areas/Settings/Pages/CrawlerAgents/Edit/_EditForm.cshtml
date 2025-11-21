@@ -3,9 +3,7 @@
 @using KamiYomu.Web.Entities
 @model KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.Edit.InputModel
 
-<form hx-post="/Settings/CrawlerAgents/Edit"
-      hx-target="#toast-container"
-      hx-swap="none"
+<form asp-area="Settings" asp-page="/CrawlerAgents/Edit/Index"
       class="needs-validation"
       novalidate>
     @Html.AntiForgeryToken()
@@ -22,7 +20,6 @@
             </div>
         </div>
     </div>
-
 
     <input asp-for="Id" name="Input.Id" type="hidden" />
 

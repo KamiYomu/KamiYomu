@@ -1483,6 +1483,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This Value Is Required.
+        /// </summary>
+        internal static string ThisValueIsRequired {
+            get {
+                return ResourceManager.GetString("ThisValueIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A timeout is the maximum amount of time a client will wait for an operation to finish before giving up. (in milliseconds).
         /// </summary>
         internal static string TimeoutExplanation {

@@ -37,15 +37,36 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.Edit
 
         public async Task<IActionResult> OnPostAsync(CancellationToken cancellationToken)
         {
+            var agentCrawler = dbContext.CrawlerAgents.FindById(Input.Id);
+            var metadata = Input.CrawlerInputsViewModel.GetAgentMetadataValues();
+            var crawlerInputs = agentCrawler.GetCrawlerInputs();
+
+            foreach (var crawlerInput in crawlerInputs)
+            {
+                if (crawlerInput.Required)
+                {
+                    if(metadata.TryGetValue(crawlerInput.Name, out var valueObj) 
+                       && valueObj is null 
+                       || (valueObj is string valueStr && string.IsNullOrWhiteSpace(valueStr)))
+                    {
+                        ModelState.AddModelError($"AgentMetadata[{crawlerInput.Name}]", I18n.ThisValueIsRequired);
+                    }
+                }
+            }
+
             if (!ModelState.IsValid)
             {
-                return Page();
+                return OnGet(Input.Id.GetValueOrDefault());
             }
-            var agentCrawler = dbContext.CrawlerAgents.FindById(Input.Id);
-            agentCrawler.Update(Input.DisplayName, Input.CrawlerInputsViewModel.GetAgentMetadataValues(), Input.ReadOnlyMetadata);
+
+            agentCrawler.Update(Input.DisplayName, metadata, Input.ReadOnlyMetadata);
+
             dbContext.CrawlerAgents.Update(agentCrawler);
+
             cacheContext.EmptyAgentKeys(agentCrawler.Id);
-            await notificationService.PushSuccessAsync(I18n.CrawlerAgentSavedSuccessfully, cancellationToken);
+
+            notificationService.EnqueueSuccessForNextPage(I18n.CrawlerAgentSavedSuccessfully);
+
             return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit/Index", new { agentCrawler.Id });
         }
     }

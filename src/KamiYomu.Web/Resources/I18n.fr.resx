@@ -672,16 +672,6 @@
   <data name="InstallCrawlerAgentDescription" xml:space="preserve">
     <value>Améliorez KamiYomu en installant des agents d'exploration qui suivent et récupèrent automatiquement votre manga dès qu'il est disponible.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="AreYouCertainYouWantPermanentlyDeleteThisRecord" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="UserAgentExplanation" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="TimeoutExplanation" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="AreYouCertainYouWantPermanentlyDeleteThisRecord" xml:space="preserve">
     <value>Êtes-vous certain de vouloir supprimer définitivement cet enregistrement ?</value>
   </data>
@@ -690,5 +680,12 @@
   </data>
   <data name="UserAgentExplanation" xml:space="preserve">
     <value>Un agent utilisateur est une chaîne de texte qu'un navigateur Web ou un client HTTP envoie avec ses requêtes à un serveur.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ThisValueIsRequired" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ThisValueIsRequired" xml:space="preserve">
+    <value>Cette valeur est obligatoire</value>
   </data>
 </root>
