@@ -3,9 +3,7 @@
 @using KamiYomu.Web.Entities
 @model KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.Edit.InputModel
 
-<form asp-area="Settings" asp-page="/CrawlerAgents/Edit/Index"
-      class="needs-validation"
-      novalidate>
+
     @Html.AntiForgeryToken()
 
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -68,4 +66,3 @@
             </div>
         </div>
     </div>
-</form>
