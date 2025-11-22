@@ -169,6 +169,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adjust the search term to explore available packages..
+        /// </summary>
+        internal static string AdjustSearchTerm {
+            get {
+                return ResourceManager.GetString("AdjustSearchTerm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Agent Actions.
         /// </summary>
         internal static string AgentActions {
@@ -336,6 +345,15 @@ namespace KamiYomu.Web.Resources {
         internal static string Company {
             get {
                 return ResourceManager.GetString("Company", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compatible.
+        /// </summary>
+        internal static string Compatible {
+            get {
+                return ResourceManager.GetString("Compatible", resourceCulture);
             }
         }
         
@@ -1078,6 +1096,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not Compatible.
+        /// </summary>
+        internal static string NotCompatible {
+            get {
+                return ResourceManager.GetString("NotCompatible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not Started.
         /// </summary>
         internal static string NotStarted {
@@ -1227,6 +1254,15 @@ namespace KamiYomu.Web.Resources {
         internal static string Pending {
             get {
                 return ResourceManager.GetString("Pending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please correct the highlighted field..
+        /// </summary>
+        internal static string PleaseCorrectHighlightedField {
+            get {
+                return ResourceManager.GetString("PleaseCorrectHighlightedField", resourceCulture);
             }
         }
         
@@ -1416,6 +1452,15 @@ namespace KamiYomu.Web.Resources {
         internal static string Size {
             get {
                 return ResourceManager.GetString("Size", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Something Went Wrong..
+        /// </summary>
+        internal static string SomethingWentWrong {
+            get {
+                return ResourceManager.GetString("SomethingWentWrong", resourceCulture);
             }
         }
         

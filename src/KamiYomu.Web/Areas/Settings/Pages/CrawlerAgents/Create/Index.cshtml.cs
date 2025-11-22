@@ -5,6 +5,7 @@ using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Infrastructure.Storage;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel;
 using System.IO.Compression;
@@ -139,11 +140,46 @@ public class IndexModel(DbContext dbContext, INotificationService notificationSe
         }
 
         // Register agent
+        var assembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
+        var crawlerInputs = CrawlerAgent.GetCrawlerInputs(assembly);
+        var displayName = CrawlerAgent.GetCrawlerDisplayName(assembly);
+        var assemblyMetadata = CrawlerAgent.GetAssemblyMetadata(assembly);
+        var metadata = Input.CrawlerInputsViewModel.GetAgentMetadataValues();
+        foreach (var crawlerInput in crawlerInputs)
+        {
+            if (crawlerInput.Required)
+            {
+                if (metadata.TryGetValue(crawlerInput.Name, out var valueObj)
+                   && valueObj is null
+                   || (valueObj is string valueStr && string.IsNullOrWhiteSpace(valueStr)))
+                {
+                    ModelState.AddModelError($"AgentMetadata[{crawlerInput.Name}]", I18n.ThisValueIsRequired);
+                }
+            }
+        }
+
+
+        if (!ModelState.IsValid)
+        {
+            notificationService.EnqueueErrorForNextPage(I18n.PleaseCorrectHighlightedField);
+            Input = new InputModel
+            {
+                DisplayName = displayName,
+                CrawlerInputsViewModel = new CrawlerInputsViewModel
+                {
+                    CrawlerInputs = crawlerInputs,
+                    AgentMetadata = metadata.ToDictionary(p => p.Key, p => p.Value as string)
+                },
+                TempFileId = Input.TempFileId,
+                ReadOnlyMetadata = assemblyMetadata,
+            };
+            return Page();
+        }
         var crawlerAgent = new CrawlerAgent(dllPath, Input.DisplayName, Input.CrawlerInputsViewModel.GetAgentMetadataValues());
+
         dbContext.CrawlerAgents.Insert(crawlerAgent);
-
         dbContext.CrawlerAgentFileStorage.Delete(Input.TempFileId);
-
+        notificationService.EnqueueSuccessForNextPage(I18n.CrawlerAgentSavedSuccessfully);
         return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit/Index", new
         {
             crawlerAgent.Id

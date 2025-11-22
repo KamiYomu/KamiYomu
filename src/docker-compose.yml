@@ -7,7 +7,7 @@ services:
       volumes:
         - ./AppData/manga:/manga
         - kamiyomu_database:/db 
-        - kamiyomu_agents:/agents 
+        - ./AppData/agents:/agents 
         - kamiyomu_logs:/logs 
       healthcheck:
         test: ["CMD", "curl", "-f", "https://localhost:5001/healthz"]

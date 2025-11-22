@@ -56,6 +56,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.Edit
 
             if (!ModelState.IsValid)
             {
+                notificationService.EnqueueErrorForNextPage(I18n.PleaseCorrectHighlightedField);
                 return OnGet(Input.Id.GetValueOrDefault());
             }
 

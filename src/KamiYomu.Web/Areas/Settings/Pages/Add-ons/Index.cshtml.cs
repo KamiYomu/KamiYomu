@@ -7,6 +7,7 @@ using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.IO.Compression;
+using static KamiYomu.Web.AppOptions.Defaults;
 
 namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
 {
@@ -18,8 +19,6 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
         [BindProperty(SupportsGet = true)]
         public SearchBarViewModel SearchBarViewModel { get; set; } = new();
 
-        public IEnumerable<NugetPackageInfo> Packages { get; set; } = [];
-
         public PackageListViewModel PackageListViewModel { get; set; } = new();
 
         public bool IsNugetAdded { get; set; } = false;
@@ -30,7 +29,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
             PackageListViewModel = new PackageListViewModel
             {
                 SourceId = SearchBarViewModel.SourceId,
-                Packages = Packages
+                PackageItems = []
             };
             SearchBarViewModel = new SearchBarViewModel
             {
@@ -45,20 +44,26 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
         {
             try
             {
-                Packages = await nugetService.SearchPackagesAsync(SearchBarViewModel.Search, SearchBarViewModel.IncludePrerelease, SearchBarViewModel.SourceId, cancellationToken);
+                var packages = await nugetService.SearchPackagesAsync(SearchBarViewModel.Search, SearchBarViewModel.IncludePrerelease, SearchBarViewModel.SourceId, cancellationToken);
+                packages = packages.Where(p => p.IsVersionCompatible()).OrderBy(p => p.Id).ThenByDescending(p => p.Version);
+                PackageListViewModel = new PackageListViewModel
+                {
+                    SourceId = SearchBarViewModel.SourceId,
+                    PackageItems = packages.Select(p => new PackageItemViewModel
+                    {
+                        Package = p,
+                        SourceId = SearchBarViewModel.SourceId
+                    })
+                };
+               
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error on search packages");
                 notificationService.EnqueueErrorForNextPage(I18n.FailedToSearch);
-                Packages = [];
             }
 
-            return Partial("_PackageList", new PackageListViewModel
-            {
-                SourceId = SearchBarViewModel.SourceId,
-                Packages = Packages
-            });
+            return Partial("_PackageList", PackageListViewModel);
         }
 
         public async Task<IActionResult> OnPostInstallAsync(Guid sourceId, string packageId, string packageVersion, CancellationToken cancellationToken)
@@ -74,8 +79,8 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
                 var packageFileName = $"{packageId}.{packageVersion}.nupkg";
                 var crawlerAgentDir = CrawlerAgent.GetAgentDir(packageFileName);
 
-                if(Directory.Exists(crawlerAgentDir))
-                    Directory.Delete(crawlerAgentDir, recursive: true); 
+                if (Directory.Exists(crawlerAgentDir))
+                    Directory.Delete(crawlerAgentDir, recursive: true);
 
                 Directory.CreateDirectory(crawlerAgentDir);
 
@@ -135,7 +140,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
             PackageListViewModel = new PackageListViewModel
             {
                 SourceId = SearchBarViewModel.SourceId,
-                Packages = Packages
+                PackageItems = []
             };
 
             return Page();

@@ -5,7 +5,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.Shared;
 public class CrawlerInputsViewModel
 {
     public IEnumerable<AbstractInputAttribute> CrawlerInputs { get; set; } = [];
-    public Dictionary<string, string> AgentMetadata { get; set; } = [];
+    public Dictionary<string, string?> AgentMetadata { get; set; } = [];
     public Dictionary<string, object> GetAgentMetadataValues()
     {
         Dictionary<string, object> metadata = [];
