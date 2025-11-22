@@ -699,4 +699,7 @@
   <data name="AdjustSearchTerm" xml:space="preserve">
     <value>Adjust the search term to explore available packages.</value>
   </data>
+  <data name="WelcomeTo" xml:space="preserve">
+    <value>Welcome To</value>
+  </data>
 </root>

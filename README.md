@@ -1,6 +1,6 @@
 ﻿# 🦉 KamiYomu — Your Self-Hosted Manga Crawler
 
-![KamiYomu Owl Logo](./Inkscape/logo.svg)
+![KamiYomu Owl Logo](./Inkscape/logo-watermark.svg)
 
 **KamiYomu** is a powerful, extensible manga crawler built for manga enthusiasts who want full control over their collection. It scans and downloads manga from supported websites, stores them locally, and lets you host your own private manga reader—no ads, no subscriptions, no limits.
 

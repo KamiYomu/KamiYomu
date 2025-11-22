@@ -700,4 +700,13 @@
   <data name="AdjustSearchTerm" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="WelcomeTo" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="AdjustSearchTerm" xml:space="preserve">
+    <value>Ajustez le terme de recherche pour explorer les packages disponibles.</value>
+  </data>
+  <data name="WelcomeTo" xml:space="preserve">
+    <value>Bienvenue à</value>
+  </data>
 </root>

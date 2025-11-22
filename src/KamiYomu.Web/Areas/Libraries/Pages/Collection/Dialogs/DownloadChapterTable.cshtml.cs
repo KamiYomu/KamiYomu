@@ -145,7 +145,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                                   .OrderBy(f => f)
                                   .ToList();
 
-            var logoPath = Path.Combine(webHostEnvironment.ContentRootPath, "wwwroot", "images", "logo.svg");
+            var logoPath = Path.Combine(webHostEnvironment.ContentRootPath, "wwwroot", "images", "logo-watermark.svg");
             var document = new MangaChaptersPdfReport(images, Path.GetFileNameWithoutExtension(filePath), logoPath);
             var fileBytes = document.GeneratePdf();
 

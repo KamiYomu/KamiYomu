@@ -19,7 +19,11 @@ public class MangaChaptersPdfReport(List<string> images, string fileName, string
 
     public void Compose(IDocumentContainer container)
     {
-        var svgMarkup = File.ReadAllText(logoPath).Replace("fill=\"#000000\"", "fill=\"#808080\"");
+        var svgMarkup = File.ReadAllText(logoPath);
+        if (svgMarkup.Contains("<svg"))
+        {
+            svgMarkup = svgMarkup.Replace("<svg", "<svg opacity=\"0.5\"");
+        }
 
         foreach (var imgPath in images)
         {
@@ -38,8 +42,10 @@ public class MangaChaptersPdfReport(List<string> images, string fileName, string
                 page.Foreground()
                     .AlignTop()
                     .AlignRight()
+                    .Padding(10) 
                     .Width(40)
                     .Height(40)
+                    .ScaleToFit()
                     .Svg(svgMarkup);
 
                 // Image content

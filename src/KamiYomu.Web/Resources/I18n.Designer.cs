@@ -1735,6 +1735,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Welcome To.
+        /// </summary>
+        internal static string WelcomeTo {
+            get {
+                return ResourceManager.GetString("WelcomeTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Welcome to KamiYomu.
         /// </summary>
         internal static string WelcomeToKamiYomu {
