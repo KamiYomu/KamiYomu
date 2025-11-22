@@ -85,8 +85,7 @@ public class IndexModel(DbContext dbContext, INotificationService notificationSe
         // Load isolated assembly and extract metadata
         var assembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
         var metadata = CrawlerAgent.GetAssemblyMetadata(assembly);
-
-        return Partial("_CreateForm", new InputModel
+        var inputModel = new InputModel
         {
             DisplayName = CrawlerAgent.GetCrawlerDisplayName(assembly),
             CrawlerInputsViewModel = new CrawlerInputsViewModel
@@ -96,7 +95,8 @@ public class IndexModel(DbContext dbContext, INotificationService notificationSe
             },
             TempFileId = tempUploadId,
             ReadOnlyMetadata = metadata,
-        });
+        };
+        return Partial("_CreateForm", inputModel);
     }
 
     public async Task<IActionResult> OnPostSaveAsync(CancellationToken cancellationToken)
@@ -175,7 +175,7 @@ public class IndexModel(DbContext dbContext, INotificationService notificationSe
             };
             return Page();
         }
-        var crawlerAgent = new CrawlerAgent(dllPath, Input.DisplayName, Input.CrawlerInputsViewModel.GetAgentMetadataValues());
+        var crawlerAgent = new CrawlerAgent(dllPath, displayName, Input.CrawlerInputsViewModel.GetAgentMetadataValues());
 
         dbContext.CrawlerAgents.Insert(crawlerAgent);
         dbContext.CrawlerAgentFileStorage.Delete(Input.TempFileId);
