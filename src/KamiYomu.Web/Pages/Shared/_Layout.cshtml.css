@@ -9,13 +9,13 @@
     position: relative;
     z-index: 2;
     height: 2.75rem;
-    overflow-y: hidden; /* lock vertical scroll */
+    overflow-y: hidden;
 }
 
     .nav-scroller .nav {
         display: flex;
-        flex-wrap: nowrap; /* keep items in a single row */
-        overflow-x: auto; /* allow horizontal scroll if needed */
+        flex-wrap: nowrap;
+        overflow-x: auto;
         -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
         white-space: nowrap; /* prevent wrapping */
         margin-top: -1px;

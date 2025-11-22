@@ -1,4 +1,6 @@
-﻿namespace KamiYomu.Web.Entities.Addons
+﻿using NuGet.Versioning;
+
+namespace KamiYomu.Web.Entities.Addons
 {
     public class NugetPackageInfo
     {
@@ -11,5 +13,50 @@
         public int? TotalDownloads { get; init; }
         public Uri? LicenseUrl { get; init; }
         public Uri? RepositoryUrl { get; init; }
+        public List<NugetDependencyInfo> Dependencies { get; set; }
+
+
+        public string GetKamiYomuCoreRangeVersion()
+        {
+            var kamiYomuCoreDependency = Dependencies?
+                .FirstOrDefault(d => d.Id?.Equals("KamiYomu.CrawlerAgents.Core", StringComparison.OrdinalIgnoreCase) == true);
+            return kamiYomuCoreDependency?.VersionRange ?? "Unknown";
+        }
+
+        public string GetKamiYomuCoreVersion()
+        {
+            var range = GetKamiYomuCoreRangeVersion();
+
+            if (string.IsNullOrWhiteSpace(range) || range == "Unknown")
+                return "Unknown";
+
+            var cleaned = range.Trim('[', ']', '(', ')');
+
+            var parts = cleaned.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+            return parts.Length > 0 ? parts[0] : "Unknown";
+        }
+
+
+        public bool IsVersionCompatible()
+        {
+            var versionRangeString = GetKamiYomuCoreRangeVersion(); // e.g. "[1.1.0, )"
+            var currentVersion = typeof(KamiYomu.CrawlerAgents.Core.ICrawlerAgent)
+                .Assembly
+                .GetName()
+                .Version ?? new Version(0, 0, 0);
+
+            if (VersionRange.TryParse(versionRangeString, out var range))
+            {
+                var nugetVersion = new NuGetVersion(currentVersion);
+                return range.Satisfies(nugetVersion) &&
+                      range.MinVersion != null &&
+                      nugetVersion == range.MinVersion;
+
+            }
+
+            // If parsing fails, treat as incompatible
+            return false;
+        }
     }
 }

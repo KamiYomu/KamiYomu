@@ -12,7 +12,10 @@
     </h2>
 </div>
 
+<form asp-area="Settings" asp-page="/CrawlerAgents/Edit/Index"
+      class="needs-validation"
+      novalidate>
+    <partial name="_EditForm" model="Model.Input" />
 
-<partial name="_EditForm" model="Model.Input" />
-
-<div asp-validation-summary="All" class="text-danger"></div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+</form>

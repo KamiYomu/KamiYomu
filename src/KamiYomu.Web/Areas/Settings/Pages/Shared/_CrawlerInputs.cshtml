@@ -29,6 +29,10 @@
                        name="Input.CrawlerInputsViewModel.AgentMetadata[@crawlerText.Name]"
                        value="@formValue" />
             </div>
+            @if (ViewData.ModelState.TryGetValue($"AgentMetadata[{crawlerText.Name}]", out var entry) && entry.Errors.Count > 0)
+            {
+                <span class="text-danger">@entry.Errors[0].ErrorMessage</span>
+            }
         </div>
     }
     else if (inputField is CrawlerPasswordAttribute crawlerPassword)
@@ -55,6 +59,10 @@
                        name="Input.CrawlerInputsViewModel.AgentMetadata[@crawlerPassword.Name]"
                        value="@formValue" />
             </div>
+            @if (ViewData.ModelState.TryGetValue($"AgentMetadata[{crawlerPassword.Name}]", out var entry) && entry.Errors.Count > 0)
+            {
+                <span class="text-danger">@entry.Errors[0].ErrorMessage</span>
+            }
         </div>
     }
     else if (inputField is CrawlerSelectAttribute crawlerSelect)
@@ -83,6 +91,10 @@
                     <option value="@item" selected="@(item == selected ? "selected" : null)">@item</option>
                 }
             </select>
+            @if (ViewData.ModelState.TryGetValue($"AgentMetadata[{crawlerSelect.Name}]", out var entry) && entry.Errors.Count > 0)
+            {
+                <span class="text-danger">@entry.Errors[0].ErrorMessage</span>
+            }
         </div>
 
     }
@@ -96,8 +108,7 @@
             {
                 var isChecked = Model.AgentMetadata.TryGetValue($"{crawlerCheckbox.Name}.{key}", out var value)
                 && bool.TryParse(value, out var boolValue)
-                && (boolValue || (crawlerCheckbox.DefaultValue.Contains(key) && value == null))
-            ;
+                && boolValue || (crawlerCheckbox.DefaultValue.Contains(key) && value == null);
 
                 var safeKey = Regex.Replace(key.ToLowerInvariant(), @"[^a-z0-9\-]", "-");
                 var inputId = $"checkbox-{safeKey}";
@@ -116,6 +127,10 @@
 
                     <label class="form-check-label" for="@inputId">@key</label>
                 </div>
+                @if (ViewData.ModelState.TryGetValue($"AgentMetadata[{crawlerCheckbox.Name}]", out var entry) && entry.Errors.Count > 0)
+                {
+                    <span class="text-danger">@entry.Errors[0].ErrorMessage</span>
+                }
             }
         </fieldset>
     }

@@ -32,7 +32,7 @@ namespace KamiYomu.Web.Infrastructure.Services
                 var byteArray = Encoding.ASCII.GetBytes($"{source.UserName}:{source.Password}");
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
             }
-            else if (!string.IsNullOrWhiteSpace(source.Password)) 
+            else if (!string.IsNullOrWhiteSpace(source.Password))
             {
                 client.DefaultRequestHeaders.Add("X-NuGet-ApiKey", source.Password);
             }
@@ -74,12 +74,14 @@ namespace KamiYomu.Web.Infrastructure.Services
             using var requestHandler = new HttpClientHandler();
             using var client = new HttpClient(requestHandler);
 
+            // Authentication
             if (!string.IsNullOrWhiteSpace(source.UserName) && !string.IsNullOrWhiteSpace(source.Password))
             {
                 var byteArray = Encoding.ASCII.GetBytes($"{source.UserName}:{source.Password}");
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
             }
-            else if (!string.IsNullOrWhiteSpace(source.Password)) 
+            else if (!string.IsNullOrWhiteSpace(source.Password))
             {
                 client.DefaultRequestHeaders.Add("X-NuGet-ApiKey", source.Password);
             }
@@ -92,9 +94,15 @@ namespace KamiYomu.Web.Infrastructure.Services
                 .AsArray()
                 .FirstOrDefault(r => r?["@type"]?.ToString() == "SearchQueryService")?["@id"]?.ToString();
 
-            if (string.IsNullOrEmpty(searchUrl))
-                throw new InvalidOperationException("SearchQueryService not found in index.json");
+            var registrationsUrl = index?["resources"]?
+                .AsArray()
+                .FirstOrDefault(r => (r?["@type"]?.ToString()?.StartsWith("RegistrationsBaseUrl") ?? false))
+                ?["@id"]?.ToString();
 
+            if (string.IsNullOrEmpty(searchUrl) || string.IsNullOrEmpty(registrationsUrl))
+                throw new InvalidOperationException("Required NuGet endpoints not found in index.json");
+
+            // Perform search
             var searchQueryUrl = $"{searchUrl}?q={Uri.EscapeDataString(query)}&prerelease={includePreRelease}&take=20";
             var searchJson = await client.GetStringAsync(searchQueryUrl, cancellationToken);
             var searchResults = JsonNode.Parse(searchJson)?["data"]?.AsArray();
@@ -105,6 +113,11 @@ namespace KamiYomu.Web.Infrastructure.Services
             {
                 foreach (var result in searchResults)
                 {
+                    var packageId = result?["id"]?.ToString();
+                    if (string.IsNullOrEmpty(packageId))
+                        continue;
+
+                    // Filter by tags if needed
                     var tagsNode = result?["tags"];
                     string[] tags = tagsNode switch
                     {
@@ -121,12 +134,72 @@ namespace KamiYomu.Web.Infrastructure.Services
 
                     var isCrawlerAgent = tags.Any(tag =>
                         tag.Equals(Defaults.Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase));
-                    
+
                     if (!isCrawlerAgent)
                         continue;
 
-                    NugetPackageInfo packageInfo = ConvertToNuGetPackageInfo(result);
-                    packages.Add(packageInfo);
+                    // Fetch registration index for full versions + dependencies
+                    var registrationIndexUrl = $"{registrationsUrl.TrimEnd('/')}/{packageId.ToLowerInvariant()}/index.json";
+                    var registrationJson = await client.GetStringAsync(registrationIndexUrl, cancellationToken);
+                    var registration = JsonNode.Parse(registrationJson)?["items"]?.AsArray();
+
+                    if (registration == null)
+                        continue;
+
+                    foreach (var page in registration)
+                    {
+                        var versions = page?["items"]?.AsArray();
+                        if (versions == null) continue;
+
+                        foreach (var versionEntry in versions)
+                        {
+                            var catalogEntry = versionEntry?["catalogEntry"];
+                            if (catalogEntry == null) continue;
+
+                            var version = catalogEntry?["version"]?.ToString();
+                            var deps = catalogEntry?["dependencyGroups"]?.AsArray();
+
+                            var dependencies = new List<NugetDependencyInfo>();
+                            if (deps != null)
+                            {
+                                foreach (var group in deps)
+                                {
+                                    var targetFramework = group?["targetFramework"]?.ToString();
+                                    var groupDeps = group?["dependencies"]?.AsArray();
+                                    if (groupDeps == null) continue;
+
+                                    foreach (var dep in groupDeps)
+                                    {
+                                        dependencies.Add(new NugetDependencyInfo
+                                        {
+                                            Id = dep?["id"]?.ToString(),
+                                            VersionRange = dep?["range"]?.ToString(),
+                                            TargetFramework = targetFramework
+                                        });
+                                    }
+                                }
+                            }
+                            var authorsNode = result?["authors"];
+
+                            var authors = authorsNode is JsonArray array
+                                ? array.Select(p => p?.ToString()).Where(p => !string.IsNullOrEmpty(p)).ToArray()
+                                : authorsNode?.ToString() is string singleAuthor && !string.IsNullOrEmpty(singleAuthor)
+                                    ? [singleAuthor]
+                                    : Array.Empty<string>();
+                            packages.Add(new NugetPackageInfo
+                            {
+                                Id = packageId,
+                                Version = version,
+                                IconUrl = Uri.TryCreate(result?["iconUrl"]?.ToString(), UriKind.Absolute, out var icon) ? icon : null,
+                                LicenseUrl = Uri.TryCreate(result?["licenseUrl"]?.ToString(), UriKind.Absolute, out var licenseUrl) ? licenseUrl : null,
+                                Description = result?["description"]?.ToString(),
+                                Authors = authors,
+                                RepositoryUrl = Uri.TryCreate(result?["projectUrl"]?.ToString(), UriKind.Absolute, out var repo) ? repo : null,
+                                TotalDownloads = int.TryParse(result?["totalDownloads"]?.ToString(), out var totalDownload) ? totalDownload : 0,
+                                Dependencies = dependencies
+                            });
+                        }
+                    }
                 }
             }
 

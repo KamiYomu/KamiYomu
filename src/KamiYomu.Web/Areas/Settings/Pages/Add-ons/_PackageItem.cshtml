@@ -1,0 +1,97 @@
+﻿@using KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels
+@model PackageItemViewModel
+
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="row g-3 align-items-center">
+
+                    <!-- Icon -->
+                    <div class="col-12 col-md-auto text-center">
+                        <img src="@Model.Package?.IconUrl"
+                             alt="Package Icon"
+                             class="img-fluid rounded"
+                             style="max-width: 64px;" />
+                    </div>
+
+                    <!-- Package details -->
+                    <div class="col-12 col-md flex-grow-1">
+                        <h5 class="card-title mb-1">@Model.Package.Id</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            <i class="bi bi-123 me-2"></i>
+                            @I18n.Version: @Model.Package.Version
+                        </h6>
+                        <p class="card-text mb-2">
+                            <i class="bi bi-text-paragraph me-2"></i>
+                            @Model.Package.Description
+                        </p>
+
+                        <div class="d-flex flex-wrap gap-3 mb-2">
+                            <span class="d-flex align-items-center text-muted">
+                                <i class="bi bi-person-badge-fill me-2"></i>
+                                <strong class="me-1">@I18n.Authors:</strong>
+                                @string.Join(", ", Model.Package.Authors)
+                            </span>
+                            <span class="d-flex align-items-center text-muted">
+                                <i class="bi bi-cloud-download me-2"></i>
+                                <strong class="me-1">@I18n.TotalDownloads:</strong>
+                                @Model.Package.TotalDownloads
+                            </span>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-4 mt-2">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-puzzle me-2 text-secondary"></i>
+                                <span class="fw-semibold">Core Version:</span>
+                                <span class="ms-1">@Model.Package.GetKamiYomuCoreVersion()</span>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                @if (Model.Package.IsVersionCompatible())
+                                {
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span class="text-success fw-semibold">@I18n.Compatible</span>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-x-circle-fill text-danger me-2"></i>
+                                    <span class="text-danger fw-semibold">@I18n.NotCompatible</span>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-3 align-items-center mt-2">
+                            <a href="@Model.Package.RepositoryUrl"
+                               target="_blank"
+                               class="text-decoration-none text-primary">
+                                <i class="bi bi-box-seam me-1"></i> Repository
+                            </a>
+                            <a href="@Model.Package.LicenseUrl"
+                               target="_blank"
+                               class="text-decoration-none text-primary">
+                                <i class="bi bi-file-earmark-text me-1"></i> @I18n.License
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="col-12 col-md-auto text-md-end">
+                        <form method="post"
+                              asp-page-handler="Install"
+                              asp-route-packageId="@Model.Package.Id"
+                              asp-route-packageVersion="@Model.Package.Version"
+                              asp-route-sourceId="@Model.SourceId">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="bi bi-download me-1"></i> @I18n.Install
+                            </button>
+                        </form>
+                        <div id="download-message-@Model.Package.Id" class="mt-2"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

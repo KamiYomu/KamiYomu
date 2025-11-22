@@ -681,4 +681,22 @@
   <data name="UserAgentExplanation" xml:space="preserve">
     <value>A User-Agent is a text string that a web browser or HTTP client sends along with its requests to a server.</value>
   </data>
+  <data name="ThisValueIsRequired" xml:space="preserve">
+    <value>This Value Is Required</value>
+  </data>
+  <data name="SomethingWentWrong" xml:space="preserve">
+    <value>Something Went Wrong.</value>
+  </data>
+  <data name="PleaseCorrectHighlightedField" xml:space="preserve">
+    <value>Please correct the highlighted field.</value>
+  </data>
+  <data name="Compatible" xml:space="preserve">
+    <value>Compatible</value>
+  </data>
+  <data name="NotCompatible" xml:space="preserve">
+    <value>Not Compatible</value>
+  </data>
+  <data name="AdjustSearchTerm" xml:space="preserve">
+    <value>Adjust the search term to explore available packages.</value>
+  </data>
 </root>

@@ -42,20 +42,37 @@
                         }
                     </div>
                     <div class="ms-auto d-flex align-items-center">
-                        <a asp-area="Settings" asp-page="/Add-ons/Edit" asp-route-id="@source.Id"
-                           class="btn btn-sm btn-outline-secondary me-2" title="@I18n.Edit">
-                            <i class="bi bi-pencil-square"></i>
-                        </a>
-                        <button class="btn btn-sm btn-outline-danger"
-                                title="@I18n.Delete"
-                                aria-label="@I18n.Delete"
-                                hx-get="/Settings/Add-ons/Dialogs/DeleteConfirm?id=@source.Id"
-                                hx-target="#sub-modal-body"
-                                hx-swap="innerHTML"
-                                data-bs-toggle="modal"
-                                data-bs-target="#sub-modal">
-                            <i class="bi bi-trash me-1"></i> @I18n.Delete
-                        </button>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                    type="button"
+                                    id="actionsDropdown"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="bi bi-gear"></i> @I18n.Actions
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="actionsDropdown">
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-area="Settings"
+                                       asp-page="/Add-ons/Edit"
+                                       asp-route-id="@source.Id">
+                                        <i class="bi bi-pencil-square me-2"></i> @I18n.Edit
+                                    </a>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item text-danger"
+                                            title="@I18n.Delete"
+                                            aria-label="@I18n.Delete"
+                                            hx-get="/Settings/Add-ons/Dialogs/DeleteConfirm?id=@source.Id"
+                                            hx-target="#sub-modal-body"
+                                            hx-swap="innerHTML"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#sub-modal">
+                                        <i class="bi bi-trash me-2"></i> @I18n.Delete
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             }

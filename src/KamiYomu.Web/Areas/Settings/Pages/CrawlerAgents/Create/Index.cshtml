@@ -49,8 +49,15 @@
     </div>
 
 </form>
-<div asp-validation-summary="All" class="text-danger"></div>
-<div id="crawler-editor" class="mt-4"></div>
+
+<div id="crawler-editor" class="mt-4">
+    @if (Model.Input.TempFileId != Guid.Empty)
+    {
+        <partial name="_CreateForm" model="Model.Input" />
+    }
+</div>
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 <script>
     const fileInput = document.getElementById('agentFileInput');
