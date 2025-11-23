@@ -205,8 +205,8 @@ Consider using this `<PropertyGroup>` in your csproj, adjust the title accorgly
 	<PropertyGroup>
 		<Title>My Crawler Agent</Title>
 		<Description>A dedicated crawler agent for accessing public data from My Personal Stuff. Built on KamiYomu.CrawlerAgents.Core, it enables efficient search, metadata extraction, and integration with the KamiYomu platform.</Description>
-		<Authors>KamiYomu</Authors>
-		<Owners>KamiYomu</Owners>
+		<Authors>MyName</Authors>
+		<Owners>MyName</Owners>
 		<PackageProjectUrl>https://github.com/MyProjectUrl</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/MyRepositoryUrl</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>

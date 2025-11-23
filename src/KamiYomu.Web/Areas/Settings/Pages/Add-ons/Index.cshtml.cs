@@ -44,7 +44,8 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
         {
             try
             {
-                var packages = await nugetService.SearchPackagesAsync(SearchBarViewModel.Search, SearchBarViewModel.IncludePrerelease, SearchBarViewModel.SourceId, cancellationToken);
+                var searchTerm = string.IsNullOrWhiteSpace(SearchBarViewModel.Search) ? "KamiYomu" : SearchBarViewModel.Search;
+                var packages = await nugetService.SearchPackagesAsync(searchTerm, SearchBarViewModel.IncludePrerelease, SearchBarViewModel.SourceId, cancellationToken);
                 packages = packages.Where(p => p.IsVersionCompatible()).OrderBy(p => p.Id).ThenByDescending(p => p.Version);
                 PackageListViewModel = new PackageListViewModel
                 {

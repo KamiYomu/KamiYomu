@@ -50,49 +50,57 @@
 <div class="container py-4">
 
     <div class="mb-4">
-        <form class="input-group input-group-lg flex-wrap"
+        <form class="row g-2 align-items-stretch"
               hx-get="/Libraries/Collection/SearchResults?handler=crawler"
               hx-target="#search-results"
               hx-include="#selectedAgent">
-            @Html.AntiForgeryToken()
-            <!-- Dropdown agent selector -->
-            <div class="dropdown input-group-text">
-                <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center px-3"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                        style="min-width: 180px;">
-                    <img src="/images/favicon.png" id="selectedAgentFavicon" width="20" class="me-2" />
-                    <span id="selectedAgentLabel" class="text-truncate">@I18n.SelectCrawlerAgent</span>
-                </button>
-                <ul class="dropdown-menu">
-                    @foreach (var agent in Model.CrawlerAgents)
-                    {
-                        var faviconUrl = await agent.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None);
 
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center" href="#"
-                               onclick="selectSite('@agent.Id', '@agent.DisplayName', '@faviconUrl.ToInternalImageUrl()')">
-                                <img src="@faviconUrl.ToInternalImageUrl()" width="20" class="me-2" />
-                                @agent.DisplayName
-                            </a>
-                        </li>
-                    }
-                </ul>
+            @Html.AntiForgeryToken()
+
+            <!-- Dropdown agent selector -->
+            <div class="col-12 col-md-3">
+                <div class="dropdown w-100">
+                    <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center w-100"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        <img src="/images/favicon.png" id="selectedAgentFavicon" width="20" class="me-2" />
+                        <span id="selectedAgentLabel" class="text-truncate">@I18n.SelectCrawlerAgent</span>
+                    </button>
+                    <ul class="dropdown-menu w-100">
+                        @foreach (var agent in Model.CrawlerAgents)
+                        {
+                            var faviconUrl = await agent.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None);
+
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="#"
+                                   onclick="selectSite('@agent.Id', '@agent.DisplayName', '@faviconUrl.ToInternalImageUrl()')">
+                                    <img src="@faviconUrl.ToInternalImageUrl()" width="20" class="me-2" />
+                                    @agent.DisplayName
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
             </div>
 
             <!-- Search input -->
-            <input type="text"
-                   class="form-control flex-grow-1"
-                   placeholder="@I18n.SearchManga"
-                   name="query"
-                   id="searchInput"
-                   oninput="if (!document.getElementById('selectedAgent').value) this.form.removeAttribute('hx-get'); else this.form.setAttribute('hx-get', '/Library/SearchResults');" />
+            <div class="col-12 col-md-6">
+                <input type="text"
+                       class="form-control w-100"
+                       placeholder="@I18n.SearchManga"
+                       name="query"
+                       id="searchInput"
+                       oninput="if (!document.getElementById('selectedAgent').value) this.form.removeAttribute('hx-get'); else this.form.setAttribute('hx-get', '/Library/SearchResults');" />
+            </div>
 
             <!-- Search button -->
-            <button class="btn btn-outline-primary" type="submit">
-                <i class="bi bi-search"></i>
-            </button>
+            <div class="col-12 col-md-3">
+                <button class="btn btn-outline-primary w-100" type="submit">
+                    <i class="bi bi-search me-2"></i>
+                    @I18n.Search
+                </button>
+            </div>
 
             <!-- Hidden agent input -->
             <input type="hidden" name="selectedAgent" id="selectedAgent" />

@@ -155,7 +155,7 @@ namespace KamiYomu.Web.Infrastructure.Services
                         {
                             var catalogEntry = versionEntry?["catalogEntry"];
                             if (catalogEntry == null) continue;
-                            NugetPackageInfo packageInfo = GetNugetPackageInfo(result, packageId, catalogEntry);
+                            NugetPackageInfo packageInfo = GetNugetPackageInfo(packageId, result, catalogEntry);
                             packages.Add(packageInfo);
                         }
                     }
@@ -165,7 +165,7 @@ namespace KamiYomu.Web.Infrastructure.Services
             return packages;
         }
 
-        private static NugetPackageInfo GetNugetPackageInfo(JsonNode? result, string packageId, JsonNode? catalogEntry)
+        private static NugetPackageInfo GetNugetPackageInfo(string packageId, JsonNode? result, JsonNode? catalogEntry)
         {
             var version = catalogEntry?["version"]?.ToString();
             var deps = catalogEntry?["dependencyGroups"]?.AsArray();
