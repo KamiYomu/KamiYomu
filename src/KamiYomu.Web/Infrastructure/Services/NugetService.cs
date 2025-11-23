@@ -155,55 +155,62 @@ namespace KamiYomu.Web.Infrastructure.Services
                         {
                             var catalogEntry = versionEntry?["catalogEntry"];
                             if (catalogEntry == null) continue;
-
-                            var version = catalogEntry?["version"]?.ToString();
-                            var deps = catalogEntry?["dependencyGroups"]?.AsArray();
-
-                            var dependencies = new List<NugetDependencyInfo>();
-                            if (deps != null)
-                            {
-                                foreach (var group in deps)
-                                {
-                                    var targetFramework = group?["targetFramework"]?.ToString();
-                                    var groupDeps = group?["dependencies"]?.AsArray();
-                                    if (groupDeps == null) continue;
-
-                                    foreach (var dep in groupDeps)
-                                    {
-                                        dependencies.Add(new NugetDependencyInfo
-                                        {
-                                            Id = dep?["id"]?.ToString(),
-                                            VersionRange = dep?["range"]?.ToString(),
-                                            TargetFramework = targetFramework
-                                        });
-                                    }
-                                }
-                            }
-                            var authorsNode = result?["authors"];
-
-                            var authors = authorsNode is JsonArray array
-                                ? array.Select(p => p?.ToString()).Where(p => !string.IsNullOrEmpty(p)).ToArray()
-                                : authorsNode?.ToString() is string singleAuthor && !string.IsNullOrEmpty(singleAuthor)
-                                    ? [singleAuthor]
-                                    : Array.Empty<string>();
-                            packages.Add(new NugetPackageInfo
-                            {
-                                Id = packageId,
-                                Version = version,
-                                IconUrl = Uri.TryCreate(result?["iconUrl"]?.ToString(), UriKind.Absolute, out var icon) ? icon : null,
-                                LicenseUrl = Uri.TryCreate(result?["licenseUrl"]?.ToString(), UriKind.Absolute, out var licenseUrl) ? licenseUrl : null,
-                                Description = result?["description"]?.ToString(),
-                                Authors = authors,
-                                RepositoryUrl = Uri.TryCreate(result?["projectUrl"]?.ToString(), UriKind.Absolute, out var repo) ? repo : null,
-                                TotalDownloads = int.TryParse(result?["totalDownloads"]?.ToString(), out var totalDownload) ? totalDownload : 0,
-                                Dependencies = dependencies
-                            });
+                            NugetPackageInfo packageInfo = GetNugetPackageInfo(result, packageId, catalogEntry);
+                            packages.Add(packageInfo);
                         }
                     }
                 }
             }
 
             return packages;
+        }
+
+        private static NugetPackageInfo GetNugetPackageInfo(JsonNode? result, string packageId, JsonNode? catalogEntry)
+        {
+            var version = catalogEntry?["version"]?.ToString();
+            var deps = catalogEntry?["dependencyGroups"]?.AsArray();
+
+            var dependencies = new List<NugetDependencyInfo>();
+            if (deps != null)
+            {
+                foreach (var group in deps)
+                {
+                    var targetFramework = group?["targetFramework"]?.ToString();
+                    var groupDeps = group?["dependencies"]?.AsArray();
+                    if (groupDeps == null) continue;
+
+                    foreach (var dep in groupDeps)
+                    {
+                        dependencies.Add(new NugetDependencyInfo
+                        {
+                            Id = dep?["id"]?.ToString(),
+                            VersionRange = dep?["range"]?.ToString(),
+                            TargetFramework = targetFramework
+                        });
+                    }
+                }
+            }
+            var authorsNode = result?["authors"];
+
+            var authors = authorsNode is JsonArray array
+                ? array.Select(p => p?.ToString()).Where(p => !string.IsNullOrEmpty(p)).ToArray()
+                : authorsNode?.ToString() is string singleAuthor && !string.IsNullOrEmpty(singleAuthor)
+                    ? [singleAuthor]
+                    : Array.Empty<string>();
+
+            var packageInfo = new NugetPackageInfo
+            {
+                Id = packageId,
+                Version = version,
+                IconUrl = Uri.TryCreate(result?["iconUrl"]?.ToString(), UriKind.Absolute, out var icon) ? icon : null,
+                LicenseUrl = Uri.TryCreate(result?["licenseUrl"]?.ToString(), UriKind.Absolute, out var licenseUrl) ? licenseUrl : null,
+                Description = result?["description"]?.ToString(),
+                Authors = authors,
+                RepositoryUrl = Uri.TryCreate(result?["projectUrl"]?.ToString(), UriKind.Absolute, out var repo) ? repo : null,
+                TotalDownloads = int.TryParse(result?["totalDownloads"]?.ToString(), out var totalDownload) ? totalDownload : 0,
+                Dependencies = dependencies
+            };
+            return packageInfo;
         }
 
         private static NugetPackageInfo ConvertToNuGetPackageInfo(JsonNode? result)

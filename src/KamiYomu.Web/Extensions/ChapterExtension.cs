@@ -19,7 +19,8 @@ namespace KamiYomu.Web.Extensions
                 new XElement("LanguageISO", chapter?.ParentManga?.OriginalLanguage ?? string.Empty),
                 new XElement("Genre", string.Join(", ", chapter?.ParentManga?.Tags ?? [])),
                 new XElement("ScanInformation", "KamiYomu"),
-                new XElement("Web", chapter?.ParentManga?.WebSiteUrl ?? string.Empty)
+                new XElement("Web", chapter?.ParentManga?.WebSiteUrl ?? string.Empty),
+                new XElement("AgeRating", (chapter?.ParentManga?.IsFamilySafe ?? true) ? "12+" : "Mature")
             );
 
             return comicInfo.ToString();
