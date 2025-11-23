@@ -79,7 +79,7 @@ namespace KamiYomu.Web.Worker
                 {
                     chapterDownload.Complete();
                     libDbContext.ChapterDownloadRecords.Update(chapterDownload);
-                    _logger.LogError("{file} was found, download chapter marked as completed.", chapterDownload.Chapter.GetCbzFileName());
+                    _logger.LogInformation("{file} was found, download chapter marked as completed.", chapterDownload.Chapter.GetCbzFileName());
                     return;
                 }
 
