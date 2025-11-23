@@ -1,4 +1,4 @@
-﻿# 🦉 KamiYomu — Your Self-Hosted Manga Crawler
+﻿# KamiYomu — Your Self-Hosted Manga Crawler
 
 ![KamiYomu Owl Logo](./Inkscape/logo-watermark.svg)
 
@@ -195,8 +195,81 @@ public interface ICrawlerAgent : IDisposable
 Do you want a reference implementation? Check:
 - [KamiYomu.CrawlerAgents.MangaDex](https://github.com/KamiYomu/KamiYomu.CrawlerAgents.MangaDex) if you crawler will consume a web api.
 - [KamiYomu.CrawlerAgents.MangaKatana](https://github.com/KamiYomu/KamiYomu.CrawlerAgents.MangaKatana)  if you crawler will consume a web page.
+- [KamiYomu.CrawlerAgents.MangaFire](https://github.com/KamiYomu/KamiYomu.CrawlerAgents.MangaFire)  another example to consume a web page.
 > NOTE: Make sure to use a Validator console app to ensure your crawler agent meets all requirements before deploying it to KamiYomu.
 
+
+Consider using this `<PropertyGroup>` in your csproj, adjust the title accorgly
+
+```xml
+	<PropertyGroup>
+		<Title>My Crawler Agent</Title>
+		<Description>A dedicated crawler agent for accessing public data from My Personal Stuff. Built on KamiYomu.CrawlerAgents.Core, it enables efficient search, metadata extraction, and integration with the KamiYomu platform.</Description>
+		<Authors>KamiYomu</Authors>
+		<Owners>KamiYomu</Owners>
+		<PackageProjectUrl>https://github.com/MyProjectUrl</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/MyRepositoryUrl</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>kamiyomu-crawler-agents;manga-download</PackageTags>
+		<PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+		<Copyright>© Personal. Licensed under GPL-3.0.</Copyright>
+		<PackageIconUrl>https://raw.githubusercontent.com/MyPackageLogoUrl</PackageIconUrl>
+		<PackageIcon>Resources/logo.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
+```
+
+The Package Tag `<PackageTags>kamiyomu-crawler-agents</PackageTags>` is required to be showed in KamiYomu add-ons
+See the existing projects to use as a reference for your csproj.
+
+## Debugging Your NuGet Package in KamiYomu
+
+This guide explains how to build, import, and debug a NuGet package for use in KamiYomu.
+
+---
+
+### 1. Configure Your Project
+
+Add the following snippet to your `.csproj` file.  
+This ensures that a NuGet package is generated during the **Debug** build:
+
+```xml
+<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  <IncludeSymbols>True</IncludeSymbols>
+  <IncludeSource>True</IncludeSource>
+  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+</PropertyGroup>
+```
+
+### 2. Build the Project
+
+Run a build in **Debug** mode.  
+The generated NuGet package (.nupkg) and symbol file (.pdb) will be located in:
+
+### 3. Import the Package into KamiYomu
+
+1. Open KamiYomu.
+2. Navigate to **Crawler Agents** in the menu.
+3. Import your NuGet package (.nupkg) from the bin/Debug folder.
+
+### 4. Copy the Symbol File
+
+Copy the .pdb file from your bin/Debug folder into:
+
+`src\AppData\agents\{your-crawler}\lib\net8.0`
+
+This allows Visual Studio to map your source code during debugging.
+
+### 5. Debugging in KamiYomu
+
+KamiYomu uses a decorator class to invoke agent methods:
+
+`src\KamiYomu.Web\Entities\CrawlerAgentDecorator.cs`
+
+- Set a breakpoint in any call within this class.
+- When Visual Studio hits the breakpoint, step into the call.
+- Your agent’s source code will be displayed and debuggable.
 
 ## 🧠 Tech Stack- .NET 8 Razor Pages
 - Hangfire for job scheduling
