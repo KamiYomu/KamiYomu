@@ -1,5 +1,6 @@
 using Hangfire;
 using Hangfire.Storage;
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Entities.Definitions;
 using KamiYomu.Web.Infrastructure.Contexts;
@@ -8,10 +9,13 @@ using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyModel;
+using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs;
 
-public class DownloadStatusModel(DbContext dbContext, INotificationService notificationService) : PageModel
+public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
+                                 DbContext dbContext, 
+                                 INotificationService notificationService) : PageModel
 {
     [BindProperty]
     public FollowButtonViewModel FollowButtonViewModel { get; set; }
@@ -52,7 +56,6 @@ public class DownloadStatusModel(DbContext dbContext, INotificationService notif
         {
             Progress = 0;
         }
-
     }
 
     public async Task<IActionResult> OnPostToggleFollowingAsync(CancellationToken cancellationToken)
@@ -67,7 +70,7 @@ public class DownloadStatusModel(DbContext dbContext, INotificationService notif
         {
             RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(
             Library.GetDiscovertyJobId(),
-            AppOptions.Defaults.Worker.DiscoveryNewChapterQueues,
+            workerOptions.Value.DiscoveryNewChapterQueues.FirstOrDefault(),
             (job) => job.DispatchAsync(Library.AgentCrawler.Id, Library.Id, null!, CancellationToken.None),
             Cron.Daily());
 

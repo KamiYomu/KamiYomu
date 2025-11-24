@@ -50,31 +50,7 @@ public partial class Defaults
 
     public static class Worker
     {
-        public static readonly string[] DownloadChapterQueues =
-        [
-            "download-chapter-queue-1",
-            "download-chapter-queue-2",
-            "download-chapter-queue-3",
-        ];
-
-        public static readonly string[] MangaDownloadSchedulerQueues =
-        [
-            "manga-download-scheduler-queue-1",
-            "manga-download-scheduler-queue-2",
-            "manga-download-scheduler-queue-3",
-        ];
-
-        public static readonly string DiscoveryNewChapterQueues = "discovery-new-chapter-queue";
-
-        public static readonly string[] AllQueues =
-        [
-            DiscoveryNewChapterQueues,
-            .. MangaDownloadSchedulerQueues,
-            .. DownloadChapterQueues,
-        ];
-
         public const string HttpClientBackground = nameof(HttpClientBackground);
-
     }
 
     public static class LiteDbConfig

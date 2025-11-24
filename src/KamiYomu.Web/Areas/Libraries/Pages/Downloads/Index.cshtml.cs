@@ -60,7 +60,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 
             RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(
             library.GetDiscovertyJobId(),
-            Defaults.Worker.DiscoveryNewChapterQueues,
+            workerOptions.Value.DiscoveryNewChapterQueues.FirstOrDefault(),
             (job) => job.DispatchAsync(agentCrawler.Id, library.Id, null!, CancellationToken.None),
             Cron.Daily());
 

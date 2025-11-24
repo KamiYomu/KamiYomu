@@ -2,17 +2,18 @@
 using Hangfire.States;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
+using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Infrastructure.Repositories
 {
-    public class HangfireRepository : IHangfireRepository
+    public class HangfireRepository(IOptions<WorkerOptions> options) : IHangfireRepository
     {
         public EnqueuedState GetLeastLoadedDownloadChapterQueue()
         {
             var monitor = JobStorage.Current.GetMonitoringApi();
             var activeQueues = monitor.Queues().ToDictionary(q => q.Name, q => q.Length);
 
-            var allQueuesWithStats = Defaults.Worker.DownloadChapterQueues
+            var allQueuesWithStats = options.Value.DownloadChapterQueues
                 .Select(name => new
                 {
                     Name = name,
@@ -27,7 +28,7 @@ namespace KamiYomu.Web.Infrastructure.Repositories
             var monitor = JobStorage.Current.GetMonitoringApi();
             var activeQueues = monitor.Queues().ToDictionary(q => q.Name, q => q.Length);
 
-            var allQueuesWithStats = Defaults.Worker.MangaDownloadSchedulerQueues
+            var allQueuesWithStats = options.Value.MangaDownloadSchedulerQueues
                 .Select(name => new
                 {
                     Name = name,

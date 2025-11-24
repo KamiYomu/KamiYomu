@@ -3,6 +3,7 @@
 
 @{
     Layout = null;
+    var faviconUrl = await Model.AgentCrawler.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None);
     var isNew = Model.Id == Guid.Empty;
     var cardId = $"library-card-{Model.Manga.Id}".Replace(".", "-");
 }
@@ -20,7 +21,7 @@
 
             <div class="mb-3 d-flex align-items-center">
                 <span class="fw-semibold me-2">@I18n.CrawlerAgent:</span>
-                <img src="@await Model.AgentCrawler.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None)" width="20" class="me-2" alt="favicon" />
+                <img src="@faviconUrl.ToInternalImageUrl()" width="20" class="me-2" alt="favicon" />
                 <span class="text-muted">@Model.AgentCrawler.DisplayName</span>
             </div>
 

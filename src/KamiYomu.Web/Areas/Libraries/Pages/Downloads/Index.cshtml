@@ -67,7 +67,7 @@
                         <img src="/images/favicon.png" id="selectedAgentFavicon" width="20" class="me-2" />
                         <span id="selectedAgentLabel" class="text-truncate">@I18n.SelectCrawlerAgent</span>
                     </button>
-                    <ul class="dropdown-menu w-100">
+                    <ul class="dropdown-menu w-md-auto">
                         @foreach (var agent in Model.CrawlerAgents)
                         {
                             var faviconUrl = await agent.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None);

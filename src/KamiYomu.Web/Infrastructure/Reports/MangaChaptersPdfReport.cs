@@ -22,7 +22,7 @@ public class MangaChaptersPdfReport(List<string> images, string fileName, string
         var svgMarkup = File.ReadAllText(logoPath);
         if (svgMarkup.Contains("<svg"))
         {
-            svgMarkup = svgMarkup.Replace("<svg", "<svg opacity=\"0.5\"");
+            svgMarkup = svgMarkup.Replace("<svg", "<svg opacity=\"0.4\"");
         }
 
         foreach (var imgPath in images)
@@ -38,28 +38,23 @@ public class MangaChaptersPdfReport(List<string> images, string fileName, string
                 page.Size(widthPoints, heightPoints);
                 page.Margin(0);
 
-                // Always draw watermark
                 page.Foreground()
-                    .AlignTop()
-                    .AlignRight()
-                    .Padding(10) 
-                    .Width(40)
-                    .Height(40)
-                    .ScaleToFit()
-                    .Svg(svgMarkup);
+                    .Padding(10)
+                    .Column(column =>
+                    {
+                        column.Item()
+                            .AlignBottom()
+                            .AlignRight()
+                            .Width(80).Height(80).ScaleToFit()
+                            .Svg(svgMarkup);
+                    });
 
-                // Image content
+
                 page.Content()
                     .Image(imgPath)
                     .FitArea();
 
-                // Footer
-                page.Footer()
-                    .AlignRight()
-                    .Text($"KamiYomu - {fileName}")
-                    .FontSize(10)
-                    .Italic()
-                    .FontColor(Colors.Grey.Medium);
+
             });
         }
     }

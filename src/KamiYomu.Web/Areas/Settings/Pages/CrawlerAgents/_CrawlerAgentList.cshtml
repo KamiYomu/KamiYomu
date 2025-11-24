@@ -13,8 +13,12 @@
         {
             @foreach (var item in Model)
             {
+                var faviconUrl = await item.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None);
                 <tr>
-                    <td>@item.DisplayName</td>
+                    <td>
+                        <img src="@faviconUrl.ToInternalImageUrl()" width="20" class="me-2" alt="favicon" />
+                        @item.DisplayName
+                    </td>
                     <td>
                         <div class="d-flex flex-wrap gap-2">
                             <div class="btn-group" role="group" aria-label="@I18n.AgentActions">

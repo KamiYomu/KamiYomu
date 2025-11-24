@@ -14,6 +14,7 @@ using KamiYomu.Web.Middlewares;
 using KamiYomu.Web.Worker;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MonkeyCache;
 using MonkeyCache.LiteDB;
@@ -61,33 +62,7 @@ builder.Services.AddHangfire(configuration => configuration.UseSimpleAssemblyNam
                                                                return new SQLiteConnection(connectionString);
                                                            })));
 
-builder.Services.AddHangfireServer((services, optionActions) =>
-{
-    var workerOptions = services.GetService<IOptions<WorkerOptions>>();
-    optionActions.ServerName = nameof(Defaults.Worker.DownloadChapterQueues);
-    optionActions.WorkerCount = Environment.ProcessorCount * workerOptions.Value.WorkerCount;
-    optionActions.Queues = Defaults.Worker.DownloadChapterQueues;
-    optionActions.HeartbeatInterval = TimeSpan.FromSeconds(30);
 
-});
-
-builder.Services.AddHangfireServer((services, optionActions) =>
-{
-    var workerOptions = services.GetService<IOptions<WorkerOptions>>();
-    optionActions.ServerName = nameof(Defaults.Worker.DiscoveryNewChapterQueues);
-    optionActions.WorkerCount = Environment.ProcessorCount * workerOptions.Value.WorkerCount;
-    optionActions.Queues = [Defaults.Worker.DiscoveryNewChapterQueues];
-    optionActions.HeartbeatInterval = TimeSpan.FromSeconds(30);
-});
-
-builder.Services.AddHangfireServer((services, optionActions) =>
-{
-    var workerOptions = services.GetService<IOptions<WorkerOptions>>();
-    optionActions.ServerName = nameof(Defaults.Worker.MangaDownloadSchedulerQueues);
-    optionActions.WorkerCount = Environment.ProcessorCount * workerOptions.Value.WorkerCount;
-    optionActions.Queues = Defaults.Worker.MangaDownloadSchedulerQueues;
-    optionActions.HeartbeatInterval = TimeSpan.FromSeconds(30);
-});
 
 builder.Services.AddTransient<ICrawlerAgentRepository, CrawlerAgentRepository>();
 builder.Services.AddTransient<IHangfireRepository, HangfireRepository>();
@@ -144,6 +119,29 @@ builder.Services.AddHttpClient(Defaults.Worker.HttpClientBackground, client =>
     .AddPolicyHandler(timeoutPolicy);
 
 
+var workerOptions = builder.Configuration.GetSection("Settings:Worker").Get<WorkerOptions>();
+var serverNames = workerOptions.ServerAvailableNames;
+var allQueues = workerOptions.GetAllQueues().ToList();
+
+// Divide queues evenly among servers
+var queuesPerServer = allQueues
+    .Select((queue, index) => new { queue, index })
+    .GroupBy(x => x.index % serverNames.Count())
+    .Select(g => g.Select(x => x.queue).ToList())
+    .ToList();
+
+// Register each server separately
+foreach (var (serverName, queues) in serverNames.Zip(queuesPerServer))
+{
+    builder.Services.AddHangfireServer((services, options) =>
+    {
+        options.ServerName = serverName;
+        options.WorkerCount = workerOptions.WorkerCount;
+        options.Queues = [.. queues];
+        options.HeartbeatInterval = TimeSpan.FromSeconds(30);
+    });
+}
+
 var app = builder.Build();
 Defaults.ServiceLocator.Configure(() => app.Services);
 
@@ -152,7 +150,7 @@ if (!app.Environment.IsDevelopment())
     QuestPDF.Settings.EnableDebugging = true;
     app.UseExceptionHandler("/Error");
 }
-using(var appScoped = app.Services.CreateScope())
+using (var appScoped = app.Services.CreateScope())
 {
     var startupOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<StartupOptions>>().Value;
     var localizationOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<RequestLocalizationOptions>>();
