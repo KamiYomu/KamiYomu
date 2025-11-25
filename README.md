@@ -41,28 +41,59 @@ save the following `docker-compose.yml` file to run KamiYomu with Docker:
 
 ```yml
 services:
-    kamiyomu:
-      image: marcoscostadev/kamiyomu:1.0.0-rc2 # Check releases for latest versions
-      ports:
-        - "8080:8080" # HTTP Port
-      envelopment:
-        - Settings__Worker__WorkerCount=3 # Number of concurrent crawler agents excecuting
-      restart: unless-stopped
-      healthcheck:
-        test: ["CMD", "curl", "-f", "https://localhost:8080/healthz"]
-        interval: 30s
-        timeout: 10s
-        retries: 3
-      volumes:
-        - ./AppData/manga:/manga # Your desired local path for manga storage 
-        - Kamiyomu_database:/db
-        - kamiyomu_agents:/agents 
-        - kamiyomu_logs:/logs 
+  kamiyomu:
+    image: marcoscostadev/kamiyomu:1.0.0-rc2 # Check releases for latest versions
+    ports:
+      - "8080:8080" # HTTP Port
+    environment:
+        # List of Hangfire server identifiers available to process jobs.
+        # Each name corresponds to a distinct background worker instance;
+        # add more entries here if you want multiple servers to share or divide queues.
+        # add more entries as needed (e.g., Worker__ServerAvailableNames__1, Worker__ServerAvailableNames__2, etc.)
+        Worker__ServerAvailableNames__0:   "KamiYomu-background-1" 
+          
+        # Queues dedicated to downloading individual chapters.
+        # add more entries as needed (e.g., Worker__DownloadChapterQueues__1, Worker__DownloadChapterQueues__2, etc.)
+        Worker__DownloadChapterQueues__0:  "download-chapter-queue-1" 
+
+        # Queues dedicated to scheduling manga downloads (manages chapter download jobs).
+        # add more entries as needed (e.g., Worker__MangaDownloadSchedulerQueues__1, Worker__MangaDownloadSchedulerQueues__2, etc.)
+        Worker__MangaDownloadSchedulerQueues__0:  "manga-download-scheduler-queue-1" 
+
+        # Queues dedicated to discovering new chapters (polling or scraping for updates).
+        # add more entries as needed (e.g., Worker__DiscoveryNewChapterQueues__1, Worker__DiscoveryNewChapterQueues__2, etc.)
+        Worker__DiscoveryNewChapterQueues__0:  "discovery-new-chapter-queue-1" 
+
+        # Controls how many background processing threads Hangfire will spawn.
+        # A higher value allows more jobs to run concurrently, but increases CPU and memory usage.
+        Worker__WorkerCount: 1
+
+        # Minimum delay (in milliseconds) between job executions.
+        # Helps throttle requests to external services and avoid hitting rate limits (e.g., HTTP 423 "Too Many Requests").
+        Worker__MinWaitPeriodInMilliseconds: 3000
+
+        # Maximum delay (in milliseconds) between job executions.
+        # Provides variability in scheduling to reduce the chance of IP blocking or service throttling.
+        Worker__MaxWaitPeriodInMilliseconds: 9001
+
+        # Default language for the web interface (e.g., "en", "pt-BR", "fr").
+        UI__DefaultLanguage: "en" 
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - ./AppData/manga:/manga # Your desired local path for manga storage
+      - Kamiyomu_database:/db
+      - kamiyomu_agents:/agents
+      - kamiyomu_logs:/logs
 
 volumes:
-      kamiyomu_agents:
-      Kamiyomu_database:
-      kamiyomu_logs:
+  kamiyomu_agents:
+  Kamiyomu_database:
+  kamiyomu_logs:
 ```
 
 In the folder where you saved the `docker-compose.yml` file, run:

@@ -48,8 +48,8 @@ BarrelUtils.SetBaseCachePath(Defaults.SpecialFolders.DbDir);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSignalR();
-builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection("Settings:Worker"));
-builder.Services.Configure<Defaults.NugetFeeds>(builder.Configuration.GetSection("Settings:UI"));
+builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection("Worker"));
+builder.Services.Configure<Defaults.NugetFeeds>(builder.Configuration.GetSection("UI"));
 
 builder.Services.AddSingleton<CacheContext>();
 builder.Services.AddSingleton<ImageDbContext>(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb")));
@@ -119,7 +119,7 @@ builder.Services.AddHttpClient(Defaults.Worker.HttpClientBackground, client =>
     .AddPolicyHandler(timeoutPolicy);
 
 
-var workerOptions = builder.Configuration.GetSection("Settings:Worker").Get<WorkerOptions>();
+var workerOptions = builder.Configuration.GetSection("Worker").Get<WorkerOptions>();
 var serverNames = workerOptions.ServerAvailableNames;
 var allQueues = workerOptions.GetAllQueues().ToList();
 

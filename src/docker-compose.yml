@@ -4,6 +4,35 @@ services:
       build:
         context: .
         dockerfile: KamiYomu.Web/Dockerfile
+      environment:
+        # List of Hangfire server identifiers available to process jobs.
+        # Each name corresponds to a distinct background worker instance;
+        # add more entries here if you want multiple servers to share or divide queues.
+        Worker__ServerAvailableNames__0:   "KamiYomu-background-1" 
+          
+        # Queues dedicated to downloading individual chapters.
+        Worker__DownloadChapterQueues__0:  "download-chapter-queue-1" 
+
+        # Queues dedicated to scheduling manga downloads (manages chapter download jobs).
+        Worker__MangaDownloadSchedulerQueues__0:  "manga-download-scheduler-queue-1" 
+
+        # Queues dedicated to discovering new chapters (polling or scraping for updates).
+        Worker__DiscoveryNewChapterQueues__0:  "discovery-new-chapter-queue-1" 
+
+        # Controls how many background processing threads Hangfire will spawn.
+        # A higher value allows more jobs to run concurrently, but increases CPU and memory usage.
+        Worker__WorkerCount: 1
+
+        # Minimum delay (in milliseconds) between job executions.
+        # Helps throttle requests to external services and avoid hitting rate limits (e.g., HTTP 423 "Too Many Requests").
+        Worker__MinWaitPeriodInMilliseconds: 3000
+
+        # Maximum delay (in milliseconds) between job executions.
+        # Provides variability in scheduling to reduce the chance of IP blocking or service throttling.
+        Worker__MaxWaitPeriodInMilliseconds: 9001
+
+        # Default language for the web interface (e.g., "en", "pt-BR", "fr").
+        UI__DefaultLanguage: "en" 
       volumes:
         - ./AppData/manga:/manga
         - kamiyomu_database:/db 
