@@ -60,18 +60,43 @@
     </table>
 
     <!-- Pagination -->
+    @{
+        int totalPages = Model.TotalPages;
+        int currentPage = Model.CurrentPage;
+
+        int edgeCount = 3;
+
+        int window = 3;
+
+        bool ShouldShow(int page)
+        {
+            if (page <= edgeCount || page > totalPages - edgeCount) return true;
+
+            if (Math.Abs(page - currentPage) <= window) return true;
+
+            return false;
+        }
+    }
+
     <nav>
         <ul class="pagination justify-content-center">
-            @for (int i = 1; i <= Model.TotalPages; i++)
+            @for (int i = 1; i <= totalPages; i++)
             {
-                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                    <a class="page-link"
-                       hx-get='@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = Model.SortColumn, asc = Model.SortAsc, pageIndex = i })'
-                       hx-target="#downloads-table"
-                       hx-swap="outerHTML">
-                        @i
-                    </a>
-                </li>
+                if (ShouldShow(i))
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link"
+                           hx-get='@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = Model.SortColumn, asc = Model.SortAsc, pageIndex = i })'
+                           hx-target="#downloads-table"
+                           hx-swap="outerHTML">
+                            @i
+                        </a>
+                    </li>
+                }
+                else if (i == edgeCount + 1 || i == totalPages - edgeCount) 
+                {
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                }
             }
         </ul>
     </nav>

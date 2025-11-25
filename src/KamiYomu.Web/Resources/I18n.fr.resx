@@ -696,17 +696,17 @@
   <data name="NotCompatible" xml:space="preserve">
     <value>Non compatible</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="AdjustSearchTerm" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="WelcomeTo" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="AdjustSearchTerm" xml:space="preserve">
     <value>Ajustez le terme de recherche pour explorer les packages disponibles.</value>
   </data>
   <data name="WelcomeTo" xml:space="preserve">
     <value>Bienvenue à</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Source" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>Source</value>
   </data>
 </root>

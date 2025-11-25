@@ -109,6 +109,7 @@ public class MangaDownloaderJob : IMangaDownloaderJob
                     {
                         record.Complete();
                         libDbContext.ChapterDownloadRecords.Upsert(record);
+                        _logger.LogInformation("{file} was found, download chapter marked as completed.", record.Chapter.GetCbzFileName());
                         continue;
                     }
 

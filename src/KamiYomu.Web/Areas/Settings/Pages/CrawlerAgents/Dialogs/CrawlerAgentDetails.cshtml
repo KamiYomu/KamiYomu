@@ -21,6 +21,30 @@
                 <td>@I18n.Name</td>
                 <td>@Model.Agent.DisplayName</td>
             </tr>
+            @foreach (var valuePair in Model.Agent.AgentMetadata)
+            {
+                <tr>
+                    <td>@I18n.ResourceManager.GetString(valuePair.Key)</td>
+                    <td>
+                        @{
+                            var metadataKey = valuePair.Value as string;
+                            var displayValue =
+                            !string.IsNullOrWhiteSpace(metadataKey) &&
+                            Model.Agent.AgentMetadata.TryGetValue(metadataKey, out var metadataValue) &&
+                            metadataValue is string s && !string.IsNullOrWhiteSpace(s)
+                            ? s
+                            : "Empty";
+                        }
+                        @displayValue
+                    </td>
+                </tr>
+
+            }
+            <tr>
+                <td colspan="2" class="text-center fw-bold">
+                    @I18n.AssemblyProperties
+                </td>
+            </tr>
             @foreach (var key in new[] { "Title", "Description", "Company", "Product", "Version", "FileVersion", "InformationalVersion" })
             {
                 <tr>

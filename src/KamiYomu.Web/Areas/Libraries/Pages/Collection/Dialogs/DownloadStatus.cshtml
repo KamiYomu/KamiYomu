@@ -4,6 +4,7 @@
 @model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.DownloadStatusModel
 @{
     Layout = null;
+    var faviconUrl = await Model.Library.AgentCrawler.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None);
     var badgeClass = Model.Record.DownloadStatus switch
     {
         Entities.Definitions.DownloadStatus.Completed => "bg-success",
@@ -38,6 +39,13 @@
 
             <div class="col-md-8">
                 <h2 class="fw-bold mb-3">@Model.Library.Manga.Title</h2>
+
+                <div class="mb-3 d-flex align-items-center">
+                    <span class="fw-semibold me-2">@I18n.CrawlerAgent:</span>
+                    <img src="@faviconUrl.ToInternalImageUrl()" width="20" class="me-2" alt="favicon" />
+                    <span class="text-muted">@Model.Library.AgentCrawler.DisplayName</span>
+                </div>
+
                 <div class="d-flex align-items-center gap-3 mb-3">
 
                     <partial name="_FollowButton" model="Model.FollowButtonViewModel" />

@@ -49,8 +49,7 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
 
         var keyValue = args[index]?.ToString() ?? "null";
 
-        // Pick a slot based on job ID hash (or random)
-       var slot = Math.Abs(context.BackgroundJob.Id.GetHashCode()) % _maxConcurrency;
+        var slot = Math.Abs(context.BackgroundJob.Id.GetHashCode()) % _maxConcurrency;
         var lockKey = $"lock:{_parameterName}:{keyValue}:slot:{slot}";
 
         try
