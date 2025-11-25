@@ -78,12 +78,18 @@ namespace KamiYomu.Web.Entities
 
         public void DeleteDownloadedFileIfExists()
         {
-            var path = Chapter.GetCbzFilePath();
-
-            if(File.Exists(path))
+            if(IsDownloadedFileExists())
             {
+                var path = Chapter.GetCbzFilePath();
                 File.Delete(path);
             }
+        }
+
+        public bool IsDownloadedFileExists()
+        {
+            var path = Chapter.GetCbzFilePath();
+
+            return File.Exists(path);
         }
 
         public Guid Id { get; private set; }

@@ -104,6 +104,14 @@ public class MangaDownloaderJob : IMangaDownloaderJob
                 foreach (var chapter in page.Data)
                 {
                     var record = new ChapterDownloadRecord(agentCrawler, mangaDownload, chapter);
+
+                    if(record.IsDownloadedFileExists())
+                    {
+                        record.Complete();
+                        libDbContext.ChapterDownloadRecords.Upsert(record);
+                        continue;
+                    }
+
                     libDbContext.ChapterDownloadRecords.Insert(record);
 
                     var backgroundJobId = _jobClient.Create<IChapterDownloaderJob>(

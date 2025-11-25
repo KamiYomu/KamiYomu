@@ -1,4 +1,4 @@
-services:
+﻿services:
     kamiyomu.web:
       image: ${DOCKER_REGISTRY-}kamiyomuweb
       build:
@@ -22,6 +22,13 @@ services:
         # Controls how many background processing threads Hangfire will spawn.
         # A higher value allows more jobs to run concurrently, but increases CPU and memory usage.
         Worker__WorkerCount: 1
+
+        # Defines the maximum number of crawler instances allowed to run concurrently for the same source.
+        # Typically set to 1 to ensure only a single crawler operates at a time, preventing duplicate work,
+        # resource conflicts, and potential rate‑limiting or blocking by the target system.
+        # However, this can be adjusted to increase throughput if the source can handle multiple concurrent requests.
+        # Increaing the Worker__WorkerCount may also necessitate increasing this value.
+        Worker__MaxConcurrentCrawlerInstances: 1
 
         # Minimum delay (in milliseconds) between job executions.
         # Helps throttle requests to external services and avoid hitting rate limits (e.g., HTTP 423 "Too Many Requests").

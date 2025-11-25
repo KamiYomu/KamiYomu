@@ -38,7 +38,14 @@
         /// <summary>
         /// Queue dedicated to discovering new chapters (polling or scraping for updates).
         /// </summary>
-        public IEnumerable<string> DiscoveryNewChapterQueues { get; init; } 
+        public IEnumerable<string> DiscoveryNewChapterQueues { get; init; }
+        /// <summary>
+        /// Defines the maximum number of crawler instances allowed to run concurrently for the same source.
+        /// Typically set to 1 to ensure only a single crawler operates at a time, preventing duplicate work,
+        /// resource conflicts, and potential rate‑limiting or blocking by the target system.
+        /// However, this can be adjusted to increase throughput if the source can handle multiple concurrent requests.
+        /// </summary>
+        public int MaxConcurrentCrawlerInstances { get; set; } = 1;
         public IEnumerable<string> GetAllQueues() =>
         [   
             .. DownloadChapterQueues,

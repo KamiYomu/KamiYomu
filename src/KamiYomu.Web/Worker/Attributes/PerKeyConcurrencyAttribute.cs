@@ -3,7 +3,9 @@
 using Hangfire.Common;
 using Hangfire.Server;
 using Hangfire.Storage;
+using KamiYomu.Web.AppOptions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using static KamiYomu.Web.AppOptions.Defaults;
 
@@ -14,6 +16,9 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
     private readonly TimeSpan _lockTimeout;
     private readonly TimeSpan _rescheduleDelay;
     private readonly ILogger _logger;
+    private readonly IOptions<WorkerOptions>? _workerOptions;
+    private readonly int _maxConcurrency;
+
 
     public PerKeyConcurrencyAttribute(string parameterName, int timeoutMinutes = 5, int rescheduleDelayMinutes = 5)
     {
@@ -23,6 +28,8 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
 
         var factory = ServiceLocator.Instance?.GetService(typeof(ILoggerFactory)) as ILoggerFactory;
         _logger = factory?.CreateLogger<PerKeyConcurrencyAttribute>();
+        _workerOptions = ServiceLocator.Instance?.GetService<IOptions<WorkerOptions>>();
+        _maxConcurrency = _workerOptions?.Value.MaxConcurrentCrawlerInstances ?? 1;
     }
 
     public void OnPerforming(PerformingContext context)
@@ -41,7 +48,10 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
         }
 
         var keyValue = args[index]?.ToString() ?? "null";
-        var lockKey = $"lock:{_parameterName}:{keyValue}";
+
+        // Pick a slot based on job ID hash (or random)
+       var slot = Math.Abs(context.BackgroundJob.Id.GetHashCode()) % _maxConcurrency;
+        var lockKey = $"lock:{_parameterName}:{keyValue}:slot:{slot}";
 
         try
         {
@@ -49,13 +59,13 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
             context.Items["__PerKeyLock"] = handle;
 
             _logger.LogDebug(
-                "PerKeyConcurrency: Lock acquired for key '{Key}' (JobId: {JobId}, Method: {Method}).",
-                keyValue, context.BackgroundJob?.Id ?? "unknown", method.Name);
+                "PerKeyConcurrency: Lock acquired for key '{Key}' slot {Slot} (JobId: {JobId}, Method: {Method}).",
+                keyValue, slot, context.BackgroundJob?.Id ?? "unknown", method.Name);
         }
         catch (DistributedLockTimeoutException)
         {
             _logger.LogInformation(
-                "PerKeyConcurrency: Job {JobId} ({Method}) skipped — agent for key '{Key}' is currently occupied.",
+                "PerKeyConcurrency: Job {JobId} ({Method}) skipped — all slots for key '{Key}' are currently occupied.",
                 context.BackgroundJob?.Id ?? "unknown", method.Name, keyValue);
 
             context.Canceled = true; // Hangfire will retry based on AutomaticRetryAttribute
@@ -67,7 +77,10 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
         if (context.Items.TryGetValue("__PerKeyLock", out var handleObj) && handleObj is IDisposable handle)
         {
             handle.Dispose();
-            _logger.LogDebug("PerKeyConcurrency: Lock released.");
+            _logger.LogDebug(
+                "PerKeyConcurrency: Lock released (JobId: {JobId}, Method: {Method}).",
+                context.BackgroundJob?.Id ?? "unknown", context.BackgroundJob?.Job.Method.Name);
         }
     }
+
 }
