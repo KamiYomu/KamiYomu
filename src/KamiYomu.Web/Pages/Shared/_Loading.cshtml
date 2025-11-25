@@ -1,13 +1,16 @@
-﻿<div id="loading-indicator"
+﻿@using System.Net
+<div id="loading-indicator"
      class="d-none position-fixed top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center text-center"
      style="background-color: rgba(255,255,255,0.25); z-index: 2000;">
 
-    <div class="bg-light-subtle rounded p-2 mb-3 w-25">
-        <div class="spinner-border text-info" role="status" style="width: 3rem; height: 3rem;">
+    <div class="bg-light-subtle rounded p-3 mb-3 mx-auto
+            w-100 w-sm-75 w-md-50 w-lg-25 text-center">
+        <div class="spinner-border text-info mb-3" role="status" style="width: 3rem; height: 3rem;">
             <span class="visually-hidden">
                 @I18n.ProcessingCertainCrawlerAgentaRequireMoreTime
             </span>
         </div>
+
         <div id="loading-message" class="fw-bold text-primary mb-3 fs-5 text-wrap"></div>
 
         <button id="cancel-request-btn" class="btn btn-outline-danger btn-sm">
@@ -24,17 +27,17 @@
     let messageInterval = null;
 
     const messages = [
-        "@(I18n.ProcessingCertainCrawlerAgentaRequireMoreTime)",
-        "@(I18n.WaitProcessing1) 💪",
-        "@(I18n.WaitProcessing2) 🤞",
+        "@(WebUtility.HtmlDecode(I18n.ProcessingCertainCrawlerAgentaRequireMoreTime))",
+        "@(WebUtility.HtmlDecode(I18n.WaitProcessing1)) 💪",
+        "@(WebUtility.HtmlDecode(I18n.WaitProcessing2)) 🤞",
         "Baby shark dodododo 🦈🎶",
         "Mommy shark dodododo 🦈🎶",
         "Daddy shark dodododo 🦈🎶",
         "Grandma shark dodododo 🦈🎶",
         "Grandpa shark dodododo 🦈🎶",
-        "@(I18n.WaitProcessing3) 🐢",
-        "@(I18n.WaitProcessing4) 🎵",
-        "@(I18n.WaitProcessing5) 🌀"
+        "@(WebUtility.HtmlDecode(I18n.WaitProcessing3)) 🐢",
+        "@(WebUtility.HtmlDecode(I18n.WaitProcessing4)) 🎵",
+        "@(WebUtility.HtmlDecode(I18n.WaitProcessing5)) 🌀"
     ];
 
     function showLoading() {

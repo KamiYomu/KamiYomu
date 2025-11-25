@@ -205,6 +205,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Architecture.
+        /// </summary>
+        internal static string Architecture {
+            get {
+                return ResourceManager.GetString("Architecture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you certain you want to permanently delete this record?.
         /// </summary>
         internal static string AreYouCertainYouWantPermanentlyDeleteThisRecord {
@@ -493,6 +502,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current Directory.
+        /// </summary>
+        internal static string CurrentDirectory {
+            get {
+                return ResourceManager.GetString("CurrentDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dark.
         /// </summary>
         internal static string Dark {
@@ -745,6 +763,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Framework Version.
+        /// </summary>
+        internal static string FrameworkVersion {
+            get {
+                return ResourceManager.GetString("FrameworkVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to From KamiYomu NuGet Repository - requires api key.
         /// </summary>
         internal static string FromKamiYomuNuGetRepository {
@@ -939,6 +966,15 @@ namespace KamiYomu.Web.Resources {
         internal static string LogStream {
             get {
                 return ResourceManager.GetString("LogStream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Machine Name.
+        /// </summary>
+        internal static string MachineName {
+            get {
+                return ResourceManager.GetString("MachineName", resourceCulture);
             }
         }
         
@@ -1204,6 +1240,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Operational System Version.
+        /// </summary>
+        internal static string OperationalSystemVersion {
+            get {
+                return ResourceManager.GetString("OperationalSystemVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Options.
         /// </summary>
         internal static string Options {
@@ -1281,6 +1326,25 @@ namespace KamiYomu.Web.Resources {
         internal static string ProcessingCertainCrawlerAgentaRequireMoreTime {
             get {
                 return ResourceManager.GetString("ProcessingCertainCrawlerAgentaRequireMoreTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processor Count.
+        /// </summary>
+        internal static string ProcessorCount {
+            get {
+                return ResourceManager.GetString("ProcessorCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number of logical processors available. This value is often used as a baseline
+        ///for Hangfire&apos;s &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many jobs can run concurrently..
+        /// </summary>
+        internal static string ProcessorCountExplanation {
+            get {
+                return ResourceManager.GetString("ProcessorCountExplanation", resourceCulture);
             }
         }
         
@@ -1524,6 +1588,15 @@ namespace KamiYomu.Web.Resources {
         internal static string Status {
             get {
                 return ResourceManager.GetString("Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System Information.
+        /// </summary>
+        internal static string SystemInformation {
+            get {
+                return ResourceManager.GetString("SystemInformation", resourceCulture);
             }
         }
         

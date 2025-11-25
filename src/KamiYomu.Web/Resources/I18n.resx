@@ -705,4 +705,29 @@
   <data name="Source" xml:space="preserve">
     <value>Source</value>
   </data>
+  <data name="ProcessorCount" xml:space="preserve">
+    <value>Processor Count</value>
+  </data>
+  <data name="MachineName" xml:space="preserve">
+    <value>Machine Name</value>
+  </data>
+  <data name="OperationalSystemVersion" xml:space="preserve">
+    <value>Operational System Version</value>
+  </data>
+  <data name="FrameworkVersion" xml:space="preserve">
+    <value>Framework Version</value>
+  </data>
+  <data name="Architecture" xml:space="preserve">
+    <value>Architecture</value>
+  </data>
+  <data name="CurrentDirectory" xml:space="preserve">
+    <value>Current Directory</value>
+  </data>
+  <data name="SystemInformation" xml:space="preserve">
+    <value>System Information</value>
+  </data>
+  <data name="ProcessorCountExplanation" xml:space="preserve">
+    <value>Number of logical processors available. This value is often used as a baseline
+for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many jobs can run concurrently.</value>
+  </data>
 </root>

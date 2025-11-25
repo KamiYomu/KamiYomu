@@ -702,11 +702,36 @@
   <data name="WelcomeTo" xml:space="preserve">
     <value>Bem-vindo ao</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Source" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="Source" xml:space="preserve">
     <value>Fonte</value>
+  </data>
+  <data name="ProcessorCount" xml:space="preserve">
+    <value>Contagem de processadores</value>
+  </data>
+  <data name="MachineName" xml:space="preserve">
+    <value>Nome da máquina</value>
+  </data>
+  <data name="OperationalSystemVersion" xml:space="preserve">
+    <value>Versão do Sistema Operacional</value>
+  </data>
+  <data name="FrameworkVersion" xml:space="preserve">
+    <value>Versão da estrutura</value>
+  </data>
+  <data name="Architecture" xml:space="preserve">
+    <value>Arquitetura</value>
+  </data>
+  <data name="CurrentDirectory" xml:space="preserve">
+    <value>Diretório atual</value>
+  </data>
+  <data name="SystemInformation" xml:space="preserve">
+    <value>Informações do sistema</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ProcessorCountExplanation" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ProcessorCountExplanation" xml:space="preserve">
+    <value>Número de processadores lógicos disponíveis. Este valor é frequentemente usado como linha de base
+para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para controlar quantos trabalhos podem ser executados simultaneamente.</value>
   </data>
 </root>

@@ -42,9 +42,61 @@
         @I18n.LogStream
     </h2>
 </div>
+<div class="container-fluid p-4">
+    <!-- System Information Panel -->
+    <div class="mb-3">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-info-circle me-2"></i>@I18n.SystemInformation
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush small">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@I18n.ProcessorCount</span>
+                        <span>
+                            @Environment.ProcessorCount
+                            <small class="text-muted d-block">
+                                @I18n.ProcessorCountExplanation
+                            </small>
+                        </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@I18n.MachineName</span>
+                        <span>@Environment.MachineName</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@I18n.OperationalSystemVersion</span>
+                        <span>@Environment.OSVersion</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@I18n.FrameworkVersion</span>
+                        <span>@System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@I18n.Architecture</span>
+                        <span>@System.Runtime.InteropServices.RuntimeInformation.OSArchitecture</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@I18n.CurrentDirectory</span>
+                        <span>@Environment.CurrentDirectory</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
-<div class="container p-4 w-100 h-100">
-    <div id="terminal" class="bg-dark text-light overflow-hidden">
+    <!-- Log Stream / Terminal -->
+    <div>
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-light">
+                <i class="bi bi-terminal me-2"></i>@I18n.LogStream
+            </div>
+            <div class="card-body p-0">
+                <div id="terminal" class="bg-dark text-light p-3 overflow-auto" style="height:400px;">
+                    <!-- Logs will stream here -->
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
