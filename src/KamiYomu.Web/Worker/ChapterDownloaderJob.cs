@@ -121,8 +121,19 @@ namespace KamiYomu.Web.Worker
 
                     try
                     {
-                        var imageBytes = await _httpClient.GetByteArrayAsync(page.ImageUrl, cancellationToken);
-                        await File.WriteAllBytesAsync(filePath, imageBytes, cancellationToken);
+                        using var response = await _httpClient.GetAsync(
+                            page.ImageUrl,
+                            HttpCompletionOption.ResponseHeadersRead,
+                            cancellationToken
+                        );
+
+                        response.EnsureSuccessStatusCode();
+
+                        await using (var httpStream = await response.Content.ReadAsStreamAsync(cancellationToken))
+                        await using (var fileStream = File.Create(filePath))
+                        {
+                            await httpStream.CopyToAsync(fileStream, cancellationToken);
+                        }
 
                         _logger.LogInformation("{crawler}: Downloaded page {Index}/{count} to {FilePath}", library.AgentCrawler.DisplayName, index, pageCount, filePath);
                     }
@@ -168,7 +179,7 @@ namespace KamiYomu.Web.Worker
             }
         }
 
-        private int CreateCbzFile(ChapterDownloadRecord chapterDownload, string chapterFolder, string seriesFolder)
+        private long CreateCbzFile(ChapterDownloadRecord chapterDownload, string chapterFolder, string seriesFolder)
         {
             var cbzFilePath = Path.Combine(seriesFolder, chapterDownload.Chapter!.GetCbzFileName());
 
@@ -191,7 +202,8 @@ namespace KamiYomu.Web.Worker
 
             _logger.LogInformation("Created CBZ archive: {CbzFilePath}", cbzFilePath);
 
-            return File.ReadAllBytes(cbzFilePath).Length;
+            var size = new FileInfo(cbzFilePath).Length;
+            return size;
         }
 
         private void MoveTempCbzFilesToCollection(Manga manga)

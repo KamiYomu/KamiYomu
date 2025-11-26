@@ -76,10 +76,18 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                 return NotFound();
             }
 
-            var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath, cancellationToken);
+            var fileName = Path.GetFileName(filePath);
+            var stream = new FileStream(
+                filePath,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.Read,
+                bufferSize: 81920,
+                FileOptions.Asynchronous | FileOptions.SequentialScan
+            );
 
-            var fileName = System.IO.Path.GetFileName(filePath);
-            return File(fileBytes, "application/x-cbz", fileName);
+            return File(stream, "application/x-cbz", fileName);
+
         }
 
         public async Task<IActionResult> OnGetDownloadZipAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
@@ -104,10 +112,19 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                 return NotFound();
             }
 
-            var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath, cancellationToken);
-
             var fileName = Path.GetFileNameWithoutExtension(filePath) + ".zip";
-            return File(fileBytes, "application/zip", fileName);
+
+            var stream = new FileStream(
+                filePath,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.Read,
+                bufferSize: 81920,                              
+                FileOptions.Asynchronous | FileOptions.SequentialScan
+            );
+
+            return File(stream, "application/zip", fileName);
+
         }
 
         public async Task<IActionResult> OnGetDownloadPdfAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
@@ -147,9 +164,22 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 
             var logoPath = Path.Combine(webHostEnvironment.ContentRootPath, "wwwroot", "images", "logo-watermark.svg");
             var document = new MangaChaptersPdfReport(images, Path.GetFileNameWithoutExtension(filePath), logoPath);
-            var fileBytes = document.GeneratePdf();
+            var fileName = Path.GetFileNameWithoutExtension(filePath) + ".pdf";
 
-            return File(fileBytes, "application/pdf", Path.GetFileNameWithoutExtension(filePath) + ".pdf");
+            var stream = new FileStream(
+                Path.GetTempFileName(),
+                FileMode.Create,
+                FileAccess.ReadWrite,
+                FileShare.None,
+                4096,
+                FileOptions.DeleteOnClose | FileOptions.SequentialScan
+            );
+
+            document.GeneratePdf(stream);
+
+            stream.Position = 0;
+
+            return File(stream, "application/pdf", fileName);
         }
 
 

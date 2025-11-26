@@ -29,16 +29,22 @@ public class IndexModel(
 
         var fs = imageDbContext.CoverImageFileStorage;
 
-        // Check if image is already cached
         if (!fs.Exists(uri))
         {
             using var httpClient = httpClientFactory.CreateClient(Defaults.Worker.HttpClientBackground);
             try
             {
-                var imageBytes = await httpClient.GetByteArrayAsync(uri, cancellationToken);
-                using var stream = new MemoryStream(imageBytes);
+                using var response = await httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
-                fs.Upload(uri, Path.GetFileName(uri.LocalPath), stream);
+                response.EnsureSuccessStatusCode();
+
+                await using var httpStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+
+                fs.Upload(
+                    uri,
+                    Path.GetFileName(uri.LocalPath),
+                    httpStream
+                );
             }
             catch(Exception ex)
             {
@@ -47,7 +53,6 @@ public class IndexModel(
             }
         }
 
-        // Retrieve image stream from LiteDB
         var fileStream = fs.OpenRead(uri);
         if (fileStream == null)
         {
