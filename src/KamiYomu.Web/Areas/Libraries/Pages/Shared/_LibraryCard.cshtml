@@ -3,7 +3,8 @@
 
 @{
     Layout = null;
-    var faviconUrl = await Model.AgentCrawler.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None);
+    using var crawlerInstance = Model.AgentCrawler.GetCrawlerInstance();
+    var faviconUrl = await crawlerInstance.GetFaviconAsync(CancellationToken.None);
     var isNew = Model.Id == Guid.Empty;
     var cardId = $"library-card-{Model.Manga.Id}".Replace(".", "-");
 }

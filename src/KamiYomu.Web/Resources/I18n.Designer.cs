@@ -232,6 +232,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attempt.
+        /// </summary>
+        internal static string Attempt {
+            get {
+                return ResourceManager.GetString("Attempt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Authors.
         /// </summary>
         internal static string Authors {
@@ -273,6 +282,15 @@ namespace KamiYomu.Web.Resources {
         internal static string Cancelled {
             get {
                 return ResourceManager.GetString("Cancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CBZ file size is below the expected threshold, indicating a failed download. Retrying shortly..
+        /// </summary>
+        internal static string CbzIsTooSmall {
+            get {
+                return ResourceManager.GetString("CbzIsTooSmall", resourceCulture);
             }
         }
         
@@ -547,6 +565,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dispatch failed. The task will be rescheduled.
+        /// </summary>
+        internal static string DispatchFailedMessage {
+            get {
+                return ResourceManager.GetString("DispatchFailedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Display Name.
         /// </summary>
         internal static string DisplayName {
@@ -651,6 +678,15 @@ namespace KamiYomu.Web.Resources {
         internal static string Enjoy {
             get {
                 return ResourceManager.GetString("Enjoy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        internal static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
             }
         }
         

@@ -118,7 +118,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
                 var metadata = CrawlerAgent.GetAssemblyMetadata(assembly);
                 var displayName = CrawlerAgent.GetCrawlerDisplayName(assembly);
 
-                var crawlerAgent = new CrawlerAgent(dllPath, displayName, []);
+                using var crawlerAgent = new CrawlerAgent(dllPath, displayName, []);
                 dbContext.CrawlerAgents.Insert(crawlerAgent);
 
                 dbContext.CrawlerAgentFileStorage.Delete(tempUploadId);

@@ -4,7 +4,8 @@
 @model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.DownloadStatusModel
 @{
     Layout = null;
-    var faviconUrl = await Model.Library.AgentCrawler.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None);
+    using var crawlerInstance = Model.Library.AgentCrawler.GetCrawlerInstance();
+    var faviconUrl = await crawlerInstance.GetFaviconAsync(CancellationToken.None);
     var badgeClass = Model.Record.DownloadStatus switch
     {
         Entities.Definitions.DownloadStatus.ToBeRescheduled => "bg-warning",

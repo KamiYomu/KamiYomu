@@ -138,7 +138,13 @@ namespace KamiYomu.Web.Worker
 
                 _logger.LogInformation("{crawler}: Completed download of chapter {ChapterDownloadId} to {ChapterFolder}", library.AgentCrawler.DisplayName, chapterDownloadId, chapterFolderPath);
 
-                CreateCbzFile(chapterDownload, chapterFolderPath, seriesFolder);
+                var bytes = CreateCbzFile(chapterDownload, chapterFolderPath, seriesFolder);
+
+                if(bytes < 600)
+                {
+                    await _notificationService.PushWarningAsync($"{I18n.CbzIsTooSmall}: {chapterDownload.Chapter.GetCbzFileName()}", cancellationToken);
+                    throw new Exception($"{chapterDownload.Chapter.GetCbzFileName()} CBZ file size is too small, indicating a failed download.");
+                }
 
                 MoveTempCbzFilesToCollection(mangaDownload.Library.Manga);
                 chapterDownload.Complete();
@@ -152,14 +158,18 @@ namespace KamiYomu.Web.Worker
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Dispatch completed with error {Message}.", ex.Message);
-                chapterDownload.ToBeRescheduled(ex.Message);
+                var attempt = context.GetJobParameter<int>("RetryCount") + 1;
+                var errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                const int maxAttempts = 10;
+                var logMessage = $"{I18n.Attempt} {attempt}/{maxAttempts}: {I18n.DispatchFailedMessage}. {I18n.Error}: {errorMessage}";
+                _logger.LogError(ex, logMessage);
+                chapterDownload.ToBeRescheduled(logMessage);
                 libDbContext.ChapterDownloadRecords.Update(chapterDownload);
                 throw;
             }
         }
 
-        private void CreateCbzFile(ChapterDownloadRecord chapterDownload, string chapterFolder, string seriesFolder)
+        private int CreateCbzFile(ChapterDownloadRecord chapterDownload, string chapterFolder, string seriesFolder)
         {
             var cbzFilePath = Path.Combine(seriesFolder, chapterDownload.Chapter!.GetCbzFileName());
 
@@ -181,6 +191,8 @@ namespace KamiYomu.Web.Worker
             }
 
             _logger.LogInformation("Created CBZ archive: {CbzFilePath}", cbzFilePath);
+
+            return File.ReadAllBytes(cbzFilePath).Length;
         }
 
         private void MoveTempCbzFilesToCollection(Manga manga)

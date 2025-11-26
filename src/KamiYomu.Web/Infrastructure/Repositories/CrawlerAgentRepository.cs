@@ -22,8 +22,9 @@ namespace KamiYomu.Web.Infrastructure.Repositories
         {
             return cacheContext.GetOrSetAsync($"{agentCrawlerId}-manga-{mangaId}", async () =>
             {
-                using var agent = dbContext.CrawlerAgents.FindById(agentCrawlerId);
-                var manga = await agent.GetCrawlerInstance().GetByIdAsync(mangaId.ToString(), cancellationToken);
+                using var agentCrawler = dbContext.CrawlerAgents.FindById(agentCrawlerId);
+                using var crawlerInstance = agentCrawler.GetCrawlerInstance();
+                var manga = await crawlerInstance.GetByIdAsync(mangaId.ToString(), cancellationToken);
                 return manga;
             }, TimeSpan.FromMinutes(30));
         }

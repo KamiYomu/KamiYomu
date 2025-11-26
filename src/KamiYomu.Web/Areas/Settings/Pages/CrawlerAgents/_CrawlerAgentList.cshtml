@@ -13,7 +13,8 @@
         {
             @foreach (var item in Model)
             {
-                var faviconUrl = await item.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None);
+                using var crawlerInstance = item.GetCrawlerInstance();
+                var faviconUrl = await crawlerInstance.GetFaviconAsync(CancellationToken.None);
                 <tr>
                     <td>
                         <img src="@faviconUrl.ToInternalImageUrl()" width="20" class="me-2" alt="favicon" />
