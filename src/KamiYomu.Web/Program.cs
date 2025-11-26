@@ -173,7 +173,7 @@ app.UseRouting();
 app.UseHangfireDashboard("/worker", new DashboardOptions
 {
     DisplayStorageConnectionString = false,
-    DashboardTitle = I18n.BackgroundJobs,
+    DashboardTitle = "KamiYomu",
     FaviconPath = "/images/favicon.ico",
     IgnoreAntiforgeryToken = true,
     Authorization = [new AllowAllDashboardAuthorizationFilter()]
