@@ -69,7 +69,7 @@ public class MangaDownloaderJob : IMangaDownloaderJob
             }
 
             if (mangaDownload.DownloadStatus != Entities.Definitions.DownloadStatus.Scheduled &&
-                mangaDownload.DownloadStatus != Entities.Definitions.DownloadStatus.Pending)
+                mangaDownload.DownloadStatus != Entities.Definitions.DownloadStatus.ToBeRescheduled)
             {
                 return;
             }
@@ -83,7 +83,7 @@ public class MangaDownloaderJob : IMangaDownloaderJob
 
             libDbContext.MangaDownloadRecords.Update(mangaDownload);
 
-            var agentCrawler = mangaDownload.Library.AgentCrawler;
+            using var agentCrawler = mangaDownload.Library.AgentCrawler;
             var mangaId = mangaDownload.Library.Manga.Id;
 
             int offset = 0;
@@ -103,7 +103,10 @@ public class MangaDownloaderJob : IMangaDownloaderJob
 
                 foreach (var chapter in page.Data)
                 {
-                    var record = new ChapterDownloadRecord(agentCrawler, mangaDownload, chapter);
+                    var record = libDbContext.ChapterDownloadRecords.FindOne(p => p.CrawlerAgent.Id == agentCrawler.Id
+                                                                                  && p.Chapter.Id == chapter.Id
+                                                                                  && p.MangaDownload.Id == mangaDownloadId) 
+                                                                                  ?? new ChapterDownloadRecord(agentCrawler, mangaDownload, chapter);
 
                     if(record.IsDownloadedFileExists())
                     {
@@ -113,7 +116,7 @@ public class MangaDownloaderJob : IMangaDownloaderJob
                         continue;
                     }
 
-                    libDbContext.ChapterDownloadRecords.Insert(record);
+                    libDbContext.ChapterDownloadRecords.Upsert(record);
 
                     var backgroundJobId = _jobClient.Create<IChapterDownloaderJob>(
                           p => p.DispatchAsync(library.AgentCrawler.Id, library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(), null!, CancellationToken.None),

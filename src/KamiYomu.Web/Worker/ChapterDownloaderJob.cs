@@ -153,7 +153,7 @@ namespace KamiYomu.Web.Worker
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Dispatch completed with error {Message}.", ex.Message);
-                chapterDownload.Pending(ex.Message);
+                chapterDownload.ToBeRescheduled(ex.Message);
                 libDbContext.ChapterDownloadRecords.Update(chapterDownload);
                 throw;
             }

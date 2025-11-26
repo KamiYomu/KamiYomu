@@ -5,7 +5,7 @@ using KamiYomu.Web.AppOptions;
 
 namespace KamiYomu.Web.Entities
 {
-    public class CrawlerAgent
+    public class CrawlerAgent : IDisposable
     {
         public Guid Id { get; private set; }
         public string DisplayName { get; private set; }
@@ -16,6 +16,7 @@ namespace KamiYomu.Web.Entities
 
         private Assembly _assembly;
         private ICrawlerAgent _crawler;
+        private bool disposedValue;
 
         public CrawlerAgent()
         {
@@ -222,6 +223,26 @@ namespace KamiYomu.Web.Entities
             DisplayName = displayName;
             AgentMetadata = agentMetadata;
             AssemblyProperties = assemblyProperties;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _crawler?.Dispose();
+                    _crawler = null!;
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

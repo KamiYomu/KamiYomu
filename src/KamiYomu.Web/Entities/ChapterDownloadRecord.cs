@@ -12,15 +12,15 @@ namespace KamiYomu.Web.Entities
             CrawlerAgent = agentCrawler;
             MangaDownload = mangaDownload;
             Chapter = chapter;
-            DownloadStatus = DownloadStatus.Pending;
+            DownloadStatus = DownloadStatus.ToBeRescheduled;
             StatusUpdateAt = DateTime.UtcNow;
             CreateAt = DateTime.UtcNow;
         }
 
-        public void Pending(string statusReason = "")
+        public void ToBeRescheduled(string statusReason = "")
         {
             StatusReason = statusReason;
-            DownloadStatus = DownloadStatus.Pending;
+            DownloadStatus = DownloadStatus.ToBeRescheduled;
             StatusUpdateAt = DateTime.UtcNow;
         }
 

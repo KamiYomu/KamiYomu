@@ -730,4 +730,7 @@
     <value>Number of logical processors available. This value is often used as a baseline
 for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many jobs can run concurrently.</value>
   </data>
+  <data name="ToBeRescheduled" xml:space="preserve">
+    <value>To Be Rescheduled</value>
+  </data>
 </root>

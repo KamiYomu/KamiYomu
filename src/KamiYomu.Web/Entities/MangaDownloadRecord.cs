@@ -10,7 +10,7 @@ namespace KamiYomu.Web.Entities
         {
             Library = library;
             BackgroundJobId = jobId;
-            DownloadStatus = DownloadStatus.Pending;
+            DownloadStatus = DownloadStatus.ToBeRescheduled;
             StatusUpdateAt = DateTime.UtcNow;
             CreateAt = DateTime.UtcNow;
         }
@@ -25,7 +25,7 @@ namespace KamiYomu.Web.Entities
         public void Pending(string statusReason = "")
         {
             StatusReason = statusReason;
-            DownloadStatus = DownloadStatus.Pending;
+            DownloadStatus = DownloadStatus.ToBeRescheduled;
             StatusUpdateAt = DateTime.UtcNow;
         }
 

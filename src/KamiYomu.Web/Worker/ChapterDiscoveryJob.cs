@@ -64,7 +64,7 @@ namespace KamiYomu.Web.Worker
             var files = Directory.GetFiles(library!.Manga!.GetDirectory(), "*.cbz", SearchOption.AllDirectories);
 
 
-            var crawlerAgent = mangaDownload.Library.AgentCrawler;
+            using var crawlerAgent = mangaDownload.Library.AgentCrawler;
             var mangaId = mangaDownload.Library.Manga!.Id;
 
             int offset = 0;
@@ -105,7 +105,7 @@ namespace KamiYomu.Web.Worker
                         continue;
                     }
 
-                    record.Pending();
+                    record.ToBeRescheduled();
 
                     libDbContext.ChapterDownloadRecords.Upsert(record);
 

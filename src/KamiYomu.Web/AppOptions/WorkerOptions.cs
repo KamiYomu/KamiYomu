@@ -47,7 +47,7 @@
         /// </summary>
         public int MaxConcurrentCrawlerInstances { get; set; } = 1;
         public IEnumerable<string> GetAllQueues() =>
-        [   
+        [   "default",
             .. DownloadChapterQueues,
             .. MangaDownloadSchedulerQueues,
             .. DiscoveryNewChapterQueues,

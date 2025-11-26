@@ -726,12 +726,15 @@
   <data name="SystemInformation" xml:space="preserve">
     <value>Informations système</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ProcessorCountExplanation" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="ProcessorCountExplanation" xml:space="preserve">
     <value>Nombre de processeurs logiques disponibles. Cette valeur est souvent utilisée comme référence
 pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrôler le nombre de tâches pouvant être exécutées simultanément.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ToBeRescheduled" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ToBeRescheduled" xml:space="preserve">
+    <value>À reprogrammer</value>
   </data>
 </root>

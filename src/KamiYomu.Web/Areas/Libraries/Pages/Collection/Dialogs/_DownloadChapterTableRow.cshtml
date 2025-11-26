@@ -6,10 +6,11 @@
     var rowId = $"row-{Model.Id}";
     var badgeClass = Model.DownloadStatus switch
     {
-        Entities.Definitions.DownloadStatus.Completed => "bg-success",
-        Entities.Definitions.DownloadStatus.Cancelled => "bg-danger",
+        Entities.Definitions.DownloadStatus.ToBeRescheduled => "bg-warning",
         Entities.Definitions.DownloadStatus.Scheduled => "bg-primary",
         Entities.Definitions.DownloadStatus.InProgress => "bg-info",
+        Entities.Definitions.DownloadStatus.Completed => "bg-success",
+        Entities.Definitions.DownloadStatus.Cancelled => "bg-danger",
         _ => "bg-secondary"
     };
     var lastUpdateBuilder = new StringBuilder();

@@ -1646,6 +1646,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to To Be Rescheduled.
+        /// </summary>
+        internal static string ToBeRescheduled {
+            get {
+                return ResourceManager.GetString("ToBeRescheduled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Toggle Theme.
         /// </summary>
         internal static string ToggleTheme {
