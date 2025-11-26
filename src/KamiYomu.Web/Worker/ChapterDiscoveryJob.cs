@@ -61,7 +61,7 @@ namespace KamiYomu.Web.Worker
 
             using var libDbContext = library.GetDbContext();
             var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Library.Id == libraryId);
-            var files = Directory.GetFiles(library!.Manga!.GetDirectory(), "*.cbz", SearchOption.AllDirectories);
+            var files = Directory.GetFiles(library.Manga.GetDirectory(), "*.cbz", SearchOption.AllDirectories);
 
 
             using var crawlerAgent = mangaDownload.Library.AgentCrawler;

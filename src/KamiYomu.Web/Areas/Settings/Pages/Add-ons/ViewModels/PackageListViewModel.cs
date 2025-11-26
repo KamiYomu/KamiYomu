@@ -5,13 +5,25 @@ namespace KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels
     public class PackageListViewModel
     {
         public Guid SourceId { get; set; }
-        public IEnumerable<PackageItemViewModel> PackageItems { get; set; } = Enumerable.Empty<PackageItemViewModel>();
+        public IEnumerable<NugetPackageGroupedViewModel> PackageItems { get; set; } = Enumerable.Empty<NugetPackageGroupedViewModel>();
     }
 
-    public class PackageItemViewModel
+    public class NugetPackageGroupedViewModel
     {
         public Guid SourceId { get; set; }
-        public NugetPackageInfo? Package { get; set; }
+        public string Id { get; set; } = string.Empty;
+        public Uri? IconUrl { get; set; }
+        public string? Description { get; set; }
+        public string[] Authors { get; set; } = [];
+        public string[] Tags { get; set; } = [];
+        public int TotalDownloads { get; set; }
+        public NugetPackageInfo VersionSelected { get; set; }
+        public IEnumerable<string?> Versions { get; set; } = [];
+        public Uri? LicenseUrl { get; set; }
+        public Uri? RepositoryUrl { get; set; }
+        public Dictionary<string, List<NugetDependencyInfo>> DependenciesByVersion { get; set; } = [];
     }
+
+
 
 }

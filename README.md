@@ -84,6 +84,9 @@ services:
         # Provides variability in scheduling to reduce the chance of IP blocking or service throttling.
         Worker__MaxWaitPeriodInMilliseconds: 9001
 
+        # Maximum number of retry attempts for failed jobs before marking them as permanently failed.
+        Worker__MaxRetryAttempts: 10
+
         # Default language for the web interface (e.g., "en", "pt-BR", "fr").
         UI__DefaultLanguage: "en" 
     restart: unless-stopped

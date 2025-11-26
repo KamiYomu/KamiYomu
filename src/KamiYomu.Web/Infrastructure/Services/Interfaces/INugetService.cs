@@ -4,8 +4,9 @@ namespace KamiYomu.Web.Infrastructure.Services.Interfaces
 {
     public interface INugetService
     {
-        Task<NugetPackageInfo?> GetPackageMetadataAsync(string packageName, Guid sourceId, CancellationToken cancellationToken);
-        Task<IEnumerable<NugetPackageInfo>> SearchPackagesAsync(string query, bool includePreRelease, Guid sourceId, CancellationToken cancellationToken);
+        Task<NugetPackageInfo?> GetPackageMetadataAsync(Guid sourceId, string packageId, string version, CancellationToken cancellationToken);
+        Task<IEnumerable<NugetPackageInfo>> GetAllPackageVersionsAsync(Guid sourceId, string packageId, CancellationToken cancellationToken);
+        Task<IEnumerable<NugetPackageInfo>> SearchPackagesAsync(Guid sourceId, string query, bool includePreRelease, CancellationToken cancellationToken);
         Task<Stream[]> OnGetDownloadAsync(Guid sourceId, string packageId, string packageVersion, CancellationToken cancellationToken);
     }
 }

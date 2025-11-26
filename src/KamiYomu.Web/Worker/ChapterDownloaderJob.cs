@@ -160,8 +160,7 @@ namespace KamiYomu.Web.Worker
             {
                 var attempt = context.GetJobParameter<int>("RetryCount") + 1;
                 var errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                const int maxAttempts = 10;
-                var logMessage = $"{I18n.Attempt} {attempt}/{maxAttempts}: {I18n.DispatchFailedMessage}. {I18n.Error}: {errorMessage}";
+                var logMessage = $"{I18n.Attempt} {attempt}/{_workerOptions.MaxRetryAttempts}: {I18n.DispatchFailedMessage}. {I18n.Error}: {errorMessage}";
                 _logger.LogError(ex, logMessage);
                 chapterDownload.ToBeRescheduled(logMessage);
                 libDbContext.ChapterDownloadRecords.Update(chapterDownload);

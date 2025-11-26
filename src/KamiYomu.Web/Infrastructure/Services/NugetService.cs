@@ -18,86 +18,73 @@ namespace KamiYomu.Web.Infrastructure.Services
             _dbContext = dbContext;
         }
 
-        public async Task<NugetPackageInfo?> GetPackageMetadataAsync(string packageName, Guid sourceId, CancellationToken cancellationToken)
+        public async Task<NugetPackageInfo?> GetPackageMetadataAsync(Guid sourceId, string packageId, string version, CancellationToken cancellationToken)
         {
-            var source = _dbContext.NugetSources.FindById(sourceId);
-            if (source == null)
-                throw new InvalidOperationException("NuGet source not found.");
+            // Load source
+            var source = _dbContext.NugetSources.FindById(sourceId)
+                ?? throw new InvalidOperationException("NuGet source not found.");
 
-            using var handler = new HttpClientHandler();
-            using var client = new HttpClient(handler);
-
-            if (!string.IsNullOrWhiteSpace(source.UserName) && !string.IsNullOrWhiteSpace(source.Password))
-            {
-                var byteArray = Encoding.ASCII.GetBytes($"{source.UserName}:{source.Password}");
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-            }
-            else if (!string.IsNullOrWhiteSpace(source.Password))
-            {
-                client.DefaultRequestHeaders.Add("X-NuGet-ApiKey", source.Password);
-            }
-
-            var indexUrl = source.Url.ToString();
-            var indexJson = await client.GetStringAsync(indexUrl, cancellationToken);
-            var index = JsonNode.Parse(indexJson);
-
-            var metadataUrl = index?["resources"]?
-                .AsArray()
-                .FirstOrDefault(r => r?["@type"]?.ToString() == "RegistrationsBaseUrl")?["@id"]?.ToString();
-
-            if (string.IsNullOrEmpty(metadataUrl))
-                throw new InvalidOperationException("RegistrationsBaseUrl not found in index.json");
-
-            var packageUrl = $"{metadataUrl.TrimEnd('/')}/{packageName.ToLowerInvariant()}/index.json";
-            var packageJson = await client.GetStringAsync(packageUrl, cancellationToken);
-            var result = JsonNode.Parse(packageJson)?["items"]?.AsArray()?[0]?["items"]?.AsArray()?[0]?["catalogEntry"];
-
-            if (result == null)
-                return null;
-
-            var packageTypes = result?["tags"]?.ToString();
-            var isCrawlerAgent = packageTypes?.Contains(Defaults.Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase) == true;
-
-            if (!isCrawlerAgent)
-                return null;
-
-            NugetPackageInfo packageInfo = ConvertToNuGetPackageInfo(result);
-            return packageInfo;
-        }
-
-        public async Task<IEnumerable<NugetPackageInfo>> SearchPackagesAsync(string query, bool includePreRelease, Guid sourceId, CancellationToken cancellationToken)
-        {
-            var source = _dbContext.NugetSources.FindById(sourceId);
-            if (source == null)
-                throw new InvalidOperationException("NuGet source not found.");
-
-            using var requestHandler = new HttpClientHandler();
-            using var client = new HttpClient(requestHandler);
-
-            // Authentication
-            if (!string.IsNullOrWhiteSpace(source.UserName) && !string.IsNullOrWhiteSpace(source.Password))
-            {
-                var byteArray = Encoding.ASCII.GetBytes($"{source.UserName}:{source.Password}");
-                client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-            }
-            else if (!string.IsNullOrWhiteSpace(source.Password))
-            {
-                client.DefaultRequestHeaders.Add("X-NuGet-ApiKey", source.Password);
-            }
+            using var client = CreateHttpClient(source);
 
             // Fetch service index
             var indexJson = await client.GetStringAsync(source.Url, cancellationToken);
             var index = JsonNode.Parse(indexJson);
 
-            var searchUrl = index?["resources"]?
-                .AsArray()
-                .FirstOrDefault(r => r?["@type"]?.ToString() == "SearchQueryService")?["@id"]?.ToString();
-
-            var registrationsUrl = index?["resources"]?
-                .AsArray()
+            var registrationsUrl = index?["resources"]?.AsArray()
                 .FirstOrDefault(r => (r?["@type"]?.ToString()?.StartsWith("RegistrationsBaseUrl") ?? false))
                 ?["@id"]?.ToString();
+
+            if (string.IsNullOrEmpty(registrationsUrl))
+                throw new InvalidOperationException("RegistrationsBaseUrl not found in index.json");
+
+            // Fetch registration index for this package
+            var registrationIndexUrl = $"{registrationsUrl.TrimEnd('/')}/{packageId.ToLowerInvariant()}/index.json";
+            var registrationJson = await client.GetStringAsync(registrationIndexUrl, cancellationToken);
+            var registration = JsonNode.Parse(registrationJson)?["items"]?.AsArray();
+            if (registration is null) return null;
+
+            // Look for the requested version
+            foreach (var page in registration)
+            {
+                var versions = page?["items"]?.AsArray();
+                if (versions is null) continue;
+
+                foreach (var versionEntry in versions)
+                {
+                    var catalogEntry = versionEntry?["catalogEntry"];
+                    var currentVersion = catalogEntry?["version"]?.ToString();
+
+                    if (catalogEntry is null || string.IsNullOrEmpty(currentVersion))
+                        continue;
+
+                    if (string.Equals(currentVersion, version, StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Build and return the package info for this version
+                        return BuildPackageInfo(packageId, null, catalogEntry);
+                    }
+                }
+            }
+
+            // Not found
+            return null;
+        }
+
+        public async Task<IEnumerable<NugetPackageInfo>> SearchPackagesAsync(Guid sourceId, string query, bool includePreRelease, CancellationToken cancellationToken)
+        {
+            var source = _dbContext.NugetSources.FindById(sourceId)
+                ?? throw new InvalidOperationException("NuGet source not found.");
+
+            using var client = CreateHttpClient(source);
+
+            // Fetch service index
+            var indexJson = await client.GetStringAsync(source.Url, cancellationToken);
+            var index = JsonNode.Parse(indexJson);
+
+            var searchUrl = index?["resources"]?.AsArray()
+                .FirstOrDefault(r => r?["@type"]?.ToString() == "SearchQueryService")?["@id"]?.ToString();
+
+            var registrationsUrl = index?["resources"]?.AsArray()
+                .FirstOrDefault(r => r?["@type"]?.ToString()?.StartsWith("RegistrationsBaseUrl") ?? false)?["@id"]?.ToString();
 
             if (string.IsNullOrEmpty(searchUrl) || string.IsNullOrEmpty(registrationsUrl))
                 throw new InvalidOperationException("Required NuGet endpoints not found in index.json");
@@ -109,55 +96,36 @@ namespace KamiYomu.Web.Infrastructure.Services
 
             var packages = new List<NugetPackageInfo>();
 
-            if (searchResults != null)
+            if (searchResults is null) return packages;
+
+            foreach (var result in searchResults)
             {
-                foreach (var result in searchResults)
+                var packageId = result?["id"]?.ToString();
+                if (string.IsNullOrEmpty(packageId)) continue;
+
+                // Tags filter
+                var tags = ParseTags(result?["tags"]);
+                if (!tags.Any(tag => tag.Equals(Defaults.Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase)))
+                    continue;
+
+                // Fetch registration index
+                var registrationIndexUrl = $"{registrationsUrl.TrimEnd('/')}/{packageId.ToLowerInvariant()}/index.json";
+                var registrationJson = await client.GetStringAsync(registrationIndexUrl, cancellationToken);
+                var registration = JsonNode.Parse(registrationJson)?["items"]?.AsArray();
+                if (registration is null) continue;
+
+                foreach (var page in registration)
                 {
-                    var packageId = result?["id"]?.ToString();
-                    if (string.IsNullOrEmpty(packageId))
-                        continue;
+                    var versions = page?["items"]?.AsArray();
+                    if (versions is null) continue;
 
-                    // Filter by tags if needed
-                    var tagsNode = result?["tags"];
-                    string[] tags = tagsNode switch
+                    foreach (var versionEntry in versions)
                     {
-                        JsonArray array => array
-                            .Select(t => t?.ToString())
-                            .Where(t => !string.IsNullOrWhiteSpace(t))
-                            .ToArray(),
+                        var catalogEntry = versionEntry?["catalogEntry"];
+                        if (catalogEntry is null) continue;
 
-                        { } node when !string.IsNullOrWhiteSpace(node.ToString()) =>
-                            node.ToString().Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries),
-
-                        _ => Array.Empty<string>()
-                    };
-
-                    var isCrawlerAgent = tags.Any(tag =>
-                        tag.Equals(Defaults.Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase));
-
-                    if (!isCrawlerAgent)
-                        continue;
-
-                    // Fetch registration index for full versions + dependencies
-                    var registrationIndexUrl = $"{registrationsUrl.TrimEnd('/')}/{packageId.ToLowerInvariant()}/index.json";
-                    var registrationJson = await client.GetStringAsync(registrationIndexUrl, cancellationToken);
-                    var registration = JsonNode.Parse(registrationJson)?["items"]?.AsArray();
-
-                    if (registration == null)
-                        continue;
-
-                    foreach (var page in registration)
-                    {
-                        var versions = page?["items"]?.AsArray();
-                        if (versions == null) continue;
-
-                        foreach (var versionEntry in versions)
-                        {
-                            var catalogEntry = versionEntry?["catalogEntry"];
-                            if (catalogEntry == null) continue;
-                            NugetPackageInfo packageInfo = GetNugetPackageInfo(packageId, result, catalogEntry);
-                            packages.Add(packageInfo);
-                        }
+                        var packageInfo = BuildPackageInfo(packageId, result, catalogEntry);
+                        packages.Add(packageInfo);
                     }
                 }
             }
@@ -165,76 +133,136 @@ namespace KamiYomu.Web.Infrastructure.Services
             return packages;
         }
 
-        private static NugetPackageInfo GetNugetPackageInfo(string packageId, JsonNode? result, JsonNode? catalogEntry)
+        public async Task<IEnumerable<NugetPackageInfo>> GetAllPackageVersionsAsync(Guid sourceId, string packageId, CancellationToken cancellationToken)
         {
-            var version = catalogEntry?["version"]?.ToString();
-            var deps = catalogEntry?["dependencyGroups"]?.AsArray();
+            // Load source
+            var source = _dbContext.NugetSources.FindById(sourceId)
+                ?? throw new InvalidOperationException("NuGet source not found.");
 
-            var dependencies = new List<NugetDependencyInfo>();
-            if (deps != null)
+            using var client = CreateHttpClient(source);
+
+            // Fetch service index
+            var indexJson = await client.GetStringAsync(source.Url, cancellationToken);
+            var index = JsonNode.Parse(indexJson);
+
+            var registrationsUrl = index?["resources"]?.AsArray()
+                .FirstOrDefault(r => (r?["@type"]?.ToString()?.StartsWith("RegistrationsBaseUrl") ?? false))
+                ?["@id"]?.ToString();
+
+            if (string.IsNullOrEmpty(registrationsUrl))
+                throw new InvalidOperationException("RegistrationsBaseUrl not found in index.json");
+
+            // Fetch registration index for this package
+            var registrationIndexUrl = $"{registrationsUrl.TrimEnd('/')}/{packageId.ToLowerInvariant()}/index.json";
+            var registrationJson = await client.GetStringAsync(registrationIndexUrl, cancellationToken);
+            var registration = JsonNode.Parse(registrationJson)?["items"]?.AsArray();
+            if (registration is null) return new List<NugetPackageInfo>();
+
+            var packages = new List<NugetPackageInfo>();
+
+            foreach (var page in registration)
             {
-                foreach (var group in deps)
-                {
-                    var targetFramework = group?["targetFramework"]?.ToString();
-                    var groupDeps = group?["dependencies"]?.AsArray();
-                    if (groupDeps == null) continue;
+                var versions = page?["items"]?.AsArray();
+                if (versions is null) continue;
 
-                    foreach (var dep in groupDeps)
-                    {
-                        dependencies.Add(new NugetDependencyInfo
-                        {
-                            Id = dep?["id"]?.ToString(),
-                            VersionRange = dep?["range"]?.ToString(),
-                            TargetFramework = targetFramework
-                        });
-                    }
+                foreach (var versionEntry in versions)
+                {
+                    var catalogEntry = versionEntry?["catalogEntry"];
+                    if (catalogEntry is null) continue;
+
+                    var packageInfo = BuildPackageInfo(packageId, null, catalogEntry);
+                    packages.Add(packageInfo);
                 }
             }
-            var authorsNode = result?["authors"];
 
-            var authors = authorsNode is JsonArray array
-                ? array.Select(p => p?.ToString()).Where(p => !string.IsNullOrEmpty(p)).ToArray()
-                : authorsNode?.ToString() is string singleAuthor && !string.IsNullOrEmpty(singleAuthor)
-                    ? [singleAuthor]
-                    : Array.Empty<string>();
+            return packages;
+        }
+        private static HttpClient CreateHttpClient(NugetSource source)
+        {
+            var handler = new HttpClientHandler();
+            var client = new HttpClient(handler);
 
-            var packageInfo = new NugetPackageInfo
+            if (!string.IsNullOrWhiteSpace(source.UserName) && !string.IsNullOrWhiteSpace(source.Password))
+            {
+                var byteArray = Encoding.ASCII.GetBytes($"{source.UserName}:{source.Password}");
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+            }
+            else if (!string.IsNullOrWhiteSpace(source.Password))
+            {
+                client.DefaultRequestHeaders.Add("X-NuGet-ApiKey", source.Password);
+            }
+
+            return client;
+        }
+
+        private static string[] ParseTags(JsonNode? tagsNode) =>
+            tagsNode switch
+            {
+                JsonArray array => array.Select(t => t?.ToString())
+                                        .Where(t => !string.IsNullOrWhiteSpace(t))
+                                        .ToArray(),
+                { } node when !string.IsNullOrWhiteSpace(node.ToString()) =>
+                    node.ToString().Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries),
+                _ => Array.Empty<string>()
+            };
+
+        private static NugetPackageInfo BuildPackageInfo(string packageId, JsonNode? result, JsonNode? catalogEntry)
+        {
+            var version = catalogEntry?["version"]?.ToString();
+            var dependencies = ParseDependencies(catalogEntry?["dependencyGroups"]);
+
+            var authors = ParseAuthors(catalogEntry?["authors"]);
+
+            return new NugetPackageInfo
             {
                 Id = packageId,
                 Version = version,
-                IconUrl = Uri.TryCreate(result?["iconUrl"]?.ToString(), UriKind.Absolute, out var icon) ? icon : null,
-                LicenseUrl = Uri.TryCreate(result?["licenseUrl"]?.ToString(), UriKind.Absolute, out var licenseUrl) ? licenseUrl : null,
-                Description = result?["description"]?.ToString(),
+                IconUrl = TryUri(catalogEntry?["iconUrl"]),
+                LicenseUrl = TryUri(catalogEntry?["licenseUrl"]),
+                Description = catalogEntry?["description"]?.ToString(),
                 Authors = authors,
-                RepositoryUrl = Uri.TryCreate(result?["projectUrl"]?.ToString(), UriKind.Absolute, out var repo) ? repo : null,
-                TotalDownloads = int.TryParse(result?["totalDownloads"]?.ToString(), out var totalDownload) ? totalDownload : 0,
+                RepositoryUrl = TryUri(catalogEntry?["projectUrl"]),
+                TotalDownloads = int.TryParse(catalogEntry?["totalDownloads"]?.ToString(), out var totalDownload) ? totalDownload : 0,
                 Dependencies = dependencies
             };
-            return packageInfo;
         }
 
-        private static NugetPackageInfo ConvertToNuGetPackageInfo(JsonNode? result)
+        private static List<NugetDependencyInfo> ParseDependencies(JsonNode? depsNode)
         {
-            var authorsNode = result?["authors"];
+            var dependencies = new List<NugetDependencyInfo>();
+            var deps = depsNode?.AsArray();
+            if (deps is null) return dependencies;
 
-            var authors = authorsNode is JsonArray array
+            foreach (var group in deps)
+            {
+                var targetFramework = group?["targetFramework"]?.ToString();
+                var groupDeps = group?["dependencies"]?.AsArray();
+                if (groupDeps is null) continue;
+
+                foreach (var dep in groupDeps)
+                {
+                    dependencies.Add(new NugetDependencyInfo
+                    {
+                        Id = dep?["id"]?.ToString(),
+                        VersionRange = dep?["range"]?.ToString(),
+                        TargetFramework = targetFramework
+                    });
+                }
+            }
+
+            return dependencies;
+        }
+
+        private static string[] ParseAuthors(JsonNode? authorsNode) =>
+            authorsNode is JsonArray array
                 ? array.Select(p => p?.ToString()).Where(p => !string.IsNullOrEmpty(p)).ToArray()
                 : authorsNode?.ToString() is string singleAuthor && !string.IsNullOrEmpty(singleAuthor)
-                    ? [singleAuthor]
+                    ? new[] { singleAuthor }
                     : Array.Empty<string>();
 
-            var packageInfo = new NugetPackageInfo
-            {
-                Id = result?["id"]?.ToString(),
-                Version = result?["version"]?.ToString(),
-                IconUrl = Uri.TryCreate(result?["iconUrl"]?.ToString(), UriKind.Absolute, out var icon) ? icon : null,
-                Description = result?["description"]?.ToString(),
-                Authors = authors,
-                RepositoryUrl = Uri.TryCreate(result?["projectUrl"]?.ToString(), UriKind.Absolute, out var repo) ? repo : null,
-                TotalDownloads = int.TryParse(result?["totalDownloads"]?.ToString(), out var totalDownload) ? totalDownload : 0
-            };
-            return packageInfo;
-        }
+        private static Uri? TryUri(JsonNode? node) =>
+            Uri.TryCreate(node?.ToString(), UriKind.Absolute, out var uri) ? uri : null;
 
         public async Task<Stream[]> OnGetDownloadAsync(Guid sourceId, string packageId, string packageVersion, CancellationToken cancellationToken)
         {
