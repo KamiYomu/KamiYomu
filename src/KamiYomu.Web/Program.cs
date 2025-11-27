@@ -111,9 +111,9 @@ var retryPolicy = HttpPolicyExtensions
     .HandleTransientHttpError()
     .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 
-var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(10); // 10 seconds
+var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(Worker.HttpTimeOutInSeconds);
 
-builder.Services.AddHttpClient(Defaults.Worker.HttpClientBackground, client =>
+builder.Services.AddHttpClient(Worker.HttpClientBackground, client =>
 {
     client.DefaultRequestHeaders.UserAgent.ParseAdd(CrawlerAgentSettings.HttpUserAgent);
 })
@@ -181,7 +181,14 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
                                                                    | SQLiteOpenFlags.ReadWrite 
                                                                    | SQLiteOpenFlags.PrivateCache
                                                                    | SQLiteOpenFlags.FullMutex, true);
-                                                               return new SQLiteConnection(connectionString);
+                                                               var connection = new SQLiteConnection(connectionString);
+
+                                                               var journalMode = connection.ExecuteScalar<string>("PRAGMA journal_mode=WAL;");
+
+
+                                                               var busyTimeout = connection.ExecuteScalar<string>("PRAGMA busy_timeout=5000;");
+
+                                                               return connection;
                                                            }),
                                                            new SQLiteStorageOptions
                                                            {

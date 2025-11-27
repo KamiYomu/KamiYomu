@@ -54,8 +54,7 @@ public class MangaDownloaderJob(
                 return;
             }
 
-            logger.LogInformation("Dispatch started. JobId: {JobId}", context.BackgroundJob?.Id);
-
+            logger.LogInformation("Dispatch started. Manga: {Manga} on Job Id {JobId}", title, context.BackgroundJob?.Id);
 
             cancellationToken.ThrowIfCancellationRequested();
 

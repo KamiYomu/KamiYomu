@@ -70,7 +70,7 @@ namespace KamiYomu.Web.Worker
                     return;
                 }
 
-
+                logger.LogInformation("Dispatch started. Chapter: {chapter} on Job Id {JobId}", title, context.BackgroundJob?.Id);
                 chapterDownload.Processing();
                 libDbContext.ChapterDownloadRecords.Update(chapterDownload);
 
