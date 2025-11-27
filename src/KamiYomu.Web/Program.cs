@@ -193,7 +193,7 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
                                                            }),
                                                            new SQLiteStorageOptions
                                                            {
-                                                                QueuePollInterval = TimeSpan.FromSeconds(15),
+                                                                QueuePollInterval = TimeSpan.FromMinutes(1),
                                                                 JobExpirationCheckInterval = TimeSpan.FromHours(1),
                                                                 CountersAggregateInterval = TimeSpan.FromMinutes(5)
                                                            }));

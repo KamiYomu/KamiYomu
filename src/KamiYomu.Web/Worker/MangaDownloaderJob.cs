@@ -64,8 +64,6 @@ public class MangaDownloaderJob(
 
             libDbContext.MangaDownloadRecords.Update(mangaDownload);
 
-
-
             int offset = 0;
             const int limit = 30;
             int? total = null;

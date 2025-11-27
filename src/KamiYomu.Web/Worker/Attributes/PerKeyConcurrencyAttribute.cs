@@ -22,7 +22,7 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
 
     public PerKeyConcurrencyAttribute(
         string parameterName,
-        int rescheduleDelayMinutes = 5)
+        int rescheduleDelayMinutes = 2)
     {
         _parameterName = parameterName;
         _rescheduleDelay = TimeSpan.FromMinutes(rescheduleDelayMinutes);

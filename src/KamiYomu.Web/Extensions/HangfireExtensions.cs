@@ -2,17 +2,25 @@
 using Hangfire.States;
 using Hangfire.Storage;
 
-namespace KamiYomu.Web.Extensions
+namespace KamiYomu.Web.Extensions;
+
+public static class HangfireExtensions
 {
-    public static class HangfireExtensions
+    public static void EnqueueAfterDelay(this BackgroundJob backgroundJob, TimeSpan delay, JobStorage storage)
     {
-        public static void EnqueueAfterDelay(this BackgroundJob backgroundJob, TimeSpan delay, JobStorage jobStorage)
-        {
-            var client = new BackgroundJobClient(jobStorage);
+        using var connection = storage.GetConnection();
+        using var transaction = connection.CreateWriteTransaction();
 
-            var newState = new ScheduledState(delay);
+        var queue = backgroundJob.Job.Queue;
 
-            client.Create(backgroundJob.Job, newState);
-        }
+        var stateData = connection.GetStateData(backgroundJob.Id);
+
+        var newState = new ScheduledState(delay);
+
+        transaction.SetJobState(backgroundJob.Id, newState);
+
+        connection.SetJobParameter(backgroundJob.Id, "Queue", queue);
+
+        transaction.Commit();
     }
 }

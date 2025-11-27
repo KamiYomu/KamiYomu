@@ -24,18 +24,26 @@
             @foreach (var valuePair in Model.Agent.AgentMetadata)
             {
                 <tr>
-                    <td>@I18n.ResourceManager.GetString(valuePair.Key)</td>
+                    <td>@I18n.ResourceManager.GetStringSafe(valuePair.Key)</td>
                     <td>
                         @{
-                            var metadataKey = valuePair.Value as string;
-                            var displayValue =
-                            !string.IsNullOrWhiteSpace(metadataKey) &&
-                            Model.Agent.AgentMetadata.TryGetValue(metadataKey, out var metadataValue) &&
-                            metadataValue is string s && !string.IsNullOrWhiteSpace(s)
-                            ? s
-                            : "Empty";
+                            var metadataKey = valuePair.Key;
+                            object? metadataValue = null;
+
+                            var hasValue = !string.IsNullOrWhiteSpace(metadataKey) &&
+                            Model.Agent.AgentMetadata.TryGetValue(metadataKey, out metadataValue);
+
+                           
                         }
-                        @displayValue
+
+                        @if (metadataValue is bool boolVal)
+                        {
+                            <input type="checkbox" readonly @(boolVal ? "checked" : "") />
+                        }
+                        else
+                        {
+                            @metadataValue?.ToString()
+                        }
                     </td>
                 </tr>
 
