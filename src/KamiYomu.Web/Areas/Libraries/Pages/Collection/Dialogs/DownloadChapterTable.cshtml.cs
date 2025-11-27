@@ -3,6 +3,7 @@ using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Reports;
+using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using System.IO.Compression;
 namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 {
     public class DownloadChapterTableModel(DbContext dbContext,
+                                           IHangfireRepository hangfireRepository,
                                            INotificationService notificationService,
                                            IWebHostEnvironment webHostEnvironment) : PageModel
     {
@@ -200,7 +202,9 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 
             record.DeleteDownloadedFileIfExists();
 
-            var jobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(worker => worker.DispatchAsync(record.CrawlerAgent.Id,
+            var queueState = hangfireRepository.GetLeastLoadedDownloadChapterQueue();
+            var jobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(queueState.Queue, worker => worker.DispatchAsync(queueState.Queue, 
+                                                                                        record.CrawlerAgent.Id,
                                                                                         record.MangaDownload.Library.Id,
                                                                                         record.MangaDownload.Id,
                                                                                         record.Id,

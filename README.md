@@ -65,15 +65,28 @@ services:
         # add more entries using incrementing indexes (e.g., Worker__DiscoveryNewChapterQueues__1, Worker__DiscoveryNewChapterQueues__2, etc.)
         Worker__DiscoveryNewChapterQueues__0:  "discovery-new-chapter-queue-1" 
 
-        # Controls how many background processing threads Hangfire will spawn.
-        # A higher value allows more jobs to run concurrently, but increases CPU and memory usage.
+        # Specifies the number of background processing threads Hangfire will spawn.
+        # Increasing this value allows more jobs to run concurrently, but also raises CPU load 
+        # and memory usage.
+        # Each worker consumes ~80 MB of memory on average while active 
+        # (actual usage may vary depending on the crawler agent implementation and system configuration).
         Worker__WorkerCount: 1
 
         # Defines the maximum number of crawler instances allowed to run concurrently for the same source.
         # Typically set to 1 to ensure only a single crawler operates at a time, preventing duplicate work,
         # resource conflicts, and potential rate‑limiting or blocking by the target system.
-        # However, this can be adjusted to increase throughput if the source can handle multiple concurrent requests.
-        # Increaing the Worker__WorkerCount may also necessitate increasing this value.
+        # This value can be increased to improve throughput if the source supports multiple concurrent requests.
+        #
+        # Note:
+        # - Worker__WorkerCount controls the total number of threads available.
+        # - Worker__MaxConcurrentCrawlerInstances limits how many threads can be used by the same crawler.
+        #
+        # Examples:
+        # - If Worker__MaxConcurrentCrawlerInstances = 1 and Worker__WorkerCount = 4,
+        #   then up to 4 different crawler agents can run independently.
+        # - If Worker__MaxConcurrentCrawlerInstances = 2 and Worker__WorkerCount = 6,
+        #   then each crawler agent can run up to 2 instances concurrently,
+        #   while up to 3 different crawler agents may be active at the same time.
         Worker__MaxConcurrentCrawlerInstances: 1
 
         # Minimum delay (in milliseconds) between job executions.

@@ -13,14 +13,29 @@ namespace KamiYomu.Web.Pages
                             INotificationService notificationService) : PageModel
     {
         [BindProperty]
-        public string Culture { get; set; }
+        public string? Culture { get; set; }
 
         public void OnGet()
         {
 
         }
+        public IActionResult OnPostSetTimeZone(string tz)
+        {
+            if (!string.IsNullOrWhiteSpace(tz))
+            {
+                Response.Cookies.Append("UserTimeZone", tz, new CookieOptions
+                {
+                    Expires = DateTime.UtcNow.AddYears(1),
+                    Secure = true,
+                    HttpOnly = false,
+                    IsEssential = true
+                });
+            }
 
-        public IActionResult OnPostLanguageSetAsync(string? returnUrl = null, CancellationToken cancellationToken = default)
+            return new EmptyResult();
+        }
+
+        public IActionResult OnPostSetLanguageAsync(string? returnUrl = null, CancellationToken cancellationToken = default)
         {
             var culture = CultureInfo.GetCultureInfo(Culture);
 

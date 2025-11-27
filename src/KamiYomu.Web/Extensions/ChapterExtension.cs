@@ -35,9 +35,9 @@ namespace KamiYomu.Web.Extensions
 
         public static string GetCbzFileName(this Chapter chapter)
         {
-            var volumePart = chapter.Volume != 0 ? $"Vol.{chapter.Volume:00} " : "";
+            var volumePart = chapter.Volume != 0 ? $"Vol.{chapter.Volume:000} " : "";
 
-            var chapterPart = chapter.Number > -1 ? $"Ch.{chapter.Number.ToString().PadLeft(3, '0')}"
+            var chapterPart = chapter.Number > -1 ? $"Ch.{chapter.Number.ToString().PadLeft(4, '0')}"
                                                                  : $"Ch.{chapter.Id.ToString().Substring(0, 8)}";
 
             var cbzFileName = $"{chapter.ParentManga.FolderName} {volumePart}{chapterPart}.cbz";
@@ -46,13 +46,13 @@ namespace KamiYomu.Web.Extensions
 
         public static string GetVolumeFolderName(this Chapter chapter, string seriesFolder)
         {
-            return chapter.Volume != 0 ? Path.Combine(seriesFolder, $"Volume {chapter.Volume:00}")
+            return chapter.Volume != 0 ? Path.Combine(seriesFolder, $"Volume {chapter.Volume:000}")
                                        : seriesFolder;
         }
 
         public static string GetChapterFolderName(this Chapter chapter)
         {
-            return chapter.Number != 0 ? $"Chapter {chapter.Number:000}"
+            return chapter.Number != 0 ? $"Chapter {chapter.Number:0000}"
                                        : $"Chapter {chapter.Id.ToString()[..8]}";
         }
 

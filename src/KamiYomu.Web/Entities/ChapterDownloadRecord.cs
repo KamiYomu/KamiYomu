@@ -13,15 +13,15 @@ namespace KamiYomu.Web.Entities
             MangaDownload = mangaDownload;
             Chapter = chapter;
             DownloadStatus = DownloadStatus.ToBeRescheduled;
-            StatusUpdateAt = DateTime.UtcNow;
-            CreateAt = DateTime.UtcNow;
+            StatusUpdateAt = DateTimeOffset.UtcNow;
+            CreateAt = DateTimeOffset.UtcNow;
         }
 
         public void ToBeRescheduled(string statusReason = "")
         {
             StatusReason = statusReason;
             DownloadStatus = DownloadStatus.ToBeRescheduled;
-            StatusUpdateAt = DateTime.UtcNow;
+            StatusUpdateAt = DateTimeOffset.UtcNow;
         }
 
         public void Scheduled(string jobId)
@@ -29,21 +29,21 @@ namespace KamiYomu.Web.Entities
             BackgroundJobId = jobId;
             StatusReason = null;
             DownloadStatus = DownloadStatus.Scheduled;
-            StatusUpdateAt = DateTime.UtcNow;
+            StatusUpdateAt = DateTimeOffset.UtcNow;
         }
 
         public void Processing()
         {
             StatusReason = null;
             DownloadStatus = DownloadStatus.InProgress;
-            StatusUpdateAt = DateTime.UtcNow;
+            StatusUpdateAt = DateTimeOffset.UtcNow;
         }
 
         public void Complete()
         {
             StatusReason = null;
             DownloadStatus = DownloadStatus.Completed;
-            StatusUpdateAt = DateTime.UtcNow;
+            StatusUpdateAt = DateTimeOffset.UtcNow;
         }
 
         public void Cancelled(string statusReason)
@@ -51,7 +51,7 @@ namespace KamiYomu.Web.Entities
             StatusReason = statusReason;
             BackgroundJobId = string.Empty;
             DownloadStatus = DownloadStatus.Cancelled;
-            StatusUpdateAt = DateTime.UtcNow;
+            StatusUpdateAt = DateTimeOffset.UtcNow;
         }
 
 
@@ -73,7 +73,7 @@ namespace KamiYomu.Web.Entities
         public int LastUpdatedStatusTotalDays()
         {
             if (!StatusUpdateAt.HasValue) return int.MaxValue;
-            return (int)(DateTime.UtcNow - StatusUpdateAt.Value).TotalDays;
+            return (int)(DateTimeOffset.UtcNow - StatusUpdateAt.Value).TotalDays;
         }
 
         public void DeleteDownloadedFileIfExists()
@@ -97,8 +97,8 @@ namespace KamiYomu.Web.Entities
         public MangaDownloadRecord MangaDownload { get; private set; }
         public Chapter Chapter { get; private set; }
         public string BackgroundJobId { get; private set; }
-        public DateTime CreateAt { get; private set; }
-        public DateTime? StatusUpdateAt { get; private set; }
+        public DateTimeOffset CreateAt { get; private set; }
+        public DateTimeOffset? StatusUpdateAt { get; private set; }
         public DownloadStatus DownloadStatus { get; private set; }
         public string? StatusReason { get; private set; }
     }

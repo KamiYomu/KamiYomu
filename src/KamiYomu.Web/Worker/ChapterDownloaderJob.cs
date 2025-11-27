@@ -14,43 +14,30 @@ using System.Runtime.InteropServices;
 
 namespace KamiYomu.Web.Worker
 {
-    public class ChapterDownloaderJob : IChapterDownloaderJob
+    public class ChapterDownloaderJob(
+        ILogger<ChapterDownloaderJob> logger,
+        IOptions<WorkerOptions> workerOptions,
+        DbContext dbContext,
+        ICrawlerAgentRepository agentCrawlerRepository,
+        IHttpClientFactory httpClientFactory,
+        INotificationService notificationService) : IChapterDownloaderJob, IDisposable
     {
-        private readonly ILogger<ChapterDownloaderJob> _logger;
-        private readonly WorkerOptions _workerOptions;
-        private readonly DbContext _dbContext;
-        private readonly ICrawlerAgentRepository _agentCrawlerRepository;
-        private readonly HttpClient _httpClient;
-        private readonly INotificationService _notificationService;
+        private readonly WorkerOptions _workerOptions = workerOptions.Value;
+        private readonly HttpClient _httpClient = httpClientFactory.CreateClient(Defaults.Worker.HttpClientBackground);
+        private bool disposedValue;
 
-        public ChapterDownloaderJob(
-            ILogger<ChapterDownloaderJob> logger,
-            IOptions<WorkerOptions> workerOptions,
-            DbContext dbContext,
-            ICrawlerAgentRepository agentCrawlerRepository,
-            IHttpClientFactory httpClientFactory,
-            INotificationService notificationService)
+        public async Task DispatchAsync(string queue, Guid crawlerId, Guid libraryId, Guid mangaDownloadId, Guid chapterDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
         {
-            _logger = logger;
-            _workerOptions = workerOptions.Value;
-            _dbContext = dbContext;
-            _agentCrawlerRepository = agentCrawlerRepository;
-            _httpClient = httpClientFactory.CreateClient(Defaults.Worker.HttpClientBackground);
-            _notificationService = notificationService;
-        }
-
-        public async Task DispatchAsync(Guid crawlerId, Guid libraryId, Guid mangaDownloadId, Guid chapterDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
-        {
-            var userPreference = _dbContext.UserPreferences.FindOne(p => true);
+            var userPreference = dbContext.UserPreferences.FindOne(p => true);
             var culture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
 
             Thread.CurrentThread.CurrentCulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
 
-            var library = _dbContext.Libraries.FindById(libraryId);
+            var library = dbContext.Libraries.FindById(libraryId);
             if(library == null)
             {
-                _logger.LogError("Library not found: {LibraryId}", libraryId);
+                logger.LogError("Library not found: {LibraryId}", libraryId);
                 return;
             }
             using var libDbContext = library.GetDbContext();
@@ -62,7 +49,7 @@ namespace KamiYomu.Web.Worker
             {
                 if (chapterDownload is null)
                 {
-                    _logger.LogError("ChapterDownloadRecord not found: {ChapterDownloadId}", chapterDownloadId);
+                    logger.LogError("ChapterDownloadRecord not found: {ChapterDownloadId}", chapterDownloadId);
                     return;
                 }
 
@@ -70,7 +57,7 @@ namespace KamiYomu.Web.Worker
                 {
                     chapterDownload.Cancelled(I18n.LibraryNotFound);
                     libDbContext.ChapterDownloadRecords.Update(chapterDownload);
-                    _logger.LogWarning("Dispatch \"{title}\" could not proceed — the associated library record no longer exists.", title);
+                    logger.LogWarning("Dispatch \"{title}\" could not proceed — the associated library record no longer exists.", title);
                     return;
                 }
 
@@ -79,7 +66,7 @@ namespace KamiYomu.Web.Worker
                 {
                     chapterDownload.Complete();
                     libDbContext.ChapterDownloadRecords.Update(chapterDownload);
-                    _logger.LogInformation("{file} was found, download chapter marked as completed.", chapterDownload.Chapter.GetCbzFileName());
+                    logger.LogInformation("{file} was found, download chapter marked as completed.", chapterDownload.Chapter.GetCbzFileName());
                     return;
                 }
 
@@ -87,7 +74,7 @@ namespace KamiYomu.Web.Worker
                 chapterDownload.Processing();
                 libDbContext.ChapterDownloadRecords.Update(chapterDownload);
 
-                var pages = await _agentCrawlerRepository.GetChapterPagesAsync(
+                var pages = await agentCrawlerRepository.GetChapterPagesAsync(
                     chapterDownload.CrawlerAgent,
                     chapterDownload.Chapter,
                     cancellationToken);
@@ -100,7 +87,7 @@ namespace KamiYomu.Web.Worker
 
                 var pageCount = pages.Count();
 
-                _logger.LogInformation("{crawler}: Downloading {Count} pages to chapter folder: {chapterFolderPath}", library.AgentCrawler.DisplayName, pageCount, chapterFolderPath);
+                logger.LogInformation("{crawler}: Downloading {Count} pages to chapter folder: {chapterFolderPath}", library.AgentCrawler.DisplayName, pageCount, chapterFolderPath);
 
                 File.WriteAllText(Path.Join(chapterFolderPath, "ComicInfo.xml"), chapterDownload.Chapter.ToComicInfo());
 
@@ -110,7 +97,7 @@ namespace KamiYomu.Web.Worker
                 {
                     if (cancellationToken.IsCancellationRequested)
                     {
-                        _logger.LogWarning("{crawler}: Dispatch cancelled during page download. Chapter: {ChapterDownloadId}", library.AgentCrawler.DisplayName, chapterDownloadId);
+                        logger.LogWarning("{crawler}: Dispatch cancelled during page download. Chapter: {ChapterDownloadId}", library.AgentCrawler.DisplayName, chapterDownloadId);
                         chapterDownload.Cancelled($"Dispatch cancelled during page download. Chapter: {chapterDownloadId}");
                         libDbContext.ChapterDownloadRecords.Update(chapterDownload);
                         return;
@@ -135,11 +122,11 @@ namespace KamiYomu.Web.Worker
                             await httpStream.CopyToAsync(fileStream, cancellationToken);
                         }
 
-                        _logger.LogInformation("{crawler}: Downloaded page {Index}/{count} to {FilePath}", library.AgentCrawler.DisplayName, index, pageCount, filePath);
+                        logger.LogInformation("{crawler}: Downloaded page {Index}/{count} to {FilePath}", library.AgentCrawler.DisplayName, index, pageCount, filePath);
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, "{crawler}: Failed to download page {Index}/{count} from {Url}", library.AgentCrawler.DisplayName, index, pageCount, page.ImageUrl);
+                        logger.LogError(ex, "{crawler}: Failed to download page {Index}/{count} from {Url}", library.AgentCrawler.DisplayName, index, pageCount, page.ImageUrl);
                     }
 
                     index++;
@@ -147,13 +134,21 @@ namespace KamiYomu.Web.Worker
                     await Task.Delay(_workerOptions.GetWaitPeriod(), cancellationToken);
                 }
 
-                _logger.LogInformation("{crawler}: Completed download of chapter {ChapterDownloadId} to {ChapterFolder}", library.AgentCrawler.DisplayName, chapterDownloadId, chapterFolderPath);
+                logger.LogInformation("{crawler}: Completed download of chapter {ChapterDownloadId} to {ChapterFolder}", library.AgentCrawler.DisplayName, chapterDownloadId, chapterFolderPath);
 
                 var bytes = CreateCbzFile(chapterDownload, chapterFolderPath, seriesFolder);
 
                 if(bytes < 600)
                 {
-                    await _notificationService.PushWarningAsync($"{I18n.CbzIsTooSmall}: {chapterDownload.Chapter.GetCbzFileName()}", cancellationToken);
+                    await notificationService.PushWarningAsync($"{I18n.CbzIsTooSmall}: {chapterDownload.Chapter.GetCbzFileName()}", cancellationToken);
+                    chapterDownload.DeleteDownloadedFileIfExists();
+                    var cbzFilePath = Path.Combine(seriesFolder, chapterDownload.Chapter!.GetCbzFileName());
+                    if (File.Exists(cbzFilePath))
+                    {
+                        File.Delete(cbzFilePath);
+                    }
+
+                    
                     throw new Exception($"{chapterDownload.Chapter.GetCbzFileName()} CBZ file size is too small, indicating a failed download.");
                 }
 
@@ -164,7 +159,7 @@ namespace KamiYomu.Web.Worker
                 if (userPreference.FamilySafeMode && chapterDownload.MangaDownload.Library.Manga.IsFamilySafe ||
                     !userPreference.FamilySafeMode)
                 {
-                    await _notificationService.PushSuccessAsync($"{I18n.ChapterDownloaded}: {Path.GetFileNameWithoutExtension(chapterDownload.Chapter.GetCbzFileName())}", cancellationToken);
+                    await notificationService.PushSuccessAsync($"{I18n.ChapterDownloaded}: {Path.GetFileNameWithoutExtension(chapterDownload.Chapter.GetCbzFileName())}", cancellationToken);
                 }
             }
             catch (Exception ex)
@@ -172,12 +167,13 @@ namespace KamiYomu.Web.Worker
                 var attempt = context.GetJobParameter<int>("RetryCount") + 1;
                 var errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 var logMessage = $"{I18n.Attempt} {attempt}/{_workerOptions.MaxRetryAttempts}: {I18n.DispatchFailedMessage}. {I18n.Error}: {errorMessage}";
-                _logger.LogError(ex, logMessage);
+                logger.LogError(ex, logMessage);
                 chapterDownload.ToBeRescheduled(logMessage);
                 libDbContext.ChapterDownloadRecords.Update(chapterDownload);
                 throw;
             }
         }
+
 
         private long CreateCbzFile(ChapterDownloadRecord chapterDownload, string chapterFolder, string seriesFolder)
         {
@@ -193,14 +189,14 @@ namespace KamiYomu.Web.Worker
             try
             {
                 Directory.Delete(chapterFolder, recursive: true);
-                _logger.LogInformation("Cleaned up extracted chapter folder: {ChapterFolder}", chapterFolder);
+                logger.LogInformation("Cleaned up extracted chapter folder: {ChapterFolder}", chapterFolder);
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Failed to delete chapter folder: {ChapterFolder}", chapterFolder);
+                logger.LogWarning(ex, "Failed to delete chapter folder: {ChapterFolder}", chapterFolder);
             }
 
-            _logger.LogInformation("Created CBZ archive: {CbzFilePath}", cbzFilePath);
+            logger.LogInformation("Created CBZ archive: {CbzFilePath}", cbzFilePath);
 
             var size = new FileInfo(cbzFilePath).Length;
             return size;
@@ -237,10 +233,27 @@ namespace KamiYomu.Web.Worker
                 }
 
 
-                _logger.LogInformation("Copied: {cbzFile} → {destinationPath}", cbzFile, destinationPath);
+                logger.LogInformation("Copied: {cbzFile} → {destinationPath}", cbzFile, destinationPath);
             }
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _httpClient.Dispose();
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
     }
 }
 

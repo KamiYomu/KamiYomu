@@ -61,7 +61,7 @@ public class IndexModel(
 
         var result = File(fileStream, GetContentType(fileStream.FileInfo.Filename));
         Response.Headers["Cache-Control"] = "public,max-age=2592000"; // 30 days
-        Response.Headers["Expires"] = DateTime.UtcNow.AddDays(30).ToString("R"); // RFC1123 format
+        Response.Headers["Expires"] = DateTimeOffset.UtcNow.AddDays(30).ToString("R"); // RFC1123 format
         return result;
 
     }
