@@ -32,53 +32,7 @@
 </head>
 <body>
     <partial name="_Sprites" />
-    <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
-        <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center"
-                id="bd-theme"
-                type="button"
-                aria-expanded="false"
-                data-bs-toggle="dropdown"
-                aria-label="Toggle theme (auto)">
-            <i class="bi bi-circle-half my-1 theme-icon-active" aria-hidden="true"></i>
-            <span class="visually-hidden" id="bd-theme-text">@I18n.ToggleTheme</span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end shadow"
-            aria-labelledby="bd-theme-text">
-            <li>
-                <button type="button"
-                        class="dropdown-item d-flex align-items-center"
-                        data-bs-theme-value="light"
-                        aria-pressed="false">
-
-                    <i class="bi bi-sun-fill me-2 opacity-50" aria-hidden="true"></i>
-                    @I18n.Light
-                    <i class="bi bi-check2 ms-auto d-none" aria-hidden="true"></i>
-                </button>
-
-            </li>
-            <li>
-                <button type="button"
-                        class="dropdown-item d-flex align-items-center"
-                        data-bs-theme-value="dark"
-                        aria-pressed="false">
-
-                    <i class="bi bi-moon-stars-fill me-2 opacity-50" aria-hidden="true"></i>
-                    @I18n.Dark
-                    <i class="bi bi-check2 ms-auto d-none" aria-hidden="true"></i>
-                </button>
-            </li>
-            <li>
-                <button type="button"
-                        class="dropdown-item d-flex align-items-center active"
-                        data-bs-theme-value="auto"
-                        aria-pressed="true">
-                    <i class="bi bi-circle-half me-2 opacity-50" aria-hidden="true"></i>
-                    Auto
-                    <i class="bi bi-check2 ms-auto d-none" aria-hidden="true"></i>
-                </button>
-            </li>
-        </ul>
-    </div>
+    
 
     <header class="navbar sticky-top bg-dark p-0 shadow d-flex justify-content-between align-items-center"
             data-bs-theme="dark">
@@ -105,7 +59,7 @@
         </ul>
     </header>
     <div class="container-fluid">
-        <div class="row min-vh-lg-100">
+        <div class="row min-vh-100">
             <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
                 <div class="offcanvas-md offcanvas-end bg-body-tertiary"
                      tabindex="-1"
@@ -135,9 +89,9 @@
                 <div class="mt-5 text-center">
                     <partial name="_AppVersion" />
                 </div>
+                <partial name="_TimeZoneCheck" />
                 <partial name="_Dialogs" />
                 <partial name="_Loading" />
-
             </main>
         </div>
     </div>

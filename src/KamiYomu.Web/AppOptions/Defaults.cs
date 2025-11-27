@@ -51,6 +51,7 @@ public partial class Defaults
     public static class Worker
     {
         public const string HttpClientBackground = nameof(HttpClientBackground);
+        public const int HttpTimeOutInSeconds = 60;
     }
 
     public static class LiteDbConfig

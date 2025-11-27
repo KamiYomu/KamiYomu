@@ -13,7 +13,8 @@
         {
             @foreach (var item in Model)
             {
-                var faviconUrl = await item.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None);
+                using var crawlerInstance = item.GetCrawlerInstance();
+                var faviconUrl = await crawlerInstance.GetFaviconAsync(CancellationToken.None);
                 <tr>
                     <td>
                         <img src="@faviconUrl.ToInternalImageUrl()" width="20" class="me-2" alt="favicon" />
@@ -21,49 +22,47 @@
                     </td>
                     <td>
                         <div class="mt-auto d-flex justify-content-end">
-                            <div class="btn-group dropup">
-                                <button type="button"
-                                        class="btn btn-sm btn-outline-secondary dropdown-toggle"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                    <i class="bi bi-gear me-2"></i> @I18n.Actions
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <button class="dropdown-item"
-                                                title="@I18n.Details"
-                                                aria-label="View details"
-                                                hx-get="/Settings/CrawlerAgents/Dialogs/CrawlerAgentDetails?id=@item.Id"
-                                                hx-target="#modal-body"
-                                                hx-swap="innerHTML"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#modal">
-                                            <i class="bi bi-info-circle me-1"></i> @I18n.Details
-                                        </button>
-                                    </li>
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="bi bi-gear me-2"></i> @I18n.Actions
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <button class="dropdown-item"
+                                            title="@I18n.Details"
+                                            aria-label="View details"
+                                            hx-get="/Settings/CrawlerAgents/Dialogs/CrawlerAgentDetails?id=@item.Id"
+                                            hx-target="#modal-body"
+                                            hx-swap="innerHTML"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modal">
+                                        <i class="bi bi-info-circle me-1"></i> @I18n.Details
+                                    </button>
+                                </li>
 
-                                    <li>
-                                        <a asp-area="Settings" asp-page="/CrawlerAgents/Edit/Index" asp-route-id="@item.Id"
-                                           class="dropdown-item"
-                                           title="@I18n.Edit"
-                                           aria-label="@I18n.Edit">
-                                            <i class="bi bi-pencil me-1"></i> @I18n.Edit
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <button class="dropdown-item bg-danger text-light"
-                                                title="@I18n.Delete"
-                                                aria-label="@I18n.Delete"
-                                                hx-get="/Settings/CrawlerAgents/Dialogs/DeleteConfirm?id=@item.Id"
-                                                hx-target="#modal-body"
-                                                hx-swap="innerHTML"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#modal">
-                                            <i class="bi bi-trash me-1"></i> @I18n.Delete
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
+                                <li>
+                                    <a asp-area="Settings" asp-page="/CrawlerAgents/Edit/Index" asp-route-id="@item.Id"
+                                       class="dropdown-item"
+                                       title="@I18n.Edit"
+                                       aria-label="@I18n.Edit">
+                                        <i class="bi bi-pencil me-1"></i> @I18n.Edit
+                                    </a>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item bg-danger text-light"
+                                            title="@I18n.Delete"
+                                            aria-label="@I18n.Delete"
+                                            hx-get="/Settings/CrawlerAgents/Dialogs/DeleteConfirm?id=@item.Id"
+                                            hx-target="#modal-body"
+                                            hx-swap="innerHTML"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modal">
+                                        <i class="bi bi-trash me-1"></i> @I18n.Delete
+                                    </button>
+                                </li>
+                            </ul>
                         </div>
                     </td>
                 </tr>

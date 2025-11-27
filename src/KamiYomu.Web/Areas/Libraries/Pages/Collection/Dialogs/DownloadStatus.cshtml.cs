@@ -68,10 +68,11 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
         }
         else
         {
+            var queue = workerOptions.Value.DiscoveryNewChapterQueues.FirstOrDefault();
             RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(
             Library.GetDiscovertyJobId(),
-            workerOptions.Value.DiscoveryNewChapterQueues.FirstOrDefault(),
-            (job) => job.DispatchAsync(Library.AgentCrawler.Id, Library.Id, null!, CancellationToken.None),
+            queue,
+            (job) => job.DispatchAsync(queue, Library.CrawlerAgent.Id, Library.Id, null!, CancellationToken.None),
             Cron.Daily());
 
             await notificationService.PushSuccessAsync(I18n.YouStartedFollowingThisTitle, cancellationToken);

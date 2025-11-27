@@ -730,4 +730,19 @@
     <value>Number of logical processors available. This value is often used as a baseline
 for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many jobs can run concurrently.</value>
   </data>
+  <data name="ToBeRescheduled" xml:space="preserve">
+    <value>To Be Rescheduled</value>
+  </data>
+  <data name="CbzIsTooSmall" xml:space="preserve">
+    <value>CBZ file size is below the expected threshold, indicating a failed download. Retrying shortly.</value>
+  </data>
+  <data name="DispatchFailedMessage" xml:space="preserve">
+    <value>Dispatch failed. The task will be rescheduled</value>
+  </data>
+  <data name="Attempt" xml:space="preserve">
+    <value>Attempt</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
 </root>

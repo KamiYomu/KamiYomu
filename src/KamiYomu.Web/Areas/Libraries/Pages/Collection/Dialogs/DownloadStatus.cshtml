@@ -1,20 +1,24 @@
 ﻿@page
 @using KamiYomu.Web.Extensions
 @using System.Text
+@using KamiYomu.Web.Infrastructure.Services.Interfaces
+@inject IUserClockService UserClockService
 @model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.DownloadStatusModel
 @{
     Layout = null;
-    var faviconUrl = await Model.Library.AgentCrawler.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None);
+    using var crawlerInstance = Model.Library.CrawlerAgent.GetCrawlerInstance();
+    var faviconUrl = await crawlerInstance.GetFaviconAsync(CancellationToken.None);
     var badgeClass = Model.Record.DownloadStatus switch
     {
-        Entities.Definitions.DownloadStatus.Completed => "bg-success",
-        Entities.Definitions.DownloadStatus.Cancelled => "bg-danger",
+        Entities.Definitions.DownloadStatus.ToBeRescheduled => "bg-warning",
         Entities.Definitions.DownloadStatus.Scheduled => "bg-primary",
         Entities.Definitions.DownloadStatus.InProgress => "bg-info",
+        Entities.Definitions.DownloadStatus.Completed => "bg-success",
+        Entities.Definitions.DownloadStatus.Cancelled => "bg-danger",
         _ => "bg-secondary"
     };
     var lastUpdateBuilder = new StringBuilder();
-    lastUpdateBuilder.AppendLine($"{I18n.LastUpdate}: {Model.Record.StatusUpdateAt?.ToLocalTime()}.");
+    lastUpdateBuilder.AppendLine($"{I18n.LastUpdate}: {UserClockService.ConvertToUserTime(Model.Record.StatusUpdateAt.GetValueOrDefault())}.");
     if (!string.IsNullOrWhiteSpace(Model.Record.StatusReason))
     {
         lastUpdateBuilder.AppendLine(Model.Record.StatusReason);
@@ -43,7 +47,7 @@
                 <div class="mb-3 d-flex align-items-center">
                     <span class="fw-semibold me-2">@I18n.CrawlerAgent:</span>
                     <img src="@faviconUrl.ToInternalImageUrl()" width="20" class="me-2" alt="favicon" />
-                    <span class="text-muted">@Model.Library.AgentCrawler.DisplayName</span>
+                    <span class="text-muted">@Model.Library.CrawlerAgent.DisplayName</span>
                 </div>
 
                 <div class="d-flex align-items-center gap-3 mb-3">

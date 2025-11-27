@@ -14,7 +14,7 @@ using KamiYomu.Web.Middlewares;
 using KamiYomu.Web.Worker;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Options;
 using MonkeyCache;
 using MonkeyCache.LiteDB;
@@ -50,19 +50,20 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSignalR();
 builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection("Worker"));
 builder.Services.Configure<Defaults.NugetFeeds>(builder.Configuration.GetSection("UI"));
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+    options.Level = System.IO.Compression.CompressionLevel.Fastest;
+});
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<GzipCompressionProvider>();
+});
 
 builder.Services.AddSingleton<CacheContext>();
 builder.Services.AddSingleton<ImageDbContext>(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb")));
+builder.Services.AddSingleton<IUserClockService, UserClockService>();
 builder.Services.AddScoped<DbContext>(_ => new DbContext(builder.Configuration.GetConnectionString("AgentDb")));
-builder.Services.AddHangfire(configuration => configuration.UseSimpleAssemblyNameTypeSerializer()
-                                                           .UseRecommendedSerializerSettings()
-                                                           .UseSQLiteStorage(new SQLiteDbConnectionFactory(() =>
-                                                           {
-                                                               var connectionString = new SQLiteConnectionString(builder.Configuration.GetConnectionString("WorkerDb"), SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.SharedCache, true);
-                                                               return new SQLiteConnection(connectionString);
-                                                           })));
-
-
 
 builder.Services.AddTransient<ICrawlerAgentRepository, CrawlerAgentRepository>();
 builder.Services.AddTransient<IHangfireRepository, HangfireRepository>();
@@ -71,6 +72,7 @@ builder.Services.AddTransient<IChapterDownloaderJob, ChapterDownloaderJob>();
 builder.Services.AddTransient<IMangaDownloaderJob, MangaDownloaderJob>();
 builder.Services.AddTransient<INugetService, NugetService>();
 builder.Services.AddTransient<INotificationService, NotificationService>();
+builder.Services.AddTransient<IWorkerService, WorkerService>();
 
 builder.Services.AddHealthChecks()
                 .AddCheck<DatabaseHealthCheck>(nameof(DatabaseHealthCheck), tags: ["storage"])
@@ -109,38 +111,16 @@ var retryPolicy = HttpPolicyExtensions
     .HandleTransientHttpError()
     .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 
-var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(10); // 10 seconds
+var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(Worker.HttpTimeOutInSeconds);
 
-builder.Services.AddHttpClient(Defaults.Worker.HttpClientBackground, client =>
+builder.Services.AddHttpClient(Worker.HttpClientBackground, client =>
 {
     client.DefaultRequestHeaders.UserAgent.ParseAdd(CrawlerAgentSettings.HttpUserAgent);
 })
     .AddPolicyHandler(retryPolicy)
     .AddPolicyHandler(timeoutPolicy);
 
-
-var workerOptions = builder.Configuration.GetSection("Worker").Get<WorkerOptions>();
-var serverNames = workerOptions.ServerAvailableNames;
-var allQueues = workerOptions.GetAllQueues().ToList();
-
-// Divide queues evenly among servers
-var queuesPerServer = allQueues
-    .Select((queue, index) => new { queue, index })
-    .GroupBy(x => x.index % serverNames.Count())
-    .Select(g => g.Select(x => x.queue).ToList())
-    .ToList();
-
-// Register each server separately
-foreach (var (serverName, queues) in serverNames.Zip(queuesPerServer))
-{
-    builder.Services.AddHangfireServer((services, options) =>
-    {
-        options.ServerName = serverName;
-        options.WorkerCount = workerOptions.WorkerCount;
-        options.Queues = [.. queues];
-        options.HeartbeatInterval = TimeSpan.FromSeconds(30);
-    });
-}
+AddHangfireConfig(builder);
 
 var app = builder.Build();
 Defaults.ServiceLocator.Configure(() => app.Services);
@@ -168,12 +148,13 @@ using (var appScoped = app.Services.CreateScope())
     app.UseRequestLocalization(localizationOptions.Value);
 }
 
+app.UseResponseCompression();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseHangfireDashboard("/worker", new DashboardOptions
 {
     DisplayStorageConnectionString = false,
-    DashboardTitle = I18n.BackgroundJobs,
+    DashboardTitle = "KamiYomu",
     FaviconPath = "/images/favicon.ico",
     IgnoreAntiforgeryToken = true,
     Authorization = [new AllowAllDashboardAuthorizationFilter()]
@@ -184,3 +165,59 @@ app.UseMiddleware<ExceptionNotificationMiddleware>();
 app.MapHub<NotificationHub>("/notificationHub");
 app.MapHealthChecks("/healthz");
 app.Run();
+
+static void AddHangfireConfig(WebApplicationBuilder builder)
+{
+    var workerOptions = builder.Configuration.GetSection("Worker").Get<WorkerOptions>();
+    var serverNames = workerOptions.ServerAvailableNames;
+    var allQueues = workerOptions.GetAllQueues().ToList();
+
+    builder.Services.AddHangfire(configuration => configuration.UseSimpleAssemblyNameTypeSerializer()
+                                                           .UseRecommendedSerializerSettings()
+                                                           .UseSQLiteStorage(new SQLiteDbConnectionFactory(() =>
+                                                           {
+                                                               var connectionString = new SQLiteConnectionString(builder.Configuration.GetConnectionString("WorkerDb"), 
+                                                                   SQLiteOpenFlags.Create 
+                                                                   | SQLiteOpenFlags.ReadWrite 
+                                                                   | SQLiteOpenFlags.PrivateCache
+                                                                   | SQLiteOpenFlags.FullMutex, true);
+                                                               var connection = new SQLiteConnection(connectionString);
+
+                                                               var journalMode = connection.ExecuteScalar<string>("PRAGMA journal_mode=WAL;");
+
+
+                                                               var busyTimeout = connection.ExecuteScalar<string>("PRAGMA busy_timeout=5000;");
+
+                                                               return connection;
+                                                           }),
+                                                           new SQLiteStorageOptions
+                                                           {
+                                                                QueuePollInterval = TimeSpan.FromSeconds(15),
+                                                                JobExpirationCheckInterval = TimeSpan.FromHours(1),
+                                                                CountersAggregateInterval = TimeSpan.FromMinutes(5)
+                                                           }));
+
+    // Divide queues evenly among servers
+    var queuesPerServer = allQueues
+        .Select((queue, index) => new { queue, index })
+        .GroupBy(x => x.index % serverNames.Count())
+        .Select(g => g.Select(x => x.queue).ToList())
+        .ToList();
+
+    // Register each server separately
+    foreach (var (serverName, queues) in serverNames.Zip(queuesPerServer))
+    {
+        builder.Services.AddHangfireServer((services, options) =>
+        {
+            options.ServerName = serverName;
+            options.WorkerCount = workerOptions.WorkerCount;
+            options.Queues = [.. queues];
+            options.HeartbeatInterval = TimeSpan.FromSeconds(15);
+        });
+    }
+
+    GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { 
+        Attempts = workerOptions.MaxRetryAttempts, 
+    });
+
+}

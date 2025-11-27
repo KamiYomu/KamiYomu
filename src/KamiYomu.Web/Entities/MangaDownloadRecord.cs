@@ -10,9 +10,9 @@ namespace KamiYomu.Web.Entities
         {
             Library = library;
             BackgroundJobId = jobId;
-            DownloadStatus = DownloadStatus.Pending;
-            StatusUpdateAt = DateTime.UtcNow;
-            CreateAt = DateTime.UtcNow;
+            DownloadStatus = DownloadStatus.ToBeRescheduled;
+            StatusUpdateAt = DateTimeOffset.UtcNow;
+            CreateAt = DateTimeOffset.UtcNow;
         }
 
         public void Schedule(string backgroundJobId)
@@ -25,21 +25,21 @@ namespace KamiYomu.Web.Entities
         public void Pending(string statusReason = "")
         {
             StatusReason = statusReason;
-            DownloadStatus = DownloadStatus.Pending;
-            StatusUpdateAt = DateTime.UtcNow;
+            DownloadStatus = DownloadStatus.ToBeRescheduled;
+            StatusUpdateAt = DateTimeOffset.UtcNow;
         }
 
         public void Processing()
         {
             StatusReason = null;
             DownloadStatus = DownloadStatus.InProgress;
-            StatusUpdateAt = DateTime.UtcNow;
+            StatusUpdateAt = DateTimeOffset.UtcNow;
         }
         public void Complete()
         {
             StatusReason = null;
             DownloadStatus = DownloadStatus.Completed;
-            StatusUpdateAt = DateTime.UtcNow;
+            StatusUpdateAt = DateTimeOffset.UtcNow;
         }
 
         public void Cancelled(string statusReason)
@@ -47,14 +47,14 @@ namespace KamiYomu.Web.Entities
 
             StatusReason = statusReason;
             DownloadStatus = DownloadStatus.Cancelled;
-            StatusUpdateAt = DateTime.UtcNow;
+            StatusUpdateAt = DateTimeOffset.UtcNow;
         }
 
         public Guid Id { get; private set; }
         public string BackgroundJobId { get; private set; }
         public Library Library { get; private set; }
-        public DateTime CreateAt { get; private set; }
-        public DateTime? StatusUpdateAt { get; private set; }
+        public DateTimeOffset CreateAt { get; private set; }
+        public DateTimeOffset? StatusUpdateAt { get; private set; }
         public DownloadStatus DownloadStatus { get; private set; }
         public string? StatusReason { get; private set; }
     }

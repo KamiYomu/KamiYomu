@@ -726,12 +726,27 @@
   <data name="SystemInformation" xml:space="preserve">
     <value>Informations système</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ProcessorCountExplanation" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="ProcessorCountExplanation" xml:space="preserve">
     <value>Nombre de processeurs logiques disponibles. Cette valeur est souvent utilisée comme référence
 pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrôler le nombre de tâches pouvant être exécutées simultanément.</value>
+  </data>
+  <data name="ToBeRescheduled" xml:space="preserve">
+    <value>À reprogrammer</value>
+  </data>
+  <data name="CbzIsTooSmall" xml:space="preserve">
+    <value>La taille du fichier CBZ est inférieure au seuil attendu, ce qui indique un échec de téléchargement. Je réessaye sous peu.</value>
+  </data>
+  <data name="DispatchFailedMessage" xml:space="preserve">
+    <value>L'envoi a échoué. La tâche sera reprogrammée</value>
+  </data>
+  <data name="Attempt" xml:space="preserve">
+    <value>Tentative</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Error" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Erreur</value>
   </data>
 </root>

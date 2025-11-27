@@ -24,12 +24,12 @@ namespace KamiYomu.Web.Pages.CrawlerAgents.Dialogs
         public IActionResult OnPostAsync(CancellationToken cancellationToken)
         {
             var agentCrawler = dbContext.CrawlerAgents.FindById(Id);
-            var libraries = dbContext.Libraries.Find(p => p.AgentCrawler.Id == agentCrawler.Id);
+            var libraries = dbContext.Libraries.Find(p => p.CrawlerAgent.Id == agentCrawler.Id);
 
             foreach (var lib in libraries)
             {
                 using var libDbContext = lib.GetDbContext();
-                var downloadMangas = libDbContext.MangaDownloadRecords.Find(p => p.Library.AgentCrawler.Id == agentCrawler.Id);
+                var downloadMangas = libDbContext.MangaDownloadRecords.Find(p => p.Library.CrawlerAgent.Id == agentCrawler.Id);
                 var downloadChapters = libDbContext.ChapterDownloadRecords.Find(p => p.CrawlerAgent.Id == agentCrawler.Id);
 
                 foreach (var jobId in downloadMangas.Select(p => p.BackgroundJobId).Union(downloadChapters.Select(p => p.BackgroundJobId)))
@@ -37,7 +37,7 @@ namespace KamiYomu.Web.Pages.CrawlerAgents.Dialogs
                     jobClient.Delete(jobId);
                 }
 
-                libDbContext.MangaDownloadRecords.DeleteMany(p => p.Library.AgentCrawler.Id == agentCrawler.Id);
+                libDbContext.MangaDownloadRecords.DeleteMany(p => p.Library.CrawlerAgent.Id == agentCrawler.Id);
                 libDbContext.ChapterDownloadRecords.DeleteMany(p => p.CrawlerAgent.Id == agentCrawler.Id);
             }
 

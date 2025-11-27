@@ -3,7 +3,8 @@
 
 @{
     Layout = null;
-    var faviconUrl = await Model.AgentCrawler.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None);
+    using var crawlerInstance = Model.CrawlerAgent.GetCrawlerInstance();
+    var faviconUrl = await crawlerInstance.GetFaviconAsync(CancellationToken.None);
     var isNew = Model.Id == Guid.Empty;
     var cardId = $"library-card-{Model.Manga.Id}".Replace(".", "-");
 }
@@ -22,7 +23,7 @@
             <div class="mb-3 d-flex align-items-center">
                 <span class="fw-semibold me-2">@I18n.CrawlerAgent:</span>
                 <img src="@faviconUrl.ToInternalImageUrl()" width="20" class="me-2" alt="favicon" />
-                <span class="text-muted">@Model.AgentCrawler.DisplayName</span>
+                <span class="text-muted">@Model.CrawlerAgent.DisplayName</span>
             </div>
 
 
@@ -37,7 +38,7 @@
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
                             <button class="dropdown-item"
-                                    hx-get="/Libraries/Collection/Dialogs/MangaDetails?agentId=@Model.AgentCrawler.Id&mangaId=@Model.Manga.Id"
+                                    hx-get="/Libraries/Collection/Dialogs/MangaDetails?agentId=@Model.CrawlerAgent.Id&mangaId=@Model.Manga.Id"
                                     hx-target="#modal-body"
                                     hx-swap="innerHTML"
                                     data-bs-toggle="modal"
@@ -54,7 +55,7 @@
                                       hx-swap="innerHTML">
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="MangaId" value="@Model.Manga.Id" />
-                                    <input type="hidden" name="AgentId" value="@Model.AgentCrawler.Id" />
+                                    <input type="hidden" name="AgentId" value="@Model.CrawlerAgent.Id" />
                                     <button type="submit" class="dropdown-item bg-success text-light">
                                         <i class="bi bi-plus-circle me-2"></i> @I18n.AddToYourCollection
                                     </button>

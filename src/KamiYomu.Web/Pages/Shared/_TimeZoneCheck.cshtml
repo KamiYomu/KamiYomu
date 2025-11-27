@@ -1,0 +1,23 @@
+﻿<form id="TimeZoneSetForm"
+      hx-post="Index?handler=SetTimeZone"
+      hx-trigger="load"
+      hx-swap="none"
+      hx-vals="js:{ tz: Intl.DateTimeFormat().resolvedOptions().timeZone }"
+      method="post">
+    @Html.AntiForgeryToken()
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const cookieName = "UserTimeZone";
+        const cookies = document.cookie.split(';').map(c => c.trim());
+        const hasCookie = cookies.some(c => c.startsWith(cookieName + "="));
+
+        if (hasCookie) {
+            const form = document.querySelector('#TimeZoneSetForm');
+            if (form) {
+                form.removeAttribute("hx-trigger");
+            }
+        }
+    });
+</script>

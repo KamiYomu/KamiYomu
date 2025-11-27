@@ -70,7 +70,8 @@
                     <ul class="dropdown-menu w-md-auto">
                         @foreach (var agent in Model.CrawlerAgents)
                         {
-                            var faviconUrl = await agent.GetCrawlerInstance().GetFaviconAsync(CancellationToken.None);
+                            using var crawlerInstance = agent.GetCrawlerInstance();
+                            var faviconUrl = await crawlerInstance.GetFaviconAsync(CancellationToken.None);
 
                             <li>
                                 <a class="dropdown-item d-flex align-items-center" href="#"

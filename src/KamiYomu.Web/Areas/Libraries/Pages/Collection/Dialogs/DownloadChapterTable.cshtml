@@ -31,7 +31,7 @@
                        hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = nameof(ChapterDownloadRecord.DownloadStatus), asc = !Model.SortAsc, page = Model.CurrentPage })"
                        hx-target="#downloads-table" hx-swap="outerHTML" class="text-decoration-none">
                         @I18n.Status
-                        @if (Model.SortColumn == "Status")
+                        @if (Model.SortColumn == nameof(ChapterDownloadRecord.DownloadStatus))
                         {
                             <i class="bi @(Model.SortAsc ? "bi-caret-up-fill" : "bi-caret-down-fill") ms-1"></i>
                         }
@@ -43,7 +43,7 @@
                        hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = nameof(ChapterDownloadRecord.StatusUpdateAt), asc = !Model.SortAsc, page = Model.CurrentPage })"
                        hx-target="#downloads-table" hx-swap="outerHTML" class="text-decoration-none">
                         @I18n.LastUpdate
-                        @if (Model.SortColumn == "CreateAt")
+                        @if (Model.SortColumn == nameof(ChapterDownloadRecord.StatusUpdateAt))
                         {
                             <i class="bi @(Model.SortAsc ? "bi-caret-up-fill" : "bi-caret-down-fill") ms-1"></i>
                         }

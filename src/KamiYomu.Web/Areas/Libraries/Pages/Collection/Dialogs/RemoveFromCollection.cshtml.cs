@@ -17,7 +17,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs
         {
             LibraryId = libraryId;
             RefreshElementId = refreshElementId;
-            Library = dbContext.Libraries.Include(p => p.Manga).Include(p => p.AgentCrawler).FindOne(p => p.Id == LibraryId);
+            Library = dbContext.Libraries.Include(p => p.Manga).Include(p => p.CrawlerAgent).FindOne(p => p.Id == LibraryId);
         }
     }
 }

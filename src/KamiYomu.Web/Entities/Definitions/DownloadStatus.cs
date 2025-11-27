@@ -2,7 +2,7 @@
 {
     public enum DownloadStatus
     {
-        Pending = 0,
+        ToBeRescheduled = 0,
         Scheduled = 1,
         InProgress = 2,
         Completed = 3,

@@ -7,14 +7,45 @@
         /// Each name corresponds to a distinct background worker instance; 
         /// add more entries here if you want multiple servers to share or divide queues.
         /// </summary>
-        public IEnumerable<string> ServerAvailableNames { get; init; } 
+        public IEnumerable<string> ServerAvailableNames { get; init; }
 
         /// <summary>
-        /// Controls how many background processing threads Hangfire will spawn.
-        /// A higher value allows more jobs to run concurrently, but increases CPU and memory usage.
+        /// Specifies the number of background processing threads Hangfire will spawn.
+        /// Increasing this value allows more jobs to run concurrently, but also raises CPU load 
+        /// and memory usage.
+        /// Each worker consumes ~80 MB of memory on average while active 
+        /// (actual usage may vary depending on the crawler agent implementation and system configuration).
         /// </summary>
         public int WorkerCount { get; init; } = 1;
 
+        /// <summary>
+        /// Specifies the maximum number of crawler instances that can run concurrently for the same source.
+        /// Typically set to 1 to ensure only a single crawler operates at a time, preventing duplicate work,
+        /// resource conflicts, and potential rate‑limiting or blocking by the target system.
+        /// This value can be increased to improve throughput if the source supports multiple concurrent requests.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// Relationship to other settings:
+        /// <para>
+        /// - <c>Worker__WorkerCount</c> defines the total number of background threads available.
+        /// </para>
+        /// <para>
+        /// - <c>Worker__MaxConcurrentCrawlerInstances</c> restricts how many of those threads can be used by a single crawler.
+        /// </para>
+        /// 
+        /// Examples:
+        /// <para>
+        /// - If <c>Worker__MaxConcurrentCrawlerInstances = 1</c> and <c>Worker__WorkerCount = 4</c>,
+        ///   up to 4 different crawler agents can run independently.
+        /// </para>
+        /// <para>
+        /// - If <c>Worker__MaxConcurrentCrawlerInstances = 2</c> and <c>Worker__WorkerCount = 6</c>,
+        ///   each crawler agent can run up to 2 instances concurrently,
+        ///   while up to 3 different crawler agents may be active at the same time.
+        /// </para>
+        /// </remarks>
+        public int MaxConcurrentCrawlerInstances { get; init; } = 1;
 
         /// <summary>
         /// Minimum delay (in milliseconds) between job executions.
@@ -28,6 +59,10 @@
         /// </summary>
         public int MaxWaitPeriodInMilliseconds { get; init; } = 7001;
         /// <summary>
+        /// Maximum number of retry attempts for failed jobs before giving up.
+        /// </summary>
+        public int MaxRetryAttempts { get; init; } = 10;
+        /// <summary>
         /// Queue dedicated to downloading individual chapters.
         /// </summary>
         public string[] DownloadChapterQueues { get; init; } 
@@ -39,15 +74,9 @@
         /// Queue dedicated to discovering new chapters (polling or scraping for updates).
         /// </summary>
         public IEnumerable<string> DiscoveryNewChapterQueues { get; init; }
-        /// <summary>
-        /// Defines the maximum number of crawler instances allowed to run concurrently for the same source.
-        /// Typically set to 1 to ensure only a single crawler operates at a time, preventing duplicate work,
-        /// resource conflicts, and potential rate‑limiting or blocking by the target system.
-        /// However, this can be adjusted to increase throughput if the source can handle multiple concurrent requests.
-        /// </summary>
-        public int MaxConcurrentCrawlerInstances { get; set; } = 1;
+        
         public IEnumerable<string> GetAllQueues() =>
-        [   
+        [   "default",
             .. DownloadChapterQueues,
             .. MangaDownloadSchedulerQueues,
             .. DiscoveryNewChapterQueues,

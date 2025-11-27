@@ -1,7 +1,10 @@
 ﻿@using KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels
-@model PackageItemViewModel
-
-<div class="row mb-3">
+@model NugetPackageGroupedViewModel
+@{
+    Layout = null;
+    var cardId = $"package-card-{Model.Id}".Replace(".", "-");
+}
+<div class="row mb-3" id="@cardId">
     <div class="col-12">
         <div class="card h-100">
             <div class="card-body">
@@ -9,7 +12,7 @@
 
                     <!-- Icon -->
                     <div class="col-12 col-md-auto text-center">
-                        <img src="@Model.Package?.IconUrl"
+                        <img src="@Model?.IconUrl"
                              alt="Package Icon"
                              class="img-fluid rounded"
                              style="max-width: 64px;" />
@@ -17,26 +20,37 @@
 
                     <!-- Package details -->
                     <div class="col-12 col-md flex-grow-1">
-                        <h5 class="card-title mb-1">@Model.Package.Id</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">
+                        <h5 class="card-title mb-1">@Model.Id</h5>
+                        <h6 class="card-subtitle mb-2 text-muted d-flex align-items-center">
                             <i class="bi bi-123 me-2"></i>
-                            @I18n.Version: @Model.Package.Version
+                            @I18n.Version:
+
+                            <select class="form-select form-select-sm ms-2"
+                                    hx-get="/Settings/Add-ons/Index?handler=PackageItem&sourceId=@Model.SourceId&packageId=@Model.Id"
+                                    hx-target="#@cardId"
+                                    hx-trigger="change"
+                                    hx-swap="outerHTML"
+                                    name="version">
+                                @foreach (var version in Model.Versions)
+                                {
+                                    <option value="@version" selected="@(version == Model.VersionSelected.Version)">
+                                        @version
+                                    </option>
+                                }
+                            </select>
                         </h6>
+
+
                         <p class="card-text mb-2">
                             <i class="bi bi-text-paragraph me-2"></i>
-                            @Model.Package.Description
+                            @Model.Description
                         </p>
 
                         <div class="d-flex flex-wrap gap-3 mb-2">
                             <span class="d-flex align-items-center text-muted">
                                 <i class="bi bi-person-badge-fill me-2"></i>
                                 <strong class="me-1">@I18n.Authors:</strong>
-                                @string.Join(", ", Model.Package.Authors)
-                            </span>
-                            <span class="d-flex align-items-center text-muted">
-                                <i class="bi bi-cloud-download me-2"></i>
-                                <strong class="me-1">@I18n.TotalDownloads:</strong>
-                                @Model.Package.TotalDownloads
+                                @string.Join(", ", Model.Authors)
                             </span>
                         </div>
 
@@ -44,11 +58,11 @@
                             <div class="d-flex align-items-center">
                                 <i class="bi bi-puzzle me-2 text-secondary"></i>
                                 <span class="fw-semibold">Core Version:</span>
-                                <span class="ms-1">@Model.Package.GetKamiYomuCoreVersion()</span>
+                                <span class="ms-1">@Model.VersionSelected.GetKamiYomuCoreVersion()</span>
                             </div>
 
                             <div class="d-flex align-items-center">
-                                @if (Model.Package.IsVersionCompatible())
+                                @if (Model.VersionSelected.IsVersionCompatible())
                                 {
                                     <i class="bi bi-check-circle-fill text-success me-2"></i>
                                     <span class="text-success fw-semibold">@I18n.Compatible</span>
@@ -62,12 +76,12 @@
                         </div>
 
                         <div class="d-flex flex-wrap gap-3 align-items-center mt-2">
-                            <a href="@Model.Package.RepositoryUrl"
+                            <a href="@Model.RepositoryUrl"
                                target="_blank"
                                class="text-decoration-none text-primary">
                                 <i class="bi bi-box-seam me-1"></i> Repository
                             </a>
-                            <a href="@Model.Package.LicenseUrl"
+                            <a href="@Model.LicenseUrl"
                                target="_blank"
                                class="text-decoration-none text-primary">
                                 <i class="bi bi-file-earmark-text me-1"></i> @I18n.License
@@ -79,15 +93,15 @@
                     <div class="col-12 col-md-auto text-md-end">
                         <form method="post"
                               asp-page-handler="Install"
-                              asp-route-packageId="@Model.Package.Id"
-                              asp-route-packageVersion="@Model.Package.Version"
+                              asp-route-packageId="@Model.Id"
+                              asp-route-packageVersion="@Model.VersionSelected.Version"
                               asp-route-sourceId="@Model.SourceId">
                             @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-outline-primary">
+                            <button type="submit" class="btn @(Model.VersionSelected.IsVersionCompatible() ? "btn-primary" : "btn-outline-secondary")" @(Model.VersionSelected.IsVersionCompatible() ? "" : "disabled")>
                                 <i class="bi bi-download me-1"></i> @I18n.Install
                             </button>
                         </form>
-                        <div id="download-message-@Model.Package.Id" class="mt-2"></div>
+                        <div id="download-message-@Model.VersionSelected.Id" class="mt-2"></div>
                     </div>
 
                 </div>

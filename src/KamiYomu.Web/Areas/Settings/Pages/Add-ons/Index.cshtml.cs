@@ -40,21 +40,65 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
             IsNugetAdded = SearchBarViewModel.Sources.Any(p => p.Url.ToString().StartsWith(AppOptions.Defaults.NugetFeeds.NugetFeedUrl, StringComparison.OrdinalIgnoreCase));
         }
 
+        public async Task<IActionResult> OnGetPackageItemAsync(Guid sourceId, string packageId, string version, CancellationToken cancellationToken)
+        {
+            var package = await nugetService.GetPackageMetadataAsync(sourceId, packageId, version, cancellationToken);
+
+            var packageVersions = await nugetService.GetAllPackageVersionsAsync(sourceId, packageId, cancellationToken);
+
+            return Partial("_PackageItem", new NugetPackageGroupedViewModel
+            {
+                Authors = package.Authors ?? Array.Empty<string>(),
+                Description = package.Description,
+                Id = package.Id!,
+                IconUrl = package.IconUrl,
+                LicenseUrl = package.LicenseUrl,
+                RepositoryUrl = package.RepositoryUrl,
+                SourceId = sourceId,
+                VersionSelected = package,
+                Versions = packageVersions.OrderByDescending(p => p.Version).Select(p => p.Version).Where(v => v != null)!,
+                Tags = package.Tags ?? [],
+                TotalDownloads = package.TotalDownloads ?? 0,
+                DependenciesByVersion = packageVersions
+                    .Where(p => !string.IsNullOrEmpty(p.Version))
+                    .ToDictionary(
+                        p => p.Version!,
+                        p => p.Dependencies ?? []
+                    )
+            });
+        }
+
         public async Task<IActionResult> OnPostSearchAsync(CancellationToken cancellationToken)
         {
             try
             {
                 var searchTerm = string.IsNullOrWhiteSpace(SearchBarViewModel.Search) ? "KamiYomu" : SearchBarViewModel.Search;
-                var packages = await nugetService.SearchPackagesAsync(searchTerm, SearchBarViewModel.IncludePrerelease, SearchBarViewModel.SourceId, cancellationToken);
-                packages = packages.Where(p => p.IsVersionCompatible()).OrderBy(p => p.Id).ThenByDescending(p => p.Version);
+                var packages = await nugetService.SearchPackagesAsync(SearchBarViewModel.SourceId, searchTerm, SearchBarViewModel.IncludePrerelease, cancellationToken);
+                packages = packages.OrderBy(p => p.Id).ThenByDescending(p => p.Version);
                 PackageListViewModel = new PackageListViewModel
                 {
                     SourceId = SearchBarViewModel.SourceId,
-                    PackageItems = packages.Select(p => new PackageItemViewModel
-                    {
-                        Package = p,
-                        SourceId = SearchBarViewModel.SourceId
-                    })
+                    PackageItems = packages.GroupBy(p => p.Id)
+                                           .Select(g => new NugetPackageGroupedViewModel
+                                           {
+                                               Id = g.Key!,
+                                               SourceId = SearchBarViewModel.SourceId,
+                                               IconUrl = g.FirstOrDefault()?.IconUrl,
+                                               Description = g.FirstOrDefault()?.Description,
+                                               Authors = g.FirstOrDefault()?.Authors ?? [],
+                                               Tags = g.FirstOrDefault()?.Tags ?? [],
+                                               TotalDownloads = g.Sum(x => x.TotalDownloads ?? 0),
+                                               LicenseUrl = g.FirstOrDefault()?.LicenseUrl,
+                                               RepositoryUrl = g.FirstOrDefault()?.RepositoryUrl,
+                                               VersionSelected = g.FirstOrDefault() ?? null,
+                                               Versions = g.Select(x => x.Version!).ToList(),
+                                               DependenciesByVersion = g
+                                                   .Where(x => x.Version != null)
+                                                   .ToDictionary(
+                                                       x => x.Version!,
+                                                       x => x.Dependencies ?? []
+                                                   )
+                                           })
                 };
                
             }
@@ -118,7 +162,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
                 var metadata = CrawlerAgent.GetAssemblyMetadata(assembly);
                 var displayName = CrawlerAgent.GetCrawlerDisplayName(assembly);
 
-                var crawlerAgent = new CrawlerAgent(dllPath, displayName, []);
+                using var crawlerAgent = new CrawlerAgent(dllPath, displayName, []);
                 dbContext.CrawlerAgents.Insert(crawlerAgent);
 
                 dbContext.CrawlerAgentFileStorage.Delete(tempUploadId);

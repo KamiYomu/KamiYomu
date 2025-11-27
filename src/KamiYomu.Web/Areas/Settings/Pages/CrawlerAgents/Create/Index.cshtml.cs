@@ -175,7 +175,7 @@ public class IndexModel(DbContext dbContext, INotificationService notificationSe
             };
             return Page();
         }
-        var crawlerAgent = new CrawlerAgent(dllPath, displayName, Input.CrawlerInputsViewModel.GetAgentMetadataValues());
+        using var crawlerAgent = new CrawlerAgent(dllPath, displayName, Input.CrawlerInputsViewModel.GetAgentMetadataValues());
 
         dbContext.CrawlerAgents.Insert(crawlerAgent);
         dbContext.CrawlerAgentFileStorage.Delete(Input.TempFileId);

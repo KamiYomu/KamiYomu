@@ -12,7 +12,8 @@ namespace KamiYomu.Web.Infrastructure.Repositories
         {
             return cacheContext.GetOrSetAsync($"{agentCrawler.Id}-manga-{mangaId}", async () =>
              {
-                 var manga = await agentCrawler.GetCrawlerInstance().GetByIdAsync(mangaId.ToString(), cancellationToken);
+                 using var crawlerInstance = agentCrawler.GetCrawlerInstance();
+                 var manga = await crawlerInstance.GetByIdAsync(mangaId.ToString(), cancellationToken);
                  return manga;
              }, TimeSpan.FromMinutes(30));
         }
@@ -21,8 +22,9 @@ namespace KamiYomu.Web.Infrastructure.Repositories
         {
             return cacheContext.GetOrSetAsync($"{agentCrawlerId}-manga-{mangaId}", async () =>
             {
-                var agent = dbContext.CrawlerAgents.FindById(agentCrawlerId);
-                var manga = await agent.GetCrawlerInstance().GetByIdAsync(mangaId.ToString(), cancellationToken);
+                using var agentCrawler = dbContext.CrawlerAgents.FindById(agentCrawlerId);
+                using var crawlerInstance = agentCrawler.GetCrawlerInstance();
+                var manga = await crawlerInstance.GetByIdAsync(mangaId.ToString(), cancellationToken);
                 return manga;
             }, TimeSpan.FromMinutes(30));
         }
@@ -32,7 +34,8 @@ namespace KamiYomu.Web.Infrastructure.Repositories
             return cacheContext.GetOrSetAsync($"{agentCrawler.Id}-manga-{mangaId}-{paginationOptions}", async () =>
             {
                 var library = dbContext.Libraries.Include(p => p.Manga).FindOne(p => p.Manga.Id == mangaId);
-                return await agentCrawler.GetCrawlerInstance().GetChaptersAsync(library.Manga, paginationOptions, cancellationToken);
+                using var crawlerInstance = agentCrawler.GetCrawlerInstance();
+                return await crawlerInstance.GetChaptersAsync(library.Manga, paginationOptions, cancellationToken);
             }, TimeSpan.FromMinutes(30));
         }
 
@@ -40,7 +43,8 @@ namespace KamiYomu.Web.Infrastructure.Repositories
         {
             return cacheContext.GetOrSetAsync($"{agentCrawler.Id}-chapter-{chapter.ParentManga.Id}-{chapter.Id}", async () =>
             {
-                return await agentCrawler.GetCrawlerInstance().GetChapterPagesAsync(chapter, cancellationToken);
+                using var crawlerInstance = agentCrawler.GetCrawlerInstance();
+                return await crawlerInstance.GetChapterPagesAsync(chapter, cancellationToken);
             }, TimeSpan.FromMinutes(30));
         }
 
@@ -48,7 +52,8 @@ namespace KamiYomu.Web.Infrastructure.Repositories
         {
             return cacheContext.GetOrSetAsync($"{agentCrawler.Id}-agent-{Regex.Replace(query, @"[^a-zA-Z0-9]", "")}-{paginationOptions}", async () =>
             {
-                return await agentCrawler.GetCrawlerInstance().SearchAsync(query, paginationOptions, cancellationToken);
+                using var crawlerInstance = agentCrawler.GetCrawlerInstance();
+                return await crawlerInstance.SearchAsync(query, paginationOptions, cancellationToken);
             }, TimeSpan.FromMinutes(5));
         }
     }
