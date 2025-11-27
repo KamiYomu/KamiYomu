@@ -1,9 +1,29 @@
 ﻿@page
+@using KamiYomu.CrawlerAgents.Core.Catalog
 @model KamiYomu.Web.Areas.Libraries.Pages.Mangas.SearchResultsModel
 @{
     Layout = null;
 }
-@foreach (var library in Model.Results)
+
+    @foreach (var library in Model.Results)
+    {
+        <partial name="_LibraryCard" model="library" />
+    }
+
+@if(Model.Results.Any())
 {
-    <partial name="_LibraryCard" model="library" />
-}
+    <div hx-get="@Url.Page("/Collection/SearchResults", new {
+            Area= "Libraries",
+            Handler = ViewData["Handler"],
+            Query = ViewData["query"],
+            SelectedAgent = ViewData["selectedAgent"],
+            OffSet = ViewData[nameof(PaginationOptions.OffSet)],
+            Limit = ViewData[nameof(PaginationOptions.Limit)],
+            ContinuationToken = ViewData[nameof(PaginationOptions.ContinuationToken)]
+       })"
+     hx-trigger="revealed"
+     hx-swap="afterend"
+     class="htmx-trigger d-block w-100">
+    </div>
+} 
+

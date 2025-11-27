@@ -20,7 +20,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
         public string MangaId { get; set; }
 
         [BindProperty]
-        public Guid AgentId { get; set; }
+        public Guid CrawlerAgentId { get; set; }
 
         public void OnGet()
         {
@@ -33,11 +33,11 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
             {
                 return BadRequest("Invalid manga data.");
             }
-            using var agentCrawler = dbContext.CrawlerAgents.FindById(AgentId);
+            using var crawlerAgent = dbContext.CrawlerAgents.FindById(CrawlerAgentId);
 
-            var manga = await agentCrawlerRepository.GetMangaAsync(agentCrawler, MangaId, cancellationToken);
+            var manga = await agentCrawlerRepository.GetMangaAsync(crawlerAgent.Id, MangaId, cancellationToken);
 
-            var library = new Library(agentCrawler, manga);
+            var library = new Library(crawlerAgent, manga);
 
             dbContext.Libraries.Insert(library);
 
@@ -69,7 +69,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 
             var library = dbContext.Libraries.Include(p => p.Manga)
                                              .Include(p => p.CrawlerAgent)
-                                             .FindOne(p => p.Manga.Id == MangaId && p.CrawlerAgent.Id == AgentId);
+                                             .FindOne(p => p.Manga.Id == MangaId && p.CrawlerAgent.Id == CrawlerAgentId);
             var mangaTitle = library.Manga.Title;
 
             using var libDbContext = library.GetDbContext();

@@ -62,7 +62,8 @@ builder.Services.AddResponseCompression(options =>
 
 builder.Services.AddSingleton<CacheContext>();
 builder.Services.AddSingleton<ImageDbContext>(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb")));
-builder.Services.AddSingleton<IUserClockService, UserClockService>();
+builder.Services.AddSingleton<IUserClockManager, UserClockManager>();
+builder.Services.AddSingleton<ILockManager, LockManager>();
 builder.Services.AddScoped<DbContext>(_ => new DbContext(builder.Configuration.GetConnectionString("AgentDb")));
 
 builder.Services.AddTransient<ICrawlerAgentRepository, CrawlerAgentRepository>();
@@ -192,7 +193,7 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
                                                            }),
                                                            new SQLiteStorageOptions
                                                            {
-                                                                QueuePollInterval = TimeSpan.FromSeconds(15),
+                                                                QueuePollInterval = TimeSpan.FromMinutes(1),
                                                                 JobExpirationCheckInterval = TimeSpan.FromHours(1),
                                                                 CountersAggregateInterval = TimeSpan.FromMinutes(5)
                                                            }));

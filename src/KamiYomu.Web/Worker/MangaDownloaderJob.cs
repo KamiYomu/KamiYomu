@@ -53,18 +53,16 @@ public class MangaDownloaderJob(
             {
                 return;
             }
-            var agentCrawler = mangaDownload.Library.CrawlerAgent;
+            var crawlerAgent = mangaDownload.Library.CrawlerAgent;
             var mangaId = mangaDownload.Library.Manga.Id;
 
-            logger.LogInformation("Dispatch process started: Manga '{Manga}' assigned to Agent Crawler '{AgentCrawler}'", title, agentCrawler.DisplayName);
+            logger.LogInformation("Dispatch process started: Manga '{Manga}' assigned to Agent Crawler '{AgentCrawler}'", title, crawlerAgent.DisplayName);
 
             cancellationToken.ThrowIfCancellationRequested();
 
             mangaDownload.Processing();
 
             libDbContext.MangaDownloadRecords.Update(mangaDownload);
-
-
 
             int offset = 0;
             const int limit = 30;
@@ -76,16 +74,16 @@ public class MangaDownloaderJob(
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                var page = await agentCrawlerRepository.GetMangaChaptersAsync(agentCrawler, mangaId, new PaginationOptions(offset, limit), cancellationToken);
+                var page = await agentCrawlerRepository.GetMangaChaptersAsync(crawlerAgent.Id, mangaId, new PaginationOptions(offset, limit), cancellationToken);
 
                 total = page.PaginationOptions.Total;
 
                 foreach (var chapter in page.Data)
                 {
-                    var record = libDbContext.ChapterDownloadRecords.FindOne(p => p.CrawlerAgent.Id == agentCrawler.Id
+                    var record = libDbContext.ChapterDownloadRecords.FindOne(p => p.CrawlerAgent.Id == crawlerAgent.Id
                                                                                   && p.Chapter.Id == chapter.Id
                                                                                   && p.MangaDownload.Id == mangaDownloadId) 
-                                                                                  ?? new ChapterDownloadRecord(agentCrawler, mangaDownload, chapter);
+                                                                                  ?? new ChapterDownloadRecord(crawlerAgent, mangaDownload, chapter);
 
                     if(record.IsDownloadedFileExists())
                     {

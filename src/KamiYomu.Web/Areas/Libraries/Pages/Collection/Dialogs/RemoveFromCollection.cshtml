@@ -30,7 +30,7 @@
         @Html.AntiForgeryToken()
 
         <input type="hidden" name="MangaId" value="@Model.Library.Manga.Id" />
-        <input type="hidden" name="AgentId" value="@Model.Library.CrawlerAgent.Id" />
+        <input type="hidden" name="CrawlerAgentId" value="@Model.Library.CrawlerAgent.Id" />
 
         <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">@I18n.Delete</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@I18n.Cancel</button>

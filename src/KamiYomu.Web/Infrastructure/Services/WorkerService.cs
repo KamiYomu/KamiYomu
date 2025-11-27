@@ -19,7 +19,6 @@ namespace KamiYomu.Web.Infrastructure.Services
        
         public string ScheduleMangaDownload(MangaDownloadRecord mangaDownloadRecord)
         {
-            cacheContext.Current.Empty(mangaDownloadRecord.Library.CrawlerAgent.GetConcurrencyCacheKey());
 
             var mangaDownloadQueueState = hangfireRepository.GetLeastLoadedMangaDownloadSchedulerQueue();
             
@@ -35,8 +34,6 @@ namespace KamiYomu.Web.Infrastructure.Services
         public void CancelMangaDownload(MangaDownloadRecord mangaDownloadRecord)
         {
             using var libDbContext = mangaDownloadRecord.Library.GetDbContext();
-
-            cacheContext.Current.Empty(mangaDownloadRecord.Library.CrawlerAgent.GetConcurrencyCacheKey());
 
             mangaDownloadRecord.Cancelled("User remove manga from the library.");
 
