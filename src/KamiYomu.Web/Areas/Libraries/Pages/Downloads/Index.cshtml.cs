@@ -33,11 +33,11 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
             {
                 return BadRequest("Invalid manga data.");
             }
-            using var agentCrawler = dbContext.CrawlerAgents.FindById(AgentId);
+            using var crawlerAgent = dbContext.CrawlerAgents.FindById(AgentId);
 
-            var manga = await agentCrawlerRepository.GetMangaAsync(agentCrawler, MangaId, cancellationToken);
+            var manga = await agentCrawlerRepository.GetMangaAsync(crawlerAgent.Id, MangaId, cancellationToken);
 
-            var library = new Library(agentCrawler, manga);
+            var library = new Library(crawlerAgent, manga);
 
             dbContext.Libraries.Insert(library);
 

@@ -68,7 +68,7 @@ namespace KamiYomu.Web.Worker
                 }
 
                 var page = await agentCrawlerRepository.GetMangaChaptersAsync(
-                    crawlerAgent, mangaId, new PaginationOptions(offset, limit), cancellationToken);
+                    crawlerAgent.Id, mangaId, new PaginationOptions(offset, limit), cancellationToken);
 
                 total = page.PaginationOptions.Total;
 

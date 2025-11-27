@@ -76,7 +76,7 @@ namespace KamiYomu.Web.Worker
                 libDbContext.ChapterDownloadRecords.Update(chapterDownload);
 
                 var pages = await agentCrawlerRepository.GetChapterPagesAsync(
-                    chapterDownload.CrawlerAgent,
+                    chapterDownload.CrawlerAgent.Id,
                     chapterDownload.Chapter,
                     cancellationToken);
 
