@@ -1,6 +1,8 @@
 ﻿@using KamiYomu.Web.Entities
 @using KamiYomu.Web.Extensions
 @using System.Text
+@using KamiYomu.Web.Infrastructure.Services.Interfaces
+@inject IUserClockService UserClockService
 @model ChapterDownloadRecord
 @{
     var rowId = $"row-{Model.Id}";
@@ -14,7 +16,7 @@
         _ => "bg-secondary"
     };
     var lastUpdateBuilder = new StringBuilder();
-    lastUpdateBuilder.AppendLine($"{I18n.LastUpdate}: {Model.StatusUpdateAt?.ToLocalTime()}.");
+    lastUpdateBuilder.AppendLine($"{I18n.LastUpdate}: {UserClockService.ConvertToUserTime(Model.StatusUpdateAt.GetValueOrDefault()).ToString("g")}.");
     if (!string.IsNullOrWhiteSpace(Model.StatusReason))
     {
         lastUpdateBuilder.AppendLine(Model.StatusReason);
@@ -33,7 +35,7 @@
                         ?? Model.DownloadStatus.ToString())
         </span>
     </td>
-    <td>@Model.CreateAt.ToLocalTime().ToString("g")</td>
+    <td>@UserClockService.ConvertToUserTime(Model.StatusUpdateAt.GetValueOrDefault(Model.CreateAt)).ToString("g")</td>
     <td class="text-end">
         <div class="btn-group">
             <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"
@@ -45,7 +47,7 @@
                 <li>
                     <form method="post"
                           hx-post='@Url.Page("DownloadChapterTable",
-                                                                         values: new { handler = "Reschedule", libraryId = Model.MangaDownload.Library.Id, recordId = Model.Id })'
+                          values: new { handler = "Reschedule", libraryId = Model.MangaDownload.Library.Id, recordId = Model.Id })'
                           hx-target="#@rowId"
                           hx-swap="outerHTML">
                         @Html.AntiForgeryToken()

@@ -1,7 +1,8 @@
 ﻿using KamiYomu.CrawlerAgents.Core.Inputs;
+using KamiYomu.Web.AppOptions;
+using PuppeteerSharp.Input;
 using System.ComponentModel;
 using System.Reflection;
-using KamiYomu.Web.AppOptions;
 
 namespace KamiYomu.Web.Entities
 {
@@ -243,6 +244,16 @@ namespace KamiYomu.Web.Entities
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        public string GetConcurrencyCacheKey()
+        {
+            return GetConcurrencyCacheKey(Id);
+        }
+
+        public static string GetConcurrencyCacheKey(Guid crawlerAgentId)
+        {
+            return $"concurrency_{crawlerAgentId}";
         }
     }
 }

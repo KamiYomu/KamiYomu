@@ -1,6 +1,8 @@
 ﻿@page
 @using KamiYomu.Web.Extensions
 @using System.Text
+@using KamiYomu.Web.Infrastructure.Services.Interfaces
+@inject IUserClockService UserClockService
 @model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.DownloadStatusModel
 @{
     Layout = null;
@@ -16,7 +18,7 @@
         _ => "bg-secondary"
     };
     var lastUpdateBuilder = new StringBuilder();
-    lastUpdateBuilder.AppendLine($"{I18n.LastUpdate}: {Model.Record.StatusUpdateAt?.ToLocalTime()}.");
+    lastUpdateBuilder.AppendLine($"{I18n.LastUpdate}: {UserClockService.ConvertToUserTime(Model.Record.StatusUpdateAt.GetValueOrDefault())}.");
     if (!string.IsNullOrWhiteSpace(Model.Record.StatusReason))
     {
         lastUpdateBuilder.AppendLine(Model.Record.StatusReason);

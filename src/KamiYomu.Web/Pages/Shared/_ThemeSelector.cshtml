@@ -1,0 +1,51 @@
+﻿<div class="dropdown bd-mode-toggle">
+    <button class="btn btn-outline-secondary btn-bd-primary btn-sm dropdown-toggle d-flex justify-content-center align-items-center shadow-sm w-100 position-relative"
+            id="bd-theme"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            aria-label="Toggle theme (auto)"
+            style="border-width: 1px; font-size: 0.75rem; border-radius: 0.3rem;">
+        <span class="position-absolute start-0 ps-2">
+            <i class="bi bi-circle-half fs-6 my-1 theme-icon-active" aria-hidden="true"></i>
+        </span>
+        <span class="fw-normal visually-hidden" id="bd-theme-text">
+            @I18n.ToggleTheme
+        </span>
+        <span class="fw-normal">
+            @I18n.ToggleTheme
+        </span>
+    </button>
+    <ul class="dropdown-menu w-100" aria-labelledby="bd-theme-text">
+        <li>
+            <button type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-bs-theme-value="light"
+                    aria-pressed="false">
+                <i class="bi bi-sun-fill me-2 opacity-50" aria-hidden="true"></i>
+                @I18n.Light
+                <i class="bi bi-check2 ms-auto d-none" aria-hidden="true"></i>
+            </button>
+        </li>
+        <li>
+            <button type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-bs-theme-value="dark"
+                    aria-pressed="false">
+                <i class="bi bi-moon-stars-fill me-2 opacity-50" aria-hidden="true"></i>
+                @I18n.Dark
+                <i class="bi bi-check2 ms-auto d-none" aria-hidden="true"></i>
+            </button>
+        </li>
+        <li>
+            <button type="button"
+                    class="dropdown-item d-flex align-items-center active"
+                    data-bs-theme-value="auto"
+                    aria-pressed="true">
+                <i class="bi bi-circle-half me-2 opacity-50" aria-hidden="true"></i>
+                Auto
+                <i class="bi bi-check2 ms-auto d-none" aria-hidden="true"></i>
+            </button>
+        </li>
+    </ul>
+</div>

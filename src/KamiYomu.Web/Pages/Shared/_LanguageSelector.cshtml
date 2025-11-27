@@ -1,7 +1,7 @@
 ﻿@using System.Globalization
 
 <div class="dropdown">
-    <button class="btn btn-outline-secondary btn-sm dropdown-toggle d-flex justify-content-center align-items-center px-2 py-1 shadow-sm w-100 position-relative"
+    <button class="btn btn-outline-primary btn-sm dropdown-toggle d-flex justify-content-center align-items-center px-2 py-1 shadow-sm w-100 position-relative"
             type="button"
             data-bs-toggle="dropdown" style="border-width: 1px; font-size: 0.75rem; border-radius: 0.3rem;">
         <span class="position-absolute start-0 ps-2">
@@ -15,7 +15,7 @@
         <li>
             <form method="post"
                   asp-page="/Index"
-                  asp-page-handler="LanguageSet"
+                  asp-page-handler="SetLanguage"
                   asp-route-area=""
                   asp-route-returnUrl="@Context.Request.Path"
                   novalidate>
@@ -27,7 +27,7 @@
         <li>
             <form method="post"
                   asp-page="/Index"
-                  asp-page-handler="LanguageSet"
+                  asp-page-handler="SetLanguage"
                   asp-route-area=""
                   asp-route-returnUrl="@Context.Request.Path"
                   novalidate>
@@ -39,7 +39,7 @@
         <li>
             <form method="post"
                   asp-page="/Index"
-                  asp-page-handler="LanguageSet"
+                  asp-page-handler="SetLanguage"
                   asp-route-area=""
                   asp-route-returnUrl="@Context.Request.Path"
                   novalidate>

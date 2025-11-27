@@ -14,7 +14,7 @@ using KamiYomu.Web.Middlewares;
 using KamiYomu.Web.Worker;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Options;
 using MonkeyCache;
 using MonkeyCache.LiteDB;
@@ -50,9 +50,19 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSignalR();
 builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection("Worker"));
 builder.Services.Configure<Defaults.NugetFeeds>(builder.Configuration.GetSection("UI"));
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+    options.Level = System.IO.Compression.CompressionLevel.Fastest;
+});
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<GzipCompressionProvider>();
+});
 
 builder.Services.AddSingleton<CacheContext>();
 builder.Services.AddSingleton<ImageDbContext>(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb")));
+builder.Services.AddSingleton<IUserClockService, UserClockService>();
 builder.Services.AddScoped<DbContext>(_ => new DbContext(builder.Configuration.GetConnectionString("AgentDb")));
 
 builder.Services.AddTransient<ICrawlerAgentRepository, CrawlerAgentRepository>();
@@ -62,6 +72,7 @@ builder.Services.AddTransient<IChapterDownloaderJob, ChapterDownloaderJob>();
 builder.Services.AddTransient<IMangaDownloaderJob, MangaDownloaderJob>();
 builder.Services.AddTransient<INugetService, NugetService>();
 builder.Services.AddTransient<INotificationService, NotificationService>();
+builder.Services.AddTransient<IWorkerService, WorkerService>();
 
 builder.Services.AddHealthChecks()
                 .AddCheck<DatabaseHealthCheck>(nameof(DatabaseHealthCheck), tags: ["storage"])
@@ -137,6 +148,7 @@ using (var appScoped = app.Services.CreateScope())
     app.UseRequestLocalization(localizationOptions.Value);
 }
 
+app.UseResponseCompression();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseHangfireDashboard("/worker", new DashboardOptions
@@ -164,7 +176,11 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
                                                            .UseRecommendedSerializerSettings()
                                                            .UseSQLiteStorage(new SQLiteDbConnectionFactory(() =>
                                                            {
-                                                               var connectionString = new SQLiteConnectionString(builder.Configuration.GetConnectionString("WorkerDb"), SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.SharedCache, true);
+                                                               var connectionString = new SQLiteConnectionString(builder.Configuration.GetConnectionString("WorkerDb"), 
+                                                                   SQLiteOpenFlags.Create 
+                                                                   | SQLiteOpenFlags.ReadWrite 
+                                                                   | SQLiteOpenFlags.PrivateCache
+                                                                   | SQLiteOpenFlags.FullMutex, true);
                                                                return new SQLiteConnection(connectionString);
                                                            }),
                                                            new SQLiteStorageOptions

@@ -3,6 +3,7 @@ using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Reports;
+using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using System.IO.Compression;
 namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 {
     public class DownloadChapterTableModel(DbContext dbContext,
+                                           IHangfireRepository hangfireRepository,
                                            INotificationService notificationService,
                                            IWebHostEnvironment webHostEnvironment) : PageModel
     {
@@ -76,10 +78,18 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                 return NotFound();
             }
 
-            var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath, cancellationToken);
+            var fileName = Path.GetFileName(filePath);
+            var stream = new FileStream(
+                filePath,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.Read,
+                bufferSize: 81920,
+                FileOptions.Asynchronous | FileOptions.SequentialScan
+            );
 
-            var fileName = System.IO.Path.GetFileName(filePath);
-            return File(fileBytes, "application/x-cbz", fileName);
+            return File(stream, "application/x-cbz", fileName);
+
         }
 
         public async Task<IActionResult> OnGetDownloadZipAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
@@ -104,10 +114,19 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                 return NotFound();
             }
 
-            var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath, cancellationToken);
-
             var fileName = Path.GetFileNameWithoutExtension(filePath) + ".zip";
-            return File(fileBytes, "application/zip", fileName);
+
+            var stream = new FileStream(
+                filePath,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.Read,
+                bufferSize: 81920,                              
+                FileOptions.Asynchronous | FileOptions.SequentialScan
+            );
+
+            return File(stream, "application/zip", fileName);
+
         }
 
         public async Task<IActionResult> OnGetDownloadPdfAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
@@ -147,9 +166,22 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 
             var logoPath = Path.Combine(webHostEnvironment.ContentRootPath, "wwwroot", "images", "logo-watermark.svg");
             var document = new MangaChaptersPdfReport(images, Path.GetFileNameWithoutExtension(filePath), logoPath);
-            var fileBytes = document.GeneratePdf();
+            var fileName = Path.GetFileNameWithoutExtension(filePath) + ".pdf";
 
-            return File(fileBytes, "application/pdf", Path.GetFileNameWithoutExtension(filePath) + ".pdf");
+            var stream = new FileStream(
+                Path.GetTempFileName(),
+                FileMode.Create,
+                FileAccess.ReadWrite,
+                FileShare.None,
+                4096,
+                FileOptions.DeleteOnClose | FileOptions.SequentialScan
+            );
+
+            document.GeneratePdf(stream);
+
+            stream.Position = 0;
+
+            return File(stream, "application/pdf", fileName);
         }
 
 
@@ -170,7 +202,9 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 
             record.DeleteDownloadedFileIfExists();
 
-            var jobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(worker => worker.DispatchAsync(record.CrawlerAgent.Id,
+            var queueState = hangfireRepository.GetLeastLoadedDownloadChapterQueue();
+            var jobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(queueState.Queue, worker => worker.DispatchAsync(queueState.Queue, 
+                                                                                        record.CrawlerAgent.Id,
                                                                                         record.MangaDownload.Library.Id,
                                                                                         record.MangaDownload.Id,
                                                                                         record.Id,

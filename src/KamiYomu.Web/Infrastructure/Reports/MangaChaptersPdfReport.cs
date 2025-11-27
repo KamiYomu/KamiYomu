@@ -28,10 +28,29 @@ public class MangaChaptersPdfReport(List<string> images, string fileName, string
         foreach (var imgPath in images)
         {
             using var codec = SKCodec.Create(imgPath);
-            var info = codec.Info;
 
-            float widthPoints = info.Width * 72f / 96f;
-            float heightPoints = info.Height * 72f / 96f;
+            int width, height;
+
+            if (codec != null)
+            {
+                width = codec.Info.Width;
+                height = codec.Info.Height;
+            }
+            else
+            {
+                using var bitmap = SKBitmap.Decode(imgPath);
+                if (bitmap == null)
+                {
+                    continue;
+                }
+
+                width = bitmap.Width;
+                height = bitmap.Height;
+            }
+
+            float widthPoints = width * 72f / 96f;
+            float heightPoints = height * 72f / 96f;
+
 
             container.Page(page =>
             {
