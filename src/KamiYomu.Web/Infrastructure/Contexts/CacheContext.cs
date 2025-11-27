@@ -58,8 +58,8 @@ namespace KamiYomu.Web.Infrastructure.Contexts
             return value;
         }
 
-        public string[] GetKeys(Guid agentId) => [.. Barrel.Current.GetKeys(CacheState.Active).Where(x => x.StartsWith(agentId.ToString(), StringComparison.OrdinalIgnoreCase))];
-        public void EmptyAgentKeys(Guid agentId) => Barrel.Current.Empty(GetKeys(agentId));
+        public string[] GetKeys(Guid crawlerAgentId) => [.. Barrel.Current.GetKeys(CacheState.Active).Where(x => x.StartsWith(crawlerAgentId.ToString(), StringComparison.OrdinalIgnoreCase))];
+        public void EmptyAgentKeys(Guid crawlerAgentId) => Barrel.Current.Empty(GetKeys(crawlerAgentId));
         public void EmptyAll() => Barrel.Current.EmptyAll();
         public void Empty(params string[] keys) => Barrel.Current.Empty(keys);
         public void EmptyExpired() => Barrel.Current.EmptyExpired();

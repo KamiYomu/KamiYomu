@@ -5,17 +5,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs
 {
-    public class MangaDetailsModel(DbContext agentDbContext, CacheContext cacheContext, ICrawlerAgentRepository agentCrawlerRepository) : PageModel
+    public class MangaDetailsModel(DbContext agentDbContext, CacheContext cacheContext, ICrawlerAgentRepository crawlerAgentRepository) : PageModel
     {
         public Manga? Manga { get; set; } = default;
-        public async Task OnGetAsync(Guid agentId, string mangaId, CancellationToken cancellationToken)
+        public async Task OnGetAsync(Guid crawlerAgentId, string mangaId, CancellationToken cancellationToken)
         {
-            if(agentId == Guid.Empty || string.IsNullOrWhiteSpace(mangaId))
+            if(crawlerAgentId == Guid.Empty || string.IsNullOrWhiteSpace(mangaId))
             {
                 return;
             }
 
-            Manga = await agentCrawlerRepository.GetMangaAsync(agentId, mangaId, cancellationToken);
+            Manga = await crawlerAgentRepository.GetMangaAsync(crawlerAgentId, mangaId, cancellationToken);
         }
     }
 }

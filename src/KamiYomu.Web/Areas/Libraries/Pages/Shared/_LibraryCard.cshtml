@@ -38,7 +38,7 @@
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
                             <button class="dropdown-item"
-                                    hx-get="/Libraries/Collection/Dialogs/MangaDetails?agentId=@Model.CrawlerAgent.Id&mangaId=@Model.Manga.Id"
+                                    hx-get="/Libraries/Collection/Dialogs/MangaDetails?crawlerAgentId=@Model.CrawlerAgent.Id&mangaId=@Model.Manga.Id"
                                     hx-target="#modal-body"
                                     hx-swap="innerHTML"
                                     data-bs-toggle="modal"
@@ -55,7 +55,7 @@
                                       hx-swap="innerHTML">
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="MangaId" value="@Model.Manga.Id" />
-                                    <input type="hidden" name="AgentId" value="@Model.CrawlerAgent.Id" />
+                                    <input type="hidden" name="CrawlerAgentId" value="@Model.CrawlerAgent.Id" />
                                     <button type="submit" class="dropdown-item bg-success text-light">
                                         <i class="bi bi-plus-circle me-2"></i> @I18n.AddToYourCollection
                                     </button>

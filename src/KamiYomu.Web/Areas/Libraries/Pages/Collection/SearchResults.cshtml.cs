@@ -22,14 +22,14 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Mangas
             if (string.IsNullOrWhiteSpace(query))
                 return new EmptyResult();
 
-            var crawlerAgent = dbContext.CrawlerAgents.FindOne(p => p.Id == selectedAgent);
-            if (crawlerAgent == null)
+            if (selectedAgent == Guid.Empty)
             {
                 return new EmptyResult();
             }
+
             var userPreference = dbContext.UserPreferences.FindOne(p => true);
             var paginationOptions = !string.IsNullOrWhiteSpace(continuationToken) ? new PaginationOptions(continuationToken) : new PaginationOptions(offset, 30);
-            var queryResult = await agentCrawlerRepository.SearchAsync(crawlerAgent.Id, query, paginationOptions, cancellationToken);
+            var queryResult = await agentCrawlerRepository.SearchAsync(selectedAgent, query, paginationOptions, cancellationToken);
             Results = queryResult.Data.Where(p => p.IsFamilySafe == true || p.IsFamilySafe == userPreference.FamilySafeMode).Select(p => new Entities.Library(crawlerAgent, p));
             ViewData["ShowAddToLibrary"] = true;
             ViewData["Handler"] = "Crawler";

@@ -245,15 +245,5 @@ namespace KamiYomu.Web.Entities
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
-
-        public string GetConcurrencyCacheKey()
-        {
-            return GetConcurrencyCacheKey(Id);
-        }
-
-        public static string GetConcurrencyCacheKey(Guid crawlerAgentId)
-        {
-            return $"concurrency_{crawlerAgentId}";
-        }
     }
 }
