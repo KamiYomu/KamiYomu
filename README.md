@@ -42,7 +42,7 @@ save the following `docker-compose.yml` file to run KamiYomu with Docker:
 ```yml
 services:
   kamiyomu:
-    image: marcoscostadev/kamiyomu:1.0.0-rc4 # Check releases for latest versions
+    image: marcoscostadev/kamiyomu:latest # Check releases for latest versions
     ports:
       - "8080:8080" # HTTP Port
     environment:
