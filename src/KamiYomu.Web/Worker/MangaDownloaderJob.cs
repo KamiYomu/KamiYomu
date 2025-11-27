@@ -53,8 +53,10 @@ public class MangaDownloaderJob(
             {
                 return;
             }
+            var agentCrawler = mangaDownload.Library.CrawlerAgent;
+            var mangaId = mangaDownload.Library.Manga.Id;
 
-            logger.LogInformation("Dispatch started. Manga: {Manga} on Job Id {JobId}", title, context.BackgroundJob?.Id);
+            logger.LogInformation("Dispatch process started: Manga '{Manga}' assigned to Agent Crawler '{AgentCrawler}'", title, agentCrawler.DisplayName);
 
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -62,8 +64,7 @@ public class MangaDownloaderJob(
 
             libDbContext.MangaDownloadRecords.Update(mangaDownload);
 
-            var agentCrawler = mangaDownload.Library.AgentCrawler;
-            var mangaId = mangaDownload.Library.Manga.Id;
+
 
             int offset = 0;
             const int limit = 30;
@@ -96,7 +97,7 @@ public class MangaDownloaderJob(
 
                     libDbContext.ChapterDownloadRecords.Upsert(record);
                     var queueState = hangfireRepository.GetLeastLoadedDownloadChapterQueue();
-                    var backgroundJobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(queueState.Queue, p => p.DispatchAsync(queueState.Queue, library.AgentCrawler.Id, library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(), null!, CancellationToken.None) );
+                    var backgroundJobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(queueState.Queue, p => p.DispatchAsync(queueState.Queue, library.CrawlerAgent.Id, library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(), null!, CancellationToken.None) );
 
                     record.Scheduled(backgroundJobId);
                     libDbContext.ChapterDownloadRecords.Update(record);

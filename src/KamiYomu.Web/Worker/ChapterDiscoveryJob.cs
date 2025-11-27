@@ -48,7 +48,7 @@ namespace KamiYomu.Web.Worker
             var files = Directory.GetFiles(library.Manga.GetDirectory(), "*.cbz", SearchOption.AllDirectories);
 
 
-            using var crawlerAgent = mangaDownload.Library.AgentCrawler;
+            using var crawlerAgent = mangaDownload.Library.CrawlerAgent;
             var mangaId = mangaDownload.Library.Manga!.Id;
 
             int offset = 0;
@@ -93,7 +93,7 @@ namespace KamiYomu.Web.Worker
 
                     libDbContext.ChapterDownloadRecords.Upsert(record);
                     var queueState = hangfireRepository.GetLeastLoadedDownloadChapterQueue();
-                    var backgroundJobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(queueState.Queue, p => p.DispatchAsync(queueState.Queue, library.AgentCrawler.Id, library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(), null!, CancellationToken.None));
+                    var backgroundJobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(queueState.Queue, p => p.DispatchAsync(queueState.Queue, library.CrawlerAgent.Id, library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(), null!, CancellationToken.None));
 
                     record.Scheduled(backgroundJobId);
                     libDbContext.ChapterDownloadRecords.Update(record);

@@ -68,8 +68,8 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
             }
 
             var library = dbContext.Libraries.Include(p => p.Manga)
-                                             .Include(p => p.AgentCrawler)
-                                             .FindOne(p => p.Manga.Id == MangaId && p.AgentCrawler.Id == AgentId);
+                                             .Include(p => p.CrawlerAgent)
+                                             .FindOne(p => p.Manga.Id == MangaId && p.CrawlerAgent.Id == AgentId);
             var mangaTitle = library.Manga.Title;
 
             using var libDbContext = library.GetDbContext();
@@ -89,7 +89,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 
             await notificationService.PushSuccessAsync($"{I18n.YourCollectionNoLongerIncludes}: {mangaTitle}.", cancellationToken);
 
-            return Partial("_LibraryCard", new Library(library.AgentCrawler, library.Manga));
+            return Partial("_LibraryCard", new Library(library.CrawlerAgent, library.Manga));
         }
     }
 }

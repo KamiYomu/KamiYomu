@@ -30,7 +30,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Mangas
         public IActionResult OnGetSearch(string query)
         {
             var userPreference = dbContext.UserPreferences.FindOne(p => true);
-            Results = [.. dbContext.Libraries.Include(p => p.AgentCrawler)
+            Results = [.. dbContext.Libraries.Include(p => p.CrawlerAgent)
                                              .Find(p => (query == string.Empty || p.Manga.Title.Contains(query))
                                                && (p.Manga.IsFamilySafe == true || p.Manga.IsFamilySafe == userPreference.FamilySafeMode))];
             ViewData["ShowAddToLibrary"] = false;

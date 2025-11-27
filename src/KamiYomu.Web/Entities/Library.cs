@@ -10,7 +10,7 @@ namespace KamiYomu.Web.Entities
         protected Library() { }
         public Library(CrawlerAgent agentCrawler, Manga manga)
         {
-            AgentCrawler = agentCrawler;
+            CrawlerAgent = agentCrawler;
             Manga = string.IsNullOrEmpty(manga.Title) ? null : manga;
         }
 
@@ -26,11 +26,11 @@ namespace KamiYomu.Web.Entities
 
         public string GetDiscovertyJobId()
         {
-            return $"{Manga!.Title}-{Id}-{AgentCrawler.Id}";
+            return $"{Manga!.Title}-{Id}-{CrawlerAgent.Id}";
         }
 
         public Guid Id { get; private set; }
-        public CrawlerAgent AgentCrawler { get; private set; }
+        public CrawlerAgent CrawlerAgent { get; private set; }
         public Manga Manga { get; private set; }
     }
 }

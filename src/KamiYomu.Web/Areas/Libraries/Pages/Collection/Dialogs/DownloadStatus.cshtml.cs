@@ -72,7 +72,7 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
             RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(
             Library.GetDiscovertyJobId(),
             queue,
-            (job) => job.DispatchAsync(queue, Library.AgentCrawler.Id, Library.Id, null!, CancellationToken.None),
+            (job) => job.DispatchAsync(queue, Library.CrawlerAgent.Id, Library.Id, null!, CancellationToken.None),
             Cron.Daily());
 
             await notificationService.PushSuccessAsync(I18n.YouStartedFollowingThisTitle, cancellationToken);

@@ -19,15 +19,15 @@ namespace KamiYomu.Web.Infrastructure.Services
        
         public string ScheduleMangaDownload(MangaDownloadRecord mangaDownloadRecord)
         {
-            cacheContext.Current.Empty(mangaDownloadRecord.Library.AgentCrawler.GetConcurrencyCacheKey());
+            cacheContext.Current.Empty(mangaDownloadRecord.Library.CrawlerAgent.GetConcurrencyCacheKey());
 
             var mangaDownloadQueueState = hangfireRepository.GetLeastLoadedMangaDownloadSchedulerQueue();
             
-            var backgroundJobId = BackgroundJob.Enqueue<IMangaDownloaderJob>(mangaDownloadQueueState.Queue, p => p.DispatchAsync(mangaDownloadQueueState.Queue, mangaDownloadRecord.Library.AgentCrawler.Id, mangaDownloadRecord.Library.Id, mangaDownloadRecord.Id, mangaDownloadRecord.Library.Manga.Title, null!, CancellationToken.None));
+            var backgroundJobId = BackgroundJob.Enqueue<IMangaDownloaderJob>(mangaDownloadQueueState.Queue, p => p.DispatchAsync(mangaDownloadQueueState.Queue, mangaDownloadRecord.Library.CrawlerAgent.Id, mangaDownloadRecord.Library.Id, mangaDownloadRecord.Id, mangaDownloadRecord.Library.Manga.Title, null!, CancellationToken.None));
 
             var mangaDiscoveryQueue = workerOptions.Value.DiscoveryNewChapterQueues.First();
 
-            RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(mangaDownloadRecord.Library.GetDiscovertyJobId(), (job) => job.DispatchAsync(mangaDiscoveryQueue, mangaDownloadRecord.Library.AgentCrawler.Id, mangaDownloadRecord.Library.Id, null!, CancellationToken.None), Cron.Daily());
+            RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(mangaDownloadRecord.Library.GetDiscovertyJobId(), (job) => job.DispatchAsync(mangaDiscoveryQueue, mangaDownloadRecord.Library.CrawlerAgent.Id, mangaDownloadRecord.Library.Id, null!, CancellationToken.None), Cron.Daily());
 
             return backgroundJobId;
         }
@@ -36,7 +36,7 @@ namespace KamiYomu.Web.Infrastructure.Services
         {
             using var libDbContext = mangaDownloadRecord.Library.GetDbContext();
 
-            cacheContext.Current.Empty(mangaDownloadRecord.Library.AgentCrawler.GetConcurrencyCacheKey());
+            cacheContext.Current.Empty(mangaDownloadRecord.Library.CrawlerAgent.GetConcurrencyCacheKey());
 
             mangaDownloadRecord.Cancelled("User remove manga from the library.");
 
