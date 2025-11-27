@@ -19,7 +19,7 @@ public partial class Defaults
             _providerFactory = factory;
         }
 
-        public static IServiceProvider? Instance => _lazyProvider.Value;
+        public static IServiceProvider Instance => _lazyProvider.Value;
     }
 
     public class NugetFeeds

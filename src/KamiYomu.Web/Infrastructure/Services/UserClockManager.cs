@@ -2,11 +2,11 @@
 
 namespace KamiYomu.Web.Infrastructure.Services
 {
-    public class UserClockService : IUserClockService
+    public class UserClockManager : IUserClockManager
     {
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public UserClockService(IHttpContextAccessor contextAccessor)
+        public UserClockManager(IHttpContextAccessor contextAccessor)
         {
             _contextAccessor = contextAccessor;
         }
