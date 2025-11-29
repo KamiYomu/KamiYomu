@@ -6,10 +6,10 @@ namespace KamiYomu.Web.Extensions
 {
     public static class ChapterExtension
     {
-        public static string ToComicInfo(this Chapter chapter)
+        public static string ToComicInfo(this Chapter chapter, Guid libraryId)
         {
             XElement comicInfo = new("ComicInfo",
-                new XElement("Title", chapter?.Title ?? string.Empty),
+                new XElement("Title",  $"{chapter?.ChapterFileName()} {chapter?.Title ?? "Untitled Chapter"}" ),
                 new XElement("Series", chapter?.ParentManga?.Title ?? string.Empty),
                 new XElement("Number", chapter?.Number.ToString() ?? string.Empty),
                 new XElement("Volume", chapter?.Volume.ToString() ?? string.Empty),
@@ -19,8 +19,9 @@ namespace KamiYomu.Web.Extensions
                 new XElement("LanguageISO", chapter?.ParentManga?.OriginalLanguage ?? string.Empty),
                 new XElement("Genre", string.Join(", ", chapter?.ParentManga?.Tags ?? [])),
                 new XElement("ScanInformation", "KamiYomu"),
-                new XElement("Web", chapter?.ParentManga?.WebSiteUrl ?? string.Empty),
-                new XElement("AgeRating", (chapter?.ParentManga?.IsFamilySafe ?? true) ? "12+" : "Mature")
+                new XElement("Web", chapter?.Uri?.ToString() ?? chapter?.ParentManga.WebSiteUrl ?? string.Empty),
+                new XElement("AgeRating", (chapter?.ParentManga?.IsFamilySafe ?? true) ? "12+" : "Mature"),
+                new XElement("Notes", $"libraryId:{libraryId};")
             );
 
             return comicInfo.ToString();
@@ -35,12 +36,18 @@ namespace KamiYomu.Web.Extensions
 
         public static string GetCbzFileName(this Chapter chapter)
         {
+            string cbzFileName = $"{ChapterFileName(chapter)}.cbz";
+            return cbzFileName;
+        }
+
+        public static string ChapterFileName(this Chapter chapter)
+        {
             var volumePart = chapter.Volume != 0 ? $"Vol.{chapter.Volume:000} " : "";
 
             var chapterPart = chapter.Number > -1 ? $"Ch.{chapter.Number.ToString().PadLeft(4, '0')}"
                                                                  : $"Ch.{chapter.Id.ToString().Substring(0, 8)}";
 
-            var cbzFileName = $"{chapter.ParentManga.FolderName} {volumePart}{chapterPart}.cbz";
+            var cbzFileName = $"{chapter.ParentManga.FolderName} {volumePart}{chapterPart}";
             return cbzFileName;
         }
 

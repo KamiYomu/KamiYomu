@@ -78,6 +78,7 @@ namespace KamiYomu.Web.Worker
 
                 logger.LogInformation("Dispatch '{title}' process started: Chapter assigned to Agent Crawler '{AgentCrawler}'", title, library.CrawlerAgent.DisplayName);
 
+
                 chapterDownload.Processing();
 
                 libDbContext.ChapterDownloadRecords.Update(chapterDownload);
@@ -102,7 +103,7 @@ namespace KamiYomu.Web.Worker
                 pageCount,
                 chapterFolderPath);
 
-                File.WriteAllText(Path.Join(chapterFolderPath, "ComicInfo.xml"), chapterDownload.Chapter.ToComicInfo());
+                File.WriteAllText(Path.Join(chapterFolderPath, "ComicInfo.xml"), chapterDownload.Chapter.ToComicInfo(library.Id));
 
                 int index = 1;
 
@@ -159,7 +160,8 @@ namespace KamiYomu.Web.Worker
                     throw new FileNotFoundException($"{chapterDownload.Chapter.GetCbzFileName()} CBZ file size is too small, indicating a failed download.");
                 }
 
-                MoveTempCbzFilesToCollection(mangaDownload.Library.Manga);
+                await MoveTempCbzFilesToCollectionAsync(mangaDownload.Library.Manga, cancellationToken);
+
                 chapterDownload.Complete();
                 libDbContext.ChapterDownloadRecords.Update(chapterDownload);
 
@@ -181,7 +183,36 @@ namespace KamiYomu.Web.Worker
             }
         }
 
-
+        private async Task<bool> CopyCoverIfNotExistsAsync(Manga manga, string mangaFolder, CancellationToken cancellationToken)
+        {
+            if (manga.CoverUrl == null)
+            {
+                return false;
+            }
+            var coverFileName = "cover" + Path.GetExtension(manga.CoverUrl.AbsolutePath);
+            var coverFilePath = Path.Combine(mangaFolder, coverFileName);
+            if (File.Exists(coverFilePath))
+            {
+                return false;
+            }
+            try
+            {
+                using var response = await _httpClient.GetAsync(
+                    manga.CoverUrl,
+                    HttpCompletionOption.ResponseHeadersRead);
+                response.EnsureSuccessStatusCode();
+                using var httpStream = await response.Content.ReadAsStreamAsync();
+                using var fileStream = File.Create(coverFilePath);
+                httpStream.CopyTo(fileStream);
+                logger.LogInformation("Copied cover image to chapter folder: '{CoverFilePath}'", coverFilePath);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Failed to copy cover image to chapter folder: '{CoverFilePath}'", coverFilePath);
+                return false;
+            }
+        }
         private long CreateCbzFile(ChapterDownloadRecord chapterDownload, string chapterFolder, string seriesFolder)
         {
             var cbzFilePath = Path.Combine(seriesFolder, chapterDownload.Chapter!.GetCbzFileName());
@@ -209,7 +240,7 @@ namespace KamiYomu.Web.Worker
             return size;
         }
 
-        private void MoveTempCbzFilesToCollection(Manga manga)
+        private async Task MoveTempCbzFilesToCollectionAsync(Manga manga, CancellationToken cancellationToken)
         {
             var cbzFiles = Directory.GetFiles(manga.GetTempDirectory(), "*.cbz", SearchOption.AllDirectories);
 
@@ -239,6 +270,7 @@ namespace KamiYomu.Web.Worker
                                                         | UnixFileMode.OtherExecute);
                 }
 
+                await CopyCoverIfNotExistsAsync(manga, destinationDir, cancellationToken);
 
                 logger.LogInformation("Moved: '{cbzFile}' → '{destinationPath}'", cbzFile, destinationPath);
             }
