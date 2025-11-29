@@ -54,6 +54,10 @@ namespace KamiYomu.Web.Entities
             StatusUpdateAt = DateTimeOffset.UtcNow;
         }
 
+        public bool ShouldRun()
+        {
+            return DownloadStatus == DownloadStatus.ToBeRescheduled || DownloadStatus == DownloadStatus.Scheduled;
+        }
 
         public bool IsInProgress()
         {

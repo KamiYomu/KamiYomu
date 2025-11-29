@@ -2,6 +2,6 @@
 {
     public interface ILockManager
     {
-        Task<IDisposable?> TryAcquireAsync(string crawlerType);
+        IDisposable? TryAcquireAsync(string crawlerId);
     }
 }

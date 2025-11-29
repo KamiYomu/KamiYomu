@@ -22,10 +22,10 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
 
     public PerKeyConcurrencyAttribute(
         string parameterName,
-        int rescheduleDelayMinutes = 2)
+        int rescheduleDelayMinutes = AppOptions.Defaults.Worker.StaleLockTimeout)
     {
         _parameterName = parameterName;
-        _rescheduleDelay = TimeSpan.FromMinutes(rescheduleDelayMinutes);
+        _rescheduleDelay = TimeSpan.FromMinutes(rescheduleDelayMinutes + 2);
 
         _logger = ServiceLocator.Instance.GetRequiredService<ILogger<PerKeyConcurrencyAttribute>>();
         _lockManager = ServiceLocator.Instance.GetRequiredService<ILockManager>();
@@ -51,18 +51,13 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
 
             string key = args[index]?.ToString() ?? "null";
 
-            var handleTask = _lockManager.TryAcquireAsync(key);
-            handleTask.Wait();
-
-            var handle = handleTask.Result;
+            var handle = _lockManager.TryAcquireAsync(key);
 
             if (handle == null)
             {
                 _logger.LogInformation(
-                    "PerKeyConcurrency: Job {JobId} deferred — key '{Key}' is at max concurrency. Rescheduling in {Delay}.",
+                    "PerKeyConcurrency: Job '{JobId}' deferred — key '{Key}' is at max concurrency. Rescheduling in '{Delay}'.",
                     context.BackgroundJob.Id, key, _rescheduleDelay);
-
-                context.Canceled = true;
 
                 context.BackgroundJob.EnqueueAfterDelay(_rescheduleDelay, context.Storage);
 
@@ -72,13 +67,13 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
             _lockHandle.Value = handle;
 
             _logger.LogDebug(
-                "PerKeyConcurrency: Job {JobId} acquired lock for key '{Key}'.",
+                "PerKeyConcurrency: Job '{JobId}' acquired lock for key '{Key}'.",
                 context.BackgroundJob.Id, key);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex,
-                "Error while processing concurrency for job {JobId}", context.BackgroundJob.Id);
+                "Error while processing concurrency for job '{JobId}'", context.BackgroundJob.Id);
         }
     }
 
@@ -90,13 +85,13 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
             _lockHandle.Value = null;
 
             _logger.LogDebug(
-                "PerKeyConcurrency: Job {JobId} released concurrency lock.",
+                "PerKeyConcurrency: Job '{JobId}' released concurrency lock.",
                 context.BackgroundJob.Id);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex,
-                "Error releasing lock for job {JobId}", context.BackgroundJob.Id);
+                "Error releasing lock for job '{JobId}'", context.BackgroundJob.Id);
         }
     }
 }

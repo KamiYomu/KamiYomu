@@ -13,46 +13,87 @@ public class LockManager : ILockManager
     {
         _workerOptions = workerOptions.Value;
 
-        _folder = Path.Combine(Path.GetTempPath(), "Locks");
+        _folder = Path.Combine(Path.GetTempPath(), Defaults.Worker.TempDirName, "Locks");
         Directory.CreateDirectory(_folder);
     }
 
-    public Task<IDisposable?> TryAcquireAsync(string crawlerId)
+    public IDisposable? TryAcquireAsync(string crawlerId)
     {
-
         for (int slot = 1; slot <= _workerOptions.MaxConcurrentCrawlerInstances; slot++)
         {
-            string path = Path.Combine(_folder, $"{crawlerId}-{slot}.lock");
+            var path = Path.Combine(_folder, $"{crawlerId}-{slot}.lock");
 
-            try
-            {
-                var fs = new FileStream(
-                    path,
-                    FileMode.OpenOrCreate,
-                    FileAccess.ReadWrite,
-                    FileShare.None,
-                    1,
-                    FileOptions.DeleteOnClose);
-
-                return Task.FromResult<IDisposable?>(new FileLockHandle(fs));
-            }
-            catch (IOException)
-            {
-            }
+            if (TryAcquireSlot(path, out var handle))
+                return handle;
         }
 
-        return Task.FromResult<IDisposable?>(null);
+        return null;
+    }
+
+    private bool TryAcquireSlot(string path, out IDisposable? handle)
+    {
+        handle = null;
+
+        try
+        {
+            if (File.Exists(path))
+            {
+                var lastWrite = File.GetLastWriteTimeUtc(path);
+
+                if ((DateTime.UtcNow - lastWrite).TotalMinutes > Defaults.Worker.StaleLockTimeout)
+                {
+                    TryDelete(path);
+                }
+            }
+
+            var fs = new FileStream(
+                path,
+                FileMode.OpenOrCreate,
+                FileAccess.ReadWrite,
+                FileShare.None,
+                1,
+                FileOptions.None);
+
+            using (var writer = new StreamWriter(fs, leaveOpen: true))
+            {
+                fs.SetLength(0);
+                writer.Write(DateTime.UtcNow.ToString("o"));
+                writer.Flush();
+            }
+
+            handle = new FileLockHandle(fs, path);
+            return true;
+        }
+        catch (IOException)
+        {
+            return false;
+        }
+    }
+
+    private void TryDelete(string path)
+    {
+        try { File.Delete(path); }
+        catch {}
     }
 
     private class FileLockHandle : IDisposable
     {
         private readonly FileStream _stream;
+        private readonly string _path;
 
-        public FileLockHandle(FileStream stream)
+        public FileLockHandle(FileStream stream, string path)
         {
             _stream = stream;
+            _path = path;
         }
 
-        public void Dispose() => _stream.Dispose();
+        public void Dispose()
+        {
+            try { _stream.Dispose(); }
+            catch { }
+
+            try { File.Delete(_path); }
+            catch { }
+        }
     }
 }

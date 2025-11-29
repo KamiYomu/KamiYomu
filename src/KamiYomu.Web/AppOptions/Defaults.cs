@@ -52,6 +52,8 @@ public partial class Defaults
     {
         public const string HttpClientBackground = nameof(HttpClientBackground);
         public const int HttpTimeOutInSeconds = 60;
+        public const int StaleLockTimeout = 8;
+        public const string TempDirName = "kamiyomu-worker.tmp";
     }
 
     public static class LiteDbConfig

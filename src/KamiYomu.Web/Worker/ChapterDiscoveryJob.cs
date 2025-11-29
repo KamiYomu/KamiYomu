@@ -39,7 +39,7 @@ namespace KamiYomu.Web.Worker
 
             if (library == null)
             {
-                logger.LogWarning("{Dispatch} for \"{libraryId}\" could not proceed — the associated library record no longer exists.", nameof(DispatchAsync), libraryId);
+                logger.LogWarning("{Dispatch} for '{libraryId}' could not proceed — the associated library record no longer exists.", nameof(DispatchAsync), libraryId);
                 return;
             }
 
@@ -47,21 +47,20 @@ namespace KamiYomu.Web.Worker
             var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Library.Id == libraryId);
             var files = Directory.GetFiles(library.Manga.GetDirectory(), "*.cbz", SearchOption.AllDirectories);
 
-
-            using var crawlerAgent = mangaDownload.Library.CrawlerAgent;
+            var crawlerAgent = mangaDownload.Library.CrawlerAgent;
             var mangaId = mangaDownload.Library.Manga!.Id;
 
             int offset = 0;
             const int limit = 100;
             int? total = null;
 
-            logger.LogInformation("Starting {jobname} for manga: {MangaId}", nameof(ChapterDiscoveryJob), mangaId);
+            logger.LogInformation("Starting '{jobname}' for manga: '{MangaId}'", nameof(ChapterDiscoveryJob), mangaId);
 
             do
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    logger.LogWarning("Dispatch cancelled during chapter fetch for manga: {MangaId}", mangaId);
+                    logger.LogWarning("Dispatch cancelled during chapter fetch for manga: '{MangaId}'", mangaId);
                     mangaDownload.Cancelled($"Cancelled during the running job: {mangaId}");
                     libDbContext.MangaDownloadRecords.Update(mangaDownload);
                     return;
