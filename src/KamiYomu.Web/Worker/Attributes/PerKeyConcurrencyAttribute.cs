@@ -25,7 +25,7 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
         int rescheduleDelayMinutes = AppOptions.Defaults.Worker.StaleLockTimeout)
     {
         _parameterName = parameterName;
-        _rescheduleDelay = TimeSpan.FromMinutes(rescheduleDelayMinutes + 2);
+        _rescheduleDelay = TimeSpan.FromMinutes(rescheduleDelayMinutes);
 
         _logger = ServiceLocator.Instance.GetRequiredService<ILogger<PerKeyConcurrencyAttribute>>();
         _lockManager = ServiceLocator.Instance.GetRequiredService<ILockManager>();

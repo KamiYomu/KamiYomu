@@ -58,8 +58,6 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
             return Partial("_LibraryCard", library);
         }
 
-
-
         public async Task<IActionResult> OnPostRemoveFromCollectionAsync(CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)

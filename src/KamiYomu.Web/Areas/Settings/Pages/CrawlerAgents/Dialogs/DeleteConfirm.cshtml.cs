@@ -41,8 +41,6 @@ namespace KamiYomu.Web.Pages.CrawlerAgents.Dialogs
                 libDbContext.ChapterDownloadRecords.DeleteMany(p => p.CrawlerAgent.Id == agentCrawler.Id);
             }
 
-            agentCrawler.DeleteAssembly();
-
             dbContext.CrawlerAgents.Delete(Id);
 
             var crawlerAgents = dbContext.CrawlerAgents.FindAll().ToList();

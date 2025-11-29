@@ -1,14 +1,19 @@
+using Hangfire;
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
+using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 using System.Globalization;
 
 namespace KamiYomu.Web.Pages
 {
-    public class IndexModel(ILogger<IndexModel> logger, 
+    public class IndexModel(ILogger<IndexModel> logger,
+            IOptions<WorkerOptions> workerOptions,
                             DbContext dbContext,
                             INotificationService notificationService) : PageModel
     {
@@ -17,7 +22,6 @@ namespace KamiYomu.Web.Pages
 
         public void OnGet()
         {
-
         }
         public IActionResult OnPostSetTimeZone(string tz)
         {

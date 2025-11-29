@@ -71,6 +71,7 @@ builder.Services.AddTransient<IHangfireRepository, HangfireRepository>();
 builder.Services.AddTransient<IChapterDiscoveryJob, ChapterDiscoveryJob>();
 builder.Services.AddTransient<IChapterDownloaderJob, ChapterDownloaderJob>();
 builder.Services.AddTransient<IMangaDownloaderJob, MangaDownloaderJob>();
+builder.Services.AddTransient<IDeferredExecutionCoordinator, DeferredExecutionCoordinator>();
 builder.Services.AddTransient<INugetService, NugetService>();
 builder.Services.AddTransient<INotificationService, NotificationService>();
 builder.Services.AddTransient<IWorkerService, WorkerService>();
@@ -147,11 +148,14 @@ using (var appScoped = app.Services.CreateScope())
     localizationOptions.Value.DefaultRequestCulture = new RequestCulture(userPreference!.GetCulture());
 
     app.UseRequestLocalization(localizationOptions.Value);
+
+
 }
 
 app.UseResponseCompression();
 app.UseStaticFiles();
 app.UseRouting();
+
 app.UseHangfireDashboard("/worker", new DashboardOptions
 {
     DisplayStorageConnectionString = false,
@@ -160,6 +164,8 @@ app.UseHangfireDashboard("/worker", new DashboardOptions
     IgnoreAntiforgeryToken = true,
     Authorization = [new AllowAllDashboardAuthorizationFilter()]
 });
+
+RecurringJob.AddOrUpdate<IDeferredExecutionCoordinator>(Worker.DeferredExecutionQueue, (job) => job.DispatchAsync(Worker.DeferredExecutionQueue, null!, CancellationToken.None), Cron.MinuteInterval(Defaults.Worker.StaleLockTimeout));
 
 app.MapRazorPages();
 app.UseMiddleware<ExceptionNotificationMiddleware>();
@@ -177,9 +183,9 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
                                                            .UseRecommendedSerializerSettings()
                                                            .UseSQLiteStorage(new SQLiteDbConnectionFactory(() =>
                                                            {
-                                                               var connectionString = new SQLiteConnectionString(builder.Configuration.GetConnectionString("WorkerDb"), 
-                                                                   SQLiteOpenFlags.Create 
-                                                                   | SQLiteOpenFlags.ReadWrite 
+                                                               var connectionString = new SQLiteConnectionString(builder.Configuration.GetConnectionString("WorkerDb"),
+                                                                   SQLiteOpenFlags.Create
+                                                                   | SQLiteOpenFlags.ReadWrite
                                                                    | SQLiteOpenFlags.PrivateCache
                                                                    | SQLiteOpenFlags.FullMutex, true);
                                                                var connection = new SQLiteConnection(connectionString);
@@ -193,9 +199,9 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
                                                            }),
                                                            new SQLiteStorageOptions
                                                            {
-                                                                QueuePollInterval = TimeSpan.FromMinutes(1),
-                                                                JobExpirationCheckInterval = TimeSpan.FromHours(1),
-                                                                CountersAggregateInterval = TimeSpan.FromMinutes(5)
+                                                               QueuePollInterval = TimeSpan.FromMinutes(1),
+                                                               JobExpirationCheckInterval = TimeSpan.FromHours(1),
+                                                               CountersAggregateInterval = TimeSpan.FromMinutes(5)
                                                            }));
 
     // Divide queues evenly among servers
@@ -217,8 +223,9 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
         });
     }
 
-    GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { 
-        Attempts = workerOptions.MaxRetryAttempts, 
+    GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute
+    {
+        Attempts = workerOptions.MaxRetryAttempts,
     });
 
 }
