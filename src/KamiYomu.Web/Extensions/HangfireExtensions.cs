@@ -32,13 +32,17 @@ public static class HangfireExtensions
 
         using var transaction = connection.CreateWriteTransaction();
 
-        var monitoringApi = JobStorage.Current.GetMonitoringApi();
+        var monitoringApi = storage.GetMonitoringApi();
 
         var jobDetails = monitoringApi.JobDetails(pastJobInfo.JobId);
 
         var enqueuedState = jobDetails.History.FirstOrDefault(h => h.StateName == "Enqueued");
 
-        var queue = enqueuedState?.Data["Queue"] ?? Defaults.Worker.DefaultQueue;
+        var queue = (enqueuedState?.Data != null
+                        && enqueuedState.Data.TryGetValue("Queue", out var value)
+                        && !string.IsNullOrWhiteSpace(value))
+                    ? value
+                    : Defaults.Worker.DefaultQueue;
 
         var newState = new ScheduledState(delay);
 
