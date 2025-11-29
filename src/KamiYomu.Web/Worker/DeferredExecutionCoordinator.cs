@@ -11,7 +11,8 @@ public class DeferredExecutionCoordinator(ILogger<DeferredExecutionCoordinator> 
 {
     public Task DispatchAsync(string queue, PerformContext context, CancellationToken cancellationToken)
     {
-        var monitoring = JobStorage.Current.GetMonitoringApi();
+        logger.LogInformation("Dispatch \"{title}\".", nameof(DeferredExecutionCoordinator));
+        var monitoring = context.Storage.GetMonitoringApi();
         var now = DateTime.UtcNow;
 
         var enqueued = monitoring.EnqueuedJobs(queue, 0, int.MaxValue)
@@ -41,6 +42,8 @@ public class DeferredExecutionCoordinator(ILogger<DeferredExecutionCoordinator> 
             );
 
         }
+
+        logger.LogInformation("Dispatch \"{title}\" completed.", nameof(DeferredExecutionCoordinator));
 
         return Task.CompletedTask;
     }

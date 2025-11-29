@@ -29,6 +29,8 @@ namespace KamiYomu.Web.Worker
 
         public async Task DispatchAsync(string queue, Guid crawlerId, Guid libraryId, Guid mangaDownloadId, Guid chapterDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
         {
+            logger.LogInformation("Dispatch \"{title}\".", title);
+
             var userPreference = dbContext.UserPreferences.FindOne(p => true);
             var culture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
 
@@ -181,6 +183,8 @@ namespace KamiYomu.Web.Worker
                 libDbContext.ChapterDownloadRecords.Update(chapterDownload);
                 throw;
             }
+
+            logger.LogInformation("Dispatch \"{title}\" completed.", title);
         }
 
         private async Task<bool> CopyCoverIfNotExistsAsync(Manga manga, string mangaFolder, CancellationToken cancellationToken)
