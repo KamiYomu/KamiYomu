@@ -25,6 +25,8 @@ public class MangaDownloaderJob(
 
     public async Task DispatchAsync(string queue, Guid crawlerId, Guid libraryId, Guid mangaDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
     {
+        logger.LogInformation("Dispatch \"{title}\".", title);
+
         var userPreference = dbContext.UserPreferences.FindOne(p => true);
         var culture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
 
@@ -126,5 +128,7 @@ public class MangaDownloaderJob(
             libDbContext.MangaDownloadRecords.Update(mangaDownload);
             throw;
         }
+
+        logger.LogInformation("Dispatch \"{title}\" completed.", title);
     }
 }

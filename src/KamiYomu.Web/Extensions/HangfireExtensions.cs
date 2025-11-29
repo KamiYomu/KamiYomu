@@ -18,7 +18,7 @@ public static class HangfireExtensions
 
         var newState = new ScheduledState(delay);
 
-        transaction.AddJobState(backgroundJob.Id, newState);
+        transaction.SetJobState(backgroundJob.Id, newState);
 
         connection.SetJobParameter(backgroundJob.Id, "Queue", queue);
 
@@ -45,8 +45,8 @@ public static class HangfireExtensions
                     : Defaults.Worker.DefaultQueue;
 
         var newState = new ScheduledState(delay);
-
-        transaction.AddJobState(pastJobInfo.JobId, newState);
+        
+        transaction.SetJobState(pastJobInfo.JobId, newState);
 
         connection.SetJobParameter(pastJobInfo.JobId, "Queue", queue);
 
