@@ -50,6 +50,11 @@ namespace KamiYomu.Web.Entities
             StatusUpdateAt = DateTimeOffset.UtcNow;
         }
 
+        public bool ShouldRun()
+        {
+            return DownloadStatus == DownloadStatus.ToBeRescheduled || DownloadStatus == DownloadStatus.Scheduled;
+        }
+
         public Guid Id { get; private set; }
         public string BackgroundJobId { get; private set; }
         public Library Library { get; private set; }

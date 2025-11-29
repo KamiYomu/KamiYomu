@@ -32,9 +32,9 @@ public class MangaDownloaderJob(
         Thread.CurrentThread.CurrentUICulture = culture;
 
         var library = dbContext.Libraries.FindById(libraryId);
-        if(library == null)
+        if(library is null)
         {
-            logger.LogError("Library no longer exists");
+            logger.LogWarning("Dispatch \"{title}\" could not proceed — the associated library record no longer exists.", title);
             return;
         }
         using var libDbContext = library.GetDbContext();
@@ -43,22 +43,21 @@ public class MangaDownloaderJob(
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (library == null)
+            if (!mangaDownload.ShouldRun())
             {
-                logger.LogWarning("Dispatch \"{title}\" could not proceed — the associated library record no longer exists.", title);
+                logger.LogWarning(
+                "Dispatch \"{Title}\" failed - job cannot run with status {Status}.",
+                title,
+                mangaDownload.DownloadStatus);
                 return;
             }
 
-            if (mangaDownload.DownloadStatus != Entities.Definitions.DownloadStatus.Scheduled)
-            {
-                return;
-            }
             var crawlerAgent = mangaDownload.Library.CrawlerAgent;
             var mangaId = mangaDownload.Library.Manga.Id;
-
-            logger.LogInformation("Dispatch process started: Manga '{Manga}' assigned to Agent Crawler '{AgentCrawler}'", title, crawlerAgent.DisplayName);
-
+            
             cancellationToken.ThrowIfCancellationRequested();
+
+            logger.LogInformation("Dispatch '{title}' process started: assigned to Agent Crawler '{AgentCrawler}'", title, crawlerAgent.DisplayName);
 
             mangaDownload.Processing();
 
@@ -67,8 +66,6 @@ public class MangaDownloaderJob(
             int offset = 0;
             const int limit = 30;
             int? total = null;
-
-            logger.LogInformation("Starting dispatch for manga: {MangaId}", mangaId);
 
             do
             {
@@ -89,7 +86,7 @@ public class MangaDownloaderJob(
                     {
                         record.Complete();
                         libDbContext.ChapterDownloadRecords.Upsert(record);
-                        logger.LogInformation("{file} was found, download chapter marked as completed.", record.Chapter.GetCbzFileName());
+                        logger.LogInformation("Dispatch '{title}': File {file} has been found, download chapter marked as completed.", title, record.Chapter.GetCbzFileName());
                         continue;
                     }
 
@@ -106,10 +103,15 @@ public class MangaDownloaderJob(
                 await Task.Delay(_workerOptions.GetWaitPeriod(), cancellationToken);
             } while (offset < total);
 
-            logger.LogInformation("Finished dispatch for manga: {MangaId}. Total chapters: {Total}", mangaId, total);
             mangaDownload.Complete();
 
             libDbContext.MangaDownloadRecords.Update(mangaDownload);
+
+            logger.LogInformation(
+            "Dispatch \"{Title}\" (MangaId: {MangaId}) — total chapters found: {Total}",
+             title,
+             mangaDownload.Library.Manga.Id,
+             total);
 
             if (userPreference.FamilySafeMode && mangaDownload.Library.Manga.IsFamilySafe || !userPreference.FamilySafeMode)
             {
@@ -119,7 +121,7 @@ public class MangaDownloaderJob(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Dispatch completed with error {Message}.", ex.Message);
+            logger.LogError(ex, "Dispatch '{title}': completed with error {Message}.", title, ex.Message);
             mangaDownload.Pending(ex.Message);
             libDbContext.MangaDownloadRecords.Update(mangaDownload);
             throw;
