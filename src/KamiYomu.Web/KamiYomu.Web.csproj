@@ -25,11 +25,11 @@
 		<PackageReference Include="Microsoft.Extensions.Localization" Version="10.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
 		<PackageReference Include="MonkeyCache.LiteDB" Version="2.1.1" />
-		<PackageReference Include="NuGet.Versioning" Version="7.0.0" />
-		<PackageReference Include="Polly" Version="8.6.4" />
+		<PackageReference Include="NuGet.Versioning" Version="7.0.1" />
+		<PackageReference Include="Polly" Version="8.6.5" />
 		<PackageReference Include="QuestPDF" Version="2025.7.4" />
-		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
-		<PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
+		<PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+		<PackageReference Include="Serilog.Settings.Configuration" Version="10.0.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
 		<PackageReference Include="SkiaSharp" Version="3.119.1" />

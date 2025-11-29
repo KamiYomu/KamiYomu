@@ -76,7 +76,9 @@
         public IEnumerable<string> DiscoveryNewChapterQueues { get; init; }
         
         public IEnumerable<string> GetAllQueues() =>
-        [   "default",
+        [   
+            Defaults.Worker.DefaultQueue,
+            Defaults.Worker.DeferredExecutionQueue,
             .. DownloadChapterQueues,
             .. MangaDownloadSchedulerQueues,
             .. DiscoveryNewChapterQueues,
