@@ -151,7 +151,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                 return NotFound();
             }
 
-            var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            var tempDir = Path.Combine(Path.GetTempPath(), AppOptions.Defaults.Worker.TempDirName, Guid.NewGuid().ToString());
             Directory.CreateDirectory(tempDir);
 
             ZipFile.ExtractToDirectory(filePath, tempDir);

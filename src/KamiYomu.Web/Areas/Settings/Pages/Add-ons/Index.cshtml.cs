@@ -118,7 +118,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers
                 var streams = await nugetService.OnGetDownloadAsync(sourceId, packageId, packageVersion, cancellationToken);
 
                 var tempUploadId = Guid.NewGuid();
-                var downloadDir = Path.Combine(Path.GetTempPath(), tempUploadId.ToString());
+                var downloadDir = Path.Combine(Path.GetTempPath(), AppOptions.Defaults.Worker.TempDirName, tempUploadId.ToString());
                 Directory.CreateDirectory(downloadDir);
 
                 var packageFileName = $"{packageId}.{packageVersion}.nupkg";

@@ -2,7 +2,6 @@
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
-using KamiYomu.Web.Entities.Definitions;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
@@ -173,7 +172,7 @@ namespace KamiYomu.Web.Worker
                     await notificationService.PushSuccessAsync($"{I18n.ChapterDownloaded}: {Path.GetFileNameWithoutExtension(chapterDownload.Chapter.GetCbzFileName())}", cancellationToken);
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!context.CancellationToken.ShutdownToken.IsCancellationRequested)
             {
                 var attempt = context.GetJobParameter<int>("RetryCount") + 1;
                 var errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;

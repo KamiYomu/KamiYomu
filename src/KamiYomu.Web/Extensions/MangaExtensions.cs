@@ -6,7 +6,7 @@ namespace KamiYomu.Web.Extensions
     {
         public static string GetTempDirectory(this Manga manga)
         {
-            var dirPath = Path.Combine(Path.GetTempPath(), manga.FolderName);
+            var dirPath = Path.Combine(Path.GetTempPath(), Defaults.Worker.TempDirName, manga.FolderName);
 
             if (!Directory.Exists(dirPath))
             {
