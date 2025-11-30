@@ -22,7 +22,7 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
 
     public PerKeyConcurrencyAttribute(
         string parameterName,
-        int rescheduleDelayMinutes = AppOptions.Defaults.Worker.StaleLockTimeout)
+        int rescheduleDelayMinutes = AppOptions.Defaults.Worker.DeferredExecutionInMinutes)
     {
         _parameterName = parameterName;
         _rescheduleDelayMinutes = rescheduleDelayMinutes;
