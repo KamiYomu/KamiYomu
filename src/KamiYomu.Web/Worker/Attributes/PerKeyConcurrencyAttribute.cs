@@ -60,6 +60,8 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
                     "PerKeyConcurrency: Job '{JobId}' deferred — key '{Key}' is at max concurrency. Rescheduling in '{Delay}'.",
                     context.BackgroundJob.Id, key, delay);
 
+                context.Canceled = true;
+
                 context.BackgroundJob.EnqueueAfterDelay(delay);
 
                 return;

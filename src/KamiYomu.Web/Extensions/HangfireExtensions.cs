@@ -26,7 +26,7 @@ public static class HangfireExtensions
     }
 
 
-    public static void EnqueueAfterDelay(this PastJobInfo pastJobInfo, TimeSpan delay)
+    public static void EnqueueImmediately(this PastJobInfo pastJobInfo)
     {
         using var connection = JobStorage.Current.GetConnection();
 
@@ -40,9 +40,7 @@ public static class HangfireExtensions
 
         var queue = enqueuedState?.Data["Queue"] ?? Defaults.Worker.DefaultQueue;
 
-        connection.SetJobParameter(pastJobInfo.JobId, "Queue", queue);
-
-        var newState = new ScheduledState(delay);
+        var newState = new EnqueuedState(queue);
 
         transaction.SetJobState(pastJobInfo.JobId, newState);
   

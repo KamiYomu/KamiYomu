@@ -9,6 +9,7 @@ namespace KamiYomu.Web.Worker.Interfaces
         [Queue("{0}")]
         [JobDisplayName("Down Manga {4}")]
         [PerKeyConcurrency("crawlerId")]
+        [MangaCancelOnFail("libraryId")]
         Task DispatchAsync(string queue, Guid crawlerId, Guid libraryId, Guid mangaDownloadId, string title, PerformContext context, CancellationToken cancellationToken);
     }
 }

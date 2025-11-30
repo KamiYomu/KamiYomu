@@ -30,7 +30,7 @@ public class DeferredExecutionCoordinator(ILogger<DeferredExecutionCoordinator> 
 
         foreach (var job in allPastJobs)
         {
-            job.EnqueueAfterDelay(TimeSpan.FromMinutes(Defaults.Worker.StaleLockTimeout + 1));
+            job.EnqueueImmediately();
 
             logger.LogInformation(
                 "[{State}] JobId={JobId} Method={Method} Type={Type} Time={Time}",

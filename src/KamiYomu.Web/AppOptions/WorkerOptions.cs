@@ -65,7 +65,7 @@
         /// <summary>
         /// Queue dedicated to downloading individual chapters.
         /// </summary>
-        public string[] DownloadChapterQueues { get; init; } 
+        public string[] DownloadChapterQueues { get; init; }
         /// <summary>
         /// Queue dedicated to scheduling manga downloads (manages chapter download jobs).
         /// </summary>
@@ -74,9 +74,9 @@
         /// Queue dedicated to discovering new chapters (polling or scraping for updates).
         /// </summary>
         public IEnumerable<string> DiscoveryNewChapterQueues { get; init; }
-        
+
         public IEnumerable<string> GetAllQueues() =>
-        [   
+        [
             Defaults.Worker.DefaultQueue,
             Defaults.Worker.DeferredExecutionQueue,
             .. DownloadChapterQueues,
