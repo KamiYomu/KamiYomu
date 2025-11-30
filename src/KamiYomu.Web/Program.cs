@@ -177,7 +177,7 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
 {
     var workerOptions = builder.Configuration.GetSection("Worker").Get<WorkerOptions>();
     var serverNames = workerOptions.ServerAvailableNames;
-    var allQueues = workerOptions.GetAllQueues().ToList();
+ 
 
     builder.Services.AddHangfire(configuration => configuration.UseSimpleAssemblyNameTypeSerializer()
                                                            .UseRecommendedSerializerSettings()
@@ -199,12 +199,13 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
                                                            }),
                                                            new SQLiteStorageOptions
                                                            {
-                                                               QueuePollInterval = TimeSpan.FromMinutes(1),
+                                                               QueuePollInterval = TimeSpan.FromSeconds(15),
+                                                               DistributedLockLifetime = TimeSpan.FromMinutes(Defaults.Worker.StaleLockTimeout),
                                                                JobExpirationCheckInterval = TimeSpan.FromHours(1),
                                                                CountersAggregateInterval = TimeSpan.FromMinutes(5)
                                                            }));
 
-    // Divide queues evenly among servers
+    var allQueues = workerOptions.GetAllQueues().ToList();
     var queuesPerServer = allQueues
         .Select((queue, index) => new { queue, index })
         .GroupBy(x => x.index % serverNames.Count())

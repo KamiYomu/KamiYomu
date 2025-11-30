@@ -13,7 +13,7 @@ using static KamiYomu.Web.AppOptions.Defaults;
 public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
 {
     private readonly string _parameterName;
-    private readonly TimeSpan _rescheduleDelay;
+    private readonly int _rescheduleDelayMinutes;
 
     private readonly ILogger<PerKeyConcurrencyAttribute> _logger;
     private readonly ILockManager _lockManager;
@@ -25,7 +25,7 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
         int rescheduleDelayMinutes = AppOptions.Defaults.Worker.StaleLockTimeout)
     {
         _parameterName = parameterName;
-        _rescheduleDelay = TimeSpan.FromMinutes(rescheduleDelayMinutes);
+        _rescheduleDelayMinutes = rescheduleDelayMinutes;
 
         _logger = ServiceLocator.Instance.GetRequiredService<ILogger<PerKeyConcurrencyAttribute>>();
         _lockManager = ServiceLocator.Instance.GetRequiredService<ILockManager>();
@@ -55,11 +55,12 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
 
             if (handle == null)
             {
+                var delay = TimeSpan.FromMinutes(_rescheduleDelayMinutes + 1);
                 _logger.LogInformation(
                     "PerKeyConcurrency: Job '{JobId}' deferred — key '{Key}' is at max concurrency. Rescheduling in '{Delay}'.",
-                    context.BackgroundJob.Id, key, _rescheduleDelay);
+                    context.BackgroundJob.Id, key, delay);
 
-                context.BackgroundJob.EnqueueAfterDelay(_rescheduleDelay, context.Storage);
+                context.BackgroundJob.EnqueueAfterDelay(delay);
 
                 return;
             }
