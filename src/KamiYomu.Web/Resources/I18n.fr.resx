@@ -510,6 +510,21 @@
   <data name="ProcessingCertainCrawlerAgentaRequireMoreTime" xml:space="preserve">
     <value>Traitement... Certains agents de robot d'exploration nécessitent plus de temps en fonction de la complexité de la tâche.</value>
   </data>
+  <data name="WaitProcessing1" xml:space="preserve">
+    <value>Nous sommes toujours en train de traiter, croyez en nous</value>
+  </data>
+  <data name="WaitProcessing2" xml:space="preserve">
+    <value>Nous ne pouvons pas attendre que ce soit fait</value>
+  </data>
+  <data name="WaitProcessing3" xml:space="preserve">
+    <value>J'y suis presque... peut-être</value>
+  </data>
+  <data name="WaitProcessing4" xml:space="preserve">
+    <value>Je tourne toujours... comme ton vinyle préféré</value>
+  </data>
+  <data name="WaitProcessing5" xml:space="preserve">
+    <value>Ce spinner fait de son mieux</value>
+  </data>
   <data name="IncludePreReleaseVersions" xml:space="preserve">
     <value>Inclure les versions préliminaires</value>
   </data>
@@ -730,19 +745,11 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="Error" xml:space="preserve">
     <value>Erreur</value>
   </data>
-  <data name="WaitProcessing1" xml:space="preserve">
-    <value>Nous sommes toujours en train de traiter, croyez en nous</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="DownloadMangaHasBeenCancelled" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
-  <data name="WaitProcessing2" xml:space="preserve">
-    <value>Nous ne pouvons pas attendre que ce soit fait</value>
-  </data>
-  <data name="WaitProcessing3" xml:space="preserve">
-    <value>J'y suis presque... peut-être</value>
-  </data>
-  <data name="WaitProcessing4" xml:space="preserve">
-    <value>Je tourne toujours... comme ton vinyle préféré</value>
-  </data>
-  <data name="WaitProcessing5" xml:space="preserve">
-    <value>Ce spinner fait de son mieux</value>
+  <data name="DownloadMangaHasBeenCancelled" xml:space="preserve">
+    <value>Le téléchargement du manga a été annulé</value>
   </data>
 </root>

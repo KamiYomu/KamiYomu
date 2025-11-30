@@ -2,22 +2,26 @@
 using Hangfire.States;
 using Hangfire.Storage;
 using KamiYomu.Web.Infrastructure.Contexts;
+using System.Reflection.Metadata.Ecma335;
 
 namespace KamiYomu.Web.Worker.Attributes
 {
     public class MangaCancelOnFailAttribute : JobFilterAttribute, IApplyStateFilter, IDisposable
     {
-        public string CancelReason { get; }
-
+        private string _cancelReason { get; set; }
         private readonly string _libraryIdParameterName;
+        private readonly string _titleParameterName;
         private readonly IServiceScope _scope;
         private readonly ILogger<ChapterCancelOnFailAttribute> _logger;
         private bool disposedValue;
 
-        public MangaCancelOnFailAttribute(string libraryIdParameterName, string cancelReason = "The number of attempts was exceeded")
+        public MangaCancelOnFailAttribute(string libraryIdParameterName,
+                                          string titleParameterName,
+                                          string cancelReason = "The number of attempts was exceeded")
         {
-            CancelReason = cancelReason;
+            _cancelReason = cancelReason;
             _libraryIdParameterName = libraryIdParameterName;
+            _titleParameterName = titleParameterName;
             _scope = AppOptions.Defaults.ServiceLocator.Instance.CreateScope();
             _logger = _scope.ServiceProvider.GetRequiredService<ILogger<ChapterCancelOnFailAttribute>>();
         }
@@ -27,24 +31,29 @@ namespace KamiYomu.Web.Worker.Attributes
             var oldState = context.OldStateName;
             var newState = context.NewState?.Name;
 
-            if (oldState == ProcessingState.StateName &&
-                newState == FailedState.StateName)
+            if ((oldState == ProcessingState.StateName &&
+                newState == FailedState.StateName) ||
+                newState == DeletedState.StateName)
             {
+                if (newState == DeletedState.StateName)
+                {
+                    _cancelReason = I18n.DownloadMangaHasBeenCancelled;
+                }
                 var args = context.BackgroundJob.Job.Args;
                 var method = context.BackgroundJob.Job.Method;
                 var parameters = method.GetParameters();
 
-                int index = Array.FindIndex(parameters, p => p.Name == _libraryIdParameterName);
-
-                if (index == -1)
+                int libraryIdIndex = Array.FindIndex(parameters, p => p.Name == _libraryIdParameterName);
+                int titleIndex = Array.FindIndex(parameters, p => p.Name == _titleParameterName);
+                if (libraryIdIndex == -1)
                 {
                     _logger.LogError(
-                        "MangaCancelOnFail: Parameter '{Parameter}' not found for job {JobId}.",
+                        "ChapterCancelOnFail: Parameter '{Parameter}' not found for job {JobId}.",
                         _libraryIdParameterName, context.BackgroundJob.Id);
                     return;
                 }
 
-                if(args[index] is Guid libraryId)
+                if (args[libraryIdIndex] is Guid libraryId)
                 {
                     var jobId = context.BackgroundJob.Id;
 
@@ -52,18 +61,20 @@ namespace KamiYomu.Web.Worker.Attributes
 
                     var library = dbContext.Libraries.FindById(libraryId);
 
-                    using var libDbContext = library.GetDbContext();
-
-                    var downloadChapter = libDbContext.MangaDownloadRecords.FindOne(p => p.BackgroundJobId == jobId);
-
-                    if (downloadChapter != null)
+                    if (library != null)
                     {
-                        downloadChapter.Cancelled(CancelReason);
-                        libDbContext.MangaDownloadRecords.Update(downloadChapter);
-                    }
-                }
+                        using var libDbContext = library.GetDbContext();
 
-                
+                        var downloadManga = libDbContext.MangaDownloadRecords.FindOne(p => p.BackgroundJobId == jobId);
+
+                        if (downloadManga != null)
+                        {
+                            downloadManga.Cancelled(_cancelReason);
+                            libDbContext.MangaDownloadRecords.Update(downloadManga);
+                        }
+                    }
+                    _logger.LogWarning("Chapter '{title}' was cancelled. '{newState}' state was applied to the job id '{jobId}'.", args[titleIndex].ToString(), newState, context.BackgroundJob.Id);
+                }
             }
         }
 

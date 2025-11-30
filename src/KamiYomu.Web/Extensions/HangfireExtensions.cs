@@ -21,7 +21,9 @@ public static class HangfireExtensions
         var newState = new ScheduledState(delay);
 
         transaction.SetJobState(backgroundJob.Id, newState);
-        
+
+        transaction.AddToQueue(queue, backgroundJob.Id);
+
         transaction.Commit();
     }
 
@@ -38,12 +40,14 @@ public static class HangfireExtensions
 
         var enqueuedState = jobDetails.History.FirstOrDefault(h => h.StateName == "Enqueued");
 
-        var queue = enqueuedState?.Data["Queue"] ?? Defaults.Worker.DefaultQueue;
+        var queue = enqueuedState?.Data["Queue"] ?? EnqueuedState.DefaultQueue;
 
         var newState = new EnqueuedState(queue);
 
         transaction.SetJobState(pastJobInfo.JobId, newState);
-  
+
+        transaction.AddToQueue(queue, pastJobInfo.JobId);
+
         transaction.Commit();
     }
 }

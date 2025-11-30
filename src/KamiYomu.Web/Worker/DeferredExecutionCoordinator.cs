@@ -43,8 +43,10 @@ public class DeferredExecutionCoordinator(ILogger<DeferredExecutionCoordinator> 
 
         }
 
+        context.SetJobParameter($"{nameof(enqueued)}Found", enqueued.Count);
+        context.SetJobParameter($"{nameof(scheduled)}Found", scheduled.Count);
+        context.SetJobParameter($"totalFound", allPastJobs.Count);
         logger.LogInformation("Dispatch \"{title}\" completed.", nameof(DeferredExecutionCoordinator));
-
         return Task.CompletedTask;
     }
 }

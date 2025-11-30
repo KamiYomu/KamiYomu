@@ -9,6 +9,6 @@ namespace KamiYomu.Web.Entities.Notifications.Definitions
         Success, 
         Info,    
         Warning, 
-        Error    
+        Danger    
     }
 }
