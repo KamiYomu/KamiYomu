@@ -55,13 +55,13 @@ public class IndexModel(DbContext dbContext, INotificationService notificationSe
         // Create a temp file with the correct extension
         var tempUploadId = Guid.NewGuid();
         var tempFileName = $"{tempUploadId}{extension}";
-        var tempFilePath = Path.Combine(Path.GetTempPath(), tempFileName);
+        var tempFilePath = Path.Combine(Path.GetTempPath(), AppOptions.Defaults.Worker.TempDirName, tempFileName);
 
         // Save to permanent storage
         dbContext.CrawlerAgentFileStorage.Upload(tempUploadId, agentFile.FileName, agentFile.OpenReadStream());
         var fileStorage = dbContext.CrawlerAgentFileStorage.FindById(tempUploadId);
         fileStorage.SaveAs(tempFilePath);
-        var crawlerAgentTempDir = Path.Combine(Path.GetTempPath(), CrawlerAgent.GetAgentDirName(agentFile.FileName));
+        var crawlerAgentTempDir = Path.Combine(Path.GetTempPath(), AppOptions.Defaults.Worker.TempDirName, CrawlerAgent.GetAgentDirName(agentFile.FileName));
         var dllPath = "";
         if (isNuget && NugetHelper.IsNugetPackage(tempFilePath))
         {

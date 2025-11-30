@@ -40,10 +40,6 @@ public static class HangfireExtensions
 
         var queue = enqueuedState?.Data["Queue"] ?? EnqueuedState.DefaultQueue;
 
-        var newState = new EnqueuedState(queue);
-
-        transaction.SetJobState(pastJobInfo.JobId, newState);
-
         transaction.AddToQueue(queue, pastJobInfo.JobId);
 
         transaction.Commit();

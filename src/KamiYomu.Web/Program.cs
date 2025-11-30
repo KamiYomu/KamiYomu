@@ -170,7 +170,7 @@ app.UseHangfireDashboard("/worker", new DashboardOptions
 
 RecurringJob.AddOrUpdate<IDeferredExecutionCoordinator>(Worker.DeferredExecutionQueue, 
                                                         (job) => job.DispatchAsync(Worker.DeferredExecutionQueue, null!, CancellationToken.None), 
-                                                        Cron.MinuteInterval(Defaults.Worker.DeferredExecutionCoordinatorStaleLock));
+                                                        Cron.MinuteInterval(Defaults.Worker.StaleLockTimeout));
 
 app.MapRazorPages();
 app.UseMiddleware<ExceptionNotificationMiddleware>();

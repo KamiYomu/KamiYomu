@@ -13,7 +13,7 @@ public class LockManager : ILockManager
     {
         _workerOptions = workerOptions.Value;
 
-        _folder = Path.Combine(Path.GetTempPath(), Defaults.Worker.TempDirName, "Locks");
+        _folder = Path.Combine(Path.GetTempPath(), Defaults.Worker.TempDirName, "locks");
         Directory.CreateDirectory(_folder);
     }
 

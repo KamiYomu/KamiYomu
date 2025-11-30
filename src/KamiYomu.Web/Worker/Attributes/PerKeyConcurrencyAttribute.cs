@@ -55,7 +55,7 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
 
             if (handle == null)
             {
-                var delay = TimeSpan.FromMinutes(_rescheduleDelayMinutes + 1);
+                var delay = TimeSpan.FromMinutes(_rescheduleDelayMinutes);
                 _logger.LogInformation(
                     "PerKeyConcurrency: Job '{JobId}' deferred — key '{Key}' is at max concurrency. Rescheduling in '{Delay}'.",
                     context.BackgroundJob.Id, key, delay);

@@ -121,7 +121,7 @@ public class MangaDownloaderJob(
             }
 
         }
-        catch (Exception ex)
+        catch (Exception ex) when (!context.CancellationToken.ShutdownToken.IsCancellationRequested)
         {
             logger.LogError(ex, "Dispatch '{title}': completed with error {Message}.", title, ex.Message);
             mangaDownload.Pending(ex.Message);
