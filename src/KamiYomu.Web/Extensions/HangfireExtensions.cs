@@ -8,48 +8,44 @@ namespace KamiYomu.Web.Extensions;
 
 public static class HangfireExtensions
 {
-    public static void EnqueueAfterDelay(this BackgroundJob backgroundJob, TimeSpan delay, JobStorage storage)
+    public static void EnqueueAfterDelay(this BackgroundJob backgroundJob, TimeSpan delay)
     {
-        using var connection = storage.GetConnection();
+        using var connection = JobStorage.Current.GetConnection();
 
         using var transaction = connection.CreateWriteTransaction();
 
         var queue = backgroundJob.Job.Queue;
 
+        connection.SetJobParameter(backgroundJob.Id, "Queue", queue);
+
         var newState = new ScheduledState(delay);
 
         transaction.SetJobState(backgroundJob.Id, newState);
-
-        connection.SetJobParameter(backgroundJob.Id, "Queue", queue);
-
+        
         transaction.Commit();
     }
 
 
-    public static void EnqueueAfterDelay(this PastJobInfo pastJobInfo, TimeSpan delay, JobStorage storage)
+    public static void EnqueueAfterDelay(this PastJobInfo pastJobInfo, TimeSpan delay)
     {
-        using var connection = storage.GetConnection();
+        using var connection = JobStorage.Current.GetConnection();
 
         using var transaction = connection.CreateWriteTransaction();
 
-        var monitoringApi = storage.GetMonitoringApi();
+        var monitoringApi = JobStorage.Current.GetMonitoringApi();
 
         var jobDetails = monitoringApi.JobDetails(pastJobInfo.JobId);
 
         var enqueuedState = jobDetails.History.FirstOrDefault(h => h.StateName == "Enqueued");
 
-        var queue = (enqueuedState?.Data != null
-                        && enqueuedState.Data.TryGetValue("Queue", out var value)
-                        && !string.IsNullOrWhiteSpace(value))
-                    ? value
-                    : Defaults.Worker.DefaultQueue;
-
-        var newState = new ScheduledState(delay);
-        
-        transaction.SetJobState(pastJobInfo.JobId, newState);
+        var queue = enqueuedState?.Data["Queue"] ?? Defaults.Worker.DefaultQueue;
 
         connection.SetJobParameter(pastJobInfo.JobId, "Queue", queue);
 
+        var newState = new ScheduledState(delay);
+
+        transaction.SetJobState(pastJobInfo.JobId, newState);
+  
         transaction.Commit();
     }
 }

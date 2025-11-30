@@ -12,7 +12,7 @@ public class DeferredExecutionCoordinator(ILogger<DeferredExecutionCoordinator> 
     public Task DispatchAsync(string queue, PerformContext context, CancellationToken cancellationToken)
     {
         logger.LogInformation("Dispatch \"{title}\".", nameof(DeferredExecutionCoordinator));
-        var monitoring = context.Storage.GetMonitoringApi();
+        var monitoring = JobStorage.Current.GetMonitoringApi();
         var now = DateTime.UtcNow;
 
         var enqueued = monitoring.EnqueuedJobs(queue, 0, int.MaxValue)
@@ -30,7 +30,7 @@ public class DeferredExecutionCoordinator(ILogger<DeferredExecutionCoordinator> 
 
         foreach (var job in allPastJobs)
         {
-            job.EnqueueAfterDelay(TimeSpan.FromMinutes(Defaults.Worker.StaleLockTimeout), context.Storage);
+            job.EnqueueAfterDelay(TimeSpan.FromMinutes(Defaults.Worker.StaleLockTimeout + 1));
 
             logger.LogInformation(
                 "[{State}] JobId={JobId} Method={Method} Type={Type} Time={Time}",
