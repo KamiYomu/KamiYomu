@@ -8,8 +8,8 @@ namespace KamiYomu.Web.Worker.Interfaces
     public interface IChapterDiscoveryJob
     {
         [Queue("{0}")]
-        [PerKeyConcurrency("crawlerId")]
         [DisplayName("Discovery New Chapter")]
+        [PerKeyConcurrency("crawlerId")]
         Task DispatchAsync(string queue, Guid crawlerId, Guid libraryId, PerformContext context, CancellationToken cancellationToken);
     }
 }

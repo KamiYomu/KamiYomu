@@ -17,6 +17,30 @@ RUN apt-get update \
 # Create folders for persistent data
 RUN mkdir -p /manga /db /logs /agents
 
+# Install Fonts
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        curl fontconfig && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        curl unzip fontconfig \
+        fonts-dejavu \
+        fonts-liberation \
+        fonts-noto \
+        fonts-noto-cjk \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create fonts folder
+RUN mkdir -p /usr/share/fonts/truetype/lato
+RUN cd /usr/share/fonts/truetype/lato && \
+    curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWw.ttf && \
+    curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWA.ttf && \
+    curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWy.ttf && \
+    curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWQ.ttf
+   
+RUN fc-cache -f -v
+
+
 # Create non-root user
 ARG UNAME=KamiYomu
 ARG UID=1000
