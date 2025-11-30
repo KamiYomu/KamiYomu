@@ -628,6 +628,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Download Manga Has Been Cancelled.
+        /// </summary>
+        internal static string DownloadMangaHasBeenCancelled {
+            get {
+                return ResourceManager.GetString("DownloadMangaHasBeenCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Download Status.
         /// </summary>
         internal static string DownloadStatus {

@@ -16,6 +16,6 @@ namespace KamiYomu.Web.Entities.Notifications
         public static Notification Success(string message) => new(message, NotificationType.Success);
         public static Notification Info(string message) => new(message, NotificationType.Info);
         public static Notification Warning(string message) => new(message, NotificationType.Warning);
-        public static Notification Error(string message) => new(message, NotificationType.Error);
+        public static Notification Error(string message) => new(message, NotificationType.Danger);
     }
 }
