@@ -20,7 +20,7 @@ using MonkeyCache;
 using MonkeyCache.LiteDB;
 using Polly;
 using Polly.Extensions.Http;
-using QuestPDF.Infrastructure;
+using QuestPDF.Fluent;
 using Serilog;
 using SQLite;
 using System.Globalization;
@@ -29,7 +29,9 @@ using static KamiYomu.Web.AppOptions.Defaults;
 
 var builder = WebApplication.CreateBuilder(args);
 
-QuestPDF.Settings.License = LicenseType.Community;
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+QuestPDF.Infrastructure.TextStyle.Default.FontFamily("Lato");
+
 LiteDbConfig.Configure();
 
 Log.Logger = new LoggerConfiguration()

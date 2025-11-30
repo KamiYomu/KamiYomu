@@ -22,8 +22,6 @@ public static class HangfireExtensions
 
         transaction.SetJobState(backgroundJob.Id, newState);
 
-        transaction.AddToQueue(queue, backgroundJob.Id);
-
         transaction.Commit();
     }
 
