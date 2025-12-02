@@ -1412,6 +1412,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Read It Online.
+        /// </summary>
+        internal static string ReadItOnline {
+            get {
+                return ResourceManager.GetString("ReadItOnline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Release Status.
         /// </summary>
         internal static string ReleaseStatus {

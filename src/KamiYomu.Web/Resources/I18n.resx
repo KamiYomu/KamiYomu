@@ -748,4 +748,7 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="DownloadMangaHasBeenCancelled" xml:space="preserve">
     <value>Download Manga Has Been Cancelled</value>
   </data>
+  <data name="ReadItOnline" xml:space="preserve">
+    <value>Read It Online</value>
+  </data>
 </root>
