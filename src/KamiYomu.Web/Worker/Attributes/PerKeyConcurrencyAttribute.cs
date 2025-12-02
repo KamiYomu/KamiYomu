@@ -43,7 +43,7 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
 
             if (index == -1)
             {
-                _logger.LogWarning(
+                _logger.LogDebug(
                     "PerKeyConcurrency: Parameter '{Parameter}' not found for job {JobId}.",
                     _parameterName, context.BackgroundJob.Id);
                 return;
@@ -56,7 +56,7 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
             if (handle == null)
             {
                 var delay = TimeSpan.FromMinutes(_rescheduleDelayMinutes);
-                _logger.LogInformation(
+                _logger.LogDebug(
                     "PerKeyConcurrency: Job '{JobId}' deferred — key '{Key}' is at max concurrency. Rescheduling in '{Delay}'.",
                     context.BackgroundJob.Id, key, delay);
 
