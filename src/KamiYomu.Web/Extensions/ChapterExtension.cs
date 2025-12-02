@@ -1,4 +1,5 @@
 ﻿using KamiYomu.CrawlerAgents.Core.Catalog;
+using KamiYomu.Web.Infrastructure.Storage;
 using System;
 using System.Xml.Linq;
 
@@ -47,7 +48,7 @@ namespace KamiYomu.Web.Extensions
             var chapterPart = chapter.Number > -1 ? $"Ch.{chapter.Number.ToString().PadLeft(4, '0')}"
                                                                  : $"Ch.{chapter.Id.ToString().Substring(0, 8)}";
 
-            var cbzFileName = $"{chapter.ParentManga.FolderName} {volumePart}{chapterPart}";
+            var cbzFileName = $"{FileNameHelper.SanitizeFileName(chapter.ParentManga.FolderName)} {volumePart}{chapterPart}";
             return cbzFileName;
         }
 
