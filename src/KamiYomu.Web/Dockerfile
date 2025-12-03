@@ -11,8 +11,11 @@ RUN apt-get update \
     libx11-6 libx11-xcb1 libatk1.0-0 libgtk-3-0 libcups2 libdrm2 \
     libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 \
     libpango-1.0-0 libcairo2 libasound2 libxshmfence1 libnss3 chromium \
+    libfontconfig1 libfreetype6 libharfbuzz0b libpng16-16 libjpeg62-turbo \
   && apt-get autopurge -y \
   && apt-get autoclean -y
+
+
 
 # Create folders for persistent data
 RUN mkdir -p /manga /db /logs /agents
@@ -27,6 +30,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWA.ttf \
   && curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWy.ttf \
   && curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWQ.ttf \
+  && curl -L -O https://fonts.gstatic.com/s/gloriahallelujah/v24/LYjYdHv3kUk9BMV96EIswT9DIbW-MLSy3TKEvkCF.ttf \
   && fc-cache -f -v \
   && rm -rf /var/lib/apt/lists/*
 
