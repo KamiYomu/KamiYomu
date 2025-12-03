@@ -50,6 +50,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -74,6 +82,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -92,8 +108,22 @@
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
             "Identifier" = "8:_70C28021_B6C8_47CF_8535_56C7C953E7A4"
-            "InstallerClass" = "11:TRUE"
-            "CustomActionData" = "8:"
+            "InstallerClass" = "11:FALSE"
+            "CustomActionData" = "8:install"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_7B549BFFD93740088F5269B1AC174FCC"
+            {
+            "Name" = "8:Primary output from KamiYomu.WinInstallerHelper (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_83A93F9570D748C69AF9E852E884C059"
+            "FileType" = "3:1"
+            "InstallAction" = "3:4"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_74B76886_B9DB_49FF_8207_E100A7571761"
+            "InstallerClass" = "11:FALSE"
+            "CustomActionData" = "8:uninstall"
             }
         }
         "DefaultFeature"

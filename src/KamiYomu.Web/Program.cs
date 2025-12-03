@@ -29,6 +29,19 @@ using static KamiYomu.Web.AppOptions.Defaults;
 
 var builder = WebApplication.CreateBuilder(args);
 
+if (!IsRunningInDocker())
+{
+    if (OperatingSystem.IsWindows())
+    {
+        builder.Host.UseWindowsService();
+    }
+    else if (OperatingSystem.IsLinux())
+    {
+        builder.Host.UseSystemd();
+    }
+}
+
+
 QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 QuestPDF.Infrastructure.TextStyle.Default.FontFamily("Lato");
 
@@ -126,7 +139,10 @@ builder.Services.AddHttpClient(Worker.HttpClientBackground, client =>
 
 AddHangfireConfig(builder);
 
-var app = builder.Build();
+
+
+
+    var app = builder.Build();
 Defaults.ServiceLocator.Configure(() => app.Services);
 
 if (!app.Environment.IsDevelopment())
@@ -234,4 +250,10 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
         Attempts = workerOptions.MaxRetryAttempts,
     });
 
+}
+
+
+static bool IsRunningInDocker()
+{
+    return System.IO.File.Exists("/.dockerenv");
 }
