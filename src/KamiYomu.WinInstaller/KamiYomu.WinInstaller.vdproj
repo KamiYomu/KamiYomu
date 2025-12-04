@@ -15,13 +15,19 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_38FE4DD3A9B54F99A83B80DB804A2B4B"
+        "MsmKey" = "8:_0097B718C2DF4E6CA285F4ADF3DC9CDC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_83A93F9570D748C69AF9E852E884C059"
+        "MsmKey" = "8:_BE97E3C3E0D1412FB7448E91E80015AA"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FB4569A623A24F1E98B9B6877D5AD511"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -84,10 +90,10 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.CoreRuntime.8.0.x64"
                     {
-                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
-                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    "Name" = "8:.NET Runtime 8.0.22 (x64)"
+                    "ProductCode" = "8:Microsoft.NetCore.CoreRuntime.8.0.x64"
                     }
                 }
             }
@@ -97,33 +103,33 @@
     {
         "CustomAction"
         {
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_15DD0D3B15354C779E6C7BFA6CE43CE0"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_B34ADE5119034B858711E9A8B2BB041F"
             {
-            "Name" = "8:Primary output from KamiYomu.WinInstallerHelper (Active)"
+            "Name" = "8:KamiYomu.WinInstallerHelper.exe"
             "Condition" = "8:"
-            "Object" = "8:_83A93F9570D748C69AF9E852E884C059"
-            "FileType" = "3:1"
-            "InstallAction" = "3:1"
-            "Arguments" = "8:"
-            "EntryPoint" = "8:"
-            "Sequence" = "3:1"
-            "Identifier" = "8:_70C28021_B6C8_47CF_8535_56C7C953E7A4"
-            "InstallerClass" = "11:FALSE"
-            "CustomActionData" = "8:install"
-            }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_7B549BFFD93740088F5269B1AC174FCC"
-            {
-            "Name" = "8:Primary output from KamiYomu.WinInstallerHelper (Active)"
-            "Condition" = "8:"
-            "Object" = "8:_83A93F9570D748C69AF9E852E884C059"
-            "FileType" = "3:1"
+            "Object" = "8:_0097B718C2DF4E6CA285F4ADF3DC9CDC"
+            "FileType" = "3:2"
             "InstallAction" = "3:4"
             "Arguments" = "8:"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
-            "Identifier" = "8:_74B76886_B9DB_49FF_8207_E100A7571761"
+            "Identifier" = "8:_F8FAFA45_FE30_4140_9D10_7329A66A17DB"
             "InstallerClass" = "11:FALSE"
-            "CustomActionData" = "8:uninstall"
+            "CustomActionData" = "8:/Uninstall"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_CF269BFB1DD44694AEB72EA8AC1B6621"
+            {
+            "Name" = "8:KamiYomu.WinInstallerHelper.exe"
+            "Condition" = "8:"
+            "Object" = "8:_0097B718C2DF4E6CA285F4ADF3DC9CDC"
+            "FileType" = "3:2"
+            "InstallAction" = "3:1"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_6DE820EF_F138_4EF9_8A84_9CFAB537D55A"
+            "InstallerClass" = "11:FALSE"
+            "CustomActionData" = "8:/Install=[TARGETDIR]KamiYomu.exe"
             }
         }
         "DefaultFeature"
@@ -158,6 +164,26 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0097B718C2DF4E6CA285F4ADF3DC9CDC"
+            {
+            "SourcePath" = "8:..\\KamiYomu.WinInstallerHelper\\bin\\Release\\net8.0\\KamiYomu.WinInstallerHelper.exe"
+            "TargetName" = "8:KamiYomu.WinInstallerHelper.exe"
+            "Tag" = "8:"
+            "Folder" = "8:_6136CA7863DD47B0908FFCA9192FE5AD"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -224,9 +250,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:KamiYomu.WinInstaller"
+        "ProductName" = "8:KamiYomu"
         "ProductCode" = "8:{748AE3C1-6095-428F-8768-3744F4641644}"
-        "PackageCode" = "8:{320D2541-7ABF-4F41-9643-A3D6A3E712E5}"
+        "PackageCode" = "8:{67DDBBE8-7B11-4458-94D6-F051080F4F8A}"
         "UpgradeCode" = "8:{EF6CDD59-AC84-4340-BE01-84E0B08A8EE1}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -234,14 +260,14 @@
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:Default Company Name"
+        "Manufacturer" = "8:KamiYomu"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:KamiYomu.WinInstaller"
+        "Title" = "8:KamiYomu"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Default Company Name"
-        "Keywords" = "8:"
-        "ARPCOMMENTS" = "8:"
+        "ARPCONTACT" = "8:KamiYomu"
+        "Keywords" = "8:crawler;downloader;manga;manga-downloader;manga-scraper;konga;kavita;kamiyomu;crawler-agents"
+        "ARPCOMMENTS" = "8:A Manga Downloader - KamiYomu is a powerful, extensible manga downloader built for manga enthusiasts who want full control over their collection. It scans and downloads manga from supported websites, stores them locally, and lets you host your own private manga reader"
         "ARPURLINFOABOUT" = "8:"
         "ARPPRODUCTICON" = "8:"
         "ARPIconIndex" = "3:0"
@@ -745,9 +771,9 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_38FE4DD3A9B54F99A83B80DB804A2B4B"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BE97E3C3E0D1412FB7448E91E80015AA"
             {
-            "SourcePath" = "8:..\\KamiYomu.Web\\obj\\Debug\\net8.0\\KamiYomu.Web.dll"
+            "SourcePath" = "8:..\\KamiYomu.Web\\obj\\Release\\net8.0\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_6136CA7863DD47B0908FFCA9192FE5AD"
@@ -766,16 +792,16 @@
             "IsolateTo" = "8:"
             "ProjectOutputGroupRegister" = "3:1"
             "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
+            "OutputGroupCanonicalName" = "8:PublishItems"
             "OutputProjectGuid" = "8:{7A2F7B63-50BF-4FF9-B34B-0BA8CC88E754}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {
                 }
             }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_83A93F9570D748C69AF9E852E884C059"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FB4569A623A24F1E98B9B6877D5AD511"
             {
-            "SourcePath" = "8:..\\KamiYomu.WinInstallerHelper\\obj\\Debug\\net8.0\\KamiYomu.WinInstallerHelper.dll"
+            "SourcePath" = "8:..\\KamiYomu.WinInstallerHelper\\obj\\Release\\net8.0\\KamiYomu.WinInstallerHelper.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_6136CA7863DD47B0908FFCA9192FE5AD"
