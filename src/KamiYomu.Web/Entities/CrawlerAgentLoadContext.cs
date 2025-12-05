@@ -1,4 +1,5 @@
 ﻿using KamiYomu.Web.AppOptions;
+using Microsoft.Extensions.Options;
 using System.Reflection;
 using System.Runtime.Loader;
 
@@ -17,6 +18,7 @@ namespace KamiYomu.Web.Entities
 
         protected override Assembly? Load(AssemblyName assemblyName)
         {
+
             // 1. Try application bin path first
             if (string.Equals(assemblyName.Name, "KamiYomu.CrawlerAgents.Core"))
                 return null;
@@ -43,7 +45,9 @@ namespace KamiYomu.Web.Entities
                 return LoadFromAssemblyPath(objPath);
 
             // 6. Try agent folder
-            var agentPath = Path.Combine(Defaults.SpecialFolders.AgentsDir, Path.GetFileName(_baseDir), $"{assemblyName.Name}.dll");
+            var specialFolderOptions = Defaults.ServiceLocator.Instance.GetRequiredService<IOptions<SpecialFolderOptions>>();
+
+            var agentPath = Path.Combine(specialFolderOptions.Value.AgentsDir, Path.GetFileName(_baseDir), $"{assemblyName.Name}.dll");
             if (File.Exists(agentPath))
                 return LoadFromAssemblyPath(agentPath);
 

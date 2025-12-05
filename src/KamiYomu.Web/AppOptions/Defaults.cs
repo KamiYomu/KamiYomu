@@ -40,14 +40,6 @@ public partial class Defaults
         public const string KamiYomuCrawlerAgentTag = "kamiyomu-crawler-agents";
     }
 
-    public static class SpecialFolders
-    {
-        public const string LogDir = "/logs";
-        public const string AgentsDir = "/agents";
-        public const string DbDir = "/db";
-        public const string MangaDir = "/manga";
-    }
-
     public static class Worker
     {
         public const string HttpClientBackground = nameof(HttpClientBackground);

@@ -21,13 +21,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_BE97E3C3E0D1412FB7448E91E80015AA"
+        "MsmKey" = "8:_8C2524108BFE4B9DA5F0C3B18855E23E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_FB4569A623A24F1E98B9B6877D5AD511"
+        "MsmKey" = "8:_BE97E3C3E0D1412FB7448E91E80015AA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -75,7 +75,7 @@
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
-        "Compression" = "3:2"
+        "Compression" = "3:3"
         "SignOutput" = "11:FALSE"
         "CertificateFile" = "8:"
         "PrivateKeyFile" = "8:"
@@ -83,18 +83,13 @@
         "InstallerBootstrapper" = "3:2"
             "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
             {
-            "Enabled" = "11:TRUE"
+            "Enabled" = "11:FALSE"
             "PromptEnabled" = "11:TRUE"
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.CoreRuntime.8.0.x64"
-                    {
-                    "Name" = "8:.NET Runtime 8.0.22 (x64)"
-                    "ProductCode" = "8:Microsoft.NetCore.CoreRuntime.8.0.x64"
-                    }
                 }
             }
         }
@@ -115,7 +110,8 @@
             "Sequence" = "3:1"
             "Identifier" = "8:_F8FAFA45_FE30_4140_9D10_7329A66A17DB"
             "InstallerClass" = "11:FALSE"
-            "CustomActionData" = "8:/Uninstall"
+            "CustomActionData" = "8:/Uninstall=[TARGETDIR]KamiYomu.exe"
+            "Run64Bit" = "11:TRUE"
             }
             "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_CF269BFB1DD44694AEB72EA8AC1B6621"
             {
@@ -130,6 +126,7 @@
             "Identifier" = "8:_6DE820EF_F138_4EF9_8A84_9CFAB537D55A"
             "InstallerClass" = "11:FALSE"
             "CustomActionData" = "8:/Install=[TARGETDIR]KamiYomu.exe"
+            "Run64Bit" = "11:TRUE"
             }
         }
         "DefaultFeature"
@@ -203,7 +200,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_6136CA7863DD47B0908FFCA9192FE5AD"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFiles64Folder][Manufacturer]\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -211,17 +208,6 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_8DC415EDEA4A4E05896A4A023BB74C72"
-                    {
-                    "Name" = "8:chromium"
-                    "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_61E213CF69FB42F9997A03322DE964AB"
-                        "Folders"
-                        {
-                        }
-                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_D73CD1E3B4FB4FA89F134D0525DFC090"
@@ -252,7 +238,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:KamiYomu"
         "ProductCode" = "8:{748AE3C1-6095-428F-8768-3744F4641644}"
-        "PackageCode" = "8:{67DDBBE8-7B11-4458-94D6-F051080F4F8A}"
+        "PackageCode" = "8:{8C2C7B14-EF25-4717-BDA8-6B5D80C77E90}"
         "UpgradeCode" = "8:{EF6CDD59-AC84-4340-BE01-84E0B08A8EE1}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -273,7 +259,7 @@
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
-        "TargetPlatform" = "3:0"
+        "TargetPlatform" = "3:1"
         "PreBuildEvent" = "8:"
         "PostBuildEvent" = "8:"
         "RunPostBuildEvent" = "3:0"
@@ -771,6 +757,34 @@
         }
         "ProjectOutput"
         {
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8C2524108BFE4B9DA5F0C3B18855E23E"
+            {
+            "SourcePath" = "8:..\\KamiYomu.WinInstallerHelper\\obj\\Release\\net8.0\\apphost.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_6136CA7863DD47B0908FFCA9192FE5AD"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:Release|Any CPU"
+            "OutputGroupCanonicalName" = "8:PublishItems"
+            "OutputProjectGuid" = "8:{244D42C6-F64F-7C1A-2F87-28F9871C9871}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BE97E3C3E0D1412FB7448E91E80015AA"
             {
             "SourcePath" = "8:..\\KamiYomu.Web\\obj\\Release\\net8.0\\apphost.exe"
@@ -794,34 +808,6 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:PublishItems"
             "OutputProjectGuid" = "8:{7A2F7B63-50BF-4FF9-B34B-0BA8CC88E754}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FB4569A623A24F1E98B9B6877D5AD511"
-            {
-            "SourcePath" = "8:..\\KamiYomu.WinInstallerHelper\\obj\\Release\\net8.0\\KamiYomu.WinInstallerHelper.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_6136CA7863DD47B0908FFCA9192FE5AD"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{244D42C6-F64F-7C1A-2F87-28F9871C9871}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

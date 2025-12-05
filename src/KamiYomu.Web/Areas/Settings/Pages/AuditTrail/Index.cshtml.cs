@@ -1,10 +1,11 @@
 using KamiYomu.Web.AppOptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Areas.Settings.Pages.AuditTrail
 {
-    public class IndexModel(ILogger<IndexModel> logger) : PageModel
+    public class IndexModel(ILogger<IndexModel> logger, IOptions<SpecialFolderOptions> specialFolderOptions) : PageModel
     {
         public void OnGet()
         {
@@ -16,7 +17,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.AuditTrail
 
             Response.Headers["Content-Type"] = "text/event-stream";
 
-            string logFolder = Defaults.SpecialFolders.LogDir;
+            string logFolder = specialFolderOptions.Value.LogDir;
 
             long lastSize = 0;
             string? currentFile = null;

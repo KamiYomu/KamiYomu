@@ -1,5 +1,6 @@
 ﻿using KamiYomu.CrawlerAgents.Core.Inputs;
 using KamiYomu.Web.AppOptions;
+using Microsoft.Extensions.Options;
 using PuppeteerSharp.Input;
 using System.ComponentModel;
 using System.Reflection;
@@ -197,9 +198,11 @@ namespace KamiYomu.Web.Entities
         }
         public static string GetAgentDir(string fileName)
         {
+            var specialFolderOptions = Defaults.ServiceLocator.Instance.GetRequiredService<IOptions<SpecialFolderOptions>>();
+
             string name = GetAgentDirName(fileName);
 
-            var directory = Path.Combine(Defaults.SpecialFolders.AgentsDir, name);
+            var directory = Path.Combine(specialFolderOptions.Value.AgentsDir, name);
 
             Directory.CreateDirectory(directory);
 
