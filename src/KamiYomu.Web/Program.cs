@@ -254,6 +254,8 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
     GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute
     {
         Attempts = workerOptions.MaxRetryAttempts,
+        OnAttemptsExceeded = AttemptsExceededAction.Delete,
+        LogEvents = true        
     });
 }
 

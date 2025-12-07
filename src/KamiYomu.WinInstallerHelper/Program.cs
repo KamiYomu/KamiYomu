@@ -1,17 +1,10 @@
-﻿using System.Diagnostics;
-using System.Reflection;
-using PuppeteerSharp;
+﻿using PuppeteerSharp;
 using Serilog;
-using Serilog.Core;
+using System.Diagnostics;
 
-// --- Configuration ---
 const string ServiceName = "KamiYomu";
-const string ServiceDescription = "KamiYomu ASP.NET Web Application Host Service.";
-const int WebAppPort = 8080;
-// ---------------------
+const string ServiceDescription = "A Manga Downloader - KamiYomu is a powerful, extensible manga downloader built for manga enthusiasts who want full control over their collection. It scans and downloads manga from supported websites, stores them locally, and lets you host your own private manga reade";
 
-// --- Serilog Initialization ---
-// The log file will be placed in the user's temporary directory, ensuring the MSI has permissions to write it.
 string logFilePath = Path.Combine(Path.GetTempPath(), $"{ServiceName}InstallerLog.txt");
 
 Log.Logger = new LoggerConfiguration()
@@ -20,45 +13,54 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File(logFilePath, rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
-Log.Information("--- {ServiceName} Service Installer Helper ---", ServiceName);
+Log.Information("--- {ServiceName} Installer Helper ---", ServiceName);
 Log.Information("Log file created at: {Path}", logFilePath);
 
 
 if (args.Length == 0)
 {
-    Log.Warning("Please provide an argument: 'install', 'uninstall', or 'download-chromium'.");
+    Log.Warning("Please provide an argument: 'install' or 'uninstall'.");
     return;
 }
 
+string command = args[0].ToLower();
+string webAppExePath = null;
+string commandKey = null;
+
 try
 {
-    string command = args[0].ToLower();
-    string installDirectoryArgument = string.Empty;
+    // --- Robust Argument Parsing ---
 
-    // Check if the argument contains a path assignment (e.g., install=C:\App)
-    if (command.Contains("="))
+    // Check if the argument contains the path assignment (e.g., /install=C:\Path)
+    if (command.StartsWith("/install=") || command.StartsWith("install="))
     {
         var parts = command.Split('=', 2);
-        command = parts[0];
-        // The path will be quoted by MSI, so trim quotes
-        installDirectoryArgument = parts[1].Trim('"');
+        Log.Information("part[1] = {0} | part[2] = {1}", parts[0], parts[1]);
+        commandKey = parts[0].TrimStart('/'); // Get 'install'
+        webAppExePath = parts[1].Trim('"'); // Get "C:\Program Files\..." and remove quotes
+    }
+    else if (command == "/install" || command == "install")
+    {
+        // Fallback for split arguments, expecting path in args[1]
+        if (args.Length < 2)
+        {
+            throw new ArgumentException("Installation command requires the full path to the web application executable.");
+        }
+        commandKey = command.TrimStart('/');
+        webAppExePath = args[1].Trim('"');
+        Log.Information("part[1] = {0} | part[2] = {1}", args[0], args[1]);
+    }
+    else if (command == "/uninstall" || command == "uninstall")
+    {
+        commandKey = command.TrimStart('/');
     }
 
-    switch (command)
+    // --- Action Execution ---
+
+    switch (commandKey)
     {
         case "install":
-            // Use the explicitly provided path from MSI [TARGETDIR] property, 
-            // falling back to AppContext.BaseDirectory only if parsing failed (which should not happen with correct MSI config)
-            if (string.IsNullOrEmpty(installDirectoryArgument))
-            {
-                installDirectoryArgument = AppContext.BaseDirectory;
-                Log.Warning("Installation directory was not explicitly passed via argument. Using AppContext.BaseDirectory: {Dir}", installDirectoryArgument);
-            }
-            else
-            {
-                Log.Information("Installation directory received from MSI argument: {Dir}", installDirectoryArgument);
-            }
-            await InstallAsync(installDirectoryArgument);
+            InstallAsync(webAppExePath).Wait();
             break;
 
         case "uninstall":
@@ -72,7 +74,14 @@ try
 }
 catch (Exception ex)
 {
-    Log.Error(ex, "Operation failed: {ErrorMessage}", ex.Message);
+    Exception baseException = (ex is AggregateException aggEx) ? aggEx.InnerException ?? ex : ex;
+    // Log the exception to the file with full stack trace and details
+    Log.Error(baseException, "\n[ERROR] Operation failed: {Message}", baseException.Message);
+
+    // Only use Console.WriteLine for the final, critical exit message for the MSI user
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine($"\n[ERROR] Operation failed. Check log file at: {logFilePath} for details.");
+    Console.ResetColor();
     Environment.Exit(1);
 }
 finally
@@ -80,115 +89,79 @@ finally
     Log.CloseAndFlush();
 }
 
-// Updated InstallAsync to explicitly take the installation directory argument
-static async Task InstallAsync(string installDirectory)
+static async Task InstallAsync(string webAppExePath)
 {
     Log.Information("Starting installation process...");
-    Log.Information("Using determined installation directory: {InstallDirectory}", installDirectory);
 
-    // The rest of the function uses the passed 'installDirectory' variable
-    const string WebAppExeName = "KamiYomu.Web.exe";
-    string exePath = Path.Combine(installDirectory, WebAppExeName);
-    string binPath = $"\"{exePath}\"";
-    Log.Information("Service Path: {BinPath}", binPath);
-
-    if (!File.Exists(exePath))
+    if (string.IsNullOrEmpty(webAppExePath) || !File.Exists(webAppExePath))
     {
-        Log.Error("The main application executable was not found at the expected path: {ExePath}", exePath);
-        Log.Information("Please ensure the project is published correctly and '{ExeName}' exists in the installer directory.", WebAppExeName);
+        Log.Error("Target web application executable not found or path missing: {Path}", webAppExePath);
+        throw new FileNotFoundException($"Target web application executable not found or path missing at: {webAppExePath}");
+    }
 
-        // Retaining Console interaction for immediate feedback on critical error
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"\nERROR: The main application executable was not found at the expected path:\n{exePath}");
-        Console.WriteLine("Please ensure the project is published correctly and 'KamiYomu.Web.exe' exists in the installer directory.");
-        Console.ResetColor();
-        Console.WriteLine("\nPress any key to exit...");
-        Console.ReadKey();
+    string binPath = $"\"{webAppExePath}\"";
+
+    Log.Information("Service Executable Path: {Path}", binPath);
+
+    Log.Information("\n[1/3] Registering Windows Service...");
+
+    RunCommand("sc.exe", $"create {ServiceName} binPath= {binPath} start= auto");
+    RunCommand("sc.exe", $"description {ServiceName} \"{ServiceDescription}\"");
+    RunCommand("sc.exe", $"start {ServiceName}");
+
+    Log.Information("Service '{ServiceName}' created and started successfully.", ServiceName);
+    Console.WriteLine($"Service '{ServiceName}' created and started successfully.");
+
+    Log.Information("\n[2/3] Ensuring Chromium dependency is installed...");
+    await EnsureChromiumInstalledAsync();
+    Log.Information("Chromium dependency ready.");
+
+    Log.Information("\n[3/3] Cleaning up installer logs...");
+
+
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine("\n--- INSTALLATION COMPLETE ---");
+    Console.ResetColor();
+}
+
+static async Task EnsureChromiumInstalledAsync()
+{
+    var fetcher = new BrowserFetcher();
+
+    var installedRevision = fetcher.GetInstalledBrowsers()
+                                    .FirstOrDefault(b => b.Browser == SupportedBrowser.Chromium);
+
+    if (installedRevision != null && File.Exists(installedRevision.GetExecutablePath()))
+    {
+        Log.Information("Chromium is already installed. Skipping download.");
+        Console.WriteLine("\tChromium is already installed. Skipping download.");
         return;
     }
 
-    Log.Information("\n[1/4] Registering Windows Service...");
-
-    string createCommand = $"create {ServiceName} binPath= {binPath} start= auto";
-    Log.Information("Executing: sc.exe {Command}", createCommand);
-    RunCommand("sc.exe", createCommand);
-
-    string descCommand = $"description {ServiceName} \"{ServiceDescription}\"";
-    Log.Information("Executing: sc.exe {Command}", descCommand);
-    RunCommand("sc.exe", descCommand);
-
-    Log.Information("\n[2/4] Setting Service-Specific Environment Variables in Registry...");
-
-    string aspnetUrls = $"ASPNETCORE_URLS=http://+:{WebAppPort}";
-    string aspnetEnvironment = "ASPNETCORE_ENVIRONMENT=Windows";
-    string registryData = $"{aspnetUrls} {aspnetEnvironment}";
-
-    string regCommand = $"ADD \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\{ServiceName}\" /v Environment /t REG_MULTI_SZ /d \"{registryData}\" /f";
-
-    Log.Information("Executing: reg.exe {Command}", regCommand);
-    RunCommand("reg.exe", regCommand);
-
-    Log.Information("Environment variables set in service registry key.");
-
-    string startCommand = $"start {ServiceName}";
-    Log.Information("Executing: sc.exe {Command}", startCommand);
-    RunCommand("sc.exe", startCommand);
-
-    Log.Information("Service '{ServiceName}' created and started successfully.", ServiceName);
-
-    Log.Information("\n[3/4] Configuring Windows Firewall for Port {Port}...", WebAppPort);
-    string firewallCommand = $"advfirewall firewall add rule name=\"{ServiceName} HTTP Port\" dir=in action=allow protocol=TCP localport={WebAppPort}";
-    Log.Information("Executing: netsh.exe {Command}", firewallCommand);
-    RunCommand("netsh.exe", firewallCommand);
-    Log.Information("Firewall rule for port {Port} added successfully.", WebAppPort);
-
-    Log.Information("\n[4/4] Handling Chromium dependency...");
-    await DownloadChromiumAsync();
-
-    Log.Information("\n--- INSTALLATION COMPLETE ---");
-
-    Console.WriteLine("\nInstallation log complete. Press any key to exit...");
-    Console.ReadKey();
+    Log.Information("Chromium is missing. Downloading stable version...");
+    Console.WriteLine("\tChromium is missing. Downloading stable version...");
+    await fetcher.DownloadAsync(BrowserTag.Stable);
+    Log.Information("Chromium download complete.");
+    Console.WriteLine("\tChromium download complete.");
 }
 
 static void Uninstall()
 {
     Log.Information("Starting uninstallation process...");
 
-    // --- 1. Registry Cleanup (Environment Variables) ---
-    Log.Information("\n[1/3] Removing service environment variables from Registry...");
-    string regDeleteCommand = $"DELETE \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\{ServiceName}\" /v Environment /f";
-    Log.Information("Executing: reg.exe {Command}", regDeleteCommand);
-    // Ignore error in case the service or environment key already failed to be created/deleted
-    RunCommand("reg.exe", regDeleteCommand, false);
-    Log.Information("Service environment variables removed (if they existed).");
-
-    // --- 2. Service Cleanup ---
-    Log.Information("\n[2/3] Stopping and deleting Windows Service...");
-    Log.Information("Executing: sc.exe stop {ServiceName}", ServiceName);
+    Log.Information("\n[1/1] Stopping and deleting Windows Service...");
     RunCommand("sc.exe", $"stop {ServiceName}", false);
-    Log.Information("Executing: sc.exe delete {ServiceName}", ServiceName);
     RunCommand("sc.exe", $"delete {ServiceName}", false);
 
-    Log.Information("Service '{ServiceName}' deleted successfully (if it existed).", ServiceName);
+    Log.Information("Service '{ServiceName}' deleted.", ServiceName);
+    Console.WriteLine($"Service '{ServiceName}' deleted.");
 
-    // --- 3. Firewall Cleanup ---
-    Log.Information("\n[3/3] Removing Windows Firewall rule for Port {Port}...", WebAppPort);
-    Log.Information("Executing: netsh.exe advfirewall firewall delete rule name=\"{ServiceName} HTTP Port\"", ServiceName);
-    RunCommand("netsh.exe", $"advfirewall firewall delete rule name=\"{ServiceName} HTTP Port\"", false);
-
-    Log.Information("\n--- UNINSTALLATION COMPLETE ---");
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine("\n--- UNINSTALLATION COMPLETE ---");
+    Console.ResetColor();
 }
 
-static async Task DownloadChromiumAsync()
-{
-    Log.Information("Downloading Chromium (PuppeteerSharp dependency)...");
-    var fetcher = new BrowserFetcher();
-    await fetcher.DownloadAsync(BrowserTag.Stable);
-    Log.Information("Chromium download complete.");
-}
-
-static void RunCommand(string fileName, string arguments, bool throwOnError = true)
+static void RunCommand(string fileName, string arguments, bool ignoreError = false)
 {
     Log.Debug("Executing system command: {FileName} {Arguments}", fileName, arguments);
 
@@ -217,7 +190,7 @@ static void RunCommand(string fileName, string arguments, bool throwOnError = tr
         if (!string.IsNullOrEmpty(error))
             Log.Error("Command Error: {Error}", error.Trim());
 
-        if (throwOnError)
+        if (!ignoreError)
         {
             throw new InvalidOperationException(
                 $"Command failed with exit code {process.ExitCode}. Executable: {fileName}, Arguments: {arguments}. Error: {error.Trim()}");

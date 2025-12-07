@@ -14,6 +14,11 @@
 		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<SelfContained>true</SelfContained>
+	</PropertyGroup>
+
 	<Target Name="LogBuildMetadata" BeforeTargets="BeforeBuild">
 		<Message Text="🔧 Build Configuration: $(Configuration)" Importance="High" />
 		<Message Text="📦 Version: $(Version)" Importance="High" />
