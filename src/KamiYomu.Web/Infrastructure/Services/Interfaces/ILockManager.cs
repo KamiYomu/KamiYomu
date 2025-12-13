@@ -1,7 +1,6 @@
-﻿namespace KamiYomu.Web.Infrastructure.Services.Interfaces
+﻿namespace KamiYomu.Web.Infrastructure.Services.Interfaces;
+
+public interface ILockManager
 {
-    public interface ILockManager
-    {
-        IDisposable? TryAcquireAsync(string crawlerId);
-    }
+    IDisposable? TryAcquireAsync(string crawlerId);
 }

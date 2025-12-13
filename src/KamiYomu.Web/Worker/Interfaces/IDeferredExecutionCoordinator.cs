@@ -1,6 +1,5 @@
 ﻿using Hangfire;
 using Hangfire.Server;
-using KamiYomu.Web.Worker.Attributes;
 using System.ComponentModel;
 
 namespace KamiYomu.Web.Worker.Interfaces;

@@ -1,10 +1,9 @@
 ﻿using KamiYomu.Web.Entities;
 
-namespace KamiYomu.Web.Infrastructure.Services.Interfaces
+namespace KamiYomu.Web.Infrastructure.Services.Interfaces;
+
+public interface IWorkerService
 {
-    public interface IWorkerService
-    {
-        string ScheduleMangaDownload(MangaDownloadRecord mangaDownloadRecord);
-        void CancelMangaDownload(MangaDownloadRecord mangaDownloadRecord);
-    }
+    string ScheduleMangaDownload(MangaDownloadRecord mangaDownloadRecord);
+    void CancelMangaDownload(MangaDownloadRecord mangaDownloadRecord);
 }

@@ -182,6 +182,13 @@ namespace KamiYomu.Web.Worker
                 libDbContext.ChapterDownloadRecords.Update(chapterDownload);
                 throw;
             }
+            finally
+            {
+                context.SetJobParameter(nameof(title), title);
+                context.SetJobParameter(nameof(library.CrawlerAgent), library.CrawlerAgent.DisplayName);
+                context.SetJobParameter(nameof(library.Manga), library.Manga.Title);
+                context.SetJobParameter(nameof(library.Manga.WebSiteUrl), library.Manga.WebSiteUrl);
+            }
 
             logger.LogInformation("Dispatch \"{title}\" completed.", title);
         }

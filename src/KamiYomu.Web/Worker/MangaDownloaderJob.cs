@@ -128,6 +128,12 @@ public class MangaDownloaderJob(
             libDbContext.MangaDownloadRecords.Update(mangaDownload);
             throw;
         }
+        finally
+        {
+            context.SetJobParameter(nameof(library.CrawlerAgent), library.CrawlerAgent.DisplayName);
+            context.SetJobParameter(nameof(library.Manga), library.Manga.Title);
+            context.SetJobParameter(nameof(library.Manga.WebSiteUrl), library.Manga.WebSiteUrl);
+        }
 
         logger.LogInformation("Dispatch \"{title}\" completed.", title);
     }

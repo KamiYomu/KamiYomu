@@ -15,8 +15,6 @@ RUN apt-get update \
   && apt-get autopurge -y \
   && apt-get autoclean -y
 
-
-
 # Create folders for persistent data
 RUN mkdir -p /manga /db /logs /agents
 
@@ -41,7 +39,6 @@ ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
    
 RUN fc-cache -f -v
-
 
 # Create non-root user
 ARG UNAME=KamiYomu
