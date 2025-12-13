@@ -29,6 +29,18 @@ using static KamiYomu.Web.AppOptions.Defaults;
 
 var builder = WebApplication.CreateBuilder(args);
 
+if (!IsRunningInDocker())
+{
+    if (OperatingSystem.IsWindows())
+    {
+        builder.Host.UseWindowsService();
+    }
+    else if (OperatingSystem.IsLinux())
+    {
+        builder.Host.UseSystemd();
+    }
+}
+
 QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 QuestPDF.Infrastructure.TextStyle.Default.FontFamily("Lato");
 
@@ -45,17 +57,17 @@ builder.Host.UseSerilog((context, services, configuration) =>
            .Enrich.FromLogContext()
    );
 
-Barrel.ApplicationId = nameof(KamiYomu);
-BarrelUtils.SetBaseCachePath(Defaults.SpecialFolders.DbDir);
-
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSignalR();
+builder.Services.Configure<SpecialFolderOptions>(builder.Configuration.GetSection("SpecialFolders"));
 builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection("Worker"));
 builder.Services.Configure<Defaults.NugetFeeds>(builder.Configuration.GetSection("UI"));
 builder.Services.Configure<GzipCompressionProviderOptions>(options =>
 {
     options.Level = System.IO.Compression.CompressionLevel.Fastest;
 });
+
+
 builder.Services.AddResponseCompression(options =>
 {
     options.EnableForHttps = true;
@@ -126,7 +138,8 @@ builder.Services.AddHttpClient(Worker.HttpClientBackground, client =>
 
 AddHangfireConfig(builder);
 
-var app = builder.Build();
+
+    var app = builder.Build();
 Defaults.ServiceLocator.Configure(() => app.Services);
 
 if (!app.Environment.IsDevelopment())
@@ -136,10 +149,20 @@ if (!app.Environment.IsDevelopment())
 }
 using (var appScoped = app.Services.CreateScope())
 {
+    var specialFolderOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<SpecialFolderOptions>>().Value;
     var startupOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<StartupOptions>>().Value;
     var localizationOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<RequestLocalizationOptions>>();
-    var dbcontext = appScoped.ServiceProvider.GetRequiredService<DbContext>();
 
+
+    Directory.CreateDirectory(specialFolderOptions.LogDir);
+    Directory.CreateDirectory(specialFolderOptions.DbDir);
+    Directory.CreateDirectory(specialFolderOptions.AgentsDir);
+    Directory.CreateDirectory(specialFolderOptions.MangaDir);
+
+    Barrel.ApplicationId = nameof(KamiYomu);
+    BarrelUtils.SetBaseCachePath(specialFolderOptions.DbDir);
+
+    using var dbcontext = appScoped.ServiceProvider.GetRequiredService<DbContext>();
     var userPreference = dbcontext.UserPreferences.FindOne(p => true);
     if (userPreference == null)
     {
@@ -150,8 +173,6 @@ using (var appScoped = app.Services.CreateScope())
     localizationOptions.Value.DefaultRequestCulture = new RequestCulture(userPreference!.GetCulture());
 
     app.UseRequestLocalization(localizationOptions.Value);
-
-
 }
 
 app.UseResponseCompression();
@@ -161,7 +182,7 @@ app.UseRouting();
 app.UseHangfireDashboard("/worker", new DashboardOptions
 {
     DisplayStorageConnectionString = false,
-    DashboardTitle = "KamiYomu",
+    DashboardTitle = nameof(KamiYomu),
     FaviconPath = "/images/favicon.ico",
     IgnoreAntiforgeryToken = true,
     Authorization = [new AllowAllDashboardAuthorizationFilter()]
@@ -232,6 +253,12 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
     GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute
     {
         Attempts = workerOptions.MaxRetryAttempts,
+        OnAttemptsExceeded = AttemptsExceededAction.Delete,
+        LogEvents = true        
     });
+}
 
+static bool IsRunningInDocker()
+{
+    return System.IO.File.Exists("/.dockerenv");
 }
