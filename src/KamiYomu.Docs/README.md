@@ -1,6 +1,6 @@
 # KamiYomu Documentation
 
-The **KamiYomu Documentation** (https://kamiyomu.github.io/docs/) is the official website and resource center for the KamiYomu manga crawler project, providing guides, technical specifications, and usage instructions. Contributions and improvements are highly encouraged via **Pull Requests**.
+The **KamiYomu Documentation** (https://kamiyomu.github.io/KamiYomu/) is the official website and resource center for the KamiYomu manga crawler project, providing guides, technical specifications, and usage instructions. Contributions and improvements are highly encouraged via **Pull Requests**.
 
 ## How to Contribute
 
@@ -11,13 +11,13 @@ To contribute documentation, fix typos, or update guides, follow these steps to 
 1. Clone the repository, ensuring you include any necessary submodules:
 
     ```bash
-    git clone --recurse-submodules [https://github.com/KamiYomu/KamiYomu.Docs.git](https://github.com/KamiYomu/KamiYomu.Docs.git)
+    git clone https://github.com/KamiYomu/KamiYomu.git
     ```
 
-2. Navigate to the project directory (assuming the repository is named `KamiYomu.Docs`):
+2. Navigate to the project directory (assuming the repository is named `KamiYomu`):
 
     ```bash
-    cd KamiYomu.Docs
+    cd KamiYomu/src/KamiYomu.Docs
     ```
 
 3. Build and launch the development environment using Docker to ensure all dependencies are met:
@@ -50,5 +50,5 @@ This project utilizes the **[Just the Docs]** theme for Jekyll, which provides a
 
 This repository is licensed under the [MIT License]. You are welcome to reuse or extend the code and documentation structure. Please let us know how we can improve!
 
-[Just the Docs]: https://just-the-docs.github.io/just-the-docs/
-[MIT License]: https://en.wikipedia.org/wiki/MIT_License
+[Just the Docs](https://just-the-docs.github.io/just-the-docs/)
+[MIT License](https://en.wikipedia.org/wiki/MIT_License)
