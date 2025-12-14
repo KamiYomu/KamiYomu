@@ -1,0 +1,122 @@
+title: KamiYomu
+url: https://github.com/KamiYomu
+repository: https://github.com/KamiYomu/KamiYomu
+description: >
+  KamiYomu is a powerful, extensible manga crawler built for manga enthusiasts who want full control
+  over their collection. It scans and downloads manga from supported websites, 
+  stores them locally, and lets you host your own private manga reader—no ads, 
+  no subscriptions, no limits.
+
+# ===============================================
+# JUST THE DOCS THEME SETTINGS
+# ===============================================
+
+theme: just-the-docs
+nav_enabled: true
+permalink: pretty
+aux_links:
+  Github: https://github.com/KamiYomu/kamiyomu
+  "Nuget.org": https://www.nuget.org/profiles/KamiYomu
+
+# Enable 'Edit this Page' links
+gh_edit_link: true
+gh_edit_link_repository: KamiYomu/KamiYomu
+# Verify your documentation branch (e.g., 'main', 'master', or 'docs')
+gh_edit_link_branch: main 
+# This path must be correct relative to the repository root for the 'Edit this Page' link to work
+gh_edit_link_docs_path: src/KamiYomu.Docs/docs 
+gh_edit_link_text: "Suggest an edit on this page"
+
+# ===============================================
+# JEKYLL PLUGIN & PATH DEFAULTS
+# ===============================================
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-redirect-from
+  - jekyll-mentions
+  - jemoji
+  
+defaults:
+  - scope:
+      # This path should point to the directory containing your Markdown pages
+      path: "docs"
+      type: "pages"
+    values:
+      layout: "default"
+      image: /assets/images/favicon.png
+      author: KamiYomu
+
+# ===============================================
+# SEO & SOCIAL SETTINGS
+# ===============================================
+
+# SEO settings
+tagline: KamiYomu — Your Self-Hosted Manga Crawler
+lang: en
+author: KamiYomu
+keywords: >
+  crawler, downloader, csharp, dotnet,
+  manga, manga-downloader, manga-scraper, 
+  konga, kavita, kamiyomu, crawler-agents
+
+# Open Graph / Social Media
+og_image: /assets/images/og-image.png
+
+social:
+  name: Github
+  links:
+    - https://github.com/KamiYomu/kamiyomu
+
+# Analytics
+google_analytics: UA-XXXXXXXX-X
+google_site_verification: google-site-verification-code
+
+# Sitemap settings
+sitemap:
+  filename: "/sitemap.xml"
+  exclude:
+    - "/atom.xml"
+    - "/feed.xml"
+    - "/feed/index.xml"
+  include_posts:
+    - "/index.html"
+  change_frequency_name: "change_frequency"
+  priority_name: "priority"
+
+# ===============================================
+# EXCLUDES
+# ===============================================
+
+exclude:
+  # Standard Jekyll excludes
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  # Project-specific excludes
+  - bin/
+  - lib/
+  - "*.gemspec"
+  - "*.gem"
+  - LICENSE.txt
+  - package.json
+  - package-lock.json
+  - Rakefile
+  - README.md
+  - CODE_OF_CONDUCT.md
+  - docker-compose.yml
+  - Dockerfile
+  - fixtures/
+  - docs/assets
+  - docs/.github
+  - docs/_sass
+  - docs/_config.yml

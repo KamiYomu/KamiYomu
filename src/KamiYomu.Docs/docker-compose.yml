@@ -1,0 +1,9 @@
+services:
+  kamiyomu-site:
+    build:
+      context: .
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app
+    restart: always
