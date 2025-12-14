@@ -1,6 +1,6 @@
 title: KamiYomu
 url: "https://kamiyomu.github.io/KamiYomu"
-baseurl: /KamiYomu
+baseurl: "/KamiYomu"
 repository: https://github.com/KamiYomu/KamiYomu
 description: >
   KamiYomu is a powerful, extensible manga crawler built for manga enthusiasts who want full control
