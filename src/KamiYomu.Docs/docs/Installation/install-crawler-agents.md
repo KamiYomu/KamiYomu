@@ -19,12 +19,12 @@ A crawler agent is a component responsible for searching, retrieving, and extrac
 1. Click on the button "Add nuget.org as source"
 1. Type "KamiYomu Crawler Agent" and click on Search or just click on Search.
 
-<img src="/assets/tutorial/search-add-ons.gif" height="300"/>
+<img src="{{ '/assets/tutorial/search-add-ons.gif' | relative_url }}" height="300"/>
 
 1. Click on install button in your Crawler Agent desired.
 1. Configure the add-on in the Add-ons UI as needed.
 
-<img src="/assets/tutorial/install-add-ons.gif" height="300"/>
+<img src="{{ '/assets/tutorial/install-add-ons.gif' | relative_url }}" height="300"/>
 
 ## List of Official Crawler Agents
 
