@@ -45,63 +45,6 @@ services:
     image: marcoscostadev/kamiyomu:latest # Check releases for latest versions
     ports:
       - "8080:8080" # HTTP Port
-    environment:
-        # List of Hangfire server identifiers available to process jobs.
-        # Each name corresponds to a distinct background worker instance;
-        # add more entries here if you want multiple servers to share or divide queues.
-        # add more entries using incrementing indexes (e.g., Worker__ServerAvailableNames__1, Worker__ServerAvailableNames__2, etc.)
-        Worker__ServerAvailableNames__0:   "KamiYomu-background-1" 
-        
-
-        # Queues dedicated to downloading individual chapters.
-        # add more entries using incrementing indexes (e.g., Worker__DownloadChapterQueues__1, Worker__DownloadChapterQueues__2, etc.)
-        Worker__DownloadChapterQueues__0:  "download-chapter-queue-1" 
-
-        # Queues dedicated to scheduling manga downloads (manages chapter download jobs).
-        # add more entries using incrementing indexes (e.g., Worker__MangaDownloadSchedulerQueues__1, Worker__MangaDownloadSchedulerQueues__2, etc.)
-        Worker__MangaDownloadSchedulerQueues__0:  "manga-download-scheduler-queue-1" 
-
-        # Queues dedicated to discovering new chapters (polling or scraping for updates).
-        # add more entries using incrementing indexes (e.g., Worker__DiscoveryNewChapterQueues__1, Worker__DiscoveryNewChapterQueues__2, etc.)
-        Worker__DiscoveryNewChapterQueues__0:  "discovery-new-chapter-queue-1" 
-
-        # Specifies the number of background processing threads Hangfire will spawn.
-        # Increasing this value allows more jobs to run concurrently, but also raises CPU load 
-        # and memory usage.
-        # Each worker consumes ~80 MB of memory on average while active 
-        # (actual usage may vary depending on the crawler agent implementation and system configuration).
-        Worker__WorkerCount: 1
-
-        # Defines the maximum number of crawler instances allowed to run concurrently for the same source.
-        # Typically set to 1 to ensure only a single crawler operates at a time, preventing duplicate work,
-        # resource conflicts, and potential rate‑limiting or blocking by the target system.
-        # This value can be increased to improve throughput if the source supports multiple concurrent requests.
-        #
-        # Note:
-        # - Worker__WorkerCount controls the total number of threads available.
-        # - Worker__MaxConcurrentCrawlerInstances limits how many threads can be used by the same crawler.
-        #
-        # Examples:
-        # - If Worker__MaxConcurrentCrawlerInstances = 1 and Worker__WorkerCount = 4,
-        #   then up to 4 different crawler agents can run independently.
-        # - If Worker__MaxConcurrentCrawlerInstances = 2 and Worker__WorkerCount = 6,
-        #   then each crawler agent can run up to 2 instances concurrently,
-        #   while up to 3 different crawler agents may be active at the same time.
-        Worker__MaxConcurrentCrawlerInstances: 1
-
-        # Minimum delay (in milliseconds) between job executions.
-        # Helps throttle requests to external services and avoid hitting rate limits (e.g., HTTP 423 "Too Many Requests").
-        Worker__MinWaitPeriodInMilliseconds: 3000
-
-        # Maximum delay (in milliseconds) between job executions.
-        # Provides variability in scheduling to reduce the chance of IP blocking or service throttling.
-        Worker__MaxWaitPeriodInMilliseconds: 9001
-
-        # Maximum number of retry attempts for failed jobs before marking them as permanently failed.
-        Worker__MaxRetryAttempts: 10
-
-        # Default language for the web interface (e.g., "en", "pt-BR", "fr").
-        UI__DefaultLanguage: "en" 
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
@@ -110,14 +53,6 @@ services:
       retries: 3
     volumes:
       - ./AppData/manga:/manga # Your desired local path for manga storage
-      - Kamiyomu_database:/db
-      - kamiyomu_agents:/agents
-      - kamiyomu_logs:/logs
-
-volumes:
-  kamiyomu_agents:
-  Kamiyomu_database:
-  kamiyomu_logs:
 ```
 
 In the folder where you saved the `docker-compose.yml` file, run:
@@ -133,68 +68,12 @@ Configure your sources and crawler agents
 
 Download crawler agents from NuGet Package from [here](https://github.com/orgs/KamiYomu/packages) and upload them in [Crawler Agents](http://localhost:8080/Settings/CrawlerAgents).
 
-## 🛠️ Development Setup
-
-We recommend using Visual Studio 2022 or later with the .NET 8 SDK installed. 
-However, you can also run KamiYomu using VsCode.
-
-1. Fork the repository
-2. Select the develop branch (`git checkout develop`)
-3. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-4. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-5. Push to the branch (`git push origin feature/AmazingFeature`)
-6. Open a Pull Request against the ``develop`` branch
 
 ### Using Visual Studio
-
-- Docker: [Download here](https://www.docker.com/get-started)
-- Visual Studio: [Download here](https://visualstudio.microsoft.com/downloads/)
-- .NET 8 SDK: [Download here](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/KamiYomu/KamiYomu.Web.git
-	```
-2. Open the solution in Visual Studio in `/src/KamiYomu.Web.sln`
-3. Set `docker-compose` project as **startup project** (Right-click on project, select `Set As Startup Project.`).
-4. Run it 
-
-### Using VsCode
-
-To get started with local development using Visual Studio Code, ensure the following tools are installed:
-
-**Required Tools**
-
-- Docker: [Download here](https://www.docker.com/get-started)
-- Visual Studio Code [Download Here](https://code.visualstudio.com/)
-- C# Dev Kit Extension [Install](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
-- Docker Extension for VS Code [Install](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
-
-Note: Make sure Docker is installed and running on your machine.
-
-1. Clone the Repository
-
-```bash
-    git clone https://github.com/KamiYomu/KamiYomu.Web.git
-```
-2. Running the Project in VS Code
-- Open the `./src/` folder in VS Code.
-- Navigate to the "Run and Debug" tab (Ctrl+Shift+D) or press `F5`.
-- Select the launch configuration: "Attach to .NET Core in Docker".
-- Click the ▶️ Start Debugging button.
-
-
-This project includes predefined tasks to build and run the Docker container automatically.
-If you install all required extensions, the project will run and open the browser in http://localhost:8080
-> NOTE:  You may see a window with some error related `=> ERROR [kamiyomu.web internal] load metadata for mcr.microsoft.com/dotnet/sdk:8.0`, just click on `abort` button then try again.
 
 ## 🧩 Create your First Crawler Agent
 
 
-To create your first crawler agent, follow these steps:
-1. **Set Up a New Project**: Create a new Class Library project in Visual Studio or your preferred IDE.
-1. **Add References**: Add references to the necessary KamiYomu packages from NuGet `KamiYomu.CrawlerAgents.Core`.
-1. **Implement the 5 methods from ICrawlerAgent Interface**: Create a class that implements the `ICrawlerAgent` interface. This class will contain the logic for crawling a specific manga source.
 
 ```csharp
 

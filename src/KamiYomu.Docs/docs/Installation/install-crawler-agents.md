@@ -26,7 +26,7 @@ A crawler agent is a component responsible for searching, retrieving, and extrac
 
 <img src="/assets/tutorial/install-add-ons.gif" height="300"/>
 
-## List of Offical Crawler Agents
+## List of Official Crawler Agents
 
 <img src="https://github.com/KamiYomu/KamiYomu.CrawlerAgents.MangaDex/blob/main/src/KamiYomu.CrawlerAgents.MangaDex/Resources/logo.png?raw=true" width="100" height="100" />
 
@@ -66,4 +66,4 @@ dotnet add package KamiYomu.CrawlerAgents.MangaKatana --version <version>
 
 ```sh
  dotnet add package KamiYomu.CrawlerAgents.MundoAvatar --version <version> 
-```  
+```

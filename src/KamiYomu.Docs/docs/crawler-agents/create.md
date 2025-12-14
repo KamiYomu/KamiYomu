@@ -3,6 +3,11 @@ title: Interfaces
 parent: Crawler Agents
 ---
 
+To create your first crawler agent, follow these steps:
+1. **Set Up a New Project**: Create a new Class Library project in Visual Studio or your preferred IDE.
+1. **Add References**: Add references to the necessary KamiYomu packages from NuGet `KamiYomu.CrawlerAgents.Core`.
+1. **Implement the 5 methods from ICrawlerAgent Interface**: Create a class that implements the `ICrawlerAgent` interface. This class will contain the logic for crawling a specific manga source.
+
 
 ```csharp
 
