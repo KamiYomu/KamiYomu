@@ -18,10 +18,11 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
+# Default working-directory
 defaults:
  run:
   working-directory: src/KamiYomu.Docs 
-  
+
 jobs:
   # Build job
   build:
@@ -30,31 +31,32 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
-      # 1. Setup Ruby and Bundler in the documentation directory
+      # 1. Setup Ruby environment (Removed bundler-cache: true)
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3' # Not needed with a .ruby-version file
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-          cache-version: 0 # Increment this number if you need to re-download cached gems
+          ruby-version: '3.3'
+          # bundler-cache: true is removed or set to false
+          cache-version: 0 
+        
+      # 2. Explicitly install dependencies (New step to guarantee installation)
+      - name: Install Dependencies
+        run: bundle install
         
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
         
-      # 2. Build with Jekyll in the documentation directory
+      # 3. Build with Jekyll
       - name: Build with Jekyll
-        # Outputs to the './_site' directory by default (relative to the working-directory)
         run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
         env:
           JEKYLL_ENV: production
         
-      # 3. Upload artifact from the new output location
       - name: Upload artifact
-        # The built output is now in src/KamiYomu.Docs/_site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: src/KamiYomu.Docs/_site # <--- KEY CHANGE
+          path: src/KamiYomu.Docs/_site
 
   # Deployment job
   deploy:
