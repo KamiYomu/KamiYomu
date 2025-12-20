@@ -12,9 +12,8 @@
 
 Join the conversation and be part of the KamiYomu community:
 
-[![Join the discussion on Reddit](https://badgen.net/badge/reddit/kamiyomu/orange?icon=reddit)](https://www.reddit.com/r/KamiYomu/)
-[![Discord](https://flat.badgen.net/badge/Discord/channel/5865F2?icon=discord)](https://discord.com/channels/1451623083604443138)
-[![GitHub Discussions](https://flat.badgen.net/badge/GitHub/Discussions/blue?icon=github)](https://github.com/orgs/KamiYomu/discussions)
+[![Join the discussion on Reddit](https://badgen.net/badge/reddit/KamiYomu/orange?icon=reddit)](https://www.reddit.com/r/KamiYomu/)
+[![Join the discussion on Issues](https://badgen.net/github/issues/KamiYomu/KamiYomu?icon=github)](https://github.com/KamiYomu/KamiYomu/issues)
 
 ---
 
