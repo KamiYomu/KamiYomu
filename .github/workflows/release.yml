@@ -112,7 +112,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+            ${{ env.IMAGE_NAME }}:${{ needs.extract_version.outputs.tag }}
             ${{ env.IMAGE_NAME }}:latest
           build-args: |
             VERSION=${{ needs.extract_version.outputs.version }}
