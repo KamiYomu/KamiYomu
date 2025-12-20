@@ -117,6 +117,9 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
+RUN chown -R $UID:$GID /app
+USER $UNAME
+
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD curl --fail http://localhost:8080/healthz || exit 1
 
