@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   actions: write
+  packages: write
 
 jobs:
   extract_version:
@@ -95,7 +96,7 @@ jobs:
           file: src/KamiYomu.Web/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+          tags: ${{ env.IMAGE_NAME }}:${{ needs.extract_version.outputs.tag }}
           build-args: |
             VERSION=${{ needs.extract_version.outputs.version }}
             VERSION_SUFFIX=${{ needs.extract_version.outputs.version_suffix }}
@@ -195,6 +196,16 @@ jobs:
     needs: build_platforms
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create git tag
+        run: |
+          git tag ${{ needs.build_platforms.outputs.tag }}
+          git push origin ${{ needs.build_platforms.outputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
@@ -203,7 +214,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.build_platforms.outputs.tag || github.ref_name.replace('releases/', '') }}
-          name: Release ${{ github.ref_name.replace('releases/', '') }}
+          tag_name: ${{ needs.build_platforms.outputs.tag }}
+          name: Release ${{ needs.build_platforms.outputs.tag }}
           prerelease: ${{ needs.build_platforms.outputs.is_prerelease || false }}
           files: artifacts/**/*.tar.gz
