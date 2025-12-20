@@ -288,11 +288,11 @@ public class NugetService : INugetService
 
         var packageBaseUrl = index?["resources"]?
             .AsArray()
-            .FirstOrDefault(r => r?["@type"]?.ToString() == "PackageBaseAddress/3.0.0")?["@id"]?.ToString();
+            .FirstOrDefault(r => r?["@type"]?.ToString()?.StartsWith("PackageBaseAddress") ?? false)?["@id"]?.ToString();
 
         var registrationBaseUrl = index?["resources"]?
             .AsArray()
-            .FirstOrDefault(r => r?["@type"]?.ToString() == "RegistrationsBaseUrl/3.6.0")?["@id"]?.ToString();
+            .FirstOrDefault(r => r?["@type"]?.ToString()?.StartsWith("RegistrationsBaseUrl") ?? false)?["@id"]?.ToString();
 
         if (string.IsNullOrEmpty(packageBaseUrl) || string.IsNullOrEmpty(registrationBaseUrl))
             throw new FileNotFoundException("Required NuGet service endpoints not found.");
@@ -319,10 +319,19 @@ public class NugetService : INugetService
             response.EnsureSuccessStatusCode();
 
             using var regStream = await response.Content.ReadAsStreamAsync(cancellationToken);
-            using var gzipStream = new GZipStream(regStream, CompressionMode.Decompress);
-            using var reader = new StreamReader(gzipStream);
-            var regJson = await reader.ReadToEndAsync();
-            var reg = JsonNode.Parse(regJson);
+            JsonNode reg;
+            if (response.Content.Headers.ContentEncoding.Contains("gzip"))
+            {
+                using var gzipStream = new GZipStream(await response.Content.ReadAsStreamAsync(cancellationToken), CompressionMode.Decompress);
+                using var reader = new StreamReader(gzipStream);
+                var regJson = await reader.ReadToEndAsync();
+                reg = JsonNode.Parse(regJson);
+            }
+            else
+            {
+                var regJson = await response.Content.ReadAsStringAsync(cancellationToken);
+                reg = JsonNode.Parse(regJson);
+            }
 
             var entries = reg?["items"]?.AsArray()
                 .SelectMany(item => item?["items"]?.AsArray() ?? new JsonArray())
