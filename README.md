@@ -32,6 +32,20 @@ Whether you're cataloging rare series, powering a personal manga dashboard, or s
 
 <img src="./screenshots/welcome-page.jpeg" alt="Welcome Page" width="600"/>
 
+[![GitHub followers](https://img.shields.io/github/followers/kamiyomu)](https://github.com/orgs/KamiYomu/followers)
+[![GitHub stars](https://img.shields.io/github/stars/kamiyomu/kamiyomu)](https://github.com/kamiyomu/kamiyomu/stargazers)
+[![GitHub contributors](https://img.shields.io/github/contributors/kamiyomu/kamiyomu)](https://github.com/kamiyomu/kamiyomu/graphs/contributors)
+[![GitHub issues](https://img.shields.io/github/issues/kamiyomu/kamiyomu)](https://github.com/kamiyomu/kamiyomu/issues)
+[![GitHub License](https://img.shields.io/github/license/kamiyomu/kamiyomu)](https://github.com/kamiyomu/kamiyomu/blob/main/LICENSE)
+
+---
+
+## Community
+
+Join the conversation and be part of the KamiYomu community:
+
+[![Join the discussion on Github](https://img.shields.io/github/discussions/kamiyomu/kamiyomu?logo=github&label=Join%20the%20community)](https://github.com/KamiYomu/KamiYomu/discussions)
+
 ---
 
 ## 📋 Requirements
@@ -89,11 +103,45 @@ docker-compose up -d
 - HTMX + Bootstrap for dynamic UI
 - Plugin-based architecture for extensibility
 
----
+----
 
-## 📜 License
+## ⚠️ What KamiYomu Does and Does Not
 
-This project is licensed under AGPL-3.0. See the [LICENSE](LICENSE) file for details.
+### ✅ Does
+
+- Orchestrate and schedule crawler agent tasks (search, list, get, etc.)
+- Download images from websites that the crawler agent specify
+- Create local archives from downloaded images in specified folder location.
+- Allow you to export archives as PDF, CBZ, or ZIP files to your local storage
+- Provide a user-friendly web interface for managing your manga library.
+
+### ❌ Does Not
+
+- Invade sites or exploit vulnerabilities to access sensitive information
+- Extract database, protected data information from websites
+- Extract non-public information (such as website login credentials, API keys, etc)
+- Store any files, data, or metadata on KamiYomu servers
+- Track or monitor crawler activity across KamiYomu instances
+- Enable peer-to-peer sharing or inter-instance communication
+- Cache or retain downloaded content in KamiYomu servers
+- Distribute, share, or redistribute downloaded content from KamiYomu instances to other users or platforms.
+
+### User Responsibility and Disclaimer
+
+By using KamiYomu, you agree that you are solely responsible for all downloaded content, file management, and usage. KamiYomu is provided as-is for local use only. The developers and maintainers of KamiYomu assume no responsibility for your use of this tool, including but not limited to compliance with copyright laws, licensing agreements, or the terms of service of any source websites. You assume full liability for any legal consequences arising from your use of KamiYomu.
+
+## 📃 License
+
+
+The KamiYomu project is licensed under the **AGPL-3.0 (Affero General Public License version 3.0)**. This license allows users to freely use, modify, and distribute the software, provided that any modified versions are also distributed under the same license. 
+
+### Key Points of AGPL-3.0:
+- **Freedom to Use**: Users can run the software for any purpose.
+- **Freedom to Study and Modify**: Users can access the source code and modify it to suit their needs.
+- **Freedom to Distribute Copies**: Users can share the original software with others.
+- **Freedom to Distribute Modified Versions**: Users can distribute modified versions of the software, but they must also be licensed under AGPL-3.0, ensuring that the same freedoms are preserved for all users.
+
+This license is particularly important for software that is intended to be run on servers, as it requires that the source code be made available to users who interact with the software over a network.
 
 ---
 
@@ -105,4 +153,4 @@ Pull requests are welcome! See the [development guide](https://kamiyomu.github.i
 
 ## 💬 Contact
 
-Questions, feedback, or bug reports? [Open an issue](https://github.com/KamiYomu/issues) or start a [discussion](https://github.com/orgs/KamiYomu/discussions).
+Questions, feedback, or bug reports? [Open an issue](https://github.com/KamiYomu/issues) or start a [discussion](https://github.com/KamiYomu/KamiYomu/discussions).
