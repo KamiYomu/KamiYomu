@@ -165,8 +165,10 @@ jobs:
         working-directory: ./src/KamiYomu.Web
 
       - name: Restore NuGet packages
-        run: dotnet restore
-        working-directory: ./src
+        run: dotnet restore ./src/KamiYomu.sln
+
+      - name: Run tests
+        run: dotnet test ./src/KamiYomu.sln --no-build --verbosity normal
 
       - name: Publish
         run: >
