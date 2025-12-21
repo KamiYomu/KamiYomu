@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   actions: write
+  packages: write
 
 jobs:
   extract_version:
@@ -63,10 +64,10 @@ jobs:
       IMAGE_NAME: marcoscostadev/kamiyomu
 
     outputs:
-      version: ${{ steps.set_outputs.outputs.version }}
-      version_suffix: ${{ steps.set_outputs.outputs.version_suffix }}
-      is_prerelease: ${{ steps.set_outputs.outputs.is_prerelease }}
-      tag: ${{ steps.set_outputs.outputs.tag }}
+      version: ${{ needs.extract_version.outputs.version }}
+      version_suffix: ${{ needs.extract_version.outputs.version_suffix }}
+      is_prerelease: ${{ needs.extract_version.outputs.is_prerelease }}
+      tag: ${{ needs.extract_version.outputs.tag }}
 
     steps:
       - name: Checkout code
@@ -88,22 +89,22 @@ jobs:
 
       # Pre-release (only version tag)
       - name: Build & push multi-arch (pre-release)
-        if: ${{ env.IS_PRERELEASE == 'true' }}
+        if: ${{ needs.extract_version.outputs.is_prerelease == 'true' }}
         uses: docker/build-push-action@v5
         with:
           context: src
           file: src/KamiYomu.Web/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+          tags: ${{ env.IMAGE_NAME }}:${{ needs.extract_version.outputs.tag }}
           build-args: |
-            VERSION=${{ env.VERSION }}
-            VERSION_SUFFIX=${{ env.VERSION_SUFFIX }}
+            VERSION=${{ needs.extract_version.outputs.version }}
+            VERSION_SUFFIX=${{ needs.extract_version.outputs.version_suffix }}
             BUILD_CONFIGURATION=Release
 
       # Stable (version + latest)
       - name: Build & push multi-arch (stable)
-        if: ${{ env.IS_PRERELEASE == 'false' }}
+        if: ${{ needs.extract_version.outputs.is_prerelease == 'false' }}
         uses: docker/build-push-action@v5
         with:
           context: src
@@ -111,11 +112,11 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+            ${{ env.IMAGE_NAME }}:${{ needs.extract_version.outputs.tag }}
             ${{ env.IMAGE_NAME }}:latest
           build-args: |
-            VERSION=${{ env.VERSION }}
-            VERSION_SUFFIX=${{ env.VERSION_SUFFIX }}
+            VERSION=${{ needs.extract_version.outputs.version }}
+            VERSION_SUFFIX=${{ needs.extract_version.outputs.version_suffix }}
             BUILD_CONFIGURATION=Release
 
   build_platforms:
@@ -157,16 +158,18 @@ jobs:
           
       - name: Restore LibMan tools
         run: dotnet tool restore
+        working-directory: ./src
 
       - name: Restore LibMan libraries
         run: dotnet libman restore
+        working-directory: ./src/KamiYomu.Web
 
       - name: Restore NuGet packages
-        run: dotnet restore
+        run: dotnet restore ./src/KamiYomu.sln
 
       - name: Publish
         run: >
-          dotnet publish
+          dotnet publish ./src/KamiYomu.Web/KamiYomu.Web.csproj
           -c Release
           -r ${{ matrix.rid }}
           --self-contained true
@@ -195,6 +198,16 @@ jobs:
     needs: build_platforms
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create git tag
+        run: |
+          git tag ${{ needs.build_platforms.outputs.tag }}
+          git push origin ${{ needs.build_platforms.outputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
@@ -203,7 +216,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.build_platforms.outputs.tag || github.ref_name#releases/ }}
-          name: Release ${{ github.ref_name#releases/ }}
+          tag_name: ${{ needs.build_platforms.outputs.tag }}
+          name: Release ${{ needs.build_platforms.outputs.tag }}
           prerelease: ${{ needs.build_platforms.outputs.is_prerelease || false }}
-          files: artifacts/**/*.tar.gz        
+          files: artifacts/**/*.tar.gz
