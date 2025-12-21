@@ -12,8 +12,7 @@
 
 Join the conversation and be part of the KamiYomu community:
 
-[![Join the discussion on Reddit](https://badgen.net/badge/reddit/KamiYomu/orange?icon=reddit)](https://www.reddit.com/r/KamiYomu/)
-[![Join the discussion on Issues](https://badgen.net/github/issues/KamiYomu/KamiYomu?icon=github)](https://github.com/KamiYomu/KamiYomu/issues)
+[![Join the discussion on Github](https://img.shields.io/github/discussions/kamiyomu/kamiyomu?logo=github&label=Join%20the%20community)](https://github.com/KamiYomu/KamiYomu/discussions)
 
 ---
 
@@ -37,14 +36,6 @@ Whether you're cataloging rare series, powering a personal manga dashboard, or s
 [![GitHub contributors](https://img.shields.io/github/contributors/kamiyomu/kamiyomu)](https://github.com/kamiyomu/kamiyomu/graphs/contributors)
 [![GitHub issues](https://img.shields.io/github/issues/kamiyomu/kamiyomu)](https://github.com/kamiyomu/kamiyomu/issues)
 [![GitHub License](https://img.shields.io/github/license/kamiyomu/kamiyomu)](https://github.com/kamiyomu/kamiyomu/blob/main/LICENSE)
-
----
-
-## Community
-
-Join the conversation and be part of the KamiYomu community:
-
-[![Join the discussion on Github](https://img.shields.io/github/discussions/kamiyomu/kamiyomu?logo=github&label=Join%20the%20community)](https://github.com/KamiYomu/KamiYomu/discussions)
 
 ---
 
