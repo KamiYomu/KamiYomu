@@ -2,9 +2,15 @@
 
 ![KamiYomu Owl Logo](./Inkscape/logo-watermark.svg)
 
-**KamiYomu** is a powerful, extensible manga crawler built for manga enthusiasts who want full control over their collection. It scans and downloads manga from supported websites, stores them locally, and lets you host your own private manga reader—no ads, no subscriptions, no limits.
+**KamiYomu** is a powerful, extensible manga download built for manga enthusiasts who want full control over their collection. It scans and downloads manga from supported websites, stores them locally, and lets you host your own private manga reader—no ads, no subscriptions, no limits.
 
 [📖 Read the docs](https://kamiyomu.github.io)
+
+[![GitHub followers](https://img.shields.io/github/followers/kamiyomu)](https://github.com/orgs/KamiYomu/followers)
+[![GitHub stars](https://img.shields.io/github/stars/kamiyomu/kamiyomu)](https://github.com/kamiyomu/kamiyomu/stargazers)
+[![GitHub contributors](https://img.shields.io/github/contributors/kamiyomu/kamiyomu)](https://github.com/kamiyomu/kamiyomu/graphs/contributors)
+[![GitHub issues](https://img.shields.io/github/issues/kamiyomu/kamiyomu)](https://github.com/kamiyomu/kamiyomu/issues)
+[![GitHub License](https://img.shields.io/github/license/kamiyomu/kamiyomu)](https://github.com/kamiyomu/kamiyomu/blob/main/LICENSE)
 
 ---
 
@@ -31,19 +37,9 @@ Whether you're cataloging rare series, powering a personal manga dashboard, or s
 
 <img src="./screenshots/welcome-page.jpeg" alt="Welcome Page" width="600"/>
 
-[![GitHub followers](https://img.shields.io/github/followers/kamiyomu)](https://github.com/orgs/KamiYomu/followers)
-[![GitHub stars](https://img.shields.io/github/stars/kamiyomu/kamiyomu)](https://github.com/kamiyomu/kamiyomu/stargazers)
-[![GitHub contributors](https://img.shields.io/github/contributors/kamiyomu/kamiyomu)](https://github.com/kamiyomu/kamiyomu/graphs/contributors)
-[![GitHub issues](https://img.shields.io/github/issues/kamiyomu/kamiyomu)](https://github.com/kamiyomu/kamiyomu/issues)
-[![GitHub License](https://img.shields.io/github/license/kamiyomu/kamiyomu)](https://github.com/kamiyomu/kamiyomu/blob/main/LICENSE)
-
----
-
 ## 📋 Requirements
 
 - [Docker](https://www.docker.com/get-started)
-
----
 
 ## 📦 Getting Started
 
@@ -82,9 +78,10 @@ docker-compose up -d
 
 3. Access the web interface at `http://localhost:8080`
 
-**Note:** Map volumes to local paths as needed. Check [releases](https://github.com/KamiYomu/releases) for available versions.
+{: .note }
+> Map volumes to local paths as needed. Check [releases](https://github.com/KamiYomu/releases) for available versions.
+{: .note  }
 
----
 
 ## 🧠 Tech Stack
 
@@ -123,7 +120,6 @@ By using KamiYomu, you agree that you are solely responsible for all downloaded 
 
 ## 📃 License
 
-
 The KamiYomu project is licensed under the **AGPL-3.0 (Affero General Public License version 3.0)**. This license allows users to freely use, modify, and distribute the software, provided that any modified versions are also distributed under the same license. 
 
 ### Key Points of AGPL-3.0:
@@ -140,7 +136,7 @@ This license is particularly important for software that is intended to be run o
 
 Pull requests are welcome! See the [development guide](https://kamiyomu.github.io/docs/development/) to get started cloning the project and running it in Visual Studio or VS Code.
 
----
+Create your own crawler agents by following the [Crawler Agent development guide](https://kamiyomu.com/docs/crawler-agents/create/).
 
 ## 💬 Contact
 
