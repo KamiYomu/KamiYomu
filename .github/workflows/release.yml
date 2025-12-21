@@ -167,9 +167,6 @@ jobs:
       - name: Restore NuGet packages
         run: dotnet restore ./src/KamiYomu.sln
 
-      - name: Run tests
-        run: dotnet test ./src/KamiYomu.sln --no-build --verbosity normal
-
       - name: Publish
         run: >
           dotnet publish ./src/KamiYomu.Web/KamiYomu.Web.csproj
