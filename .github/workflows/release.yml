@@ -158,16 +158,19 @@ jobs:
           
       - name: Restore LibMan tools
         run: dotnet tool restore
+        working-directory: ./src
 
       - name: Restore LibMan libraries
         run: dotnet libman restore
+        working-directory: ./src/KamiYomu.Web
 
       - name: Restore NuGet packages
         run: dotnet restore
+        working-directory: ./src
 
       - name: Publish
         run: >
-          dotnet publish
+          dotnet publish ./src/KamiYomu.Web/KamiYomu.Web.csproj
           -c Release
           -r ${{ matrix.rid }}
           --self-contained true
