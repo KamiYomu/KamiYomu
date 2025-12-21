@@ -192,10 +192,89 @@ jobs:
           name: aspnet-${{ needs.extract_version.outputs.tag }}-${{ matrix.rid }}
           path: publish/aspnet-${{ needs.extract_version.outputs.tag }}-${{ matrix.rid }}.tar.gz
 
+  deploy_apt:
+      name: Deploy APT Repository
+      needs: build_platforms
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Download Linux artifacts
+          uses: actions/download-artifact@v4
+          with:
+            pattern: aspnet-${{ needs.build_platforms.outputs.tag }}-linux-*
+            merge-multiple: true
+
+        - name: Extract artifacts
+          run: |
+            mkdir -p build/linux-x64
+            mkdir -p build/linux-arm64
+
+            if [ -f aspnet-${{ needs.build_platforms.outputs.tag }}-linux-x64.tar.gz ]; then
+              tar -xzf aspnet-${{ needs.build_platforms.outputs.tag }}-linux-x64.tar.gz -C build/linux-x64
+            fi
+
+            if [ -f aspnet-${{ needs.build_platforms.outputs.tag }}-linux-arm64.tar.gz ]; then
+              tar -xzf aspnet-${{ needs.build_platforms.outputs.tag }}-linux-arm64.tar.gz -C build/linux-arm64
+            fi
+
+        - name: Install nfpm
+          run: sudo snap install nfpm
+
+        - name: Create nfpm config
+          run: |
+            cat <<EOF > nfpm.yaml
+            name: kamiyomu
+            version: "${{ needs.build_platforms.outputs.tag }}"
+            section: utils
+            priority: optional
+            maintainer: KamiYomu
+            description: KamiYomu - Your Self-Hosted Manga Downloader
+            license: AGPL-3.0
+            scripts:
+                postinstall: ./scripts/install-linux.sh
+            contents:
+              - src: ./build/linux-x64/*
+                dst: /usr/local/bin/kamiyomu
+            EOF
+
+        - name: Build amd64 .deb
+          if: ${{ hashFiles('build/linux-x64/**') != '' }}
+          run: |
+            sed -i 's/arch:.*/arch: amd64/' nfpm.yaml
+            nfpm package --packager deb --config nfpm.yaml
+            mv kamiyomu_${{ needs.build_platforms.outputs.tag }}_amd64.deb deb-amd64.deb
+
+        - name: Build arm64 .deb
+          if: ${{ hashFiles('build/linux-arm64/**') != '' }}
+          run: |
+            sed -i 's/arch:.*/arch: arm64/' nfpm.yaml
+            sed -i 's|src: ./build/linux-x64/*|src: ./build/linux-arm64/*|' nfpm.yaml
+            nfpm package --packager deb --config nfpm.yaml
+            mv kamiyomu_${{ needs.build_platforms.outputs.tag }}_arm64.deb deb-arm64.deb
+
+        - name: Publish APT repo
+          uses: martin-helmich/action-debian-repo@v1
+          with:
+            repo-directory: repo
+            gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+            gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+            packages: |
+              deb-amd64.deb
+              deb-arm64.deb
+
+        - name: Deploy to GitHub Pages
+          uses: peaceiris/actions-gh-pages@v3
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: repo
+
   release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
-    needs: build_platforms
+    needs: deploy_apt
 
     steps:
       - name: Checkout code
