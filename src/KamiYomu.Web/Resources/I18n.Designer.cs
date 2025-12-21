@@ -106,6 +106,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add KamiYomu BaGet as Source.
+        /// </summary>
+        internal static string AddKamiYomuBaGetAsSource {
+            get {
+                return ResourceManager.GetString("AddKamiYomuBaGetAsSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Nuget.org As Source.
         /// </summary>
         internal static string AddNugetOrgAsSource {
@@ -1628,11 +1637,11 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Start Download Your Mangas.
+        ///   Looks up a localized string similar to Start Download Your Manga.
         /// </summary>
-        internal static string StartDownloadYourMangas {
+        internal static string StartDownloadYourManga {
             get {
-                return ResourceManager.GetString("StartDownloadYourMangas", resourceCulture);
+                return ResourceManager.GetString("StartDownloadYourManga", resourceCulture);
             }
         }
         

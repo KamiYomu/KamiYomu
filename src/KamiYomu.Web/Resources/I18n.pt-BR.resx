@@ -498,7 +498,7 @@
   <data name="GoToAddOn" xml:space="preserve">
     <value>Vá para extensões</value>
   </data>
-  <data name="StartDownloadYourMangas" xml:space="preserve">
+  <data name="StartDownloadYourManga" xml:space="preserve">
     <value>Comece a baixar seus mangás</value>
   </data>
   <data name="Enjoy" xml:space="preserve">
@@ -750,5 +750,8 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   </data>
   <data name="ReadItOnline" xml:space="preserve">
     <value>Leia on-line</value>
+  </data>
+  <data name="AddKamiYomuBaGetAsSource" xml:space="preserve">
+    <value>Adicionar KamiYomu BaGet como fonte</value>
   </data>
 </root>
