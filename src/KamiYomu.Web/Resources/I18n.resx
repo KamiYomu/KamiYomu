@@ -498,8 +498,8 @@
   <data name="GoToAddOn" xml:space="preserve">
     <value>Go to add-on</value>
   </data>
-  <data name="StartDownloadYourMangas" xml:space="preserve">
-    <value>Start Download Your Mangas</value>
+  <data name="StartDownloadYourManga" xml:space="preserve">
+    <value>Start Download Your Manga</value>
   </data>
   <data name="Enjoy" xml:space="preserve">
     <value>Enjoy</value>
@@ -750,5 +750,8 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   </data>
   <data name="ReadItOnline" xml:space="preserve">
     <value>Read It Online</value>
+  </data>
+  <data name="AddKamiYomuBaGetAsSource" xml:space="preserve">
+    <value>Add KamiYomu BaGet as Source</value>
   </data>
 </root>

@@ -105,6 +105,10 @@ public class ChapterDiscoveryJob(
             await Task.Delay(_workerOptions.GetWaitPeriod(), cancellationToken);
         } while (offset < total);
 
+
+        context.SetJobParameter(nameof(library.CrawlerAgent), library.CrawlerAgent.DisplayName);
+        context.SetJobParameter(nameof(library.Manga), library.Manga.Title);
+        context.SetJobParameter(nameof(library.Manga.WebSiteUrl), library.Manga.WebSiteUrl);
         logger.LogInformation("Dispatch \"{title}\" completed.", nameof(ChapterDiscoveryJob));
     }
 }

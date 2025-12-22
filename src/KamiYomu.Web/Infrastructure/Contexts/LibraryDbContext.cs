@@ -1,54 +1,53 @@
 ﻿using KamiYomu.Web.Entities;
 using LiteDB;
 
-namespace KamiYomu.Web.Infrastructure.Contexts
+namespace KamiYomu.Web.Infrastructure.Contexts;
+
+public class LibraryDbContext : IDisposable
 {
-    public class LibraryDbContext : IDisposable
+    private bool _disposed = false;
+    private readonly Guid _libraryId;
+    private readonly LiteDatabase _database;
+
+    public LibraryDbContext(Guid libraryId)
     {
-        private bool _disposed = false;
-        private readonly Guid _libraryId;
-        private readonly LiteDatabase _database;
+        _libraryId = libraryId;
+        _database = new($"Filename={DatabaseFilePath()};Connection=shared;");
+    }
+    public ILiteCollection<ChapterDownloadRecord> ChapterDownloadRecords => _database.GetCollection<ChapterDownloadRecord>("chapter_download_records");
+    public ILiteCollection<MangaDownloadRecord> MangaDownloadRecords => _database.GetCollection<MangaDownloadRecord>("manga_download_records");
+    public LiteDatabase Raw => _database;
 
-        public LibraryDbContext(Guid libraryId)
-        {
-            _libraryId = libraryId;
-            _database = new($"Filename={DatabaseFilePath()};Connection=shared;");
-        }
-        public ILiteCollection<ChapterDownloadRecord> ChapterDownloadRecords => _database.GetCollection<ChapterDownloadRecord>("chapter_download_records");
-        public ILiteCollection<MangaDownloadRecord> MangaDownloadRecords => _database.GetCollection<MangaDownloadRecord>("manga_download_records");
-        public LiteDatabase Raw => _database;
+    public string DatabaseFilePath() => $"/db/lib{_libraryId}.db";
 
-        public string DatabaseFilePath() => $"/db/lib{_libraryId}.db";
+    public void DropDatabase()
+    {
+        _database.Dispose();
+        _disposed = true;
+        if (File.Exists(DatabaseFilePath()))
+        {
+            File.Delete(DatabaseFilePath());
+        }
+    }
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
 
-        public void DropDatabase()
+        if (disposing)
         {
-            _database.Dispose();
-            _disposed = true;
-            if (File.Exists(DatabaseFilePath()))
-            {
-                File.Delete(DatabaseFilePath());
-            }
+            _database?.Dispose();
         }
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed)
-                return;
+        _disposed = true;
+    }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-            if (disposing)
-            {
-                _database?.Dispose();
-            }
-            _disposed = true;
-        }
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        ~LibraryDbContext()
-        {
-            Dispose(false);
-        }
+    ~LibraryDbContext()
+    {
+        Dispose(false);
     }
 }

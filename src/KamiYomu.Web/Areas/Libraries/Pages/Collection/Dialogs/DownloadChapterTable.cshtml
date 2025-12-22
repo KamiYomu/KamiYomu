@@ -6,11 +6,11 @@
     Layout = null;
 }
 
-<div id="downloads-table">
-    <table class="table table-striped table-hover">
-        <thead>
+<div class="table-responsive" id="downloads-table">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-secondary">
             <tr>
-                <th>
+                <th scope="col">
                     <a href="#"
                        hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = nameof(ChapterDownloadRecord.Chapter), asc = !Model.SortAsc, page = Model.CurrentPage })"
                        hx-target="#downloads-table" hx-swap="outerHTML" class="text-decoration-none">
@@ -22,11 +22,11 @@
                     </a>
                 </th>
 
-                <th>
+                <th scope="col">
                     @I18n.Size
                 </th>
 
-                <th>
+                <th scope="col">
                     <a href="#"
                        hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = nameof(ChapterDownloadRecord.DownloadStatus), asc = !Model.SortAsc, page = Model.CurrentPage })"
                        hx-target="#downloads-table" hx-swap="outerHTML" class="text-decoration-none">
@@ -38,7 +38,7 @@
                     </a>
                 </th>
 
-                <th>
+                <th scope="col">
                     <a href="#"
                        hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = nameof(ChapterDownloadRecord.StatusUpdateAt), asc = !Model.SortAsc, page = Model.CurrentPage })"
                        hx-target="#downloads-table" hx-swap="outerHTML" class="text-decoration-none">
@@ -49,6 +49,7 @@
                         }
                     </a>
                 </th>
+                  <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -93,7 +94,7 @@
                         </a>
                     </li>
                 }
-                else if (i == edgeCount + 1 || i == totalPages - edgeCount) 
+                else if (i == edgeCount + 1 || i == totalPages - edgeCount)
                 {
                     <li class="page-item disabled"><span class="page-link">…</span></li>
                 }

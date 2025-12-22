@@ -1,49 +1,36 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-
-# --- Puppeteer/Chromium Setup ---
+# Puppeteer environment setup
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 ENV XDG_CONFIG_HOME=/tmp/.chromium
 ENV XDG_CACHE_HOME=/tmp/.chromium
 
-# --- Locales and Encoding for QuestPDF/SkiaSharp ---
-# Ensure locale is set for text rendering consistency
-ENV LANG=en_US.UTF-8
-ENV LC_ALL=en_US.UTF-8
-
-# --- Install Dependencies and Fonts ---
+# Install Chromium and required libraries
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        # **Core Packages for BOTH (Puppeteer/QuestPDF)**
-        chromium \
-        libgdiplus \
-        fontconfig \
-        locales \
-        curl \
-        # **Minimal Runtime Dependencies (Focus on non-Chromium dependencies)**
-        libgbm1 \
-        libxshmfence1 \
-        fonts-dejavu \
-\
-    # --- Custom Font Installation (Combined for single RUN) ---
-    && mkdir -p /usr/share/fonts/truetype/lato \
-    && cd /usr/share/fonts/truetype/lato \
-    # Lato Fonts
-    && curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWw.ttf \
-    && curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWA.ttf \
-    && curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWy.ttf \
-    && curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWQ.ttf \
-    # Gloria Hallelujah Font
-    && curl -L -O https://fonts.gstatic.com/s/gloriahallelujah/v24/LYjYdHv3kUk9BMV96EIswT9DIbW-MLSy3TKEvkCF.ttf \
-\
-    # --- Cleanup ---
-    && fc-cache -f -v \
-    && apt-get autopurge -y \
-    && apt-get autoclean -y \
-    && rm -rf /var/lib/apt/lists/*
+  && apt-get install -y \
+    libx11-6 libx11-xcb1 libatk1.0-0 libgtk-3-0 libcups2 libdrm2 \
+    libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 \
+    libpango-1.0-0 libcairo2 libasound2 libxshmfence1 libnss3 chromium \
+    libfontconfig1 libfreetype6 libharfbuzz0b libpng16-16 libjpeg62-turbo \
+  && apt-get autopurge -y \
+  && apt-get autoclean -y
 
-# --- Create Folders ---
+# Create folders for persistent data
 RUN mkdir -p /manga /db /logs /agents
+
+# Install Fonts
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl unzip fontconfig locales \
+    fonts-dejavu fonts-liberation fonts-noto fonts-noto-cjk \
+  && mkdir -p /usr/share/fonts/truetype/lato \
+  && cd /usr/share/fonts/truetype/lato \
+  && curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWw.ttf \
+  && curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWA.ttf \
+  && curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWy.ttf \
+  && curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWQ.ttf \
+  && curl -L -O https://fonts.gstatic.com/s/gloriahallelujah/v24/LYjYdHv3kUk9BMV96EIswT9DIbW-MLSy3TKEvkCF.ttf \
+  && fc-cache -f -v \
+  && rm -rf /var/lib/apt/lists/*
 
 # Locale
 RUN locale-gen en_US.UTF-8
@@ -52,7 +39,6 @@ ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
    
 RUN fc-cache -f -v
-
 
 # Create non-root user
 ARG UNAME=KamiYomu

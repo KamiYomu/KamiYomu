@@ -1,9 +1,8 @@
-﻿namespace KamiYomu.Web.Infrastructure.Services.Interfaces
+﻿namespace KamiYomu.Web.Infrastructure.Services.Interfaces;
+
+public interface IUserClockManager
 {
-    public interface IUserClockManager
-    {
-        DateTimeOffset ConvertToUserTime(DateTimeOffset utc);
-        DateTimeOffset ConvertToUtc(DateTimeOffset local);
-        TimeZoneInfo GetTimeZone();
-    }
+    DateTimeOffset ConvertToUserTime(DateTimeOffset utc);
+    DateTimeOffset ConvertToUtc(DateTimeOffset local);
+    TimeZoneInfo GetTimeZone();
 }

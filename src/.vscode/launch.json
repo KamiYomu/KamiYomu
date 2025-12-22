@@ -32,6 +32,13 @@
         "moduleLoad": true,
         "trace": true
       }
+    },
+    {
+      "type": "msedge",
+      "request": "launch",
+      "name": "Launch Edge against localhost",
+      "url": "http://localhost:4000",
+      "webRoot": "${workspaceFolder}"
     }
   ]
 }

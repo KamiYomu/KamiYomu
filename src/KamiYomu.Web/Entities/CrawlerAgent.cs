@@ -1,7 +1,6 @@
 ﻿using KamiYomu.CrawlerAgents.Core.Inputs;
 using KamiYomu.Web.AppOptions;
 using Microsoft.Extensions.Options;
-using PuppeteerSharp.Input;
 using System.ComponentModel;
 using System.Reflection;
 
@@ -212,11 +211,20 @@ namespace KamiYomu.Web.Entities
         public static string GetAgentDirName(string fileName)
         {
             var name = Path.GetFileNameWithoutExtension(fileName);
-
             var parts = name.Split('.');
-            if (parts.Length > 1 && Version.TryParse(string.Join('.', parts.Skip(parts.Length - 3)), out _))
+
+            for (int i = parts.Length - 1; i >= 2; i--)
             {
-                name = string.Join('.', parts.Take(parts.Length - 3));
+                var patchPart = parts[i].Split('-')[0]; // remove prerelease suffix
+                var minorPart = parts[i - 1];
+                var majorPart = parts[i - 2];
+
+                if (int.TryParse(majorPart, out _) &&
+                    int.TryParse(minorPart, out _) &&
+                    int.TryParse(patchPart, out _))
+                {
+                    return string.Join('.', parts.Take(i - 2));
+                }
             }
 
             return name;

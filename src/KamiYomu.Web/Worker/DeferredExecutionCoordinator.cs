@@ -1,6 +1,5 @@
 ﻿using Hangfire;
 using Hangfire.Server;
-using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities.Worker;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Worker.Interfaces;

@@ -1,10 +1,9 @@
 ﻿using Hangfire.States;
 
-namespace KamiYomu.Web.Infrastructure.Repositories.Interfaces
+namespace KamiYomu.Web.Infrastructure.Repositories.Interfaces;
+
+public interface IHangfireRepository
 {
-    public interface IHangfireRepository
-    {
-        EnqueuedState GetLeastLoadedDownloadChapterQueue();
-        EnqueuedState GetLeastLoadedMangaDownloadSchedulerQueue();
-    }
+    EnqueuedState GetLeastLoadedDownloadChapterQueue();
+    EnqueuedState GetLeastLoadedMangaDownloadSchedulerQueue();
 }

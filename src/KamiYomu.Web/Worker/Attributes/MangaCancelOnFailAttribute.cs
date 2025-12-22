@@ -2,7 +2,6 @@
 using Hangfire.States;
 using Hangfire.Storage;
 using KamiYomu.Web.Infrastructure.Contexts;
-using System.Reflection.Metadata.Ecma335;
 
 namespace KamiYomu.Web.Worker.Attributes
 {
