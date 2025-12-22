@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include "ComponentGuids.wxi"?>
+
+  <Fragment>
+    <DirectoryRef Id="INSTALLFOLDER">
+
+      <Component Id="WorkerService" Guid="$(var.Guid_KamiYomuWorkerService)">
+
+        <ServiceInstall
+          Id="KamiYomuWorkerService"
+          Name="KamiYomu"
+          DisplayName="KamiYomu Background Worker"
+          Description="Background worker for KamiYomu"
+          Start="auto"
+          Type="ownProcess"
+          ErrorControl="normal"
+        />
+
+        <ServiceControl
+          Id="StartKamiYomuWorker"
+          Name="KamiYomu"
+          Start="install"
+          Stop="both"
+          Remove="uninstall"
+          Wait="yes"
+        />
+
+        <!-- Environment Variables -->
+        <Environment Id="EnvKestrelUrl"
+          Name="Kestrel__Endpoints__Http__Url"
+          Value="http://*:8080"
+          Action="set"
+          Part="all" />
+
+        <Environment Id="EnvServerAvailableNames0"
+          Name="Worker__ServerAvailableNames__0"
+          Value="KamiYomu-background-1"
+          Action="set"
+          Part="all" />
+
+        <Environment Id="EnvDownloadChapterQueues0"
+          Name="Worker__DownloadChapterQueues__0"
+          Value="download-chapter-queue-1"
+          Action="set"
+          Part="all" />
+
+        <Environment Id="EnvMangaSchedulerQueues0"
+          Name="Worker__MangaDownloadSchedulerQueues__0"
+          Value="manga-download-scheduler-queue-1"
+          Action="set"
+          Part="all" />
+
+        <Environment Id="EnvDiscoveryQueues0"
+          Name="Worker__DiscoveryNewChapterQueues__0"
+          Value="discovery-new-chapter-queue-1"
+          Action="set"
+          Part="all" />
+
+        <Environment Id="EnvWorkerCount"
+          Name="Worker__WorkerCount"
+          Value="1"
+          Action="set"
+          Part="all" />
+
+        <Environment Id="EnvMaxCrawlerInstances"
+          Name="Worker__MaxConcurrentCrawlerInstances"
+          Value="1"
+          Action="set"
+          Part="all" />
+
+        <Environment Id="EnvMinWait"
+          Name="Worker__MinWaitPeriodInMilliseconds"
+          Value="3000"
+          Action="set"
+          Part="all" />
+
+        <Environment Id="EnvMaxWait"
+          Name="Worker__MaxWaitPeriodInMilliseconds"
+          Value="7001"
+          Action="set"
+          Part="all" />
+
+        <Environment Id="EnvDefaultLanguage"
+          Name="UI__DefaultLanguage"
+          Value="en"
+          Action="set"
+          Part="all" />
+
+      </Component>
+
+    </DirectoryRef>
+  </Fragment>
+
+</Wix>

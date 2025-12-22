@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Include>
+  <?define Version                     = "1.0.12"?>
+  <?define Guid_KamiYomuService        = "3f8c2b0e-4c1a-4e0d-9b1f-2a7d4e9c8f11"?>
+  <?define Guid_KamiYomuWorkerService  = "8a1d5c22-9e3b-4f7a-bc12-6d4f8e2a7c33"?>
+  <?define Guid_WorkerAppArm64         = "12b4c6d8-7e9f-4a1b-bc23-8f9d1e3c4a55"?>
+  <?define Guid_WorkerAppArm64Files    = "23c5d7e9-8f1a-4b2c-ad34-9e0f2a4b5c66"?>
+  <?define Guid_WorkerAppX64           = "34d6e8fa-9a2b-4c3d-be45-af1e3b5c6d77"?>
+  <?define Guid_WorkerAppX64Files      = "45e7f9ab-ab3c-4d4e-cf56-bf2f4c6d7e88"?>
+  <?define Guid_WorkerAppX86           = "56f8a0bc-bc4d-4e5f-d067-cf3f5d7e8f99"?>
+  <?define Guid_WorkerAppX86Files      = "67a9b1cd-cd5e-4f60-e178-df4f6e8f9011"?>
+
+</Include>

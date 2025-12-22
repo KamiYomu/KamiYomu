@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include "ComponentGuids.wxi"?>
+
+  <Product
+    Id="*"
+    Name="KamiYomu"
+    Language="1033"
+    Version="$(var.Version)"
+    Manufacturer="KamiYomu"
+    UpgradeCode="$(var.Guid_KamiYomuService)">
+
+    <Package InstallerVersion="500"
+             Compressed="yes"
+             InstallScope="perMachine" />
+
+    <MediaTemplate />
+
+    <Feature Id="MainFeature" Title="KamiYomu" Level="1">
+
+      <!-- Harvested component groups -->
+      <ComponentGroupRef Id="WorkerAppArm64Files" />
+      <ComponentGroupRef Id="WorkerAppX64Files" />
+      <ComponentGroupRef Id="WorkerAppX86Files" />
+
+      <!-- Explicit components -->
+      <ComponentRef Id="WorkerService" />
+
+      <ComponentRef Id="WorkerAppArm64" />
+      <ComponentRef Id="WorkerAppX64" />
+      <ComponentRef Id="WorkerAppX86" />
+
+    </Feature>
+
+  </Product>
+
+  <!-- Directory structure -->
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="KamiYomu">
+
+          <!-- Architecture roots -->
+          <Directory Id="Arm64Root" Name="win-arm64" />
+          <Directory Id="X64Root"  Name="win-x64" />
+          <Directory Id="X86Root"  Name="win-x86" />
+
+        </Directory>
+      </Directory>
+    </Directory>
+  </Fragment>
+
+  <!-- Explicit architecture-specific components -->
+  <Fragment>
+
+    <Component Id="WorkerAppArm64"
+               Guid="$(var.Guid_WorkerAppArm64)"
+               Directory="INSTALLFOLDER">
+      <Condition>MsiProcessorArchitecture = "ARM64"</Condition>
+      <File Id="File_KamiYomuWeb_ARM64"
+            Source="assets\win-arm64\KamiYomu.Web.exe" />
+    </Component>
+
+    <Component Id="WorkerAppX64"
+               Guid="$(var.Guid_WorkerAppX64)"
+               Directory="INSTALLFOLDER">
+      <Condition>VersionNT64 AND MsiProcessorArchitecture = "AMD64"</Condition>
+      <File Id="File_KamiYomuWeb_X64"
+            Source="assets\win-x64\KamiYomu.Web.exe" />
+    </Component>
+
+    <Component Id="WorkerAppX86"
+               Guid="$(var.Guid_WorkerAppX86)"
+               Directory="INSTALLFOLDER">
+      <Condition>NOT VersionNT64</Condition>
+      <File Id="File_KamiYomuWeb_X86"
+            Source="assets\win-x86\KamiYomu.Web.exe" />
+    </Component>
+
+  </Fragment>
+
+</Wix>
