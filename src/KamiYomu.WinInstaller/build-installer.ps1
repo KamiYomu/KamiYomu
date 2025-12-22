@@ -43,12 +43,16 @@ $output = "$installer/bin"
 
 Write-Host "Harvesting architecture folders with Heat..."
 
+# Changed -ag to -gg to ensure hardcoded GUIDs are generated for Directory components
+# This prevents the LGHT0230 error.
+
 # ARM64
 & "$wixToolsPath/heat.exe" `
     dir "assets/win-arm64" `
     -cg WorkerAppArm64Files `
-    -directoryid Arm64Root `
-    -prefix Arm64_ `
+    -dr Arm64Root `
+    -var var.Arm64Root `
+    -gg -pprefix ARM64_ `
     -sreg -srd -ke `
     -x "KamiYomu.Web.exe" `
     -out "$installer/WorkerAppArm64Files.wxs"
@@ -57,8 +61,9 @@ Write-Host "Harvesting architecture folders with Heat..."
 & "$wixToolsPath/heat.exe" `
     dir "assets/win-x64" `
     -cg WorkerAppX64Files `
-    -directoryid X64Root `
-    -prefix X64_ `
+    -dr X64Root `
+    -var var.X64Root `
+    -gg -pprefix X64_ `
     -sreg -srd -ke `
     -x "KamiYomu.Web.exe" `
     -out "$installer/WorkerAppX64Files.wxs"
@@ -67,17 +72,20 @@ Write-Host "Harvesting architecture folders with Heat..."
 & "$wixToolsPath/heat.exe" `
     dir "assets/win-x86" `
     -cg WorkerAppX86Files `
-    -directoryid X86Root `
-    -prefix X86_ `
+    -dr X86Root `
+    -var var.X86Root `
+    -gg -pprefix X86_ `
     -sreg -srd -ke `
     -x "KamiYomu.Web.exe" `
     -out "$installer/WorkerAppX86Files.wxs"
+
 
 Write-Host "Heat harvesting complete."
 
 # ================================
 # 4. Build MSI
 # ================================
+if (Test-Path $output) { Remove-Item -Recurse -Force $output }
 New-Item -ItemType Directory -Force -Path $output | Out-Null
 
 Write-Host "Compiling WiX sources..."
@@ -88,18 +96,25 @@ Write-Host "Compiling WiX sources..."
     "$installer/WorkerAppArm64Files.wxs" `
     "$installer/WorkerAppX64Files.wxs" `
     "$installer/WorkerAppX86Files.wxs" `
+    -dArm64Root="assets/win-arm64" `
+    -dX64Root="assets/win-x64" `
+    -dX86Root="assets/win-x86" `
     -ext WixUtilExtension `
     -out "$output/"
 
-Write-Host "Linking MSI..."
-
-& "$wixToolsPath/light.exe" `
-    "$output/KamiYomu.wixobj" `
-    "$output/ServiceConfig.wixobj" `
-    "$output/WorkerAppArm64Files.wixobj" `
-    "$output/WorkerAppX64Files.wixobj" `
-    "$output/WorkerAppX86Files.wixobj" `
-    -ext WixUtilExtension `
-    -o "$output/KamiYomu.msi"
-
-Write-Host "MSI generated at: $output/KamiYomu.msi"
+# Check if compilation succeeded before linking
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "Linking MSI..."
+    & "$wixToolsPath/light.exe" `
+        "$output/KamiYomu.wixobj" `
+        "$output/ServiceConfig.wixobj" `
+        "$output/WorkerAppArm64Files.wixobj" `
+        "$output/WorkerAppX64Files.wixobj" `
+        "$output/WorkerAppX86Files.wixobj" `
+        -ext WixUtilExtension `
+        -sw1076 -sw1056 `
+        -o "$output/KamiYomu.msi"
+    Write-Host "MSI generated at: $output/KamiYomu.msi"
+} else {
+    Write-Error "Compilation failed. Check the errors above."
+}

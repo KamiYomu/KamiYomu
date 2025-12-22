@@ -1,2 +1,5 @@
 assets/**
 !assets/.gitkeep
+WorkerAppArm64Files.wxs
+WorkerAppX64Files.wxs
+WorkerAppX86Files.wxs
