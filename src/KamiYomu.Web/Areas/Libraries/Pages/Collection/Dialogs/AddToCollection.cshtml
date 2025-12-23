@@ -2,7 +2,6 @@
 @using KamiYomu.Web.AppOptions
 @using Microsoft.Extensions.Options
 @model KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs.AddToCollectionModel
-@inject IOptions<SpecialFolderOptions> SpecialFolderOptions
 @{
     Layout = null;
 
@@ -16,7 +15,7 @@
     <h5 class="modal-title">@I18n.AddToYourCollection</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-<div class="modal-body">
+<div class="modal-body" id="addToCollectionModal">
     <fieldset class="mt-4 border rounded p-3">
         <legend class="float-none w-auto px-2">Manga Folder Format</legend>
         <form method="post"
@@ -34,7 +33,7 @@
 
                 <input class="form-control"
                        asp-for="Template"
-                       placeholder="@SpecialFolderOptions.Value.FilePathFormat" />
+                       placeholder="@Model.Template" />
             </div>
             <input type="hidden" asp-for="CrawlerAgentId" />
             <input type="hidden" asp-for="MangaId" />
@@ -42,7 +41,7 @@
         </form>
 
         <div id="template-preview" class="mt-3">
-            @await Html.PartialAsync("_PathTemplatePreview", Array.Empty<string>())
+            @await Html.PartialAsync("_PathTemplatePreview", Model.TemplateResults)
         </div>
 
         @await Html.PartialAsync("_PathTemplateVariables", Model.Variables)
@@ -63,3 +62,43 @@
         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@I18n.Cancel</button>
     </form>
 </div>
+
+<script>
+    const modalBody = document.getElementById('addToCollectionModalBody');
+
+    modalBody._afterRequestHandler = function (e) {
+        console.log("afterRequest inside modal-body", e);
+    };
+
+    modalBody._responseErrorHandler = function (e) {
+        console.log("responseError inside modal-body", e);
+    };
+
+    modalBody._sendErrorHandler = function (e) {
+        console.log("sendError inside modal-body", e);
+    };
+
+    modalBody._timeoutHandler = function (e) {
+        console.log("timeout inside modal-body", e);
+    };
+
+    modalBody._abortHandler = function (e) {
+        console.log("abort inside modal-body", e);
+    };
+
+    modalBody.addEventListener('htmx:afterRequest', modalBody._afterRequestHandler);
+    modalBody.addEventListener('htmx:responseError', modalBody._responseErrorHandler);
+    modalBody.addEventListener('htmx:sendError', modalBody._sendErrorHandler);
+    modalBody.addEventListener('htmx:timeout', modalBody._timeoutHandler);
+    modalBody.addEventListener('htmx:abort', modalBody._abortHandler);
+
+    document.addEventListener('hidden.bs.modal', function (e) {
+        if (!modalBody.contains(e.target)) return;
+
+        modalBody.removeEventListener('htmx:afterRequest', modalBody._afterRequestHandler);
+        modalBody.removeEventListener('htmx:responseError', modalBody._responseErrorHandler);
+        modalBody.removeEventListener('htmx:sendError', modalBody._sendErrorHandler);
+        modalBody.removeEventListener('htmx:timeout', modalBody._timeoutHandler);
+        modalBody.removeEventListener('htmx:abort', modalBody._abortHandler);
+    });
+</script>

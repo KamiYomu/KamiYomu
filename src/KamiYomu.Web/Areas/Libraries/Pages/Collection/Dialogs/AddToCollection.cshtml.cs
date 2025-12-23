@@ -1,13 +1,18 @@
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.CrawlerAgents.Core.Catalog.Builders;
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
+using System;
 
 namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs;
 
-public class AddToCollectionModel(ICrawlerAgentRepository crawlerAgentRepository) : PageModel
+public class AddToCollectionModel(
+    IOptions<SpecialFolderOptions> specialFolderOptions,
+    ICrawlerAgentRepository crawlerAgentRepository) : PageModel
 {
   
     public TemplateVariablesViewModel Variables { get; private set; } = new();
@@ -22,6 +27,8 @@ public class AddToCollectionModel(ICrawlerAgentRepository crawlerAgentRepository
     [BindProperty]
     public string Template { get; set; }
 
+    public string[] TemplateResults { get; private set; } = Array.Empty<string>();
+
     public async Task OnGetAsync(Guid crawlerAgentId, string mangaId, string refreshElementId, CancellationToken cancellationToken)
     {
         if (crawlerAgentId == Guid.Empty || string.IsNullOrWhiteSpace(mangaId))
@@ -32,10 +39,9 @@ public class AddToCollectionModel(ICrawlerAgentRepository crawlerAgentRepository
         RefreshElementId = refreshElementId;
         CrawlerAgentId = crawlerAgentId;
         MangaId = mangaId;
+        Template = specialFolderOptions.Value.FilePathFormat;
         Manga = await crawlerAgentRepository.GetMangaAsync(crawlerAgentId, mangaId, cancellationToken);
-
-        var manga = Manga;
-
+        TemplateResults = [.. GetTemplateResults(Template, Manga)];
         var chapter = ChapterBuilder.Create()
             .WithNumber(1)
             .WithTitle("Romance Dawn")
@@ -44,7 +50,7 @@ public class AddToCollectionModel(ICrawlerAgentRepository crawlerAgentRepository
 
         Variables = new TemplateVariablesViewModel
         {
-            Manga = TemplateResolver.GetMangaVariables(manga),
+            Manga = TemplateResolver.GetMangaVariables(Manga),
             Chapter = TemplateResolver.GetChapterVariables(chapter),
             DateTime = TemplateResolver.GetDateTimeVariables(DateTime.Now)
         };
@@ -53,12 +59,19 @@ public class AddToCollectionModel(ICrawlerAgentRepository crawlerAgentRepository
     public async Task<IActionResult> OnPostPreviewAsync(string template, CancellationToken cancellationToken)
     {
         var manga = await crawlerAgentRepository.GetMangaAsync(CrawlerAgentId, MangaId, cancellationToken);
+        
+        TemplateResults = GetTemplateResults(template, manga).ToArray();
 
+        return Partial("_PathTemplatePreview", TemplateResults);
+    }
+
+    private List<string> GetTemplateResults(string template, Manga manga)
+    {
         var chapter1 = ChapterBuilder.Create()
-                        .WithNumber(1)
-                        .WithTitle("Romance Sideways")
-                        .WithVolume(1)
-                        .Build();
+                                .WithNumber(1)
+                                .WithTitle("Romance Sideways")
+                                .WithVolume(1)
+                                .Build();
 
         var chapter2 = ChapterBuilder.Create()
                         .WithNumber(2)
@@ -126,9 +139,8 @@ public class AddToCollectionModel(ICrawlerAgentRepository crawlerAgentRepository
             }
         }
 
-        return Partial("_PathTemplatePreview", results.ToArray());
+        return results;
     }
-
 }
 
 
