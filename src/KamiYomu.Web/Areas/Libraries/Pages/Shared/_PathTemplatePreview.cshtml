@@ -1,0 +1,31 @@
+﻿@model string[]
+
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <h6 class="mb-2">Please fix the following errors:</h6>
+
+        <ul class="mb-0">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+
+@if (Model.Length == 0)
+{
+    <span class="text-muted">Preview will appear here</span>
+}
+else
+{
+    <div class="alert alert-secondary">
+        <strong>Your Manga Will Be Saved In This File Path Format:</strong>
+        @foreach (var item in Model)
+        {
+            <pre class="mb-0 mt-2">@Html.Raw($"{@item}.cbz")</pre>
+        }
+    </div>
+}

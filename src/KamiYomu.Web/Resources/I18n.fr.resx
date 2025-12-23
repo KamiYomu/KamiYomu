@@ -758,4 +758,31 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="Preferences" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="ChapterFunnyTemplate4" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ChapterFunnyTemplate1" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ChapterFunnyTemplate2" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ChapterFunnyTemplate3" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="Preferences" xml:space="preserve">
+    <value>Préférences</value>
+  </data>
+  <data name="ChapterFunnyTemplate4" xml:space="preserve">
+    <value>Romance, s'il te plaît, redémarre-moi</value>
+  </data>
+  <data name="ChapterFunnyTemplate1" xml:space="preserve">
+    <value>Romance de côté</value>
+  </data>
+  <data name="ChapterFunnyTemplate2" xml:space="preserve">
+    <value>Romance légèrement inclinée</value>
+  </data>
+  <data name="ChapterFunnyTemplate3" xml:space="preserve">
+    <value>Romance mais rendez-le bizarre</value>
+  </data>
 </root>

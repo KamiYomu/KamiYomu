@@ -31,7 +31,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Mangas
             var userPreference = dbContext.UserPreferences.FindOne(p => true);
             var paginationOptions = !string.IsNullOrWhiteSpace(continuationToken) ? new PaginationOptions(continuationToken) : new PaginationOptions(offset, 30);
             var queryResult = await agentCrawlerRepository.SearchAsync(crawlerAgent.Id, query, paginationOptions, cancellationToken);
-            Results = queryResult.Data.Where(p => p.IsFamilySafe == true || p.IsFamilySafe == userPreference.FamilySafeMode).Select(p => new Entities.Library(crawlerAgent, p));
+            Results = queryResult.Data.Where(p => p.IsFamilySafe == true || p.IsFamilySafe == userPreference.FamilySafeMode).Select(p => new Entities.Library(crawlerAgent, p, null));
             ViewData["ShowAddToLibrary"] = true;
             ViewData["Handler"] = "Crawler";
             ViewData[nameof(query)] = query;

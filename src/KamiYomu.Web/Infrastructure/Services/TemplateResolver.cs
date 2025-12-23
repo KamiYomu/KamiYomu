@@ -4,7 +4,7 @@ namespace KamiYomu.Web.Infrastructure.Services;
 
 public static class TemplateResolver
 {
-    public static string Resolve(string template, Manga? manga, Chapter? chapter, Page? page)
+    public static string Resolve(string template, Manga? manga, Chapter? chapter, DateTime? date = null)
     {
         if (string.IsNullOrWhiteSpace(template))
             return string.Empty;
@@ -13,14 +13,14 @@ public static class TemplateResolver
 
         Merge(map, GetMangaVariables(manga));
         Merge(map, GetChapterVariables(chapter));
-        Merge(map, GetDateTimeVariables());
+        Merge(map, GetDateTimeVariables(date));
 
         foreach (var kv in map)
         {
             template = template.Replace("{" + kv.Key + "}", kv.Value ?? string.Empty);
         }
 
-        return template;
+        return template.Trim('/').Trim();
     }
 
     private static void Merge(Dictionary<string, string> target, Dictionary<string, string> source)
@@ -77,28 +77,28 @@ public static class TemplateResolver
     }
 
 
-    public static Dictionary<string, string> GetDateTimeVariables()
+    public static Dictionary<string, string> GetDateTimeVariables(DateTime? date = null)
     {
-        var now = DateTime.Now;
+        date ??= DateTime.Now;
 
         return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
-            ["date"] = now.ToString("yyyy-MM-dd"),
-            ["date_short"] = now.ToString("yyyy-MM-dd"),
-            ["date_compact"] = now.ToString("yyyyMMdd"),
+            ["date"] = date.Value.ToString("yyyy-MM-dd"),
+            ["date_short"] = date.Value.ToString("yyyy-MM-dd"),
+            ["date_compact"] = date.Value.ToString("yyyyMMdd"),
 
-            ["time"] = now.ToString("HH-mm-ss"),
-            ["time_compact"] = now.ToString("HHmmss"),
+            ["time"] = date.Value.ToString("HH-mm-ss"),
+            ["time_compact"] = date.Value.ToString("HHmmss"),
 
-            ["datetime"] = now.ToString("yyyy-MM-dd HH-mm-ss"),
-            ["datetime_compact"] = now.ToString("yyyyMMdd_HHmmss"),
+            ["datetime"] = date.Value.ToString("yyyy-MM-dd HH-mm-ss"),
+            ["datetime_compact"] = date.Value.ToString("yyyyMMdd_HHmmss"),
 
-            ["year"] = now.ToString("yyyy"),
-            ["month"] = now.ToString("MM"),
-            ["day"] = now.ToString("dd"),
-            ["hour"] = now.ToString("HH"),
-            ["minute"] = now.ToString("mm"),
-            ["second"] = now.ToString("ss")
+            ["year"] = date.Value.ToString("yyyy"),
+            ["month"] = date.Value.ToString("MM"),
+            ["day"] = date.Value.ToString("dd"),
+            ["hour"] = date.Value.ToString("HH"),
+            ["minute"] = date.Value.ToString("mm"),
+            ["second"] = date.Value.ToString("ss")
         };
     }
 

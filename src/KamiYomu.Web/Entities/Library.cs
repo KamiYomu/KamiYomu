@@ -8,10 +8,11 @@ namespace KamiYomu.Web.Entities
         private LibraryDbContext _libraryDbContext;
 
         protected Library() { }
-        public Library(CrawlerAgent agentCrawler, Manga manga)
+        public Library(CrawlerAgent agentCrawler, Manga manga, string filePathTemplate)
         {
             CrawlerAgent = agentCrawler;
             Manga = string.IsNullOrEmpty(manga.Title) ? null : manga;
+            FilePathTemplate = filePathTemplate;
         }
 
         public LibraryDbContext GetDbContext()
@@ -33,7 +34,6 @@ namespace KamiYomu.Web.Entities
         public Guid Id { get; private set; }
         public CrawlerAgent CrawlerAgent { get; private set; }
         public Manga Manga { get; private set; }
-        public string MangaFolderTemplate { get; private set; }
-        public string ChapterFolderTemplate { get; private set; }
+        public string FilePathTemplate { get; private set; }
     }
 }

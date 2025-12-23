@@ -322,6 +322,42 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Romance Sideways.
+        /// </summary>
+        internal static string ChapterFunnyTemplate1 {
+            get {
+                return ResourceManager.GetString("ChapterFunnyTemplate1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Romance Slightly Tilted.
+        /// </summary>
+        internal static string ChapterFunnyTemplate2 {
+            get {
+                return ResourceManager.GetString("ChapterFunnyTemplate2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Romance But Make It Weird.
+        /// </summary>
+        internal static string ChapterFunnyTemplate3 {
+            get {
+                return ResourceManager.GetString("ChapterFunnyTemplate3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Romance, Please Restart Me.
+        /// </summary>
+        internal static string ChapterFunnyTemplate4 {
+            get {
+                return ResourceManager.GetString("ChapterFunnyTemplate4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chapters.
         /// </summary>
         internal static string Chapters {

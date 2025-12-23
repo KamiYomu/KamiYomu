@@ -757,4 +757,16 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="Preferences" xml:space="preserve">
     <value>Preferences</value>
   </data>
+  <data name="ChapterFunnyTemplate4" xml:space="preserve">
+    <value>Romance, Please Restart Me</value>
+  </data>
+  <data name="ChapterFunnyTemplate1" xml:space="preserve">
+    <value>Romance Sideways</value>
+  </data>
+  <data name="ChapterFunnyTemplate2" xml:space="preserve">
+    <value>Romance Slightly Tilted</value>
+  </data>
+  <data name="ChapterFunnyTemplate3" xml:space="preserve">
+    <value>Romance But Make It Weird</value>
+  </data>
 </root>

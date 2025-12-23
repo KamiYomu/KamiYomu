@@ -81,13 +81,9 @@ public class TemplateResolverTest
             .WithVolume(1)
             .Build();
 
-        var page = PageBuilder.Create()
-            .WithPageNumber(5)
-            .Build();
-
         string template = "{manga_title}/ch.{chapter}/{chapter_title_slug}";
 
-        string result = TemplateResolver.Resolve(template, manga, chapter, page);
+        string result = TemplateResolver.Resolve(template, manga, chapter);
 
         Assert.Equal("One Piece/ch.0001/romance-dawn", result);
     }

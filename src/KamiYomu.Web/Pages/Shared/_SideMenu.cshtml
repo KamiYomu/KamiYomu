@@ -88,19 +88,6 @@
             </a>
         </li>
         <li class="nav-item d-flex align-items-center justify-content-between">
-            <a class="nav-link d-flex align-items-center gap-2 @( (ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Preferences", StringComparison.OrdinalIgnoreCase) ?? false) ? "active" : "" )"
-               asp-area="Settings" asp-page="/Preferences/Index">
-                <i class="bi bi-columns-gap"></i> @I18n.Preferences
-            </a>
-            <a class="nav-link px-2 text-secondary"
-               href="https://kamiyomu.com"
-               target="_blank"
-               rel="noopener noreferrer"
-               title="Open documentation">
-                <i class="bi bi-question-circle"></i>
-            </a>
-        </li>
-        <li class="nav-item d-flex align-items-center justify-content-between">
             <a class="nav-link d-flex align-items-center gap-2 @( (ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/AuditTrail", StringComparison.OrdinalIgnoreCase) ?? false) ? "active" : "" )"
                asp-area="Settings" asp-page="/AuditTrail/Index">
                 <i class="bi bi-body-text"></i> @I18n.LogStream
