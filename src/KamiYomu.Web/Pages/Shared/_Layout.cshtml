@@ -3,13 +3,11 @@
 @using KamiYomu.Web.Infrastructure.Services.Interfaces
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
-
 @{
     var culture = HttpContextAccessor.HttpContext?.Features.Get<IRequestCultureFeature>()?.RequestCulture.Culture;
 
     CultureInfo.CurrentCulture = culture;
     CultureInfo.CurrentUICulture = culture;
-
 }
 <!doctype html>
 <html lang="en" data-bs-theme="auto">

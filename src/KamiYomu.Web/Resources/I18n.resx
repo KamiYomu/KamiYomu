@@ -754,4 +754,7 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="AddKamiYomuBaGetAsSource" xml:space="preserve">
     <value>Add KamiYomu BaGet as Source</value>
   </data>
+  <data name="Preferences" xml:space="preserve">
+    <value>Preferences</value>
+  </data>
 </root>

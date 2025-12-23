@@ -1,22 +1,43 @@
 ﻿<div class="d-flex flex-column h-100">
     <!-- Top navigation -->
     <ul class="nav flex-column">
-        <li class="nav-item">
+        <li class="nav-item d-flex align-items-center justify-content-between">
             <a class="nav-link d-flex align-items-center gap-2 @( (ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Index", StringComparison.OrdinalIgnoreCase) ?? false) ? "active" : "" )"
                href="~/">
                 <i class="bi bi-journal-richtext"></i> @I18n.Welcome
             </a>
+            <a class="nav-link px-2 text-secondary"
+               href="https://kamiyomu.com"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="Open documentation">
+                <i class="bi bi-question-circle"></i>
+            </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item d-flex align-items-center justify-content-between">
             <a class="nav-link d-flex align-items-center gap-2 @( (ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Collection", StringComparison.OrdinalIgnoreCase) ?? false) ? "active" : "" )"
                asp-area="Libraries" asp-page="/Collection/Index">
                 <i class="bi bi-book"></i> @I18n.YourCollection
             </a>
+            <a class="nav-link px-2 text-secondary"
+               href="https://kamiyomu.com/docs/features/your-collection/"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="Open documentation">
+                <i class="bi bi-question-circle"></i>
+            </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item d-flex align-items-center justify-content-between">
             <a class="nav-link d-flex align-items-center gap-2 @( (ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Downloads", StringComparison.OrdinalIgnoreCase) ?? false) ? "active" : "" )"
                asp-area="Libraries" asp-page="/Downloads/Index">
                 <i class="bi bi-cloud-download"></i> @I18n.Download
+            </a>
+            <a class="nav-link px-2 text-secondary"
+               href="https://kamiyomu.com/docs/features/download/"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="Open documentation">
+                <i class="bi bi-question-circle"></i>
             </a>
         </li>
     </ul>
@@ -27,28 +48,63 @@
     </h6>
 
     <ul class="nav flex-column">
-        <li class="nav-item">
+        <li class="nav-item d-flex align-items-center justify-content-between">
             <a class="nav-link d-flex align-items-center gap-2 @( (ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/CrawlerAgents", StringComparison.OrdinalIgnoreCase) ?? false) ? "active" : "" )"
                asp-area="Settings" asp-page="/CrawlerAgents/Index">
                 <i class="bi bi-puzzle"></i> @I18n.CrawlerAgents
             </a>
+            <a class="nav-link px-2 text-secondary"
+               href="https://kamiyomu.com/docs/features/crawler-agents/"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="Open documentation">
+                <i class="bi bi-question-circle"></i>
+            </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item d-flex align-items-center justify-content-between">
             <a class="nav-link d-flex align-items-center gap-2 @( (ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Add-ons", StringComparison.OrdinalIgnoreCase) ?? false) ? "active" : "" )"
                asp-area="Settings" asp-page="/Add-ons/Index">
                 <i class="bi bi-node-plus-fill"></i> @I18n.Addons
             </a>
+            <a class="nav-link px-2 text-secondary"
+               href="https://kamiyomu.com/docs/features/add-ons/"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="Open documentation">
+                <i class="bi bi-question-circle"></i>
+            </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item d-flex align-items-center justify-content-between">
             <a class="nav-link d-flex align-items-center gap-2 @( (ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Worker", StringComparison.OrdinalIgnoreCase) ?? false) ? "active" : "" )"
                href="~/Worker">
                 <i class="bi bi-bar-chart-steps"></i> @I18n.BackgroundJobs
             </a>
+            <a class="nav-link px-2 text-secondary"
+               href="https://kamiyomu.com/docs/features/background-jobs/"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="Open documentation">
+                <i class="bi bi-question-circle"></i>
+            </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item d-flex align-items-center justify-content-between">
+            <a class="nav-link d-flex align-items-center gap-2 @( (ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Preferences", StringComparison.OrdinalIgnoreCase) ?? false) ? "active" : "" )"
+               asp-area="Settings" asp-page="/Preferences/Index">
+                <i class="bi bi-columns-gap"></i> @I18n.Preferences
+            </a>
+          
+        </li>
+        <li class="nav-item d-flex align-items-center justify-content-between">
             <a class="nav-link d-flex align-items-center gap-2 @( (ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/AuditTrail", StringComparison.OrdinalIgnoreCase) ?? false) ? "active" : "" )"
                asp-area="Settings" asp-page="/AuditTrail/Index">
                 <i class="bi bi-body-text"></i> @I18n.LogStream
+            </a>
+            <a class="nav-link px-2 text-secondary"
+               href="https://kamiyomu.com/docs/features/log-stream/"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="Open documentation">
+                <i class="bi bi-question-circle"></i>
             </a>
         </li>
     </ul>
