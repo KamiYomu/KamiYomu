@@ -60,29 +60,6 @@ public class TemplateResolverTest
         Assert.Equal("3", result["volume"]);
     }
 
-
-    [Fact]
-    public void GetPageVariables_ReturnsEmpty_WhenNull()
-    {
-        var result = TemplateResolver.GetPageVariables(null);
-
-        Assert.Equal("", result["page"]);
-        Assert.Equal("", result["page_raw"]);
-    }
-
-    [Fact]
-    public void GetPageVariables_ReturnsCorrectValues()
-    {
-        var page = PageBuilder.Create()
-            .WithPageNumber(7)
-            .Build();
-
-        var result = TemplateResolver.GetPageVariables(page);
-
-        Assert.Equal("007", result["page"]);
-        Assert.Equal("7", result["page_raw"]);
-    }
-
     [Fact]
     public void Resolve_ReturnsEmpty_WhenTemplateIsNull()
     {
@@ -108,11 +85,11 @@ public class TemplateResolverTest
             .WithPageNumber(5)
             .Build();
 
-        string template = "{manga_title}/ch.{chapter}/{chapter_title_slug}_p{page}";
+        string template = "{manga_title}/ch.{chapter}/{chapter_title_slug}";
 
         string result = TemplateResolver.Resolve(template, manga, chapter, page);
 
-        Assert.Equal("One Piece/ch.0001/romance-dawn_p005", result);
+        Assert.Equal("One Piece/ch.0001/romance-dawn", result);
     }
 
 

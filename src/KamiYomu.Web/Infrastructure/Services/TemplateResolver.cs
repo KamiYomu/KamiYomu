@@ -13,7 +13,6 @@ public static class TemplateResolver
 
         Merge(map, GetMangaVariables(manga));
         Merge(map, GetChapterVariables(chapter));
-        Merge(map, GetPageVariables(page));
         Merge(map, GetDateTimeVariables());
 
         foreach (var kv in map)
@@ -77,24 +76,6 @@ public static class TemplateResolver
         };
     }
 
-    public static Dictionary<string, string> GetPageVariables(Page? page)
-    {
-        if(page == null)
-        {
-            return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-            {
-                ["page"] = "",
-                ["page_raw"] = ""
-            };
-        }
-        string pagePadded = page.PageNumber.ToString("000");
-
-        return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["page"] = pagePadded,
-            ["page_raw"] = page.PageNumber.ToString()
-        };
-    }
 
     public static Dictionary<string, string> GetDateTimeVariables()
     {

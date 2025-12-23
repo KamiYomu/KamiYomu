@@ -7,6 +7,7 @@
 else
 {
     <div class="alert alert-secondary">
-        <strong>Preview:</strong> @Model
+        <strong>Your Manga Will Be Saved In This Folder Format:</strong>
+        <pre class="mb-0 mt-2">@Html.Raw($"{@Model}.cbz")</pre>
     </div>
 }

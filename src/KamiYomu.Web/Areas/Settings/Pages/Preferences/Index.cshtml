@@ -1,6 +1,12 @@
 ﻿@page
 @model KamiYomu.Web.Areas.Settings.Pages.Preferences.IndexModel
 @{
+    var previewUrl = Url.Page(
+    "/Preferences/Index",
+    "Preview",
+    new { area = "Settings" }
+);
+
 }
 
 <div class="d-flex justify-content-between align-items-center m-3">
@@ -11,33 +17,34 @@
 </div>
 
 <div class="container mt-5">
-    <form method="post"
-          asp-area="Settings"
-          asp-page="/Preferences/Index"
-          hx-post
-          hx-page-handler="Preview"
-          hx-trigger="keyup changed delay:300ms"
-          hx-target="#template-preview"
-          hx-swap="innerHTML">
+    <fieldset class="mt-4 border rounded p-3">
+        <legend class="float-none w-auto px-2">Manga Folder Format</legend>
+        <form method="post"
+              hx-post="@previewUrl"
+              hx-trigger="keyup changed delay:300ms from:input"
+              hx-target="#template-preview"
+              hx-swap="innerHTML">
 
-        @Html.AntiForgeryToken()
+            @Html.AntiForgeryToken()
 
-        <div class="input-group">
-            <span class="input-group-text">
-                <i class="bi bi-braces"></i>
-            </span>
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="bi bi-braces"></i>
+                </span>
 
-            <input class="form-control"
-                   name="Template"
-                   placeholder="{manga_title}/ch.{chapter}/{chapter_title_slug}_p{page}" />
+                <input class="form-control"
+                       name="Template"
+                       placeholder="{manga_title}/ch.{chapter}/{chapter_title_slug}_p{page}" />
+            </div>
+        </form>
+
+
+        <div id="template-preview" class="mt-3">
+            @await Html.PartialAsync("_PathTemplatePreview", "")
         </div>
-    </form>
 
-
-    <div id="template-preview" class="mt-3">
-    @await Html.PartialAsync("_PathTemplatePreview", "")
-</div>
-
+        @await Html.PartialAsync("_PathTemplateVariables", Model.Variables)
+    </fieldset>
 </div>
 
 

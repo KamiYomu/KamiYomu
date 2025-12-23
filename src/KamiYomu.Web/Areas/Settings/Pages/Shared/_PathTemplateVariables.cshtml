@@ -1,0 +1,103 @@
+﻿@model TemplateVariablesViewModel
+
+<div class="accordion mt-4" id="templateVariablesAccordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingAllVars">
+            <button class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseAllVars">
+                <i class="bi bi-braces me-2"></i> Available Template Variables
+            </button>
+        </h2>
+
+        <div id="collapseAllVars"
+             class="accordion-collapse collapse"
+             data-bs-parent="#templateVariablesAccordion">
+            <div class="accordion-body">
+
+                <div class="table-responsive">
+
+                    <table class="table table-sm table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%">Variable</th>
+                                <th style="width: 25%">Category</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <!-- Manga -->
+                            @foreach (var kv in Model.Manga)
+                            {
+                                <tr>
+                                    <td class="d-flex align-items-center gap-2">
+                                        <code>{@kv.Key}</code>
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-secondary"
+                                                onclick="navigator.clipboard.writeText('{@kv.Key}')"
+                                                title="Copy variable name">
+                                            <i class="bi bi-clipboard"></i>
+                                        </button>
+                                    </td>
+
+                                    <td>Manga</td>
+
+                                    <td>@kv.Value</td>
+                                </tr>
+                            }
+
+                            <!-- Chapter -->
+                            @foreach (var kv in Model.Chapter)
+                            {
+                                <tr>
+                                    <td class="d-flex align-items-center gap-2">
+                                        <code>{@kv.Key}</code>
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-secondary"
+                                                onclick="navigator.clipboard.writeText('{@kv.Key}')"
+                                                title="Copy variable name">
+                                            <i class="bi bi-clipboard"></i>
+                                        </button>
+                                    </td>
+
+                                    <td>Chapter</td>
+
+                                    <td>@kv.Value</td>
+                                </tr>
+                            }
+
+                            <!-- Date/Time -->
+                            @foreach (var kv in Model.DateTime)
+                            {
+                                <tr>
+                                    <td class="d-flex align-items-center gap-2">
+                                        <code>{@kv.Key}</code>
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-secondary"
+                                                onclick="navigator.clipboard.writeText('{@kv.Key}')"
+                                                title="Copy variable name">
+                                            <i class="bi bi-clipboard"></i>
+                                        </button>
+                                    </td>
+
+                                    <td>Date/Time</td>
+
+                                    <td>@kv.Value</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
