@@ -29,8 +29,11 @@ namespace KamiYomu.Web.Entities
             return $"{Manga!.Title}-{Id}-{CrawlerAgent.Id}";
         }
 
+
         public Guid Id { get; private set; }
         public CrawlerAgent CrawlerAgent { get; private set; }
         public Manga Manga { get; private set; }
+        public string MangaFolderTemplate { get; private set; }
+        public string ChapterFolderTemplate { get; private set; }
     }
 }
