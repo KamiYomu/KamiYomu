@@ -8,10 +8,8 @@ using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.DependencyModel;
 using QuestPDF.Fluent;
 using System.IO.Compression;
-using System.Reflection;
 
 namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 {
@@ -48,7 +46,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                 nameof(ChapterDownloadRecord.StatusUpdateAt) => asc ? allRecords.OrderBy(r => r.StatusUpdateAt) : allRecords.OrderByDescending(r => r.CreateAt),
                 nameof(ChapterDownloadRecord.DownloadStatus) => asc ? allRecords.OrderBy(r => r.DownloadStatus) : allRecords.OrderByDescending(r => r.DownloadStatus),
                 nameof(ChapterDownloadRecord.Chapter) => asc ? allRecords.OrderBy(r => r.Chapter.Number) : allRecords.OrderByDescending(r => r.Chapter.Number),
-                _ => allRecords.OrderByDescending(r => r.StatusUpdateAt)
+                _ => allRecords.OrderByDescending(r => r.Chapter.Number).ThenBy(r => r.StatusUpdateAt)
             };
 
             // Pagination
@@ -162,7 +160,8 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                                   .Where(f => f.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
                                               f.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
                                               f.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-                                              f.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase))
+                                              f.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase) ||
+                                              f.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
                                   .OrderBy(f => f)
                                   .ToList();
 
