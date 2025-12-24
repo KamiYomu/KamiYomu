@@ -781,17 +781,17 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="YourMangaWillBeStoredFilePathFormat" xml:space="preserve">
     <value>Votre manga sera stocké en utilisant le format de chemin de fichier suivant :</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="PreviewWillAppearHere" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="PleaseFixFollowingErrors" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="PreviewWillAppearHere" xml:space="preserve">
     <value>L'aperçu apparaîtra ici</value>
   </data>
   <data name="PleaseFixFollowingErrors" xml:space="preserve">
     <value>Veuillez corriger les erreurs suivantes</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="BaGetFeed" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="BaGetFeed" xml:space="preserve">
+    <value>KamiYomu BaGet Feed</value>
   </data>
 </root>

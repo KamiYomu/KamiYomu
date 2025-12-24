@@ -787,4 +787,7 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="PleaseFixFollowingErrors" xml:space="preserve">
     <value>Please fix the following errors</value>
   </data>
+  <data name="BaGetFeed" xml:space="preserve">
+    <value>KamiYomu BaGet Feed</value>
+  </data>
 </root>

@@ -25,8 +25,8 @@ public partial class Defaults
     public class NugetFeeds
     {
         public const string NugetFeedUrl = "https://api.nuget.org/v3/index.json";
+        public const string BagGetFeedUrl = "https://baget.kamiyomu.com/v3/index.json";
         public const string KamiYomuFeedUrl = "https://nuget.pkg.github.com/KamiYomu/index.json";
-        public const string MyGetFeedUrl = "https://www.myget.org/F/example/api/v3/index.json";
     }
 
     public class UI

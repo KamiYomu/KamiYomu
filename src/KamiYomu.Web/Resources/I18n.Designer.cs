@@ -277,6 +277,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to KamiYomu BaGet Feed.
+        /// </summary>
+        internal static string BaGetFeed {
+            get {
+                return ResourceManager.GetString("BaGetFeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string Cancel {
