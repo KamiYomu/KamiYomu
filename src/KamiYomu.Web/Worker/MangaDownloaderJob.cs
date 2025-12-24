@@ -84,17 +84,17 @@ public class MangaDownloaderJob(
                                                                                   && p.MangaDownload.Id == mangaDownloadId) 
                                                                                   ?? new ChapterDownloadRecord(crawlerAgent, mangaDownload, chapter);
 
-                    if(record.IsDownloadedFileExists())
+                    if(record.IsDownloadedFileExists(library))
                     {
                         record.Complete();
                         libDbContext.ChapterDownloadRecords.Upsert(record);
-                        logger.LogInformation("Dispatch '{title}': File {file} has been found, download chapter marked as completed.", title, record.Chapter.GetCbzFileName());
+                        logger.LogInformation("Dispatch '{title}': File {file} has been found, download chapter marked as completed.", title, record.Chapter.GetCbzFileName(library));
                         continue;
                     }
 
                     libDbContext.ChapterDownloadRecords.Upsert(record);
                     var queueState = hangfireRepository.GetLeastLoadedDownloadChapterQueue();
-                    var backgroundJobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(queueState.Queue, p => p.DispatchAsync(queueState.Queue, library.CrawlerAgent.Id, library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(), null!, CancellationToken.None) );
+                    var backgroundJobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(queueState.Queue, p => p.DispatchAsync(queueState.Queue, library.CrawlerAgent.Id, library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(library), null!, CancellationToken.None) );
 
                     record.Scheduled(backgroundJobId);
                     libDbContext.ChapterDownloadRecords.Update(record);

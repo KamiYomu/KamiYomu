@@ -1,0 +1,31 @@
+﻿@model string[]
+
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <h6 class="mb-2">@I18n.PleaseFixFollowingErrors:</h6>
+
+        <ul class="mb-0">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+
+@if (Model.Length == 0)
+{
+    <span class="text-muted">@I18n.PreviewWillAppearHere</span>
+}
+else
+{
+    <div class="alert alert-secondary">
+        <strong>@I18n.YourMangaWillBeStoredFilePathFormat</strong>
+        @foreach (var item in Model)
+        {
+            <pre class="mb-0 mt-2">@Html.Raw($"{@item}.cbz")</pre>
+        }
+    </div>
+}

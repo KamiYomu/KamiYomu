@@ -10,17 +10,18 @@
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body text-center">
-    <img src="@Model.Library.Manga.CoverUrl.ToInternalImageUrl()"
-         alt="@Model.Library.Manga.Title cover"
-         class="img-fluid rounded mb-3 shadow-sm"
-         style="max-height: 200px; object-fit: cover;" />
+    <fieldset class="mt-4 border rounded p-3">
+        <p class="fs-5">
+            @I18n.YouAreAboutToDeleteThisMangaFromYourCollection
+        </p>
+        <p class="text-muted">
+            @I18n.AllchapterWillBeTerminated
+        </p>
+    </fieldset>
 
-    <p class="fs-5">
-        @I18n.YouAreAboutToDeleteThisMangaFromYourCollection
-    </p>
-    <p class="text-muted">
-        @I18n.AllchapterWillBeTerminated
-    </p>
+    <fieldset class="mt-4 border rounded p-3">
+        <partial name="_MangaInfo" model="Model.Library.Manga" />
+    </fieldset>
 </div>
 <div class="modal-footer">
     <form method="post"
@@ -32,8 +33,9 @@
         <input type="hidden" name="MangaId" value="@Model.Library.Manga.Id" />
         <input type="hidden" name="CrawlerAgentId" value="@Model.Library.CrawlerAgent.Id" />
 
+
         <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">@I18n.Delete</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@I18n.Cancel</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@I18n.Cancel</button>
     </form>
 </div>
 

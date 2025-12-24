@@ -1,0 +1,84 @@
+﻿@using KamiYomu.CrawlerAgents.Core.Catalog
+@using KamiYomu.Web.Extensions
+@model Manga
+
+@{
+    var desc = Model.Description;
+    var preview = desc?.Length > 50 ? desc.Substring(0, 50) + "..." : desc;
+    var needsExpand = desc?.Length > 50;
+}
+<div class="container-fluid">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="border rounded shadow-sm overflow-hidden">
+                <a href="@Model.WebSiteUrl" alt="@Model.Title" target="_blank">
+                    <img src="@Model.CoverUrl.ToInternalImageUrl()" alt="@Model.Title"
+                         class="img-fluid w-100" style="object-fit: cover; max-height: 400px;" />
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h2 class="fw-bold mb-3">@Model.Title</h2>
+
+            @if (!string.IsNullOrWhiteSpace(desc))
+            {
+                <div class="accordion" id="descAccordion">
+                    <div class="accordion-item border-0">
+                        <h2 class="accordion-header" id="descHeading">
+                            <button class="accordion-button collapsed text-muted fst-italic px-2 py-1" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#descCollapse" aria-expanded="false" aria-controls="descCollapse">
+                                @preview
+                            </button>
+                        </h2>
+                        <div id="descCollapse" class="accordion-collapse collapse" aria-labelledby="descHeading" data-bs-parent="#descAccordion">
+                            <div class="accordion-body text-muted fst-italic px-2 pt-1">
+                                @desc
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+            <div class="row gy-2">
+                <div class="col-sm-6">
+                    <strong>@I18n.Status:</strong> @Model.ReleaseStatus.ToString()
+                </div>
+                <div class="col-sm-6">
+                    <strong>@I18n.ReleaseStatus:</strong> @Model.ReleaseStatus
+                </div>
+                <div class="col-sm-6">
+                    <strong>@I18n.OriginalLanguage:</strong> @Model.OriginalLanguage
+                </div>
+                <div class="col-sm-6">
+                    <strong>@I18n.Year:</strong> @Model.Year
+                </div>
+                <div class="col-sm-6">
+                    <strong>@I18n.LatestChapter:</strong> @Model.LatestChapterAvailable
+                </div>
+                <div class="col-sm-6">
+                    <strong>@I18n.LastVolume:</strong> @Model.LastVolumeAvailable
+                </div>
+                <div class="col-sm-12">
+                    <strong>@I18n.Tags:</strong>
+                    @if (Model.Tags?.Any() == true)
+                    {
+                        <div class="mt-1">
+                            @foreach (var tag in Model.Tags)
+                            {
+                                <span class="badge bg-secondary me-1 mb-1">@tag</span>
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="col-sm-12">
+                    <strong>Website:</strong>
+                    <a href="@Model.WebSiteUrl" target="_blank" class="text-decoration-none">
+                        @Model.WebSiteUrl
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -23,8 +23,8 @@
     }
 }
 <tr id="@rowId">
-    <td>@Model.Chapter.GetCbzFileName()</td>
-    <td>@Model.Chapter.GetCbzFileSize()</td>
+    <td>@Model.Chapter.GetCbzFileName(Model.MangaDownload.Library)</td>
+    <td>@Model.Chapter.GetCbzFileSize(Model.MangaDownload.Library)</td>
     <td>
         <span class="badge @badgeClass" title="@lastUpdateBuilder.ToString()"
               data-bs-toggle="popover"

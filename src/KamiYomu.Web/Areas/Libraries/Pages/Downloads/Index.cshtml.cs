@@ -1,14 +1,17 @@
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 {
     public class IndexModel(
         ILogger<IndexModel> logger,
+        IOptions<SpecialFolderOptions> specialFolderOptions,
         DbContext dbContext,
         ICrawlerAgentRepository agentCrawlerRepository,
         IWorkerService workerService,
@@ -22,6 +25,8 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
         [BindProperty]
         public Guid CrawlerAgentId { get; set; }
 
+        [BindProperty]
+        public string FilePathTemplate { get; set; } = string.Empty;
         public void OnGet()
         {
             CrawlerAgents = dbContext.CrawlerAgents.FindAll();
@@ -33,11 +38,14 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
             {
                 return BadRequest("Invalid manga data.");
             }
+            
             using var crawlerAgent = dbContext.CrawlerAgents.FindById(CrawlerAgentId);
 
             var manga = await agentCrawlerRepository.GetMangaAsync(crawlerAgent.Id, MangaId, cancellationToken);
 
-            var library = new Library(crawlerAgent, manga);
+            var filePathTemplateFormat = string.IsNullOrWhiteSpace(FilePathTemplate) ? specialFolderOptions.Value.FilePathFormat : FilePathTemplate;
+            
+            var library = new Library(crawlerAgent, manga, filePathTemplateFormat);
 
             dbContext.Libraries.Insert(library);
 
@@ -55,11 +63,17 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 
             await notificationService.PushSuccessAsync($"{I18n.TitleAddedToYourCollection}: {library.Manga.Title} ", cancellationToken);
 
+            var preferences = dbContext.UserPreferences.FindOne(p => true);
+            preferences.SetFilePathTemplate(filePathTemplateFormat);
+            dbContext.UserPreferences.Upsert(preferences);
+
             return Partial("_LibraryCard", library);
         }
 
         public async Task<IActionResult> OnPostRemoveFromCollectionAsync(CancellationToken cancellationToken)
         {
+            ModelState.Remove(nameof(FilePathTemplate));
+
             if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid manga data.");
@@ -87,7 +101,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 
             await notificationService.PushSuccessAsync($"{I18n.YourCollectionNoLongerIncludes}: {mangaTitle}.", cancellationToken);
 
-            return Partial("_LibraryCard", new Library(library.CrawlerAgent, library.Manga));
+            return Partial("_LibraryCard", new Library(library.CrawlerAgent, library.Manga, null));
         }
     }
 }

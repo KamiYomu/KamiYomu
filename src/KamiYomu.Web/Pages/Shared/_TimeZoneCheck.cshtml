@@ -1,9 +1,11 @@
 ﻿<form id="TimeZoneSetForm"
-      hx-post="Index?handler=SetTimeZone"
+      asp-area=""
+      asp-page="Index"
+      asp-page-handler="SetTimeZone"
+      hx-post
       hx-trigger="load"
       hx-swap="none"
-      hx-vals="js:{ tz: Intl.DateTimeFormat().resolvedOptions().timeZone }"
-      method="post">
+      hx-vals="js:{ tz: Intl.DateTimeFormat().resolvedOptions().timeZone }">
     @Html.AntiForgeryToken()
 </form>
 
