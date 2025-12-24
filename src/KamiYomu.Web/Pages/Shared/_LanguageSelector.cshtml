@@ -19,9 +19,9 @@
                   asp-route-area=""
                   asp-route-returnUrl="@Context.Request.Path"
                   novalidate>
-                  @Html.AntiForgeryToken()
-                <input type="hidden" name="Culture" value="@CultureInfo.GetCultureInfo("en-US").Name" />
-                <button type="submit" class="dropdown-item">🇺🇸 @CultureInfo.GetCultureInfo("en-US").NativeName</button>
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Culture" value="@CultureInfo.GetCultureInfo("pt-BR").Name" />
+                <button type="submit" class="dropdown-item"><span class="fi fi-br"></span> @CultureInfo.GetCultureInfo("pt-BR").NativeName</button>
             </form>
         </li>
         <li>
@@ -31,11 +31,12 @@
                   asp-route-area=""
                   asp-route-returnUrl="@Context.Request.Path"
                   novalidate>
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="Culture" value="@CultureInfo.GetCultureInfo("pt-BR").Name" />
-                <button type="submit" class="dropdown-item">🇧🇷 @CultureInfo.GetCultureInfo("pt-BR").NativeName</button>
+                  @Html.AntiForgeryToken()
+                <input type="hidden" name="Culture" value="@CultureInfo.GetCultureInfo("en-US").Name" />
+                <button type="submit" class="dropdown-item"><span class="fi fi-us"></span> @CultureInfo.GetCultureInfo("en-US").NativeName</button>
             </form>
         </li>
+       
         <li>
             <form method="post"
                   asp-page="/Index"
@@ -45,7 +46,19 @@
                   novalidate>
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="Culture" value="@CultureInfo.GetCultureInfo("fr").Name" />
-                <button type="submit" class="dropdown-item">🇫🇷 @CultureInfo.GetCultureInfo("fr").NativeName</button>
+                <button type="submit" class="dropdown-item"><span class="fi fi-fr"></span> @CultureInfo.GetCultureInfo("fr").NativeName</button>
+            </form>
+        </li>
+        <li>
+            <form method="post"
+                  asp-page="/Index"
+                  asp-page-handler="SetLanguage"
+                  asp-route-area=""
+                  asp-route-returnUrl="@Context.Request.Path"
+                  novalidate>
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Culture" value="@CultureInfo.GetCultureInfo("es").Name" />
+                <button type="submit" class="dropdown-item"><span class="fi fi-es"></span> @CultureInfo.GetCultureInfo("es").NativeName</button>
             </form>
         </li>
     </ul>

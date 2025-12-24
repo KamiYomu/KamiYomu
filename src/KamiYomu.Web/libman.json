@@ -26,6 +26,10 @@
     {
       "library": "microsoft-signalr@9.0.6",
       "destination": "wwwroot/lib/microsoft-signalr/"
+    },
+    {
+      "library": "flag-icons@7.5.0",
+      "destination": "wwwroot/lib/flag-icons/"
     }
   ]
 }
