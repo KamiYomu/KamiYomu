@@ -1,5 +1,8 @@
 ﻿using KamiYomu.CrawlerAgents.Core.Catalog;
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Infrastructure.Contexts;
+using KamiYomu.Web.Infrastructure.Services;
+using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Entities
 {
@@ -30,6 +33,27 @@ namespace KamiYomu.Web.Entities
             return $"{Manga!.Title}-{Id}-{CrawlerAgent.Id}";
         }
 
+        public string GetTempDirectory()
+        {
+            var specialFolderOptions = Defaults.ServiceLocator.Instance.GetRequiredService<IOptions<SpecialFolderOptions>>();
+            var filePathTemplate = FilePathTemplate;
+
+            if (string.IsNullOrWhiteSpace(filePathTemplate))
+            {
+                filePathTemplate = specialFolderOptions.Value.FilePathFormat;
+            }
+
+            var mangaFolder = TemplateResolver.Resolve(filePathTemplate, Manga, null);
+
+            var dirPath = Path.Combine(Path.GetTempPath(), Defaults.Worker.TempDirName, Path.GetDirectoryName(mangaFolder));
+
+            if (!Directory.Exists(dirPath))
+            {
+                Directory.CreateDirectory(dirPath);
+            }
+
+            return dirPath;
+        }
 
         public Guid Id { get; private set; }
         public CrawlerAgent CrawlerAgent { get; private set; }

@@ -12,7 +12,7 @@ namespace KamiYomu.Web.Extensions
         public static string ToComicInfo(this Chapter chapter, Library library)
         {
             XElement comicInfo = new("ComicInfo",
-                new XElement("Title",  $"{chapter?.GetCbzFileNameWithoutExtension(library)} {chapter?.Title ?? "Untitled Chapter"}" ),
+                new XElement("Title", $"{chapter?.GetCbzFileNameWithoutExtension(library)} {chapter?.Title ?? "Untitled Chapter"}"),
                 new XElement("Series", chapter?.ParentManga?.Title ?? string.Empty),
                 new XElement("Number", chapter?.Number.ToString() ?? string.Empty),
                 new XElement("Volume", chapter?.Volume.ToString() ?? string.Empty),
@@ -30,27 +30,48 @@ namespace KamiYomu.Web.Extensions
             return comicInfo.ToString();
         }
 
-        public static string GetCbzFilePath(this Chapter chapter, Library library)
+        public static string GetTempChapterDirectory(this Chapter chapter, Library library)
         {
-
-            var filePath = TemplateResolver.Resolve(library.FilePathTemplate, library.Manga, chapter);
             var specialFolderOptions = Defaults.ServiceLocator.Instance.GetRequiredService<IOptions<SpecialFolderOptions>>();
-            var directory = GetDirectoryPath(chapter, library);
+            var filePathTemplate = library.FilePathTemplate;
 
-            if (!Directory.Exists(directory))
+            if (string.IsNullOrWhiteSpace(filePathTemplate))
             {
-                Directory.CreateDirectory(directory!);
+                filePathTemplate = specialFolderOptions.Value.FilePathFormat;
             }
-            return Path.Combine(specialFolderOptions.Value.MangaDir, directory, filePath) + ".cbz";
+
+            var chapterFolder = TemplateResolver.Resolve(filePathTemplate, library.Manga, chapter);
+
+            var dirPath = Path.Combine(Path.GetTempPath(), Defaults.Worker.TempDirName, chapterFolder);
+
+            if (!Directory.Exists(dirPath))
+            {
+                Directory.CreateDirectory(dirPath);
+            }
+
+            return dirPath;
         }
 
-        public static string GetDirectoryPath(this Chapter chapter, Library library)
+        public static string GetCbzFilePath(this Chapter chapter, Library library)
         {
-            var filePath = TemplateResolver.Resolve(library.FilePathTemplate, library.Manga, chapter);
             var specialFolderOptions = Defaults.ServiceLocator.Instance.GetRequiredService<IOptions<SpecialFolderOptions>>();
-            var directory = Path.GetDirectoryName(filePath);
+            var filePathTemplate = library.FilePathTemplate;
 
-            return Path.GetDirectoryName(directory);
+            if (string.IsNullOrWhiteSpace(filePathTemplate))
+            {
+                filePathTemplate = specialFolderOptions.Value.FilePathFormat;
+            }
+
+            var filePathTemplateResolved = TemplateResolver.Resolve(filePathTemplate, library.Manga, chapter);
+            var filePath = Path.Combine(specialFolderOptions.Value.MangaDir, filePathTemplateResolved) + ".cbz";
+
+            var dir = Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            return filePath;
         }
 
         public static string GetCbzFileName(this Chapter chapter, Library library)
@@ -69,9 +90,9 @@ namespace KamiYomu.Web.Extensions
 
         public static string GetCbzFileSize(this Chapter chapter, Library library)
         {
-            var fileInfo = new FileInfo(chapter.GetCbzFilePath(library)); 
-            
-            if(!fileInfo.Exists)
+            var fileInfo = new FileInfo(chapter.GetCbzFilePath(library));
+
+            if (!fileInfo.Exists)
                 return I18n.NotStarted;
 
             long bytes = fileInfo.Length;
