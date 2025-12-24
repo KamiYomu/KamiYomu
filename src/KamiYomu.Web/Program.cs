@@ -104,7 +104,8 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
             new CultureInfo("en-US"),
             new CultureInfo("pt-BR"),
             new CultureInfo("fr"),
-            new CultureInfo("es")
+            new CultureInfo("es"),
+            new CultureInfo("nl")
     };
 
     options.DefaultRequestCulture = new RequestCulture("en-US");

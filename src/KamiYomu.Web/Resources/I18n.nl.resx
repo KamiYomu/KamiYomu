@@ -1,0 +1,770 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AcceptedFormats" xml:space="preserve">
+    <value>Geaccepteerde formaten</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Toevoegen</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Rug</value>
+  </data>
+  <data name="Crawler" xml:space="preserve">
+    <value>Kruiper</value>
+  </data>
+  <data name="CrawlerAgent" xml:space="preserve">
+    <value>Crawler-agent</value>
+  </data>
+  <data name="CrawlerAgents" xml:space="preserve">
+    <value>Crawler-agenten</value>
+  </data>
+  <data name="EditCrawlerAgent" xml:space="preserve">
+    <value>Crawler-agent bewerken</value>
+  </data>
+  <data name="ImportCrawlerAgent" xml:space="preserve">
+    <value>Crawler-agent importeren</value>
+  </data>
+  <data name="Library" xml:space="preserve">
+    <value>Bibliotheek</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Redden</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Welkom</value>
+  </data>
+  <data name="BackgroundJobs" xml:space="preserve">
+    <value>Achtergrond banen</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Licht</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Donker</value>
+  </data>
+  <data name="MangaCrawlerPlatform" xml:space="preserve">
+    <value>Manga Crawler-platform</value>
+  </data>
+  <data name="AssemblyProperties" xml:space="preserve">
+    <value>Assemblage-eigenschappen</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Acties</value>
+  </data>
+  <data name="Enable" xml:space="preserve">
+    <value>Inschakelen</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Naam</value>
+  </data>
+  <data name="DisplayName" xml:space="preserve">
+    <value>Weergavenaam</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Bewerking</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Verwijderen</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Taal</value>
+  </data>
+  <data name="Property" xml:space="preserve">
+    <value>Eigendom</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Waarde</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Dichtbij</value>
+  </data>
+  <data name="AddToLibrary" xml:space="preserve">
+    <value>Toevoegen aan bibliotheek</value>
+  </data>
+  <data name="RemoveFromLibrary" xml:space="preserve">
+    <value>Verwijderen uit bibliotheek</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuleren</value>
+  </data>
+  <data name="PageSubtitleCrawler" xml:space="preserve">
+    <value>Zoek naar nieuwe titels in de door u geselecteerde bronnen.</value>
+  </data>
+  <data name="SearchManga" xml:space="preserve">
+    <value>Manga zoeken...</value>
+  </data>
+  <data name="PageSubtitleLibrary" xml:space="preserve">
+    <value>Je mangacollectie - inclusief titels die momenteel worden gedownload en titels die al zijn voltooid.</value>
+  </data>
+  <data name="SelectCrawlerAgent" xml:space="preserve">
+    <value>Selecteer Crawleragent</value>
+  </data>
+  <data name="ViewLibrary" xml:space="preserve">
+    <value>Bibliotheek bekijken</value>
+  </data>
+  <data name="OpenLibrary" xml:space="preserve">
+    <value>Bibliotheek openen</value>
+  </data>
+  <data name="StartCrawlingNow" xml:space="preserve">
+    <value>Begin nu met kruipen</value>
+  </data>
+  <data name="CrawlManga" xml:space="preserve">
+    <value>Manga kruipen</value>
+  </data>
+  <data name="ViewLibraryDescription" xml:space="preserve">
+    <value>Blader door uw gedownloade mangacollectie via een overzichtelijke, aanpasbare interface.</value>
+  </data>
+  <data name="CrawlMangaDescription" xml:space="preserve">
+    <value>Haal automatisch hoofdstukken op van ondersteunde mangasites en sla ze lokaal op.</value>
+  </data>
+  <data name="WelcomeToKamiYomu" xml:space="preserve">
+    <value>Welkom bij KamiYomu</value>
+  </data>
+  <data name="WelcomeToKamiYomuDescription" xml:space="preserve">
+    <value>Een volledig zelfgehoste manga-crawler. Geen externe servers, geen tracking: uw collectie blijft volledig onder uw controle.</value>
+  </data>
+  <data name="ConfirmDelete" xml:space="preserve">
+    <value>Bevestig verwijderen</value>
+  </data>
+  <data name="CrawlerAgentDetails" xml:space="preserve">
+    <value>Details van crawleragent</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Titel</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Beschrijving</value>
+  </data>
+  <data name="Company" xml:space="preserve">
+    <value>Bedrijf</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Product</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Versie</value>
+  </data>
+  <data name="FileVersion" xml:space="preserve">
+    <value>Bestandsversie</value>
+  </data>
+  <data name="InformationalVersion" xml:space="preserve">
+    <value>Informatieve versie</value>
+  </data>
+  <data name="ToggleTheme" xml:space="preserve">
+    <value>Thema wisselen</value>
+  </data>
+  <data name="Chapters" xml:space="preserve">
+    <value>Hoofdstukken</value>
+  </data>
+  <data name="Chapter" xml:space="preserve">
+    <value>Hoofdstuk</value>
+  </data>
+  <data name="Volumes" xml:space="preserve">
+    <value>Volumes</value>
+  </data>
+  <data name="Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="Downloaded" xml:space="preserve">
+    <value>Gedownload</value>
+  </data>
+  <data name="ChaptersFound" xml:space="preserve">
+    <value>Hoofdstukken gevonden</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Downloaden</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="ReleaseStatus" xml:space="preserve">
+    <value>Vrijgavestatus</value>
+  </data>
+  <data name="ContentRating" xml:space="preserve">
+    <value>Inhoudsbeoordeling</value>
+  </data>
+  <data name="OriginalLanguage" xml:space="preserve">
+    <value>Originele taal</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Jaar</value>
+  </data>
+  <data name="LatestChapter" xml:space="preserve">
+    <value>Laatste hoofdstuk</value>
+  </data>
+  <data name="LastVolume" xml:space="preserve">
+    <value>Laatste deel</value>
+  </data>
+  <data name="Tags" xml:space="preserve">
+    <value>Labels</value>
+  </data>
+  <data name="FolderName" xml:space="preserve">
+    <value>Mapnaam</value>
+  </data>
+  <data name="ExternalLinks" xml:space="preserve">
+    <value>Externe koppelingen</value>
+  </data>
+  <data name="AllchapterWillBeTerminated" xml:space="preserve">
+    <value>Alle downloadprocessen voor hoofdstukken en volumes worden beëindigd.</value>
+  </data>
+  <data name="CrawlerSettings" xml:space="preserve">
+    <value>Crawler-instellingen</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Ingeschakeld</value>
+  </data>
+  <data name="AcceptUserTerms" xml:space="preserve">
+    <value>Accepteer gebruikersvoorwaarden</value>
+  </data>
+  <data name="UserTerms" xml:space="preserve">
+    <value>Gebruikersvoorwaarden</value>
+  </data>
+  <data name="HasTermsAccepted" xml:space="preserve">
+    <value>Zijn de voorwaarden geaccepteerd?</value>
+  </data>
+  <data name="ValidateMessageYouMustAcceptTermsBeforeAgent" xml:space="preserve">
+    <value>U moet de voorwaarden accepteren voordat u deze agent opslaat.</value>
+  </data>
+  <data name="AgentActions" xml:space="preserve">
+    <value>Agentacties</value>
+  </data>
+  <data name="CrawlerActions" xml:space="preserve">
+    <value>Crawler-acties</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Instellingen</value>
+  </data>
+  <data name="Manga" xml:space="preserve">
+    <value>Manga</value>
+  </data>
+  <data name="Mangas" xml:space="preserve">
+    <value>Manga's</value>
+  </data>
+  <data name="LogStream" xml:space="preserve">
+    <value>Logstroom</value>
+  </data>
+  <data name="YourCollection" xml:space="preserve">
+    <value>Jouw collectie</value>
+  </data>
+  <data name="Collection" xml:space="preserve">
+    <value>Verzameling</value>
+  </data>
+  <data name="Collections" xml:space="preserve">
+    <value>Collecties</value>
+  </data>
+  <data name="AddToYourCollection" xml:space="preserve">
+    <value>Voeg toe aan uw verzameling</value>
+  </data>
+  <data name="RemoveFromYourCollection" xml:space="preserve">
+    <value>Verwijderen uit uw verzameling</value>
+  </data>
+  <data name="OpenYourCollection" xml:space="preserve">
+    <value>Open uw verzameling</value>
+  </data>
+  <data name="SeeYourCollection" xml:space="preserve">
+    <value>Bekijk uw verzameling</value>
+  </data>
+  <data name="YouAreAboutToDeleteThisMangaFromYourCollection" xml:space="preserve">
+    <value>Weet je zeker dat je deze manga uit je collectie wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.</value>
+  </data>
+  <data name="Addons" xml:space="preserve">
+    <value>Add-ons</value>
+  </data>
+  <data name="NoCrawlerAgent" xml:space="preserve">
+    <value>Geen Crawler-agent</value>
+  </data>
+  <data name="AddCrawlerAgentToGetStarted" xml:space="preserve">
+    <value>Voeg Crawler Agent toe om aan de slag te gaan</value>
+  </data>
+  <data name="SearchCrawlerAgents" xml:space="preserve">
+    <value>Zoek naar crawleragents</value>
+  </data>
+  <data name="AddNuGetSources" xml:space="preserve">
+    <value>Voeg NuGet-bronnen toe</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Zoekopdracht</value>
+  </data>
+  <data name="NoAddonsAvailable" xml:space="preserve">
+    <value>Geen add-ons beschikbaar</value>
+  </data>
+  <data name="Install" xml:space="preserve">
+    <value>Installeren</value>
+  </data>
+  <data name="License" xml:space="preserve">
+    <value>Licentie</value>
+  </data>
+  <data name="Authors" xml:space="preserve">
+    <value>Auteurs</value>
+  </data>
+  <data name="TotalDownloads" xml:space="preserve">
+    <value>Totaal aantal downloads</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>Gebruikersnaam</value>
+  </data>
+  <data name="Sources" xml:space="preserve">
+    <value>Bronnen</value>
+  </data>
+  <data name="SelectSource" xml:space="preserve">
+    <value>Selecteer Bron</value>
+  </data>
+  <data name="NoSources" xml:space="preserve">
+    <value>Geen bronnen</value>
+  </data>
+  <data name="Examples" xml:space="preserve">
+    <value>Voorbeelden</value>
+  </data>
+  <data name="NugetSourceUserNameExplanation" xml:space="preserve">
+    <value>Optioneel. Geef een gebruikersnaam op als de NuGet-bron basisverificatie vereist. Laat dit veld leeg voor openbare feeds of toegang met alleen een API-sleutel.</value>
+  </data>
+  <data name="NugetSourcePasswordExplanation" xml:space="preserve">
+    <value>Vereist voor geverifieerde bronnen. Voer het wachtwoord in voor basisauthenticatie of een API-sleutel voor op tokens gebaseerde toegang. Dit wordt gebruikt om pakketten veilig op te halen.</value>
+  </data>
+  <data name="APIKey" xml:space="preserve">
+    <value>API-sleutel</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Wachtwoord</value>
+  </data>
+  <data name="OfficialNuGetOrg" xml:space="preserve">
+    <value>officiële NuGet.org</value>
+  </data>
+  <data name="FromKamiYomuNuGetRepository" xml:space="preserve">
+    <value>Van KamiYomu NuGet Repository - vereist API-sleutel</value>
+  </data>
+  <data name="MyGetFeed" xml:space="preserve">
+    <value>MyGet-feed</value>
+  </data>
+  <data name="SourceCode" xml:space="preserve">
+    <value>Broncode</value>
+  </data>
+  <data name="CrawlerAgentSavedSuccessfully" xml:space="preserve">
+    <value>Crawler Agent succesvol opgeslagen!</value>
+  </data>
+  <data name="AddonDisclaimer" xml:space="preserve">
+    <value>Disclaimer voor extra's</value>
+  </data>
+  <data name="ModalSomeAddonsAvailableMaintainedCommunity" xml:space="preserve">
+    <value>Sommige add-ons die via dit platform beschikbaar zijn, worden ontwikkeld en onderhouden door de community. Deze community-add-ons kunnen:</value>
+  </data>
+  <data name="ModalAccessUnofficialThirdPartySourcesManga" xml:space="preserve">
+    <value>Krijg toegang tot onofficiële bronnen of bronnen van derden om manga-inhoud op te halen</value>
+  </data>
+  <data name="ModalIncludeCodeBehaviorNotEndorsedKamiYomu" xml:space="preserve">
+    <value>Voeg code of gedrag toe dat niet is beoordeeld of onderschreven door het KamiYomu-team</value>
+  </data>
+  <data name="ModalPosePotentialSecurityPrivacyRisks" xml:space="preserve">
+    <value>Ze kunnen potentiële veiligheids- of privacyrisico's met zich meebrengen als ze niet goed worden doorgelicht</value>
+  </data>
+  <data name="ModalKamiYomuNotProvideSupportCommunityAddons" xml:space="preserve">
+    <value>KamiYomu biedt geen ondersteuning voor community-add-ons en aanvaardt geen verantwoordelijkheid voor de functionaliteit, veiligheid of wettigheid ervan.</value>
+  </data>
+  <data name="ModalReviewAddonRepositoryBeforeInstall" xml:space="preserve">
+    <value>Voordat u een add-on installeert: controleer de broncode in de openbare repository, controleer of deze open source is en vermijd installatie als de bron niet beschikbaar of niet-vertrouwd is.</value>
+  </data>
+  <data name="ModalDontShowThisMessageAgain" xml:space="preserve">
+    <value>Laat dit bericht niet meer zien</value>
+  </data>
+  <data name="GotIt" xml:space="preserve">
+    <value>Ik heb het</value>
+  </data>
+  <data name="AddonExplorer" xml:space="preserve">
+    <value>Add-on verkenner</value>
+  </data>
+  <data name="InstallACrawlerAgent" xml:space="preserve">
+    <value>Installeer een Crawler-agent</value>
+  </data>
+  <data name="GoToAddOn" xml:space="preserve">
+    <value>Ga naar add-on</value>
+  </data>
+  <data name="StartDownloadYourManga" xml:space="preserve">
+    <value>Begin met het downloaden van je manga</value>
+  </data>
+  <data name="Enjoy" xml:space="preserve">
+    <value>Genieten</value>
+  </data>
+  <data name="SeeTheLicense" xml:space="preserve">
+    <value>Zie de licentie</value>
+  </data>
+  <data name="ProcessingCertainCrawlerAgentaRequireMoreTime" xml:space="preserve">
+    <value>Verwerken... Bepaalde crawleragents hebben meer tijd nodig, afhankelijk van de complexiteit van de taak.</value>
+  </data>
+  <data name="WaitProcessing1" xml:space="preserve">
+    <value>We zijn nog steeds aan het verwerken, geloof in ons</value>
+  </data>
+  <data name="WaitProcessing2" xml:space="preserve">
+    <value>Wij kunnen niet wachten tot het klaar is</value>
+  </data>
+  <data name="WaitProcessing3" xml:space="preserve">
+    <value>Bijna daar... misschien</value>
+  </data>
+  <data name="WaitProcessing4" xml:space="preserve">
+    <value>Draait nog steeds... zoals je favoriete vinyl</value>
+  </data>
+  <data name="WaitProcessing5" xml:space="preserve">
+    <value>Deze spinner doet zijn best</value>
+  </data>
+  <data name="IncludePreReleaseVersions" xml:space="preserve">
+    <value>Inclusief pre-releaseversies</value>
+  </data>
+  <data name="IncludePreReleaseVersionsExplanation" xml:space="preserve">
+    <value>Pre-releaseversies omvatten alfa-, bèta- en release candidate-builds die mogelijk nieuwe functies bevatten, maar nog niet als stabiel worden beschouwd. Wees voorzichtig.</value>
+  </data>
+  <data name="AddNugetOrgAsSource" xml:space="preserve">
+    <value>Voeg Nuget.org toe als bron</value>
+  </data>
+  <data name="ConfirmAddNugetOrg" xml:space="preserve">
+    <value>Bevestig dat u NuGet.org als bron toevoegt</value>
+  </data>
+  <data name="ConfirmAddNugetOrgSourceExplanation" xml:space="preserve">
+    <value>NuGet.org is een openbare pakketrepository die niet wordt onderhouden door KamiYomu. Elke ontwikkelaar kan daar pakketten publiceren, inclusief experimentele of potentieel onveilige pakketten. Controleer elk pakket zorgvuldig voordat u het in KamiYomu installeert, om er zeker van te zijn dat het voldoet aan uw beveiligings-, licentie- en stabiliteitsvereisten.</value>
+  </data>
+  <data name="FamilySafeMode" xml:space="preserve">
+    <value>Familieveilige modus</value>
+  </data>
+  <data name="FamilySafeModeEnableMessage" xml:space="preserve">
+    <value>Uw gezinsvriendelijke modus is ingeschakeld. Inhoud die is gemarkeerd als expliciet of gericht op volwassenen, wordt verborgen.</value>
+  </data>
+  <data name="FamilySafeModeDisableMessage" xml:space="preserve">
+    <value>Uw gezinsvriendelijke modus is uitgeschakeld. Er wordt inhoud getoond die mogelijk volwassen of gevoelig materiaal bevat.</value>
+  </data>
+  <data name="FamilySafeModeEnabled" xml:space="preserve">
+    <value>Familieveilige modus ingeschakeld</value>
+  </data>
+  <data name="FamilySafeModeDisabled" xml:space="preserve">
+    <value>Gezinsveilige modus uitgeschakeld</value>
+  </data>
+  <data name="UserInterfaceLanguageChanged" xml:space="preserve">
+    <value>Taal van de gebruikersinterface is gewijzigd</value>
+  </data>
+  <data name="SourceRemovedSuccessfully" xml:space="preserve">
+    <value>Bron succesvol verwijderd</value>
+  </data>
+  <data name="CrawlerAgentRemovedSuccessfully" xml:space="preserve">
+    <value>Crawleragent is succesvol verwijderd</value>
+  </data>
+  <data name="NugetOrgHasBeenAddedAsANugetSource" xml:space="preserve">
+    <value>Nuget.org is toegevoegd als NuGet-bron</value>
+  </data>
+  <data name="NuGetPackageIsInvalid" xml:space="preserve">
+    <value>NuGet-pakket is ongeldig</value>
+  </data>
+  <data name="FailedToSearch" xml:space="preserve">
+    <value>Kan pakketten vanaf de bron niet zoeken.</value>
+  </data>
+  <data name="ChapterDownloaded" xml:space="preserve">
+    <value>Hoofdstuk gedownload</value>
+  </data>
+  <data name="DownloadActivity" xml:space="preserve">
+    <value>Activiteit downloaden</value>
+  </data>
+  <data name="DownloadStatus" xml:space="preserve">
+    <value>Downloadstatus</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Opties</value>
+  </data>
+  <data name="LastUpdate" xml:space="preserve">
+    <value>Laatste update</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>In behandeling</value>
+  </data>
+  <data name="Scheduled" xml:space="preserve">
+    <value>Gepland</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>Verwerking</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Voltooid</value>
+  </data>
+  <data name="Cancelled" xml:space="preserve">
+    <value>Geannuleerd</value>
+  </data>
+  <data name="Reschedule" xml:space="preserve">
+    <value>Opnieuw plannen</value>
+  </data>
+  <data name="DownloadChapterSchedule" xml:space="preserve">
+    <value>Downloadhoofdstuk is gepland</value>
+  </data>
+  <data name="DownloadChapterHasBeenCancelled" xml:space="preserve">
+    <value>Downloadhoofdstuk is geannuleerd</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Maat</value>
+  </data>
+  <data name="YourCollectionNoLongerIncludes" xml:space="preserve">
+    <value>Je verzameling omvat niet langer</value>
+  </data>
+  <data name="NuGetPackageInstalledSuccessfully" xml:space="preserve">
+    <value>NuGet-pakket is succesvol geïnstalleerd</value>
+  </data>
+  <data name="NoDllFoundInNugetPackage" xml:space="preserve">
+    <value>Geen .dll gevonden in NuGet-pakket.</value>
+  </data>
+  <data name="OnlyDllOrNupkgSupported" xml:space="preserve">
+    <value>Alleen .dll- of .nupkg-bestanden worden ondersteund.</value>
+  </data>
+  <data name="NoFileWasFound" xml:space="preserve">
+    <value>Er is geen bestand gevonden.</value>
+  </data>
+  <data name="FullScanStatus" xml:space="preserve">
+    <value>Volledige scanstatus</value>
+  </data>
+  <data name="TitleAddedToYourCollection" xml:space="preserve">
+    <value>Titel toegevoegd aan je verzameling</value>
+  </data>
+  <data name="InProgress" xml:space="preserve">
+    <value>In uitvoering</value>
+  </data>
+  <data name="LibraryNotFound" xml:space="preserve">
+    <value>Bibliotheek niet gevonden</value>
+  </data>
+  <data name="SearchForChaptersCompleted" xml:space="preserve">
+    <value>Het zoeken naar hoofdstukken is voltooid</value>
+  </data>
+  <data name="Following" xml:space="preserve">
+    <value>Volgende</value>
+  </data>
+  <data name="Follow" xml:space="preserve">
+    <value>Volgen</value>
+  </data>
+  <data name="YouAreNoLongerFollowingThisTitle" xml:space="preserve">
+    <value>Je bent gestopt met het volgen van deze titel. Nieuwe hoofdstukken worden niet langer automatisch gecontroleerd.</value>
+  </data>
+  <data name="YouStartedFollowingThisTitle" xml:space="preserve">
+    <value>Je volgt nu deze titel. We controleren automatisch op nieuwe hoofdstukken.</value>
+  </data>
+  <data name="NotStated" xml:space="preserve">
+    <value>Niet vermeld</value>
+  </data>
+  <data name="NotStarted" xml:space="preserve">
+    <value>Niet gestart</value>
+  </data>
+  <data name="SearchForChapters" xml:space="preserve">
+    <value>Zoeken naar hoofdstukken</value>
+  </data>
+  <data name="ChapterSearchStatus" xml:space="preserve">
+    <value>Hoofdstukzoekstatus</value>
+  </data>
+  <data name="InstallCrawlerAgentDescription" xml:space="preserve">
+    <value>Verbeter KamiYomu door crawler-agents te installeren die je manga automatisch volgen en ophalen zodra deze beschikbaar komt.</value>
+  </data>
+  <data name="AreYouCertainYouWantPermanentlyDeleteThisRecord" xml:space="preserve">
+    <value>Weet u zeker dat u deze record definitief wilt verwijderen?</value>
+  </data>
+  <data name="TimeoutExplanation" xml:space="preserve">
+    <value>Een time-out is de maximale tijd die een cliënt wacht tot een bewerking is voltooid voordat hij het opgeeft. (in milliseconden)</value>
+  </data>
+  <data name="UserAgentExplanation" xml:space="preserve">
+    <value>Een User-Agent is een tekstreeks die een webbrowser of HTTP-client samen met zijn verzoeken naar een server verzendt.</value>
+  </data>
+  <data name="ThisValueIsRequired" xml:space="preserve">
+    <value>Deze waarde is vereist</value>
+  </data>
+  <data name="SomethingWentWrong" xml:space="preserve">
+    <value>Er is iets misgegaan.</value>
+  </data>
+  <data name="PleaseCorrectHighlightedField" xml:space="preserve">
+    <value>Corrigeer het gemarkeerde veld.</value>
+  </data>
+  <data name="Compatible" xml:space="preserve">
+    <value>Verenigbaar</value>
+  </data>
+  <data name="NotCompatible" xml:space="preserve">
+    <value>Niet compatibel</value>
+  </data>
+  <data name="AdjustSearchTerm" xml:space="preserve">
+    <value>Pas de zoekterm aan om beschikbare pakketten te verkennen.</value>
+  </data>
+  <data name="WelcomeTo" xml:space="preserve">
+    <value>Welkom bij</value>
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>Bron</value>
+  </data>
+  <data name="ProcessorCount" xml:space="preserve">
+    <value>Aantal processors</value>
+  </data>
+  <data name="MachineName" xml:space="preserve">
+    <value>Machinenaam</value>
+  </data>
+  <data name="OperationalSystemVersion" xml:space="preserve">
+    <value>Operationele systeemversie</value>
+  </data>
+  <data name="FrameworkVersion" xml:space="preserve">
+    <value>Framework-versie</value>
+  </data>
+  <data name="Architecture" xml:space="preserve">
+    <value>Architectuur</value>
+  </data>
+  <data name="CurrentDirectory" xml:space="preserve">
+    <value>Huidige map</value>
+  </data>
+  <data name="SystemInformation" xml:space="preserve">
+    <value>Systeeminformatie</value>
+  </data>
+  <data name="ProcessorCountExplanation" xml:space="preserve">
+    <value>Aantal logische processors beschikbaar. Deze waarde wordt vaak gebruikt als basislijn
+voor de &lt;code&gt;WorkerCount&lt;/code&gt;-instelling van Hangfire om te bepalen hoeveel taken gelijktijdig kunnen worden uitgevoerd.</value>
+  </data>
+  <data name="ToBeRescheduled" xml:space="preserve">
+    <value>Wordt opnieuw gepland</value>
+  </data>
+  <data name="CbzIsTooSmall" xml:space="preserve">
+    <value>De CBZ-bestandsgrootte ligt onder de verwachte drempel, wat wijst op een mislukte download. Binnenkort opnieuw proberen.</value>
+  </data>
+  <data name="DispatchFailedMessage" xml:space="preserve">
+    <value>Verzending mislukt. De taak wordt opnieuw gepland</value>
+  </data>
+  <data name="Attempt" xml:space="preserve">
+    <value>Poging</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Fout</value>
+  </data>
+  <data name="DownloadMangaHasBeenCancelled" xml:space="preserve">
+    <value>Het downloaden van manga is geannuleerd</value>
+  </data>
+  <data name="ReadItOnline" xml:space="preserve">
+    <value>Lees het online</value>
+  </data>
+  <data name="AddKamiYomuBaGetAsSource" xml:space="preserve">
+    <value>Voeg KamiYomu BaGet toe als bron</value>
+  </data>
+  <data name="Preferences" xml:space="preserve">
+    <value>Voorkeuren</value>
+  </data>
+  <data name="ChapterFunnyTemplate4" xml:space="preserve">
+    <value>Romantiek, start mij alstublieft opnieuw op</value>
+  </data>
+  <data name="ChapterFunnyTemplate1" xml:space="preserve">
+    <value>Romantiek opzij</value>
+  </data>
+  <data name="ChapterFunnyTemplate2" xml:space="preserve">
+    <value>Romantiek enigszins gekanteld</value>
+  </data>
+  <data name="ChapterFunnyTemplate3" xml:space="preserve">
+    <value>Romantiek, maar maak het raar</value>
+  </data>
+  <data name="FilePathFormat" xml:space="preserve">
+    <value>Bestandspadindeling</value>
+  </data>
+  <data name="TheTemplateMustProduceUniqueFileNames" xml:space="preserve">
+    <value>Het sjabloon moet unieke bestandsnamen voor verschillende hoofdstukken opleveren.</value>
+  </data>
+  <data name="TheTemplatePathIsMissingOrInvalid" xml:space="preserve">
+    <value>Het lijkt erop dat de sjabloon ontbreekt of ongeldig is. Voer een geldige in.</value>
+  </data>
+  <data name="YourMangaWillBeStoredFilePathFormat" xml:space="preserve">
+    <value>Je manga wordt opgeslagen met het volgende bestandspadformaat:</value>
+  </data>
+  <data name="PreviewWillAppearHere" xml:space="preserve">
+    <value>Hier verschijnt een voorbeeld</value>
+  </data>
+  <data name="PleaseFixFollowingErrors" xml:space="preserve">
+    <value>Los de volgende fouten op</value>
+  </data>
+</root>
