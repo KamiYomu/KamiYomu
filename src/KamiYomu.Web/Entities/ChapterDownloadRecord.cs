@@ -80,18 +80,18 @@ namespace KamiYomu.Web.Entities
             return (int)(DateTimeOffset.UtcNow - StatusUpdateAt.Value).TotalDays;
         }
 
-        public void DeleteDownloadedFileIfExists()
+        public void DeleteDownloadedFileIfExists(Library library)
         {
-            if(IsDownloadedFileExists())
+            if(IsDownloadedFileExists(library))
             {
-                var path = Chapter.GetCbzFilePath();
+                var path = Chapter.GetCbzFilePath(library);
                 File.Delete(path);
             }
         }
 
-        public bool IsDownloadedFileExists()
+        public bool IsDownloadedFileExists(Library library)
         {
-            var path = Chapter.GetCbzFilePath();
+            var path = Chapter.GetCbzFilePath(library);
 
             return File.Exists(path);
         }

@@ -1,16 +1,18 @@
 ﻿using KamiYomu.CrawlerAgents.Core.Catalog;
-using KamiYomu.Web.Infrastructure.Storage;
-using System;
+using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Entities;
+using KamiYomu.Web.Infrastructure.Services;
+using Microsoft.Extensions.Options;
 using System.Xml.Linq;
 
 namespace KamiYomu.Web.Extensions
 {
     public static class ChapterExtension
     {
-        public static string ToComicInfo(this Chapter chapter, Guid libraryId)
+        public static string ToComicInfo(this Chapter chapter, Library library)
         {
             XElement comicInfo = new("ComicInfo",
-                new XElement("Title",  $"{chapter?.ChapterFileName()} {chapter?.Title ?? "Untitled Chapter"}" ),
+                new XElement("Title", $"{chapter?.GetCbzFileNameWithoutExtension(library)} {chapter?.Title ?? "Untitled Chapter"}"),
                 new XElement("Series", chapter?.ParentManga?.Title ?? string.Empty),
                 new XElement("Number", chapter?.Number.ToString() ?? string.Empty),
                 new XElement("Volume", chapter?.Volume.ToString() ?? string.Empty),
@@ -22,59 +24,75 @@ namespace KamiYomu.Web.Extensions
                 new XElement("ScanInformation", "KamiYomu"),
                 new XElement("Web", chapter?.Uri?.ToString() ?? chapter?.ParentManga.WebSiteUrl ?? string.Empty),
                 new XElement("AgeRating", (chapter?.ParentManga?.IsFamilySafe ?? true) ? "12+" : "Mature"),
-                new XElement("Notes", $"libraryId:{libraryId};")
+                new XElement("Notes", $"libraryId:{library.Id};")
             );
 
             return comicInfo.ToString();
         }
 
-        public static string GetCbzFilePath(this Chapter chapter)
+        public static string GetTempChapterDirectory(this Chapter chapter, Library library)
         {
-            var mangaDirectory = chapter.ParentManga.GetDirectory();
-            var cbzFileName = chapter.GetCbzFileName();
-            return Path.Combine(mangaDirectory, cbzFileName);
+            var specialFolderOptions = Defaults.ServiceLocator.Instance.GetRequiredService<IOptions<SpecialFolderOptions>>();
+            var filePathTemplate = library.FilePathTemplate;
+
+            if (string.IsNullOrWhiteSpace(filePathTemplate))
+            {
+                filePathTemplate = specialFolderOptions.Value.FilePathFormat;
+            }
+
+            var chapterFolder = TemplateResolver.Resolve(filePathTemplate, library.Manga, chapter);
+
+            var dirPath = Path.Combine(Path.GetTempPath(), Defaults.Worker.TempDirName, chapterFolder);
+
+            if (!Directory.Exists(dirPath))
+            {
+                Directory.CreateDirectory(dirPath);
+            }
+
+            return dirPath;
         }
 
-        public static string GetCbzFileName(this Chapter chapter)
+        public static string GetCbzFilePath(this Chapter chapter, Library library)
         {
-            string cbzFileName = $"{ChapterFileName(chapter)}.cbz";
+            var specialFolderOptions = Defaults.ServiceLocator.Instance.GetRequiredService<IOptions<SpecialFolderOptions>>();
+            var filePathTemplate = library.FilePathTemplate;
+
+            if (string.IsNullOrWhiteSpace(filePathTemplate))
+            {
+                filePathTemplate = specialFolderOptions.Value.FilePathFormat;
+            }
+
+            var filePathTemplateResolved = TemplateResolver.Resolve(filePathTemplate, library.Manga, chapter);
+            var filePath = Path.Combine(specialFolderOptions.Value.MangaDir, filePathTemplateResolved) + ".cbz";
+
+            var dir = Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            return filePath;
+        }
+
+        public static string GetCbzFileName(this Chapter chapter, Library library)
+        {
+            var cbzFilePath = chapter.GetCbzFilePath(library);
+            string cbzFileName = Path.GetFileName(cbzFilePath);
             return cbzFileName;
         }
 
-        public static string ChapterFileName(this Chapter chapter)
+        public static string GetCbzFileNameWithoutExtension(this Chapter chapter, Library library)
         {
-            var volumePart = chapter.Volume != 0 ? $"Vol.{chapter.Volume:000} " : "";
-
-            var chapterPart = chapter.Number > -1 ? $"Ch.{chapter.Number.ToString().PadLeft(4, '0')}"
-                                                                 : $"Ch.{chapter.Id.ToString().Substring(0, 8)}";
-
-            var cbzFileName = $"{FileNameHelper.SanitizeFileName(chapter.ParentManga.FolderName)} {volumePart}{chapterPart}";
+            var cbzFilePath = chapter.GetCbzFilePath(library);
+            string cbzFileName = Path.GetFileNameWithoutExtension(cbzFilePath);
             return cbzFileName;
         }
 
-        public static string GetVolumeFolderName(this Chapter chapter, string seriesFolder)
+        public static string GetCbzFileSize(this Chapter chapter, Library library)
         {
-            return chapter.Volume != 0 ? Path.Combine(seriesFolder, $"Volume {chapter.Volume:000}")
-                                       : seriesFolder;
-        }
+            var fileInfo = new FileInfo(chapter.GetCbzFilePath(library));
 
-        public static string GetChapterFolderName(this Chapter chapter)
-        {
-            return chapter.Number != 0 ? $"Chapter {chapter.Number:0000}"
-                                       : $"Chapter {chapter.Id.ToString()[..8]}";
-        }
-
-        public static string GetChapterFolderPath(this Chapter chapter, string seriesFolder)
-        {
-            return Path.Combine(chapter.GetVolumeFolderName(seriesFolder), chapter.GetChapterFolderName());
-        }
-
-
-        public static string GetCbzFileSize(this Chapter chapter)
-        {
-            var fileInfo = new FileInfo(chapter.GetCbzFilePath()); 
-            
-            if(!fileInfo.Exists)
+            if (!fileInfo.Exists)
                 return I18n.NotStarted;
 
             long bytes = fileInfo.Length;

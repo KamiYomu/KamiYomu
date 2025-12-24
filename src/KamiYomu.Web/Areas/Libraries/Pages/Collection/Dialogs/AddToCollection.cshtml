@@ -1,0 +1,118 @@
+﻿@page
+@using KamiYomu.Web.AppOptions
+@using KamiYomu.Web.Extensions
+@using Microsoft.Extensions.Options
+@model KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs.AddToCollectionModel
+@{
+    Layout = null;
+
+    var previewUrl = Url.Page(
+        "/Collection/Dialogs/AddToCollection",
+        "Preview",
+        new { area = "Libraries" }
+    );
+}
+<div class="modal-header">
+    <h5 class="modal-title">@I18n.AddToYourCollection</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body" id="addToCollectionModal">
+    <partial name="_MangaInfo" model="Model.Manga" />
+
+    <fieldset class="mt-4 border rounded p-3">
+        <legend class="float-none w-auto px-2">@I18n.FilePathFormat</legend>
+        <form method="post"
+              hx-post="@previewUrl"
+              hx-trigger="keyup changed delay:300ms from:input"
+              hx-target="#template-preview"
+              hx-swap="innerHTML">
+
+            @Html.AntiForgeryToken()
+
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="bi bi-braces"></i>
+                </span>
+
+                <input class="form-control"
+                       id="template-input"
+                       asp-for="Template"
+                       placeholder="@Model.Template" />
+            </div>
+            <input type="hidden" asp-for="CrawlerAgentId" />
+            <input type="hidden" asp-for="MangaId" />
+            <input type="hidden" asp-for="RefreshElementId" />
+        </form>
+
+        <div id="template-preview" class="mt-3">
+            @await Html.PartialAsync("_PathTemplatePreview", Model.TemplateResults)
+        </div>
+
+        @await Html.PartialAsync("_PathTemplateVariables", Model.Variables)
+    </fieldset>
+</div>
+
+<div class="modal-footer">
+    <form method="post"
+          hx-post="/Libraries/Downloads/Index?handler=AddToCollection"
+          hx-target="#@Model.RefreshElementId"
+          hx-swap="innerHTML">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="@Model.MangaId" />
+        <input type="hidden" asp-for="CrawlerAgentId" />
+        <input type="hidden" asp-for="RefreshElementId" />
+        <input type="hidden" id="FilePathTemplate" name="FilePathTemplate" value="@Model.Template" />
+        <button type="submit" class="btn btn-success" data-bs-dismiss="modal">@I18n.Add</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@I18n.Cancel</button>
+    </form>
+</div>
+
+<script>
+    const templateInput = document.getElementById('template-input');
+    const hiddenTemplate = document.getElementById('FilePathTemplate');
+
+    templateInput.addEventListener('input', () => {
+        hiddenTemplate.value = templateInput.value;
+    });
+</script>
+
+<script>
+    const modalBody = document.getElementById('addToCollectionModalBody');
+
+    modalBody._afterRequestHandler = function (e) {
+        console.log("afterRequest inside modal-body", e);
+    };
+
+    modalBody._responseErrorHandler = function (e) {
+        console.log("responseError inside modal-body", e);
+    };
+
+    modalBody._sendErrorHandler = function (e) {
+        console.log("sendError inside modal-body", e);
+    };
+
+    modalBody._timeoutHandler = function (e) {
+        console.log("timeout inside modal-body", e);
+    };
+
+    modalBody._abortHandler = function (e) {
+        console.log("abort inside modal-body", e);
+    };
+
+    modalBody.addEventListener('htmx:afterRequest', modalBody._afterRequestHandler);
+    modalBody.addEventListener('htmx:responseError', modalBody._responseErrorHandler);
+    modalBody.addEventListener('htmx:sendError', modalBody._sendErrorHandler);
+    modalBody.addEventListener('htmx:timeout', modalBody._timeoutHandler);
+    modalBody.addEventListener('htmx:abort', modalBody._abortHandler);
+
+    document.addEventListener('hidden.bs.modal', function (e) {
+        if (!modalBody.contains(e.target)) return;
+
+        modalBody.removeEventListener('htmx:afterRequest', modalBody._afterRequestHandler);
+        modalBody.removeEventListener('htmx:responseError', modalBody._responseErrorHandler);
+        modalBody.removeEventListener('htmx:sendError', modalBody._sendErrorHandler);
+        modalBody.removeEventListener('htmx:timeout', modalBody._timeoutHandler);
+        modalBody.removeEventListener('htmx:abort', modalBody._abortHandler);
+    });
+</script>
