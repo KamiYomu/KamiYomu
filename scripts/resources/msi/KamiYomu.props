@@ -1,0 +1,24 @@
+<Project>
+  <PropertyGroup>
+    <PublishDir>$(MSBuildThisFileDirectory)win-x64</PublishDir>
+    <Icon>$(MSBuildThisFileDirectory)KamiYomu.ico</Icon>
+    <Version Condition="'$(Version)' == ''">1.0.0</Version>
+    <VersionSuffix Condition="'$(VersionSuffix)' == ''"></VersionSuffix>
+    <FullVersion Condition="'$(VersionSuffix)' != ''">$(Version)$(VersionSuffix)</FullVersion>
+    <FullVersion Condition="'$(VersionSuffix)' == ''">$(Version)</FullVersion>
+
+    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(Version)</AssemblyVersion>
+    <FileVersion Condition="'$(FileVersion)' == ''">$(FullVersion)</FileVersion>
+    <InformationalVersion Condition="'$(InformationalVersion)' == ''">$(FullVersion)</InformationalVersion>
+  </PropertyGroup>
+	
+
+	<Target Name="LogBuildMetadata" BeforeTargets="BeforeBuild">
+		<Message Text="🔧 Build Configuration: $(Configuration)" Importance="High" />
+		<Message Text="📦 Version: $(Version)" Importance="High" />
+		<Message Text="🔖 VersionSuffix: $(VersionSuffix)" Importance="High" />
+		<Message Text="🧩 AssemblyVersion: $(AssemblyVersion)" Importance="High" />
+		<Message Text="🧩 FileVersion: $(FileVersion)" Importance="High" />
+		<Message Text="🧩 InformationalVersion: $(InformationalVersion)" Importance="High" />
+	</Target>
+</Project>

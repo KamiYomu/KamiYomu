@@ -1,0 +1,36 @@
+<Project Sdk="WixToolset.Sdk/6.0.0">
+  <Import Project="KamiYomu.props" />
+
+  <PropertyGroup>
+    <OutputName>KamiYomu-x64</OutputName>
+    <Platform>x64</Platform>
+
+    <PublishDir Condition="'$(PublishDir)' == ''">$(MSBuildThisFileDirectory)win-x64</PublishDir>
+    <Icon Condition="'$(Icon)' == ''">$(MSBuildThisFileDirectory)KamiYomu.ico</Icon>
+
+    <DefineConstants>
+      ProductVersion=$(FullVersion);
+      PublishDir=$(PublishDir);
+      Icon=$(Icon)
+    </DefineConstants>
+  </PropertyGroup>
+
+  <Target Name="BeforeHarvest" BeforeTargets="Build">
+    <Message Importance="high" Text="HARVESTING FROM: $(PublishDir)" />
+  </Target>
+
+  <ItemGroup>
+    <HarvestDirectory Include="$(PublishDir)">
+      <DirectoryRefId>INSTALLDIR</DirectoryRefId>
+      <ComponentGroupName>PublishFiles</ComponentGroupName>
+      <SuppressRootDirectory>true</SuppressRootDirectory>
+      <HarvestType>directory</HarvestType>
+      <Recursive>true</Recursive>
+      <BindContents>true</BindContents>
+    </HarvestDirectory>
+  </ItemGroup>
+
+  <ItemGroup>
+    <WixSource Include="KamiYomu-x64.wxs" />
+  </ItemGroup>
+</Project>

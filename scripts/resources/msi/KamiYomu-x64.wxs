@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+  <Package
+    Id="KamiYomuInstaller"
+    Name="KamiYomu"
+    Manufacturer="KamiYomu"
+    Version="$(var.ProductVersion)"
+    UpgradeCode="f643e449-953e-4403-b6c1-85b932cfe527"
+    Language="1033"> 
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."/> 
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLDIR" Name="KamiYomu" /> 
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ProgramMenuDir" Name="KamiYomu">
+        <Component Id="ProgramMenuDir_Component" Guid="*">
+          <RemoveFolder Id="ProgramMenuDir_Remove" On="uninstall" />
+          <RegistryValue
+            Root="HKCU"
+            Key="Software\[Manufacturer]\[ProductName]"
+            Type="string"
+            Value=""
+            KeyPath="yes" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder" />
+
+    <DirectoryRef Id="INSTALLDIR">
+      <Component Id="KamiYomu_Web_Exe_Component" Guid="*">
+        <File
+          Id="KamiYomu.Web.exe"
+          Source="$(var.PublishDir)\KamiYomu.Web.exe"
+          KeyPath="yes">
+
+          <Shortcut
+            Id="KamiYomu_InstallDir_Shortcut"
+            Name="KamiYomu"
+            Directory="INSTALLDIR"
+            WorkingDirectory="INSTALLDIR"
+            Icon="KamiYomu.ico"
+            IconIndex="0" />
+
+          <Shortcut
+            Id="KamiYomu_Desktop_Shortcut"
+            Name="KamiYomu"
+            Directory="DesktopFolder"
+            WorkingDirectory="INSTALLDIR"
+            Icon="KamiYomu.ico"
+            IconIndex="0" />
+
+          <Shortcut
+            Id="KamiYomu_ProgramMenu_Shortcut"
+            Name="KamiYomu"
+            Directory="ProgramMenuDir"
+            WorkingDirectory="INSTALLDIR"
+            Icon="KamiYomu.ico"
+            IconIndex="0"
+            Description="KamiYomu — a free and open source manga reader." />
+        </File>
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="KamiYomu_Main" Title="KamiYomu" Level="1">
+      <ComponentGroupRef Id="PublishFiles" />
+      <ComponentRef Id="KamiYomu_Web_Exe_Component" /> 
+      <ComponentRef Id="ProgramMenuDir_Component" /> 
+    </Feature>
+
+    <Icon Id="KamiYomu.ico" SourceFile="$(var.Icon)" /> [cite: 14]
+    <Property Id="ARPPRODUCTICON" Value="KamiYomu.ico" /> [cite: 14]
+
+  </Package>
+</Wix>
