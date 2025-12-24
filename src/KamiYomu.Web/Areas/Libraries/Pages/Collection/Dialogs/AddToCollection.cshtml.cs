@@ -1,6 +1,7 @@
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.CrawlerAgents.Core.Catalog.Builders;
 using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,10 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs;
 
 public class AddToCollectionModel(
     IOptions<SpecialFolderOptions> specialFolderOptions,
+    DbContext dbContext,
     ICrawlerAgentRepository crawlerAgentRepository) : PageModel
 {
-  
+
     public TemplateVariablesViewModel Variables { get; private set; } = new();
     public Manga Manga { get; private set; }
 
@@ -34,11 +36,12 @@ public class AddToCollectionModel(
         {
             return;
         }
+        var preferences = dbContext.UserPreferences.FindOne(p => true);
 
         RefreshElementId = refreshElementId;
         CrawlerAgentId = crawlerAgentId;
         MangaId = mangaId;
-        Template = specialFolderOptions.Value.FilePathFormat;
+        Template = string.IsNullOrWhiteSpace(preferences.FilePathTemplate) ? specialFolderOptions.Value.FilePathFormat : preferences.FilePathTemplate;
         Manga = await crawlerAgentRepository.GetMangaAsync(crawlerAgentId, mangaId, cancellationToken);
         TemplateResults = [.. GetTemplateResults(Template, Manga)];
         var chapter = ChapterBuilder.Create()
@@ -58,7 +61,7 @@ public class AddToCollectionModel(
     public async Task<IActionResult> OnPostPreviewAsync(string template, CancellationToken cancellationToken)
     {
         var manga = await crawlerAgentRepository.GetMangaAsync(CrawlerAgentId, MangaId, cancellationToken);
-        
+
         TemplateResults = GetTemplateResults(template, manga).ToArray();
 
         return Partial("_PathTemplatePreview", TemplateResults);

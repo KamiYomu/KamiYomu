@@ -38,6 +38,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
             {
                 return BadRequest("Invalid manga data.");
             }
+            
             using var crawlerAgent = dbContext.CrawlerAgents.FindById(CrawlerAgentId);
 
             var manga = await agentCrawlerRepository.GetMangaAsync(crawlerAgent.Id, MangaId, cancellationToken);
@@ -61,6 +62,10 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
             libDbContext.MangaDownloadRecords.Update(downloadRecord);
 
             await notificationService.PushSuccessAsync($"{I18n.TitleAddedToYourCollection}: {library.Manga.Title} ", cancellationToken);
+
+            var preferences = dbContext.UserPreferences.FindOne(p => true);
+            preferences.SetFilePathTemplate(filePathTemplateFormat);
+            dbContext.UserPreferences.Upsert(preferences);
 
             return Partial("_LibraryCard", library);
         }
