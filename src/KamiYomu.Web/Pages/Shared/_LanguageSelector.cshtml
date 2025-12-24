@@ -61,5 +61,17 @@
                 <button type="submit" class="dropdown-item"><span class="fi fi-es"></span> @CultureInfo.GetCultureInfo("es").NativeName</button>
             </form>
         </li>
+        <li>
+            <form method="post"
+                  asp-page="/Index"
+                  asp-page-handler="SetLanguage"
+                  asp-route-area=""
+                  asp-route-returnUrl="@Context.Request.Path"
+                  novalidate>
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Culture" value="@CultureInfo.GetCultureInfo("nl").Name" />
+                <button type="submit" class="dropdown-item"><span class="fi fi-nl"></span> @CultureInfo.GetCultureInfo("nl").NativeName</button>
+            </form>
+        </li>
     </ul>
 </div>
