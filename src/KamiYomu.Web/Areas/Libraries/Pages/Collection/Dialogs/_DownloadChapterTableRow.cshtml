@@ -23,8 +23,19 @@
     }
 }
 <tr id="@rowId">
-    <td>@Model.Chapter.GetCbzFileName(Model.MangaDownload.Library)</td>
-    <td>@Model.Chapter.GetCbzFileSize(Model.MangaDownload.Library)</td>
+    <td>
+        <div class="fw-semibold">
+            @Model.MangaDownload.Library.GetCbzFileName(Model.Chapter)
+        </div>
+
+        <div class="text-muted small mt-1">
+            <code>
+                @Html.Raw($"{Model.MangaDownload.Library.GetFilePathTemplateResolved(Model.Chapter)}.cbz")
+            </code>
+        </div>
+    </td>
+
+    <td>@Model.MangaDownload.Library.GetCbzFileSize(Model.Chapter)</td>
     <td>
         <span class="badge @badgeClass" title="@lastUpdateBuilder.ToString()"
               data-bs-toggle="popover"
@@ -47,7 +58,7 @@
                 <li>
                     <form method="post"
                           hx-post='@Url.Page("DownloadChapterTable",
-                          values: new { handler = "Reschedule", libraryId = Model.MangaDownload.Library.Id, recordId = Model.Id })'
+                                                    values: new { handler = "Reschedule", libraryId = Model.MangaDownload.Library.Id, recordId = Model.Id })'
                           hx-target="#@rowId"
                           hx-swap="outerHTML">
                         @Html.AntiForgeryToken()
@@ -64,9 +75,9 @@
                 <li>
                     <a class="dropdown-item d-flex align-items-center gap-2 @( (Model?.IsCompleted() ?? false) ? "" : "disabled" )"
                        href="@( (Model?.IsCompleted() ?? false)
-                                              ? Url.Page("DownloadChapterTable",
-                                                         values: new { handler = "DownloadCbz", libraryId = Model.MangaDownload.Library.Id, recordId = Model.Id })
-                                              : "#" )"
+                                                                     ? Url.Page("DownloadChapterTable",
+                                                                                values: new { handler = "DownloadCbz", libraryId = Model.MangaDownload.Library.Id, recordId = Model.Id })
+                                                                     : "#" )"
                        target="_blank"
                        aria-disabled="@( (Model?.IsCompleted() ?? false) ? "false" : "true" )">
                         <i class="bi bi-download"></i> @I18n.Download .Cbz <i class="bi bi-file-earmark-zip-fill"></i>
@@ -77,9 +88,9 @@
                 <li>
                     <a class="dropdown-item d-flex align-items-center gap-2 @( (Model?.IsCompleted() ?? false) ? "" : "disabled" )"
                        href="@( (Model?.IsCompleted() ?? false)
-                                              ? Url.Page("DownloadChapterTable",
-                                                         values: new { handler = "DownloadZip", libraryId = Model.MangaDownload.Library.Id, recordId = Model.Id })
-                                              : "#" )"
+                                                                     ? Url.Page("DownloadChapterTable",
+                                                                                values: new { handler = "DownloadZip", libraryId = Model.MangaDownload.Library.Id, recordId = Model.Id })
+                                                                     : "#" )"
                        target="_blank"
                        aria-disabled="@( (Model?.IsCompleted() ?? false) ? "false" : "true" )">
                         <i class="bi bi-download"></i> @I18n.Download .Zip <i class="bi bi-file-zip-fill"></i>
@@ -90,9 +101,9 @@
                 <li>
                     <a class="dropdown-item d-flex align-items-center gap-2 @( (Model?.IsCompleted() ?? false) ? "" : "disabled" )"
                        href="@( (Model?.IsCompleted() ?? false)
-                                              ? Url.Page("DownloadChapterTable",
-                                                         values: new { handler = "DownloadPdf", libraryId = Model.MangaDownload.Library.Id, recordId = Model.Id })
-                                              : "#" )"
+                                                                     ? Url.Page("DownloadChapterTable",
+                                                                                values: new { handler = "DownloadPdf", libraryId = Model.MangaDownload.Library.Id, recordId = Model.Id })
+                                                                     : "#" )"
                        target="_blank"
                        aria-disabled="@( (Model?.IsCompleted() ?? false) ? "false" : "true" )">
                         <i class="bi bi-download"></i> @I18n.Download .Pdf <i class="bi bi-file-pdf-fill"></i>

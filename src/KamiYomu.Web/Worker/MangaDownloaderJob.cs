@@ -88,13 +88,13 @@ public class MangaDownloaderJob(
                     {
                         record.Complete();
                         libDbContext.ChapterDownloadRecords.Upsert(record);
-                        logger.LogInformation("Dispatch '{title}': File {file} has been found, download chapter marked as completed.", title, record.Chapter.GetCbzFileName(library));
+                        logger.LogInformation("Dispatch '{title}': File {file} has been found, download chapter marked as completed.", title, library.GetCbzFileName(record.Chapter));
                         continue;
                     }
 
                     libDbContext.ChapterDownloadRecords.Upsert(record);
                     var queueState = hangfireRepository.GetLeastLoadedDownloadChapterQueue();
-                    var backgroundJobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(queueState.Queue, p => p.DispatchAsync(queueState.Queue, library.CrawlerAgent.Id, library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(library), null!, CancellationToken.None) );
+                    var backgroundJobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(queueState.Queue, p => p.DispatchAsync(queueState.Queue, library.CrawlerAgent.Id, library.Id, mangaDownload.Id, record.Id, library.GetCbzFileName(chapter), null!, CancellationToken.None) );
 
                     record.Scheduled(backgroundJobId);
                     libDbContext.ChapterDownloadRecords.Update(record);
@@ -130,9 +130,9 @@ public class MangaDownloaderJob(
         }
         finally
         {
-            context.SetJobParameter(nameof(library.CrawlerAgent), library.CrawlerAgent.DisplayName);
-            context.SetJobParameter(nameof(library.Manga), library.Manga.Title);
-            context.SetJobParameter(nameof(library.Manga.WebSiteUrl), library.Manga.WebSiteUrl);
+            context.SetJobParameter(nameof(Library.CrawlerAgent), library.CrawlerAgent.DisplayName);
+            context.SetJobParameter(nameof(Library.Manga), library.Manga.Title);
+            context.SetJobParameter(nameof(Library.Manga.WebSiteUrl), library.Manga.WebSiteUrl);
         }
 
         logger.LogInformation("Dispatch \"{title}\" completed.", title);

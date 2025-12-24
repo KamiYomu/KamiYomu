@@ -47,7 +47,7 @@ public class ChapterDiscoveryJob(
 
         using var libDbContext = library.GetDbContext();
         var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Library.Id == libraryId);
-        var files = Directory.GetFiles(library.Manga.GetDirectory(), "*.cbz", SearchOption.AllDirectories);
+        var files = Directory.GetFiles(library.GetMangaDirectory(), "*.cbz", SearchOption.AllDirectories);
 
         var crawlerAgent = mangaDownload.Library.CrawlerAgent;
         var mangaId = mangaDownload.Library.Manga!.Id;
@@ -75,7 +75,7 @@ public class ChapterDiscoveryJob(
 
             foreach (var chapter in page.Data)
             {
-                if (File.Exists(chapter.GetCbzFilePath(library)))
+                if (File.Exists(library.GetCbzFilePath(chapter)))
                 {
                     continue;
                 }
@@ -94,7 +94,7 @@ public class ChapterDiscoveryJob(
 
                 libDbContext.ChapterDownloadRecords.Upsert(record);
                 var queueState = hangfireRepository.GetLeastLoadedDownloadChapterQueue();
-                var backgroundJobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(queueState.Queue, p => p.DispatchAsync(queueState.Queue, library.CrawlerAgent.Id, library.Id, mangaDownload.Id, record.Id, chapter.GetCbzFileName(library), null!, CancellationToken.None));
+                var backgroundJobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(queueState.Queue, p => p.DispatchAsync(queueState.Queue, library.CrawlerAgent.Id, library.Id, mangaDownload.Id, record.Id, library.GetCbzFileName(chapter), null!, CancellationToken.None));
 
                 record.Scheduled(backgroundJobId);
                 libDbContext.ChapterDownloadRecords.Update(record);

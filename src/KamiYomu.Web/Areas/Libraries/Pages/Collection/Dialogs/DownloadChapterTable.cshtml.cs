@@ -72,7 +72,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                 return NotFound();
             }
 
-            var filePath = record.Chapter.GetCbzFilePath(library);
+            var filePath = library.GetCbzFilePath(record.Chapter);
             if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath))
             {
                 return NotFound();
@@ -108,7 +108,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                 return NotFound();
             }
 
-            var filePath = record.Chapter.GetCbzFilePath(library);
+            var filePath = library.GetCbzFilePath(record.Chapter);
             if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath))
             {
                 return NotFound();
@@ -145,7 +145,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                 return NotFound();
             }
 
-            var filePath = record.Chapter.GetCbzFilePath(library);
+            var filePath = library.GetCbzFilePath(record.Chapter);
             if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath))
             {
                 return NotFound();
@@ -209,12 +209,12 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                                                                                         record.MangaDownload.Library.Id,
                                                                                         record.MangaDownload.Id,
                                                                                         record.Id,
-                                                                                        record.Chapter.GetCbzFileName(record.MangaDownload.Library),
+                                                                                        record.MangaDownload.Library.GetCbzFileName(record.Chapter),
                                                                                         null!, CancellationToken.None));
 
             record.Scheduled(jobId);
             db.ChapterDownloadRecords.Update(record);
-            await notificationService.PushSuccessAsync($"{I18n.DownloadChapterSchedule}: {record.Chapter.GetCbzFileName(record.MangaDownload.Library)}", cancellationToken);
+            await notificationService.PushSuccessAsync($"{I18n.DownloadChapterSchedule}: {record.MangaDownload.Library.GetCbzFileName(record.Chapter)}", cancellationToken);
             return Partial("_DownloadChapterTableRow", record);
         }
 
@@ -237,7 +237,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 
             record.Cancelled("Cancelled by the user.");
             db.ChapterDownloadRecords.Update(record);
-            await notificationService.PushSuccessAsync($"{I18n.DownloadChapterHasBeenCancelled}: {record.Chapter.GetCbzFileName(library)}", cancellationToken);
+            await notificationService.PushSuccessAsync($"{I18n.DownloadChapterHasBeenCancelled}: {library.GetCbzFileName(record.Chapter)}", cancellationToken);
 
             return Partial("_DownloadChapterTableRow", record);
         }

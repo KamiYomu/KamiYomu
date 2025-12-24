@@ -84,14 +84,14 @@ namespace KamiYomu.Web.Entities
         {
             if(IsDownloadedFileExists(library))
             {
-                var path = Chapter.GetCbzFilePath(library);
+                var path = library.GetCbzFilePath(Chapter);
                 File.Delete(path);
             }
         }
 
         public bool IsDownloadedFileExists(Library library)
         {
-            var path = Chapter.GetCbzFilePath(library);
+            var path = library.GetCbzFilePath(Chapter);
 
             return File.Exists(path);
         }

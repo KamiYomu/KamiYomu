@@ -68,31 +68,71 @@
                         </span>
                     </div>
                 </div>
-
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Download Progress</label>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
-                             role="progressbar"
-                             style="width: @Model.Progress.ToString("F0")%;"
-                             aria-valuenow="@Model.Progress.ToString("F0")"
-                             aria-valuemin="0"
-                             aria-valuemax="100">
-                            @Model.Progress.ToString("F0")%
+                <div class="mb-3 row align-items-center">
+                    <label class="col-sm-3 col-form-label fw-semibold">
+                        Download Progress
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                 role="progressbar"
+                                 style="width: @Model.Progress.ToString("F0")%;"
+                                 aria-valuenow="@Model.Progress.ToString("F0")"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100">
+                                @Model.Progress.ToString("F0")%
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <div class="col-sm-6">
-                        <label class="form-label fw-semibold">@I18n.ChaptersFound</label>
-                        <div class="form-control-plaintext">@Model.Total</div>
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="form-label fw-semibold">@I18n.Downloaded</label>
-                        <div class="form-control-plaintext">@Model.Completed</div>
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label fw-semibold">
+                        @I18n.FilePathFormat
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext">
+                            <code class="text-muted text-break">
+                                @Model.Library.GetFilePathTemplate()
+                            </code>
+                        </div>
                     </div>
                 </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label fw-semibold">
+                        @I18n.CurrentDirectory
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext">
+                            <code class="text-muted text-break">
+                                @Model.Library.GetMangaDirectory()
+                            </code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label fw-semibold">
+                        @I18n.ChaptersFound
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext">
+                            @Model.Total
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label fw-semibold">
+                        @I18n.Downloaded
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext">
+                            @Model.Completed
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="accordion g-4 mt-2" id="downloadAccordion">

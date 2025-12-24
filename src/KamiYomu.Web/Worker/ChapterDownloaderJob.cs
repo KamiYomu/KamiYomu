@@ -70,11 +70,11 @@ namespace KamiYomu.Web.Worker
                     return;
                 }
 
-                if (File.Exists(chapterDownload.Chapter.GetCbzFilePath(library)))
+                if (File.Exists(library.GetCbzFilePath(chapterDownload.Chapter)))
                 {
                     chapterDownload.Complete();
                     libDbContext.ChapterDownloadRecords.Update(chapterDownload);
-                    logger.LogWarning("Dispatch '{title}' could not proceed — '{file}' was found, download chapter marked as completed.", title, chapterDownload.Chapter.GetCbzFileName(library));
+                    logger.LogWarning("Dispatch '{title}' could not proceed — '{file}' was found, download chapter marked as completed.", title, library.GetCbzFileName(chapterDownload.Chapter));
                     return;
                 }
 
@@ -91,7 +91,7 @@ namespace KamiYomu.Web.Worker
                     cancellationToken);
 
                 var tempMangaFolder = mangaDownload.Library.GetTempDirectory();
-                var tempChapterFolder = chapterDownload.Chapter.GetTempChapterDirectory(library);
+                var tempChapterFolder = library.GetTempChapterDirectory(chapterDownload.Chapter);
 
                 var pageCount = pages.Count();
 
@@ -102,7 +102,7 @@ namespace KamiYomu.Web.Worker
                 pageCount,
                 tempChapterFolder);
 
-                File.WriteAllText(Path.Join(tempChapterFolder, "ComicInfo.xml"), chapterDownload.Chapter.ToComicInfo(library));
+                File.WriteAllText(Path.Join(tempChapterFolder, "ComicInfo.xml"), library.ToComicInfo(chapterDownload.Chapter));
 
                 await SaveCoverAsync(library.Manga, tempChapterFolder, cancellationToken);
 
@@ -136,16 +136,16 @@ namespace KamiYomu.Web.Worker
 
                 if (bytes < 600)
                 {
-                    await notificationService.PushWarningAsync($"{I18n.CbzIsTooSmall}: {chapterDownload.Chapter.GetCbzFileName(library)}", cancellationToken);
+                    await notificationService.PushWarningAsync($"{I18n.CbzIsTooSmall}: {library.GetCbzFileName(chapterDownload.Chapter)}", cancellationToken);
                     chapterDownload.DeleteDownloadedFileIfExists(library);
-                    var cbzFilePath = Path.Combine(tempMangaFolder, chapterDownload.Chapter!.GetCbzFileName(library));
+                    var cbzFilePath = Path.Combine(tempMangaFolder, library.GetCbzFileName(chapterDownload.Chapter!));
 
                     if (File.Exists(cbzFilePath))
                     {
                         File.Delete(cbzFilePath);
                     }
 
-                    throw new FileNotFoundException($"{chapterDownload.Chapter.GetCbzFileName(library)} CBZ file size is too small, indicating a failed download.");
+                    throw new FileNotFoundException($"{library.GetCbzFileName(chapterDownload.Chapter)} CBZ file size is too small, indicating a failed download.");
                 }
 
                 chapterDownload.Complete();
@@ -154,7 +154,7 @@ namespace KamiYomu.Web.Worker
                 if (userPreference.FamilySafeMode && chapterDownload.MangaDownload.Library.Manga.IsFamilySafe ||
                     !userPreference.FamilySafeMode)
                 {
-                    await notificationService.PushSuccessAsync($"{I18n.ChapterDownloaded}: {Path.GetFileNameWithoutExtension(chapterDownload.Chapter.GetCbzFileName(library))}", cancellationToken);
+                    await notificationService.PushSuccessAsync($"{I18n.ChapterDownloaded}: {Path.GetFileNameWithoutExtension(library.GetCbzFileName(chapterDownload.Chapter))}", cancellationToken);
                 }
             }
             catch (Exception ex) when (!context.CancellationToken.ShutdownToken.IsCancellationRequested)
@@ -225,8 +225,8 @@ namespace KamiYomu.Web.Worker
         }
         private long CreateCbzFile(ChapterDownloadRecord chapterDownload, Library library)
         {
-            var cbzFilePath = chapterDownload.Chapter.GetCbzFilePath(library);
-            var tempChapterFolder = chapterDownload.Chapter.GetTempChapterDirectory(library);
+            var cbzFilePath = library.GetCbzFilePath(chapterDownload.Chapter);
+            var tempChapterFolder = library.GetTempChapterDirectory(chapterDownload.Chapter);
 
             if (File.Exists(cbzFilePath))
             {
