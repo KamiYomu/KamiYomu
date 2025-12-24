@@ -67,6 +67,8 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Download
 
         public async Task<IActionResult> OnPostRemoveFromCollectionAsync(CancellationToken cancellationToken)
         {
+            ModelState.Remove(nameof(FilePathTemplate));
+
             if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid manga data.");

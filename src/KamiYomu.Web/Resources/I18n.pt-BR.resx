@@ -754,22 +754,6 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   <data name="AddKamiYomuBaGetAsSource" xml:space="preserve">
     <value>Adicionar KamiYomu BaGet como fonte</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Preferences" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="ChapterFunnyTemplate4" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="ChapterFunnyTemplate1" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="ChapterFunnyTemplate2" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="ChapterFunnyTemplate3" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="Preferences" xml:space="preserve">
     <value>Preferências</value>
   </data>
@@ -784,5 +768,30 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   </data>
   <data name="ChapterFunnyTemplate3" xml:space="preserve">
     <value>Romance, mas torne-o estranho</value>
+  </data>
+  <data name="FilePathFormat" xml:space="preserve">
+    <value>Formato do caminho do arquivo</value>
+  </data>
+  <data name="TheTemplateMustProduceUniqueFileNames" xml:space="preserve">
+    <value>O modelo deve produzir nomes de arquivo exclusivos para capítulos diferentes.</value>
+  </data>
+  <data name="TheTemplatePathIsMissingOrInvalid" xml:space="preserve">
+    <value>Parece que o modelo está ausente ou é inválido. Por favor insira um válido.</value>
+  </data>
+  <data name="YourMangaWillBeStoredFilePathFormat" xml:space="preserve">
+    <value>Seu mangá será armazenado usando o seguinte formato de caminho de arquivo:</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="PreviewWillAppearHere" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="PleaseFixFollowingErrors" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="PreviewWillAppearHere" xml:space="preserve">
+    <value>A visualização aparecerá aqui</value>
+  </data>
+  <data name="PleaseFixFollowingErrors" xml:space="preserve">
+    <value>Corrija os seguintes erros</value>
   </data>
 </root>

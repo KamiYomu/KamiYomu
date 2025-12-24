@@ -6,7 +6,6 @@ using KamiYomu.Web.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
-using System;
 
 namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs;
 
@@ -44,7 +43,7 @@ public class AddToCollectionModel(
         TemplateResults = [.. GetTemplateResults(Template, Manga)];
         var chapter = ChapterBuilder.Create()
             .WithNumber(1)
-            .WithTitle("Romance Dawn")
+            .WithTitle(I18n.ChapterFunnyTemplate1)
             .WithVolume(1)
             .Build();
 
@@ -69,25 +68,25 @@ public class AddToCollectionModel(
     {
         var chapter1 = ChapterBuilder.Create()
                                 .WithNumber(1)
-                                .WithTitle("Romance Sideways")
+                                .WithTitle(I18n.ChapterFunnyTemplate1)
                                 .WithVolume(1)
                                 .Build();
 
         var chapter2 = ChapterBuilder.Create()
                         .WithNumber(2)
-                        .WithTitle("Romance Slightly Tilted")
+                        .WithTitle(I18n.ChapterFunnyTemplate2)
                         .WithVolume(1)
                         .Build();
 
         var chapter3 = ChapterBuilder.Create()
                         .WithNumber(3)
-                        .WithTitle("Romance But Make It Weird")
+                        .WithTitle(I18n.ChapterFunnyTemplate3)
                         .WithVolume(2)
                         .Build();
 
         var chapter4 = ChapterBuilder.Create()
                         .WithNumber(4)
-                        .WithTitle("Romance, Please Restart Me")
+                        .WithTitle(I18n.ChapterFunnyTemplate4)
                         .WithVolume(2)
                         .Build();
 
@@ -119,8 +118,7 @@ public class AddToCollectionModel(
 
         if (results.All(string.IsNullOrWhiteSpace))
         {
-            ModelState.AddModelError("Template",
-                   "Template must be informed with valid value.");
+            ModelState.AddModelError(nameof(Template), I18n.TheTemplatePathIsMissingOrInvalid);
         }
         else
         {
@@ -134,8 +132,7 @@ public class AddToCollectionModel(
 
             if (!allDifferent)
             {
-                ModelState.AddModelError("Template",
-                    "The template must produce unique file names for different chapters.");
+                ModelState.AddModelError(nameof(Template), I18n.TheTemplateMustProduceUniqueFileNames);
             }
         }
 

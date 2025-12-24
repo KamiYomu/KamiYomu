@@ -817,6 +817,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File Path Format.
+        /// </summary>
+        internal static string FilePathFormat {
+            get {
+                return ResourceManager.GetString("FilePathFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File Version.
         /// </summary>
         internal static string FileVersion {
@@ -1402,11 +1411,29 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please fix the following errors.
+        /// </summary>
+        internal static string PleaseFixFollowingErrors {
+            get {
+                return ResourceManager.GetString("PleaseFixFollowingErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Preferences.
         /// </summary>
         internal static string Preferences {
             get {
                 return ResourceManager.GetString("Preferences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preview will appear here.
+        /// </summary>
+        internal static string PreviewWillAppearHere {
+            get {
+                return ResourceManager.GetString("PreviewWillAppearHere", resourceCulture);
             }
         }
         
@@ -1718,6 +1745,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The template must produce unique file names for different chapters..
+        /// </summary>
+        internal static string TheTemplateMustProduceUniqueFileNames {
+            get {
+                return ResourceManager.GetString("TheTemplateMustProduceUniqueFileNames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Looks like the template is missing or invalid. Please enter a valid one..
+        /// </summary>
+        internal static string TheTemplatePathIsMissingOrInvalid {
+            get {
+                return ResourceManager.GetString("TheTemplatePathIsMissingOrInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This Value Is Required.
         /// </summary>
         internal static string ThisValueIsRequired {
@@ -2002,6 +2047,15 @@ namespace KamiYomu.Web.Resources {
         internal static string YourCollectionNoLongerIncludes {
             get {
                 return ResourceManager.GetString("YourCollectionNoLongerIncludes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your manga will be stored using the following file path format:.
+        /// </summary>
+        internal static string YourMangaWillBeStoredFilePathFormat {
+            get {
+                return ResourceManager.GetString("YourMangaWillBeStoredFilePathFormat", resourceCulture);
             }
         }
         

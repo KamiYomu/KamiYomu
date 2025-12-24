@@ -769,4 +769,22 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="ChapterFunnyTemplate3" xml:space="preserve">
     <value>Romance But Make It Weird</value>
   </data>
+  <data name="FilePathFormat" xml:space="preserve">
+    <value>File Path Format</value>
+  </data>
+  <data name="TheTemplateMustProduceUniqueFileNames" xml:space="preserve">
+    <value>The template must produce unique file names for different chapters.</value>
+  </data>
+  <data name="TheTemplatePathIsMissingOrInvalid" xml:space="preserve">
+    <value>Looks like the template is missing or invalid. Please enter a valid one.</value>
+  </data>
+  <data name="YourMangaWillBeStoredFilePathFormat" xml:space="preserve">
+    <value>Your manga will be stored using the following file path format:</value>
+  </data>
+  <data name="PreviewWillAppearHere" xml:space="preserve">
+    <value>Preview will appear here</value>
+  </data>
+  <data name="PleaseFixFollowingErrors" xml:space="preserve">
+    <value>Please fix the following errors</value>
+  </data>
 </root>

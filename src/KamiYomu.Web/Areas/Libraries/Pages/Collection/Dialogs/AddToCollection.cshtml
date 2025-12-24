@@ -1,5 +1,6 @@
 ﻿@page
 @using KamiYomu.Web.AppOptions
+@using KamiYomu.Web.Extensions
 @using Microsoft.Extensions.Options
 @model KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs.AddToCollectionModel
 @{
@@ -16,8 +17,10 @@
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body" id="addToCollectionModal">
+    <partial name="_MangaInfo" model="Model.Manga" />
+
     <fieldset class="mt-4 border rounded p-3">
-        <legend class="float-none w-auto px-2">Manga Folder Format</legend>
+        <legend class="float-none w-auto px-2">@I18n.FilePathFormat</legend>
         <form method="post"
               hx-post="@previewUrl"
               hx-trigger="keyup changed delay:300ms from:input"
@@ -32,6 +35,7 @@
                 </span>
 
                 <input class="form-control"
+                       id="template-input"
                        asp-for="Template"
                        placeholder="@Model.Template" />
             </div>
@@ -55,13 +59,23 @@
           hx-swap="innerHTML">
         @Html.AntiForgeryToken()
 
-        <input type="hidden" name="MangaId" value="@Model.MangaId" />
-        <input type="hidden" name="CrawlerAgentId" value="@Model.CrawlerAgentId" />
-        <input type="hidden" name="FilePathTemplate" value="@Model.Template"/>
+        <input type="hidden" asp-for="@Model.MangaId" />
+        <input type="hidden" asp-for="CrawlerAgentId" />
+        <input type="hidden" asp-for="RefreshElementId" />
+        <input type="hidden" id="FilePathTemplate" name="FilePathTemplate" value="@Model.Template" />
         <button type="submit" class="btn btn-success" data-bs-dismiss="modal">@I18n.Add</button>
         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@I18n.Cancel</button>
     </form>
 </div>
+
+<script>
+    const templateInput = document.getElementById('template-input');
+    const hiddenTemplate = document.getElementById('FilePathTemplate');
+
+    templateInput.addEventListener('input', () => {
+        hiddenTemplate.value = templateInput.value;
+    });
+</script>
 
 <script>
     const modalBody = document.getElementById('addToCollectionModalBody');

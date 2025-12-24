@@ -8,8 +8,10 @@ using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.DependencyModel;
 using QuestPDF.Fluent;
 using System.IO.Compression;
+using System.Reflection;
 
 namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 {
@@ -58,13 +60,13 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 
         public async Task<IActionResult> OnGetDownloadCbzAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
         {
-            var downloadChapterRecords = dbContext.Libraries.FindById(libraryId);
-            if (downloadChapterRecords == null)
+            var library = dbContext.Libraries.FindById(libraryId);
+            if (library == null)
             {
                 return NotFound();
             }
 
-            using var db = downloadChapterRecords.GetDbContext();
+            using var db = library.GetDbContext();
 
             var record = db.ChapterDownloadRecords.FindById(recordId);
             if (record == null || !record.IsCompleted())
@@ -72,7 +74,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                 return NotFound();
             }
 
-            var filePath = record.Chapter.GetCbzFilePath();
+            var filePath = record.Chapter.GetCbzFilePath(library);
             if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath))
             {
                 return NotFound();
@@ -94,13 +96,13 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 
         public async Task<IActionResult> OnGetDownloadZipAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
         {
-            var downloadChapterRecords = dbContext.Libraries.FindById(libraryId);
-            if (downloadChapterRecords == null)
+            var library = dbContext.Libraries.FindById(libraryId);
+            if (library == null)
             {
                 return NotFound();
             }
 
-            using var db = downloadChapterRecords.GetDbContext();
+            using var db = library.GetDbContext();
 
             var record = db.ChapterDownloadRecords.FindById(recordId);
             if (record == null || !record.IsCompleted())
@@ -108,7 +110,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                 return NotFound();
             }
 
-            var filePath = record.Chapter.GetCbzFilePath();
+            var filePath = record.Chapter.GetCbzFilePath(library);
             if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath))
             {
                 return NotFound();
@@ -131,13 +133,13 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 
         public async Task<IActionResult> OnGetDownloadPdfAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
         {
-            var downloadChapterRecords = dbContext.Libraries.FindById(libraryId);
-            if (downloadChapterRecords == null)
+            var library = dbContext.Libraries.FindById(libraryId);
+            if (library == null)
             {
                 return NotFound();
             }
 
-            using var db = downloadChapterRecords.GetDbContext();
+            using var db = library.GetDbContext();
 
             var record = db.ChapterDownloadRecords.FindById(recordId);
             if (record == null || !record.IsCompleted())
@@ -145,7 +147,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                 return NotFound();
             }
 
-            var filePath = record.Chapter.GetCbzFilePath();
+            var filePath = record.Chapter.GetCbzFilePath(library);
             if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath))
             {
                 return NotFound();
@@ -187,20 +189,20 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 
         public async Task<IActionResult> OnPostRescheduleAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
         {
-            var downloadChapterRecords = dbContext.Libraries.FindById(libraryId);
-            if (downloadChapterRecords == null)
+            var library = dbContext.Libraries.FindById(libraryId);
+            if (library == null)
             {
                 return NotFound();
             }
 
-            using var db = downloadChapterRecords.GetDbContext();
+            using var db = library.GetDbContext();
             var record = db.ChapterDownloadRecords.FindById(recordId);
             if (record == null || !(record.IsCompleted() || record.IsCancelled()))
             {
                 return NotFound();
             }
 
-            record.DeleteDownloadedFileIfExists();
+            record.DeleteDownloadedFileIfExists(library);
 
             var queueState = hangfireRepository.GetLeastLoadedDownloadChapterQueue();
             var jobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(queueState.Queue, worker => worker.DispatchAsync(queueState.Queue, 
@@ -208,24 +210,24 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
                                                                                         record.MangaDownload.Library.Id,
                                                                                         record.MangaDownload.Id,
                                                                                         record.Id,
-                                                                                        record.Chapter.GetCbzFileName(),
+                                                                                        record.Chapter.GetCbzFileName(record.MangaDownload.Library),
                                                                                         null!, CancellationToken.None));
 
             record.Scheduled(jobId);
             db.ChapterDownloadRecords.Update(record);
-            await notificationService.PushSuccessAsync($"{I18n.DownloadChapterSchedule}: {record.Chapter.GetCbzFileName()}", cancellationToken);
+            await notificationService.PushSuccessAsync($"{I18n.DownloadChapterSchedule}: {record.Chapter.GetCbzFileName(record.MangaDownload.Library)}", cancellationToken);
             return Partial("_DownloadChapterTableRow", record);
         }
 
         public async Task<IActionResult> OnPostCancelAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
         {
-            var downloadChapterRecords = dbContext.Libraries.FindById(libraryId);
-            if (downloadChapterRecords == null)
+            var library = dbContext.Libraries.FindById(libraryId);
+            if (library == null)
             {
                 return NotFound();
             }
 
-            using var db = downloadChapterRecords.GetDbContext();
+            using var db = library.GetDbContext();
             var record = db.ChapterDownloadRecords.FindById(recordId);
             if (record == null)
             {
@@ -236,7 +238,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 
             record.Cancelled("Cancelled by the user.");
             db.ChapterDownloadRecords.Update(record);
-            await notificationService.PushSuccessAsync($"{I18n.DownloadChapterHasBeenCancelled}: {record.Chapter.GetCbzFileName()}", cancellationToken);
+            await notificationService.PushSuccessAsync($"{I18n.DownloadChapterHasBeenCancelled}: {record.Chapter.GetCbzFileName(library)}", cancellationToken);
 
             return Partial("_DownloadChapterTableRow", record);
         }

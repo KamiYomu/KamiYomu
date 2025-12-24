@@ -1,4 +1,5 @@
 ﻿using KamiYomu.CrawlerAgents.Core.Catalog;
+using KamiYomu.Web.Infrastructure.Storage;
 
 namespace KamiYomu.Web.Infrastructure.Services;
 
@@ -43,8 +44,8 @@ public static class TemplateResolver
 
         return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
-            ["manga_title"] = manga.Title ?? "",
-            ["manga_title_slug"] = Slugify(manga.Title ?? ""),
+            ["manga_title"] = FileNameHelper.SanitizeFileName(manga.Title) ?? "",
+            ["manga_title_slug"] = Slugify(FileNameHelper.SanitizeFileName(manga.Title) ?? ""),
             ["manga_familysafe"] = manga.IsFamilySafe.ToString(),
         };
     }
@@ -70,8 +71,8 @@ public static class TemplateResolver
         {
             ["chapter"] = chapterPadded,
             ["chapter_raw"] = chapter.Number.ToString(),
-            ["chapter_title"] = chapter.Title ?? "",
-            ["chapter_title_slug"] = Slugify(chapter.Title ?? ""),
+            ["chapter_title"] = FileNameHelper.SanitizeFileName(chapter.Title) ?? "",
+            ["chapter_title_slug"] = Slugify(FileNameHelper.SanitizeFileName(chapter.Title) ?? ""),
             ["volume"] = chapter.Volume.ToString()
         };
     }

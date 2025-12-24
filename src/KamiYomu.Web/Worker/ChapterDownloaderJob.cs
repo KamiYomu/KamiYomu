@@ -5,6 +5,7 @@ using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
+using KamiYomu.Web.Infrastructure.Services;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.Extensions.Options;
@@ -69,11 +70,11 @@ namespace KamiYomu.Web.Worker
                     return;
                 }
 
-                if (File.Exists(chapterDownload.Chapter.GetCbzFilePath()))
+                if (File.Exists(chapterDownload.Chapter.GetCbzFilePath(library)))
                 {
                     chapterDownload.Complete();
                     libDbContext.ChapterDownloadRecords.Update(chapterDownload);
-                    logger.LogWarning("Dispatch '{title}' could not proceed — '{file}' was found, download chapter marked as completed.", title, chapterDownload.Chapter.GetCbzFileName());
+                    logger.LogWarning("Dispatch '{title}' could not proceed — '{file}' was found, download chapter marked as completed.", title, chapterDownload.Chapter.GetCbzFileName(library));
                     return;
                 }
 
@@ -89,9 +90,9 @@ namespace KamiYomu.Web.Worker
                     chapterDownload.Chapter,
                     cancellationToken);
 
-                var seriesFolder = mangaDownload.Library.Manga!.GetTempDirectory();
+                var seriesFolder = mangaDownload.Library.Manga!.GetTempDirectory(library);
 
-                var chapterFolderPath = chapterDownload.Chapter.GetChapterFolderPath(seriesFolder);
+                var chapterFolderPath = chapterDownload.Chapter.GetDirectoryPath(library);
 
                 Directory.CreateDirectory(chapterFolderPath);
 
@@ -104,7 +105,7 @@ namespace KamiYomu.Web.Worker
                 pageCount,
                 chapterFolderPath);
 
-                File.WriteAllText(Path.Join(chapterFolderPath, "ComicInfo.xml"), chapterDownload.Chapter.ToComicInfo(library.Id));
+                File.WriteAllText(Path.Join(chapterFolderPath, "ComicInfo.xml"), chapterDownload.Chapter.ToComicInfo(library));
 
                 int index = 1;
 
@@ -145,23 +146,23 @@ namespace KamiYomu.Web.Worker
 
                 logger.LogInformation("Dispatch '{Title}' using crawler {crawler} Completed download of chapter {ChapterDownloadId} to {ChapterFolder}", title, library.CrawlerAgent.DisplayName, chapterDownloadId, chapterFolderPath);
 
-                var bytes = CreateCbzFile(chapterDownload, chapterFolderPath, seriesFolder);
+                var bytes = CreateCbzFile(chapterDownload, library);
 
                 if (bytes < 600)
                 {
-                    await notificationService.PushWarningAsync($"{I18n.CbzIsTooSmall}: {chapterDownload.Chapter.GetCbzFileName()}", cancellationToken);
-                    chapterDownload.DeleteDownloadedFileIfExists();
-                    var cbzFilePath = Path.Combine(seriesFolder, chapterDownload.Chapter!.GetCbzFileName());
+                    await notificationService.PushWarningAsync($"{I18n.CbzIsTooSmall}: {chapterDownload.Chapter.GetCbzFileName(library)}", cancellationToken);
+                    chapterDownload.DeleteDownloadedFileIfExists(library);
+                    var cbzFilePath = Path.Combine(seriesFolder, chapterDownload.Chapter!.GetCbzFileName(library));
                     
                     if (File.Exists(cbzFilePath))
                     {
                         File.Delete(cbzFilePath);
                     }
 
-                    throw new FileNotFoundException($"{chapterDownload.Chapter.GetCbzFileName()} CBZ file size is too small, indicating a failed download.");
+                    throw new FileNotFoundException($"{chapterDownload.Chapter.GetCbzFileName(library)} CBZ file size is too small, indicating a failed download.");
                 }
 
-                await MoveTempCbzFilesToCollectionAsync(mangaDownload.Library.Manga, cancellationToken);
+                await MoveTempCbzFilesToCollectionAsync(mangaDownload.Library, cancellationToken);
 
                 chapterDownload.Complete();
                 libDbContext.ChapterDownloadRecords.Update(chapterDownload);
@@ -169,7 +170,7 @@ namespace KamiYomu.Web.Worker
                 if (userPreference.FamilySafeMode && chapterDownload.MangaDownload.Library.Manga.IsFamilySafe ||
                     !userPreference.FamilySafeMode)
                 {
-                    await notificationService.PushSuccessAsync($"{I18n.ChapterDownloaded}: {Path.GetFileNameWithoutExtension(chapterDownload.Chapter.GetCbzFileName())}", cancellationToken);
+                    await notificationService.PushSuccessAsync($"{I18n.ChapterDownloaded}: {Path.GetFileNameWithoutExtension(chapterDownload.Chapter.GetCbzFileName(library))}", cancellationToken);
                 }
             }
             catch (Exception ex) when (!context.CancellationToken.ShutdownToken.IsCancellationRequested)
@@ -223,9 +224,10 @@ namespace KamiYomu.Web.Worker
                 return false;
             }
         }
-        private long CreateCbzFile(ChapterDownloadRecord chapterDownload, string chapterFolder, string seriesFolder)
+        private long CreateCbzFile(ChapterDownloadRecord chapterDownload, Library library)
         {
-            var cbzFilePath = Path.Combine(seriesFolder, chapterDownload.Chapter!.GetCbzFileName());
+            var cbzFilePath = chapterDownload.Chapter.GetCbzFilePath(library);
+            var chapterFolder = Path.Combine(Path.GetTempPath(), chapterDownload.Chapter.GetDirectoryPath(chapterDownload.MangaDownload.Library));
 
             if (File.Exists(cbzFilePath))
             {
@@ -250,14 +252,14 @@ namespace KamiYomu.Web.Worker
             return size;
         }
 
-        private async Task MoveTempCbzFilesToCollectionAsync(Manga manga, CancellationToken cancellationToken)
+        private async Task MoveTempCbzFilesToCollectionAsync(Library library, CancellationToken cancellationToken)
         {
-            var cbzFiles = Directory.GetFiles(manga.GetTempDirectory(), "*.cbz", SearchOption.AllDirectories);
+            var cbzFiles = Directory.GetFiles(library.Manga.GetTempDirectory(library), "*.cbz", SearchOption.AllDirectories);
 
             foreach (var cbzFile in cbzFiles)
             {
-                var relativePath = Path.GetRelativePath(manga.GetTempDirectory(), cbzFile);
-                var destinationPath = Path.Combine(manga.GetDirectory(), relativePath);
+                var relativePath = Path.GetRelativePath(library.Manga.GetTempDirectory(library), cbzFile);
+                var destinationPath = Path.Combine(library.Manga.GetDirectory(), relativePath);
 
                 var destinationDir = Path.GetDirectoryName(destinationPath);
 
@@ -280,7 +282,7 @@ namespace KamiYomu.Web.Worker
                                                         | UnixFileMode.OtherExecute);
                 }
 
-                await CopyCoverIfNotExistsAsync(manga, destinationDir, cancellationToken);
+                await CopyCoverIfNotExistsAsync(library.Manga, destinationDir, cancellationToken);
 
                 logger.LogInformation("Moved: '{cbzFile}' → '{destinationPath}'", cbzFile, destinationPath);
             }
