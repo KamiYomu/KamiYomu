@@ -26,9 +26,15 @@ namespace KamiYomu.Web.Entities
             FamilySafeMode = familySafeMode;
         }
 
+        internal void SetFilePathTemplate(string filePathTemplate)
+        {
+            FilePathTemplate = filePathTemplate;
+        }
+
         public Guid Id { get; private set; }
         public string Language { get; private set; }
         public int LanguageId { get; private set; }
         public bool FamilySafeMode { get; private set; } = true;
+        public string FilePathTemplate { get; private set; }
     }
 }
