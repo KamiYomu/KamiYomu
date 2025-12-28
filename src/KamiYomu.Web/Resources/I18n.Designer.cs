@@ -1069,6 +1069,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Logging out....
+        /// </summary>
+        internal static string LoggingOut {
+            get {
+                return ResourceManager.GetString("LoggingOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Log Stream.
         /// </summary>
         internal static string LogStream {
@@ -1651,6 +1660,15 @@ namespace KamiYomu.Web.Resources {
         internal static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sign out.
+        /// </summary>
+        internal static string SignOut {
+            get {
+                return ResourceManager.GetString("SignOut", resourceCulture);
             }
         }
         
