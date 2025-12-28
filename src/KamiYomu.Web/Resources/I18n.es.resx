@@ -797,4 +797,10 @@ para que la configuración &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire cont
   <data name="LoggingOut" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="SignOut" xml:space="preserve">
+    <value>desconectar</value>
+  </data>
+  <data name="LoggingOut" xml:space="preserve">
+    <value>Cerrar sesión...</value>
+  </data>
 </root>

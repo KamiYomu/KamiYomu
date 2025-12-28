@@ -797,4 +797,10 @@ voor de &lt;code&gt;WorkerCount&lt;/code&gt;-instelling van Hangfire om te bepal
   <data name="LoggingOut" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="SignOut" xml:space="preserve">
+    <value>Meld u af</value>
+  </data>
+  <data name="LoggingOut" xml:space="preserve">
+    <value>Uitloggen...</value>
+  </data>
 </root>

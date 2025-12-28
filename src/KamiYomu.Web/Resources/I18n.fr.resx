@@ -797,4 +797,10 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="LoggingOut" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="SignOut" xml:space="preserve">
+    <value>se déconnecter</value>
+  </data>
+  <data name="LoggingOut" xml:space="preserve">
+    <value>Déconnexion...</value>
+  </data>
 </root>
