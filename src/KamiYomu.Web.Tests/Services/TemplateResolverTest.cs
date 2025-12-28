@@ -36,7 +36,7 @@ public class TemplateResolverTest
         var result = TemplateResolver.GetChapterVariables(null);
 
         Assert.Equal("", result["chapter"]);
-        Assert.Equal("", result["chapter_raw"]);
+        Assert.Equal("", result["chapter"]);
         Assert.Equal("", result["chapter_title"]);
         Assert.Equal("", result["chapter_title_slug"]);
         Assert.Equal("", result["volume"]);
@@ -53,8 +53,8 @@ public class TemplateResolverTest
 
         var result = TemplateResolver.GetChapterVariables(chapter);
 
-        Assert.Equal("0012", result["chapter"]);
-        Assert.Equal("12", result["chapter_raw"]);
+        Assert.Equal("0012", result["chapter_padded_4"]);
+        Assert.Equal("12", result["chapter"]);
         Assert.Equal("Romance Dawn", result["chapter_title"]);
         Assert.Equal("romance-dawn", result["chapter_title_slug"]);
         Assert.Equal("3", result["volume"]);
@@ -81,7 +81,7 @@ public class TemplateResolverTest
             .WithVolume(1)
             .Build();
 
-        string template = "{manga_title}/ch.{chapter}/{chapter_title_slug}";
+        string template = "{manga_title}/ch.{chapter_padded_4}/{chapter_title_slug}";
 
         string result = TemplateResolver.Resolve(template, manga, chapter);
 

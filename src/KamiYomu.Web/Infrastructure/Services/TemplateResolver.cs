@@ -58,22 +58,39 @@ public static class TemplateResolver
             return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 ["chapter"] = "",
-                ["chapter_raw"] = "",
+                ["chapter_padded_1"] = "",
+                ["chapter_padded_2"] = "",
+                ["chapter_padded_3"] = "",
+                ["chapter_padded_4"] = "",
+                ["chapter_padded_5"] = "",
                 ["chapter_title"] = "",
                 ["chapter_title_slug"] = "",
-                ["volume"] = ""
+                ["volume"] = "",
+                ["volume_padded_1"] = "",
+                ["volume_padded_2"] = "",
+                ["volume_padded_3"] = "",
+                ["volume_padded_4"] = "",
+                ["volume_padded_5"] = ""
             };
         }
 
-        string chapterPadded = chapter.Number.ToString("0000");
 
         return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
-            ["chapter"] = chapterPadded,
-            ["chapter_raw"] = chapter.Number.ToString(),
+            ["chapter"] = chapter.Number.ToString(),
+            ["chapter_padded_1"] = chapter.Number.ToString("0"),
+            ["chapter_padded_2"] = chapter.Number.ToString("00"),
+            ["chapter_padded_3"] = chapter.Number.ToString("000"),
+            ["chapter_padded_4"] = chapter.Number.ToString("0000"),
+            ["chapter_padded_5"] = chapter.Number.ToString("00000"),
             ["chapter_title"] = FileNameHelper.SanitizeFileName(chapter.Title) ?? "",
             ["chapter_title_slug"] = Slugify(FileNameHelper.SanitizeFileName(chapter.Title) ?? ""),
-            ["volume"] = chapter.Volume.ToString()
+            ["volume"] = chapter.Volume.ToString(),
+            ["volume_padded_1"] = chapter.Volume.ToString("0"),
+            ["volume_padded_2"] = chapter.Volume.ToString("00"),
+            ["volume_padded_3"] = chapter.Volume.ToString("000"),
+            ["volume_padded_4"] = chapter.Volume.ToString("0000"),
+            ["volume_padded_5"] = chapter.Volume.ToString("00000")
         };
     }
 
