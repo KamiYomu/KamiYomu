@@ -1,4 +1,9 @@
-﻿<div class="d-flex flex-column h-100">
+﻿@using KamiYomu.Web.AppOptions
+@using Microsoft.Extensions.Options
+@using Microsoft.AspNetCore.Authorization
+@inject IOptions<BasicAuthOptions> AuthOptions
+
+<div class="d-flex flex-column h-100">
     <!-- Top navigation -->
     <ul class="nav flex-column">
         <li class="nav-item d-flex align-items-center justify-content-between">
@@ -100,6 +105,20 @@
                 <i class="bi bi-question-circle"></i>
             </a>
         </li>
+
+        @if (AuthOptions.Value.Enabled)
+        {
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <li class="nav-item d-flex align-items-center justify-content-between">
+                    <a class="nav-link d-flex align-items-center gap-2"
+                       href="~/Logout">
+                        <i class="bi bi-box-arrow-right"></i> @I18n.SignOut
+                    </a>
+                </li>
+            }
+        }
+       
     </ul>
 
     <!-- Bottom buttons -->

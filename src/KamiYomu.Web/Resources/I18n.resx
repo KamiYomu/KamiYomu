@@ -790,4 +790,7 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="BaGetFeed" xml:space="preserve">
     <value>KamiYomu BaGet Feed</value>
   </data>
+  <data name="SignOut" xml:space="preserve">
+    <value>Sign out</value>
+  </data>
 </root>

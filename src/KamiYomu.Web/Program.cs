@@ -13,6 +13,7 @@ using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Middlewares;
 using KamiYomu.Web.Worker;
 using KamiYomu.Web.Worker.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Options;
@@ -59,6 +60,7 @@ builder.Host.UseSerilog((context, services, configuration) =>
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSignalR();
+builder.Services.Configure<BasicAuthOptions>(builder.Configuration.GetSection("BasicAuth"));
 builder.Services.Configure<SpecialFolderOptions>(builder.Configuration.GetSection("SpecialFolders"));
 builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection("Worker"));
 builder.Services.Configure<Defaults.NugetFeeds>(builder.Configuration.GetSection("UI"));
@@ -73,6 +75,7 @@ builder.Services.AddResponseCompression(options =>
     options.EnableForHttps = true;
     options.Providers.Add<GzipCompressionProvider>();
 });
+
 
 builder.Services.AddSingleton<CacheContext>();
 builder.Services.AddSingleton<ImageDbContext>(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb")));
@@ -114,6 +117,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.FallBackToParentCultures = true;
     options.FallBackToParentUICultures = true;
 });
+
 
 
 builder.Services.AddRazorPages()
@@ -180,7 +184,7 @@ using (var appScoped = app.Services.CreateScope())
 app.UseResponseCompression();
 app.UseStaticFiles();
 app.UseRouting();
-
+app.UseMiddleware<BasicAuthMiddleware>();
 app.UseHangfireDashboard("/worker", new DashboardOptions
 {
     DisplayStorageConnectionString = false,
