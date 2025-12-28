@@ -26,7 +26,7 @@ public class AddToCollectionModel(
     [BindProperty]
     public Guid CrawlerAgentId { get; set; } = Guid.Empty;
     [BindProperty]
-    public string Template { get; set; }
+    public string FilePathTemplate { get; set; }
 
     public string[] TemplateResults { get; private set; } = Array.Empty<string>();
 
@@ -41,9 +41,9 @@ public class AddToCollectionModel(
         RefreshElementId = refreshElementId;
         CrawlerAgentId = crawlerAgentId;
         MangaId = mangaId;
-        Template = string.IsNullOrWhiteSpace(preferences.FilePathTemplate) ? specialFolderOptions.Value.FilePathFormat : preferences.FilePathTemplate;
+        FilePathTemplate = string.IsNullOrWhiteSpace(preferences.FilePathTemplate) ? specialFolderOptions.Value.FilePathFormat : preferences.FilePathTemplate;
         Manga = await crawlerAgentRepository.GetMangaAsync(crawlerAgentId, mangaId, cancellationToken);
-        TemplateResults = [.. GetTemplateResults(Template, Manga)];
+        TemplateResults = [.. GetTemplateResults(FilePathTemplate, Manga)];
         var chapter = ChapterBuilder.Create()
             .WithNumber(1)
             .WithTitle(I18n.ChapterFunnyTemplate1)
@@ -58,11 +58,11 @@ public class AddToCollectionModel(
         };
     }
 
-    public async Task<IActionResult> OnPostPreviewAsync(string template, CancellationToken cancellationToken)
+    public async Task<IActionResult> OnPostPreviewAsync(CancellationToken cancellationToken)
     {
         var manga = await crawlerAgentRepository.GetMangaAsync(CrawlerAgentId, MangaId, cancellationToken);
 
-        TemplateResults = GetTemplateResults(template, manga).ToArray();
+        TemplateResults = GetTemplateResults(FilePathTemplate, manga).ToArray();
 
         return Partial("_PathTemplatePreview", TemplateResults);
     }
@@ -121,7 +121,7 @@ public class AddToCollectionModel(
 
         if (results.All(string.IsNullOrWhiteSpace))
         {
-            ModelState.AddModelError(nameof(Template), I18n.TheTemplatePathIsMissingOrInvalid);
+            ModelState.AddModelError(nameof(FilePathTemplate), I18n.TheTemplatePathIsMissingOrInvalid);
         }
         else
         {
@@ -135,7 +135,7 @@ public class AddToCollectionModel(
 
             if (!allDifferent)
             {
-                ModelState.AddModelError(nameof(Template), I18n.TheTemplateMustProduceUniqueFileNames);
+                ModelState.AddModelError(nameof(FilePathTemplate), I18n.TheTemplateMustProduceUniqueFileNames);
             }
         }
 
