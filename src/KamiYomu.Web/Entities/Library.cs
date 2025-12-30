@@ -16,7 +16,7 @@ public class Library
     private LibraryDbContext _libraryDbContext;
 
     protected Library() { }
-    public Library(CrawlerAgent agentCrawler, Manga manga, string filePathTemplate, string comicInfoTitleTemplateFormat, string comicInfoSeriesTemplate)
+    public Library(CrawlerAgent agentCrawler, Manga manga, string? filePathTemplate, string? comicInfoTitleTemplateFormat, string? comicInfoSeriesTemplate)
     {
         CrawlerAgent = agentCrawler;
         Manga = string.IsNullOrEmpty(manga.Title) ? null : manga;
@@ -213,7 +213,7 @@ public class Library
     public Guid Id { get; private set; }
     public CrawlerAgent CrawlerAgent { get; private set; }
     public Manga Manga { get; private set; }
-    public string FilePathTemplate { get; private set; }
-    public string ComicInfoTitleTemplateFormat { get; private set; }
-    public string ComicInfoSeriesTemplate { get; private set; }
+    public string? FilePathTemplate { get; private set; }
+    public string? ComicInfoTitleTemplateFormat { get; private set; }
+    public string? ComicInfoSeriesTemplate { get; private set; }
 }

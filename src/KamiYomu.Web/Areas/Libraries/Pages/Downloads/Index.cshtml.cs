@@ -112,6 +112,6 @@ public class IndexModel(
 
         await notificationService.PushSuccessAsync($"{I18n.YourCollectionNoLongerIncludes}: {mangaTitle}.", cancellationToken);
 
-        return Partial("_LibraryCard", new Library(library.CrawlerAgent, library.Manga, null));
+        return Partial("_LibraryCard", new Library(library.CrawlerAgent, library.Manga, null, null, null));
     }
 }

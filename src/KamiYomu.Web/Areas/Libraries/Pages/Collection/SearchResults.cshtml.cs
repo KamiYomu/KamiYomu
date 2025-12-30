@@ -33,7 +33,7 @@ public class SearchResultsModel(DbContext dbContext, ICrawlerAgentRepository age
         Entities.UserPreference userPreference = dbContext.UserPreferences.FindOne(p => true);
         PaginationOptions paginationOptions = !string.IsNullOrWhiteSpace(continuationToken) ? new PaginationOptions(continuationToken) : new PaginationOptions(offset, 30);
         PagedResult<Manga> queryResult = await agentCrawlerRepository.SearchAsync(crawlerAgent.Id, query, paginationOptions, cancellationToken);
-        Results = queryResult.Data.Where(p => p.IsFamilySafe || p.IsFamilySafe == userPreference.FamilySafeMode).Select(p => new Entities.Library(crawlerAgent, p, null));
+        Results = queryResult.Data.Where(p => p.IsFamilySafe || p.IsFamilySafe == userPreference.FamilySafeMode).Select(p => new Entities.Library(crawlerAgent, p, null, null, null));
         ViewData["ShowAddToLibrary"] = true;
         ViewData["Handler"] = "Crawler";
         ViewData[nameof(query)] = query;
