@@ -1,5 +1,6 @@
 ﻿using MonkeyCache;
 using MonkeyCache.LiteDB;
+
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
@@ -14,7 +15,7 @@ public class CacheContext
     {
         if (!Barrel.Current.IsExpired(key) && Barrel.Current.Exists(key))
         {
-            var result = Barrel.Current.Get<T>(key, GetCacheSerializationOptions());
+            T? result = Barrel.Current.Get<T>(key, GetCacheSerializationOptions());
             value = result;
             return true;
         }
@@ -27,12 +28,12 @@ public class CacheContext
         // Check if cache exists and is not expired
         if (!Barrel.Current.IsExpired(key) && Barrel.Current.Exists(key))
         {
-            var result = Barrel.Current.Get<T>(key, GetCacheSerializationOptions());
+            T? result = Barrel.Current.Get<T>(key, GetCacheSerializationOptions());
             return result;
         }
 
         // Calculate the value
-        var value = await valueFactory();
+        T? value = await valueFactory();
 
         // Store in cache
         Barrel.Current.Add(key, value, expiration ?? TimeSpan.FromMinutes(30));
@@ -49,7 +50,7 @@ public class CacheContext
         }
 
         // Calculate the value
-        var value = valueFactory();
+        T? value = valueFactory();
 
         // Store in cache
         Barrel.Current.Add(key, value, expiration ?? TimeSpan.FromMinutes(30));
@@ -64,7 +65,7 @@ public class CacheContext
     public void EmptyExpired() => Barrel.Current.EmptyExpired();
     private JsonSerializerOptions GetCacheSerializationOptions()
     {
-        var options = new JsonSerializerOptions
+        JsonSerializerOptions options = new()
         {
             AllowOutOfOrderMetadataProperties = true,
             PropertyNameCaseInsensitive = true,
@@ -74,12 +75,12 @@ public class CacheContext
                 {
                     typeInfo =>
                     {
-                        var clrType = typeInfo.Type;
-                        foreach (var property in typeInfo.Properties)
+                        Type clrType = typeInfo.Type;
+                        foreach (JsonPropertyInfo property in typeInfo.Properties)
                         {
                             if (property.Set == null)
                             {
-                                var propInfo = clrType.GetProperty(property.Name,
+                                PropertyInfo? propInfo = clrType.GetProperty(property.Name,
                                     BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
                                 if (propInfo?.SetMethod?.IsPrivate == true)
@@ -94,7 +95,7 @@ public class CacheContext
         };
 
 
-        return options; 
+        return options;
 
     }
 

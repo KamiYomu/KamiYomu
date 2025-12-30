@@ -1,9 +1,8 @@
-﻿namespace KamiYomu.Web.Entities.Addons
+﻿namespace KamiYomu.Web.Entities.Addons;
+
+public class NugetDependencyInfo
 {
-    public class NugetDependencyInfo
-    {
-        public string? Id { get; init; }
-        public string? TargetFramework { get; init; }
-        public string? VersionRange { get; init; }
-    }
+    public string? Id { get; init; }
+    public string? TargetFramework { get; init; }
+    public string? VersionRange { get; init; }
 }

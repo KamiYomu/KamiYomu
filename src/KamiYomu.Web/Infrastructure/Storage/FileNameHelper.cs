@@ -8,21 +8,25 @@ public static class FileNameHelper
     public static string SanitizeFileName(string input, string replacement = "_")
     {
         if (string.IsNullOrWhiteSpace(input))
-            return string.Empty;
-
-        var normalized = input.Normalize(NormalizationForm.FormD);
-
-        var sb = new StringBuilder();
-        foreach (var c in normalized)
         {
-            var uc = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
-            if (uc != System.Globalization.UnicodeCategory.NonSpacingMark)
-                sb.Append(c);
+            return string.Empty;
         }
-        var noAccents = sb.ToString().Normalize(NormalizationForm.FormC);
 
-        var invalidChars = Path.GetInvalidFileNameChars();
-        foreach (var c in invalidChars)
+        string normalized = input.Normalize(NormalizationForm.FormD);
+
+        StringBuilder sb = new();
+        foreach (char c in normalized)
+        {
+            System.Globalization.UnicodeCategory uc = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
+            if (uc != System.Globalization.UnicodeCategory.NonSpacingMark)
+            {
+                _ = sb.Append(c);
+            }
+        }
+        string noAccents = sb.ToString().Normalize(NormalizationForm.FormC);
+
+        char[] invalidChars = Path.GetInvalidFileNameChars();
+        foreach (char c in invalidChars)
         {
             noAccents = noAccents.Replace(c.ToString(), replacement);
         }

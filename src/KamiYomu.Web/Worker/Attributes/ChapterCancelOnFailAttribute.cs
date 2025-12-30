@@ -1,6 +1,7 @@
 ﻿using Hangfire.Common;
 using Hangfire.States;
 using Hangfire.Storage;
+
 using KamiYomu.Web.Infrastructure.Contexts;
 
 namespace KamiYomu.Web.Worker.Attributes;
@@ -25,8 +26,8 @@ public class ChapterCancelOnFailAttribute : JobFilterAttribute, IApplyStateFilte
 
     public void OnStateApplied(ApplyStateContext context, IWriteOnlyTransaction transaction)
     {
-        var oldState = context.OldStateName;
-        var newState = context.NewState?.Name;
+        string oldState = context.OldStateName;
+        string? newState = context.NewState?.Name;
 
         if ((oldState == ProcessingState.StateName &&
             newState == FailedState.StateName) ||
@@ -37,9 +38,9 @@ public class ChapterCancelOnFailAttribute : JobFilterAttribute, IApplyStateFilte
                 _cancelReason = I18n.DownloadMangaHasBeenCancelled;
             }
 
-            var args = context.BackgroundJob.Job.Args;
-            var method = context.BackgroundJob.Job.Method;
-            var parameters = method.GetParameters();
+            IReadOnlyList<object> args = context.BackgroundJob.Job.Args;
+            System.Reflection.MethodInfo method = context.BackgroundJob.Job.Method;
+            System.Reflection.ParameterInfo[] parameters = method.GetParameters();
 
             int libraryIdIndex = Array.FindIndex(parameters, p => p.Name == _libraryIdParameterName);
             int titleIndex = Array.FindIndex(parameters, p => p.Name == _titleParameterName);
@@ -53,22 +54,22 @@ public class ChapterCancelOnFailAttribute : JobFilterAttribute, IApplyStateFilte
 
             if (args[libraryIdIndex] is Guid libraryId)
             {
-                var jobId = context.BackgroundJob.Id;
+                string jobId = context.BackgroundJob.Id;
 
-                var dbContext = _scope.ServiceProvider.GetRequiredService<DbContext>();
+                DbContext dbContext = _scope.ServiceProvider.GetRequiredService<DbContext>();
 
-                var library = dbContext.Libraries.FindById(libraryId);
+                Entities.Library library = dbContext.Libraries.FindById(libraryId);
 
                 if (library != null)
                 {
-                    using var libDbContext = library.GetDbContext();
+                    using LibraryDbContext libDbContext = library.GetDbContext();
 
-                    var downloadChapter = libDbContext.ChapterDownloadRecords.FindOne(p => p.BackgroundJobId == jobId);
+                    Entities.ChapterDownloadRecord downloadChapter = libDbContext.ChapterDownloadRecords.FindOne(p => p.BackgroundJobId == jobId);
 
                     if (downloadChapter != null)
                     {
                         downloadChapter.Cancelled(_cancelReason);
-                        libDbContext.ChapterDownloadRecords.Update(downloadChapter);
+                        _ = libDbContext.ChapterDownloadRecords.Update(downloadChapter);
                     }
                 }
                 _logger.LogWarning("Chapter '{title}' was cancelled. '{newState}' state was applied to the job id '{jobId}'.", args[titleIndex].ToString(), newState, context.BackgroundJob.Id);

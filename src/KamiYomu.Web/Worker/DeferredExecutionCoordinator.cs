@@ -1,5 +1,6 @@
 ﻿using Hangfire;
 using Hangfire.Server;
+
 using KamiYomu.Web.Entities.Worker;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Worker.Interfaces;
@@ -11,23 +12,21 @@ public class DeferredExecutionCoordinator(ILogger<DeferredExecutionCoordinator> 
     public Task DispatchAsync(string queue, PerformContext context, CancellationToken cancellationToken)
     {
         logger.LogInformation("Dispatch \"{title}\".", nameof(DeferredExecutionCoordinator));
-        var monitoring = JobStorage.Current.GetMonitoringApi();
-        var now = DateTime.UtcNow;
+        Hangfire.Storage.IMonitoringApi monitoring = JobStorage.Current.GetMonitoringApi();
+        DateTime now = DateTime.UtcNow;
 
-        var enqueued = monitoring.EnqueuedJobs(queue, 0, int.MaxValue)
+        List<PastJobInfo> enqueued = [.. monitoring.EnqueuedJobs(queue, 0, int.MaxValue)
             .Where(j => j.Value.EnqueuedAt.HasValue && j.Value.EnqueuedAt.Value < now)
-            .Select(j => new PastJobInfo(j.Key, j.Value.EnqueuedAt, "Enqueued", j.Value.Job.Method.Name, j.Value.Job.Type.FullName))
-            .ToList();
+            .Select(j => new PastJobInfo(j.Key, j.Value.EnqueuedAt, "Enqueued", j.Value.Job.Method.Name, j.Value.Job.Type.FullName))];
 
-        var scheduled = monitoring.ScheduledJobs(0, int.MaxValue)
-            .Where(j => 
+        List<PastJobInfo> scheduled = [.. monitoring.ScheduledJobs(0, int.MaxValue)
+            .Where(j =>
                 j.Value.EnqueueAt < now)
-            .Select(j => new PastJobInfo(j.Key, j.Value.EnqueueAt, "Scheduled", j.Value.Job.Method.Name, j.Value.Job.Type.FullName))
-            .ToList();
+            .Select(j => new PastJobInfo(j.Key, j.Value.EnqueueAt, "Scheduled", j.Value.Job.Method.Name, j.Value.Job.Type.FullName))];
 
-        var allPastJobs = enqueued.Concat(scheduled).ToList();
+        List<PastJobInfo> allPastJobs = [.. enqueued, .. scheduled];
 
-        foreach (var job in allPastJobs)
+        foreach (PastJobInfo? job in allPastJobs)
         {
             job.EnqueueImmediately();
 

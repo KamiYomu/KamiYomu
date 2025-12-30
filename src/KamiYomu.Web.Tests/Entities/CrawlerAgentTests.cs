@@ -1,4 +1,4 @@
-﻿using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities;
 
 namespace KamiYomu.Web.Tests.Entities;
 
@@ -26,7 +26,7 @@ public class CrawlerAgentTests
     public void GetAgentDirName_ShouldReturnExpected(string fileName, string expected)
     {
         // Act
-        var result = CrawlerAgent.GetAgentDirName(fileName);
+        string result = CrawlerAgent.GetAgentDirName(fileName);
 
         // Assert
         Assert.Equal(expected, result);

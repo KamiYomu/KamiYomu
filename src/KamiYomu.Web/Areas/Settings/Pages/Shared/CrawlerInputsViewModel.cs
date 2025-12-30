@@ -9,9 +9,9 @@ public class CrawlerInputsViewModel
     public Dictionary<string, object> GetAgentMetadataValues()
     {
         Dictionary<string, object> metadata = [];
-        foreach (var item in AgentMetadata)
+        foreach (KeyValuePair<string, string?> item in AgentMetadata)
         {
-            if (bool.TryParse(item.Value, out var boolValue))
+            if (bool.TryParse(item.Value, out bool boolValue))
             {
                 metadata[item.Key] = boolValue;
             }
@@ -26,7 +26,7 @@ public class CrawlerInputsViewModel
     public static Dictionary<string, string> GetAgentMetadataValues(Dictionary<string, object> values)
     {
         Dictionary<string, string> metadata = [];
-        foreach (var item in values)
+        foreach (KeyValuePair<string, object> item in values)
         {
             metadata[item.Key] = item.Value?.ToString();
         }

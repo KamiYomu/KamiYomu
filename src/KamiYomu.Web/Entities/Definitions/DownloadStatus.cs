@@ -1,11 +1,10 @@
-﻿namespace KamiYomu.Web.Entities.Definitions
+﻿namespace KamiYomu.Web.Entities.Definitions;
+
+public enum DownloadStatus
 {
-    public enum DownloadStatus
-    {
-        ToBeRescheduled = 0,
-        Scheduled = 1,
-        InProgress = 2,
-        Completed = 3,
-        Cancelled = 4,
-    }
+    ToBeRescheduled = 0,
+    Scheduled = 1,
+    InProgress = 2,
+    Completed = 3,
+    Cancelled = 4,
 }

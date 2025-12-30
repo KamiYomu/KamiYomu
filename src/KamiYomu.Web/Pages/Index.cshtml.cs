@@ -1,84 +1,86 @@
 using Hangfire;
+
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
+
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
+
 using System.Globalization;
 
-namespace KamiYomu.Web.Pages
+namespace KamiYomu.Web.Pages;
+
+public class IndexModel(ILogger<IndexModel> logger,
+        IOptions<WorkerOptions> workerOptions,
+                        DbContext dbContext,
+                        INotificationService notificationService) : PageModel
 {
-    public class IndexModel(ILogger<IndexModel> logger,
-            IOptions<WorkerOptions> workerOptions,
-                            DbContext dbContext,
-                            INotificationService notificationService) : PageModel
+    [BindProperty]
+    public string? Culture { get; set; }
+
+    public void OnGet()
     {
-        [BindProperty]
-        public string? Culture { get; set; }
-
-        public void OnGet()
+    }
+    public IActionResult OnPostSetTimeZone(string tz)
+    {
+        if (!string.IsNullOrWhiteSpace(tz))
         {
-        }
-        public IActionResult OnPostSetTimeZone(string tz)
-        {
-            if (!string.IsNullOrWhiteSpace(tz))
+            Response.Cookies.Append("UserTimeZone", tz, new CookieOptions
             {
-                Response.Cookies.Append("UserTimeZone", tz, new CookieOptions
-                {
-                    Expires = DateTime.UtcNow.AddYears(1),
-                    Secure = true,
-                    HttpOnly = false,
-                    IsEssential = true
-                });
-            }
-
-            return new EmptyResult();
+                Expires = DateTime.UtcNow.AddYears(1),
+                Secure = true,
+                HttpOnly = false,
+                IsEssential = true
+            });
         }
 
-        public IActionResult OnPostSetLanguageAsync(string? returnUrl = null, CancellationToken cancellationToken = default)
+        return new EmptyResult();
+    }
+
+    public IActionResult OnPostSetLanguageAsync(string? returnUrl = null, CancellationToken cancellationToken = default)
+    {
+        CultureInfo culture = CultureInfo.GetCultureInfo(Culture);
+
+        UserPreference userPreference = dbContext.UserPreferences.FindOne(x => true);
+
+        if (userPreference != null)
         {
-            var culture = CultureInfo.GetCultureInfo(Culture);
-
-            var userPreference = dbContext.UserPreferences.FindOne(x => true);
-
-            if (userPreference != null)
-            {
-                userPreference.SetCulture(culture);
-            }
-            else
-            {
-                userPreference = new UserPreference(culture);
-            }
-
-            dbContext.UserPreferences.Upsert(userPreference);
-
-            Response.Cookies.Append(
-                CookieRequestCultureProvider.DefaultCookieName,
-                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(Culture))
-            );
-
-            Thread.CurrentThread.CurrentCulture =
-            Thread.CurrentThread.CurrentUICulture =
-            CultureInfo.CurrentCulture =
-            CultureInfo.CurrentUICulture = culture;
-
-            notificationService.EnqueueSuccessForNextPage(I18n.UserInterfaceLanguageChanged);
-
-            return Redirect(returnUrl ?? Url.Page("/Index", new { area = "" }));
+            userPreference.SetCulture(culture);
         }
-
-        public IActionResult OnPostFamilySafeAsync(string? returnUrl = null, CancellationToken cancellationToken = default)
+        else
         {
-            var userPreference = dbContext.UserPreferences.FindOne(x => true);
-            userPreference.SetFamilySafeMode(!userPreference.FamilySafeMode);
-            dbContext.UserPreferences.Upsert(userPreference);
-
-            notificationService.EnqueueSuccessForNextPage(userPreference.FamilySafeMode ? I18n.FamilySafeModeEnabled : I18n.FamilySafeModeDisabled);
-            return Redirect(returnUrl ?? Url.Page("/Index", new { area = "" }));
+            userPreference = new UserPreference(culture);
         }
+
+        _ = dbContext.UserPreferences.Upsert(userPreference);
+
+        Response.Cookies.Append(
+            CookieRequestCultureProvider.DefaultCookieName,
+            CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(Culture))
+        );
+
+        Thread.CurrentThread.CurrentCulture =
+        Thread.CurrentThread.CurrentUICulture =
+        CultureInfo.CurrentCulture =
+        CultureInfo.CurrentUICulture = culture;
+
+        notificationService.EnqueueSuccessForNextPage(I18n.UserInterfaceLanguageChanged);
+
+        return Redirect(returnUrl ?? Url.Page("/Index", new { area = "" }));
+    }
+
+    public IActionResult OnPostFamilySafeAsync(string? returnUrl = null, CancellationToken cancellationToken = default)
+    {
+        UserPreference userPreference = dbContext.UserPreferences.FindOne(x => true);
+        userPreference.SetFamilySafeMode(!userPreference.FamilySafeMode);
+        _ = dbContext.UserPreferences.Upsert(userPreference);
+
+        notificationService.EnqueueSuccessForNextPage(userPreference.FamilySafeMode ? I18n.FamilySafeModeEnabled : I18n.FamilySafeModeDisabled);
+        return Redirect(returnUrl ?? Url.Page("/Index", new { area = "" }));
     }
 }

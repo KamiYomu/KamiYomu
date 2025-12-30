@@ -1,5 +1,6 @@
 ﻿using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
+
 using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Infrastructure.Services;
@@ -14,17 +15,19 @@ public class LockManager : ILockManager
         _workerOptions = workerOptions.Value;
 
         _folder = Path.Combine(Path.GetTempPath(), Defaults.Worker.TempDirName, "locks");
-        Directory.CreateDirectory(_folder);
+        _ = Directory.CreateDirectory(_folder);
     }
 
     public IDisposable? TryAcquireAsync(string crawlerId)
     {
         for (int slot = 1; slot <= _workerOptions.MaxConcurrentCrawlerInstances; slot++)
         {
-            var path = Path.Combine(_folder, $"{crawlerId}-{slot}.lock");
+            string path = Path.Combine(_folder, $"{crawlerId}-{slot}.lock");
 
-            if (TryAcquireSlot(path, out var handle))
+            if (TryAcquireSlot(path, out IDisposable? handle))
+            {
                 return handle;
+            }
         }
 
         return null;
@@ -38,7 +41,7 @@ public class LockManager : ILockManager
         {
             if (File.Exists(path))
             {
-                var lastWrite = File.GetLastWriteTimeUtc(path);
+                DateTime lastWrite = File.GetLastWriteTimeUtc(path);
 
                 if ((DateTime.UtcNow - lastWrite).TotalMinutes > Defaults.Worker.StaleLockTimeout)
                 {
@@ -46,7 +49,7 @@ public class LockManager : ILockManager
                 }
             }
 
-            var fs = new FileStream(
+            FileStream fs = new(
                 path,
                 FileMode.OpenOrCreate,
                 FileAccess.ReadWrite,
@@ -54,7 +57,7 @@ public class LockManager : ILockManager
                 1,
                 FileOptions.None);
 
-            using (var writer = new StreamWriter(fs, leaveOpen: true))
+            using (StreamWriter writer = new(fs, leaveOpen: true))
             {
                 fs.SetLength(0);
                 writer.Write(DateTime.UtcNow.ToString("o"));
@@ -73,7 +76,7 @@ public class LockManager : ILockManager
     private void TryDelete(string path)
     {
         try { File.Delete(path); }
-        catch {}
+        catch { }
     }
 
     private class FileLockHandle : IDisposable

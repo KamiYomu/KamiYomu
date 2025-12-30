@@ -1,6 +1,7 @@
 ﻿using KamiYomu.CrawlerAgents.Core.Catalog.Definitions;
 using KamiYomu.Web.Entities.Definitions;
 using KamiYomu.Web.Entities.Notifications.Definitions;
+
 using LiteDB;
 
 
@@ -55,34 +56,31 @@ public partial class Defaults
     {
         public static void Configure()
         {
-            var mapper = BsonMapper.Global;
+            BsonMapper mapper = BsonMapper.Global;
 
             mapper.RegisterType<Uri>(
                 uri => uri != null ? new BsonValue(uri.ToString()) : BsonValue.Null,
                 bson =>
                 {
-                    var str = bson.AsString;
-                    if (string.IsNullOrWhiteSpace(str)) return null;
-
-                    return Uri.TryCreate(str, UriKind.RelativeOrAbsolute, out Uri? uri) ? uri : null;
+                    string str = bson.AsString;
+                    return string.IsNullOrWhiteSpace(str) ? null : Uri.TryCreate(str, UriKind.RelativeOrAbsolute, out Uri? uri) ? uri : null;
                 }
             );
 
-            mapper.RegisterType<DownloadStatus>(
+            mapper.RegisterType(
                 serialize: status => new BsonValue((int)status),
                 deserialize: bson => (DownloadStatus)bson.AsInt32
             );
 
-            mapper.RegisterType<NotificationType>(
+            mapper.RegisterType(
                 serialize: status => new BsonValue((int)status),
                 deserialize: bson => (NotificationType)bson.AsInt32
             );
 
-            mapper.RegisterType<ReleaseStatus>(
+            mapper.RegisterType(
                 serialize: status => new BsonValue((int)status),
                 deserialize: bson => (ReleaseStatus)bson.AsInt32
             );
         }
     }
-
 }

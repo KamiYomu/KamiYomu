@@ -3,6 +3,7 @@ using KamiYomu.Web.Entities.Notifications;
 using KamiYomu.Web.Hubs;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
+
 using Microsoft.AspNetCore.SignalR;
 
 namespace KamiYomu.Web.Infrastructure.Services;
@@ -54,11 +55,9 @@ public class NotificationService : INotificationService
 
     public Notification? DequeuePendingNotification()
     {
-        if(_cacheDbContext.TryGetCached<Notification>(Defaults.UI.EnqueueNotification, out var notification))
-        {
-            return notification;
-        }
-        return null;
+        return _cacheDbContext.TryGetCached<Notification>(Defaults.UI.EnqueueNotification, out Notification? notification)
+            ? notification
+            : null;
     }
 
     public void EnqueueErrorForNextPage(string message)

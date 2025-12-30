@@ -1,5 +1,6 @@
 using Hangfire;
 using Hangfire.Storage.SQLite;
+
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Filters;
@@ -13,31 +14,39 @@ using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Middlewares;
 using KamiYomu.Web.Worker;
 using KamiYomu.Web.Worker.Interfaces;
+
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Options;
+
 using MonkeyCache;
 using MonkeyCache.LiteDB;
+
 using Polly;
 using Polly.Extensions.Http;
+
 using QuestPDF.Fluent;
+
 using Serilog;
+
 using SQLite;
+
 using System.Globalization;
 using System.Text.Json.Serialization;
+
 using static KamiYomu.Web.AppOptions.Defaults;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 if (!IsRunningInDocker())
 {
     if (OperatingSystem.IsWindows())
     {
-        builder.Host.UseWindowsService();
+        _ = builder.Host.UseWindowsService();
     }
     else if (OperatingSystem.IsLinux())
     {
-        builder.Host.UseSystemd();
+        _ = builder.Host.UseSystemd();
     }
 }
 
@@ -101,7 +110,7 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
-    var supportedCultures = new[]
+    CultureInfo[] supportedCultures = new[]
     {
             new CultureInfo("en-US"),
             new CultureInfo("pt-BR"),
@@ -128,11 +137,11 @@ builder.Services.AddRazorPages()
                 .AddDataAnnotationsLocalization();
 
 
-var retryPolicy = HttpPolicyExtensions
+Polly.Retry.AsyncRetryPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtensions
     .HandleTransientHttpError()
     .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 
-var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(Worker.HttpTimeOutInSeconds);
+Polly.Timeout.AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(Worker.HttpTimeOutInSeconds);
 
 builder.Services.AddHttpClient(Worker.HttpClientBackground, client =>
 {
@@ -144,40 +153,40 @@ builder.Services.AddHttpClient(Worker.HttpClientBackground, client =>
 AddHangfireConfig(builder);
 
 
-    var app = builder.Build();
+WebApplication app = builder.Build();
 Defaults.ServiceLocator.Configure(() => app.Services);
 
 if (!app.Environment.IsDevelopment())
 {
     QuestPDF.Settings.EnableDebugging = true;
-    app.UseExceptionHandler("/Error");
+    _ = app.UseExceptionHandler("/Error");
 }
-using (var appScoped = app.Services.CreateScope())
+using (IServiceScope appScoped = app.Services.CreateScope())
 {
-    var specialFolderOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<SpecialFolderOptions>>().Value;
-    var startupOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<StartupOptions>>().Value;
-    var localizationOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<RequestLocalizationOptions>>();
+    SpecialFolderOptions specialFolderOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<SpecialFolderOptions>>().Value;
+    StartupOptions startupOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<StartupOptions>>().Value;
+    IOptions<RequestLocalizationOptions> localizationOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<RequestLocalizationOptions>>();
 
 
-    Directory.CreateDirectory(specialFolderOptions.LogDir);
-    Directory.CreateDirectory(specialFolderOptions.DbDir);
-    Directory.CreateDirectory(specialFolderOptions.AgentsDir);
-    Directory.CreateDirectory(specialFolderOptions.MangaDir);
+    _ = Directory.CreateDirectory(specialFolderOptions.LogDir);
+    _ = Directory.CreateDirectory(specialFolderOptions.DbDir);
+    _ = Directory.CreateDirectory(specialFolderOptions.AgentsDir);
+    _ = Directory.CreateDirectory(specialFolderOptions.MangaDir);
 
     Barrel.ApplicationId = nameof(KamiYomu);
     BarrelUtils.SetBaseCachePath(specialFolderOptions.DbDir);
 
-    using var dbcontext = appScoped.ServiceProvider.GetRequiredService<DbContext>();
-    var userPreference = dbcontext.UserPreferences.FindOne(p => true);
+    using DbContext dbcontext = appScoped.ServiceProvider.GetRequiredService<DbContext>();
+    UserPreference userPreference = dbcontext.UserPreferences.FindOne(p => true);
     if (userPreference == null)
     {
         userPreference = new UserPreference(new CultureInfo(startupOptions.DefaultLanguage));
-        appScoped.ServiceProvider.GetService<DbContext>()!.UserPreferences.Insert(userPreference);
+        _ = appScoped.ServiceProvider.GetService<DbContext>()!.UserPreferences.Insert(userPreference);
     }
 
     localizationOptions.Value.DefaultRequestCulture = new RequestCulture(userPreference!.GetCulture());
 
-    app.UseRequestLocalization(localizationOptions.Value);
+    _ = app.UseRequestLocalization(localizationOptions.Value);
 }
 
 app.UseResponseCompression();
@@ -194,8 +203,8 @@ app.UseHangfireDashboard("/worker", new DashboardOptions
 });
 
 
-RecurringJob.AddOrUpdate<IDeferredExecutionCoordinator>(Worker.DeferredExecutionQueue, 
-                                                        (job) => job.DispatchAsync(Worker.DeferredExecutionQueue, null!, CancellationToken.None), 
+RecurringJob.AddOrUpdate<IDeferredExecutionCoordinator>(Worker.DeferredExecutionQueue,
+                                                        (job) => job.DispatchAsync(Worker.DeferredExecutionQueue, null!, CancellationToken.None),
                                                         Cron.MinuteInterval(Defaults.Worker.DeferredExecutionInMinutes));
 
 app.MapRazorPages();
@@ -206,25 +215,25 @@ app.Run();
 
 static void AddHangfireConfig(WebApplicationBuilder builder)
 {
-    var workerOptions = builder.Configuration.GetSection("Worker").Get<WorkerOptions>();
-    var serverNames = workerOptions.ServerAvailableNames;
- 
+    WorkerOptions? workerOptions = builder.Configuration.GetSection("Worker").Get<WorkerOptions>();
+    IEnumerable<string> serverNames = workerOptions.ServerAvailableNames;
 
-    builder.Services.AddHangfire(configuration => configuration.UseSimpleAssemblyNameTypeSerializer()
+
+    _ = builder.Services.AddHangfire(configuration => configuration.UseSimpleAssemblyNameTypeSerializer()
                                                            .UseRecommendedSerializerSettings()
                                                            .UseSQLiteStorage(new SQLiteDbConnectionFactory(() =>
                                                            {
-                                                               var connectionString = new SQLiteConnectionString(builder.Configuration.GetConnectionString("WorkerDb"),
+                                                               SQLiteConnectionString connectionString = new(builder.Configuration.GetConnectionString("WorkerDb"),
                                                                    SQLiteOpenFlags.Create
                                                                    | SQLiteOpenFlags.ReadWrite
                                                                    | SQLiteOpenFlags.PrivateCache
                                                                    | SQLiteOpenFlags.FullMutex, true);
-                                                               var connection = new SQLiteConnection(connectionString);
+                                                               SQLiteConnection connection = new(connectionString);
 
-                                                               var journalMode = connection.ExecuteScalar<string>("PRAGMA journal_mode=WAL;");
+                                                               string journalMode = connection.ExecuteScalar<string>("PRAGMA journal_mode=WAL;");
 
 
-                                                               var busyTimeout = connection.ExecuteScalar<string>("PRAGMA busy_timeout=5000;");
+                                                               string busyTimeout = connection.ExecuteScalar<string>("PRAGMA busy_timeout=5000;");
 
                                                                return connection;
                                                            }),
@@ -236,17 +245,16 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
                                                                CountersAggregateInterval = TimeSpan.FromMinutes(5)
                                                            }));
 
-    var allQueues = workerOptions.GetAllQueues().ToList();
-    var queuesPerServer = allQueues
+    List<string> allQueues = [.. workerOptions.GetAllQueues()];
+    List<List<string>> queuesPerServer = [.. allQueues
         .Select((queue, index) => new { queue, index })
         .GroupBy(x => x.index % serverNames.Count())
-        .Select(g => g.Select(x => x.queue).ToList())
-        .ToList();
+        .Select(g => g.Select(x => x.queue).ToList())];
 
     // Register each server separately
-    foreach (var (serverName, queues) in serverNames.Zip(queuesPerServer))
+    foreach ((string serverName, List<string> queues) in serverNames.Zip(queuesPerServer))
     {
-        builder.Services.AddHangfireServer((services, options) =>
+        _ = builder.Services.AddHangfireServer((services, options) =>
         {
             options.ServerName = serverName;
             options.WorkerCount = workerOptions.WorkerCount;
@@ -259,7 +267,7 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
     {
         Attempts = workerOptions.MaxRetryAttempts,
         OnAttemptsExceeded = AttemptsExceededAction.Delete,
-        LogEvents = true        
+        LogEvents = true
     });
 }
 

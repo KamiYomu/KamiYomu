@@ -1,6 +1,7 @@
 ﻿using Hangfire;
 using Hangfire.States;
 using Hangfire.Storage;
+
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities.Worker;
 
@@ -10,15 +11,15 @@ public static class HangfireExtensions
 {
     public static void EnqueueAfterDelay(this BackgroundJob backgroundJob, TimeSpan delay)
     {
-        using var connection = JobStorage.Current.GetConnection();
+        using IStorageConnection connection = JobStorage.Current.GetConnection();
 
-        using var transaction = connection.CreateWriteTransaction();
+        using IWriteOnlyTransaction transaction = connection.CreateWriteTransaction();
 
-        var queue = backgroundJob.Job.Queue;
+        string queue = backgroundJob.Job.Queue;
 
         connection.SetJobParameter(backgroundJob.Id, "Queue", queue);
 
-        var newState = new ScheduledState(delay);
+        ScheduledState newState = new(delay);
 
         transaction.SetJobState(backgroundJob.Id, newState);
 
@@ -28,17 +29,17 @@ public static class HangfireExtensions
 
     public static void EnqueueImmediately(this PastJobInfo pastJobInfo)
     {
-        using var connection = JobStorage.Current.GetConnection();
+        using IStorageConnection connection = JobStorage.Current.GetConnection();
 
-        using var transaction = connection.CreateWriteTransaction();
+        using IWriteOnlyTransaction transaction = connection.CreateWriteTransaction();
 
-        var monitoringApi = JobStorage.Current.GetMonitoringApi();
+        IMonitoringApi monitoringApi = JobStorage.Current.GetMonitoringApi();
 
-        var jobDetails = monitoringApi.JobDetails(pastJobInfo.JobId);
+        Hangfire.Storage.Monitoring.JobDetailsDto jobDetails = monitoringApi.JobDetails(pastJobInfo.JobId);
 
-        var enqueuedState = jobDetails.History.FirstOrDefault(h => h.StateName == "Enqueued");
+        Hangfire.Storage.Monitoring.StateHistoryDto? enqueuedState = jobDetails.History.FirstOrDefault(h => h.StateName == "Enqueued");
 
-        var queue = enqueuedState?.Data["Queue"] ?? EnqueuedState.DefaultQueue;
+        string queue = enqueuedState?.Data["Queue"] ?? EnqueuedState.DefaultQueue;
 
         transaction.AddToQueue(queue, pastJobInfo.JobId);
 

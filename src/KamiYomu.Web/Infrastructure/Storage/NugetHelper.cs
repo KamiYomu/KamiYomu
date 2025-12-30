@@ -6,16 +6,19 @@ public static class NugetHelper
 {
     public static bool IsNugetPackage(string filePath)
     {
-        if (!File.Exists(filePath)) return false;
+        if (!File.Exists(filePath))
+        {
+            return false;
+        }
 
         try
         {
-            using var archive = ZipFile.OpenRead(filePath);
+            using ZipArchive archive = ZipFile.OpenRead(filePath);
             return archive.Entries.Any(entry => entry.FullName.EndsWith(".nuspec", StringComparison.OrdinalIgnoreCase));
         }
         catch
         {
-            return false; 
+            return false;
         }
     }
 

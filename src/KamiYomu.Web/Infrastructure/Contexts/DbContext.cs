@@ -1,5 +1,6 @@
 ﻿using KamiYomu.Web.Entities;
 using KamiYomu.Web.Entities.Addons;
+
 using LiteDB;
 
 namespace KamiYomu.Web.Infrastructure.Contexts;
@@ -8,7 +9,8 @@ public class DbContext : IDisposable
 {
     private bool _disposed = false;
     private readonly LiteDatabase _database;
-    public DbContext(string connectionString) {
+    public DbContext(string connectionString)
+    {
         _database = new(connectionString);
     }
 
@@ -27,7 +29,9 @@ public class DbContext : IDisposable
     protected virtual void Dispose(bool disposing)
     {
         if (_disposed)
+        {
             return;
+        }
 
         if (disposing)
         {

@@ -1,5 +1,7 @@
 ﻿using KamiYomu.Web.AppOptions;
+
 using Microsoft.Extensions.Options;
+
 using System.Security.Claims;
 using System.Text;
 
@@ -16,7 +18,7 @@ public class BasicAuthMiddleware(RequestDelegate next, IOptions<BasicAuthOptions
             return;
         }
 
-        var authHeader = context.Request.Headers["Authorization"].ToString();
+        string authHeader = context.Request.Headers["Authorization"].ToString();
 
         if (string.IsNullOrWhiteSpace(authHeader) ||
             !authHeader.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
@@ -27,9 +29,9 @@ public class BasicAuthMiddleware(RequestDelegate next, IOptions<BasicAuthOptions
 
         try
         {
-            var encoded = authHeader["Basic ".Length..].Trim();
-            var decoded = Encoding.UTF8.GetString(Convert.FromBase64String(encoded));
-            var parts = decoded.Split(':', 2);
+            string encoded = authHeader["Basic ".Length..].Trim();
+            string decoded = Encoding.UTF8.GetString(Convert.FromBase64String(encoded));
+            string[] parts = decoded.Split(':', 2);
 
             if (parts.Length != 2)
             {
@@ -37,8 +39,8 @@ public class BasicAuthMiddleware(RequestDelegate next, IOptions<BasicAuthOptions
                 return;
             }
 
-            var username = parts[0];
-            var password = parts[1];
+            string username = parts[0];
+            string password = parts[1];
 
             if (username != _options.AdminUsername || password != _options.AdminPassword)
             {
@@ -46,11 +48,11 @@ public class BasicAuthMiddleware(RequestDelegate next, IOptions<BasicAuthOptions
                 return;
             }
 
-            var claims = new[]
+            Claim[] claims = new[]
             {
                 new Claim(ClaimTypes.Name, username)
             };
-            var identity = new ClaimsIdentity(claims, "Basic");
+            ClaimsIdentity identity = new(claims, "Basic");
             context.User = new ClaimsPrincipal(identity);
 
             await next(context);

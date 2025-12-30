@@ -4,6 +4,7 @@ using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
@@ -17,18 +18,18 @@ public class AddToCollectionModel(
 {
 
     public TemplateVariablesViewModel Variables { get; private set; } = new();
-    public Manga Manga { get; private set; }
+    public Manga? Manga { get; private set; }
 
     [BindProperty]
     public string MangaId { get; set; } = string.Empty;
     [BindProperty]
-    public string RefreshElementId { get; set; }
+    public required string RefreshElementId { get; set; }
     [BindProperty]
     public Guid CrawlerAgentId { get; set; } = Guid.Empty;
     [BindProperty]
-    public string FilePathTemplate { get; set; }
+    public required string FilePathTemplate { get; set; }
 
-    public string[] TemplateResults { get; private set; } = Array.Empty<string>();
+    public string[] TemplateResults { get; private set; } = [];
 
     public async Task OnGetAsync(Guid crawlerAgentId, string mangaId, string refreshElementId, CancellationToken cancellationToken)
     {
@@ -36,7 +37,7 @@ public class AddToCollectionModel(
         {
             return;
         }
-        var preferences = dbContext.UserPreferences.FindOne(p => true);
+        Entities.UserPreference preferences = dbContext.UserPreferences.FindOne(p => true);
 
         RefreshElementId = refreshElementId;
         CrawlerAgentId = crawlerAgentId;
@@ -44,7 +45,7 @@ public class AddToCollectionModel(
         FilePathTemplate = string.IsNullOrWhiteSpace(preferences.FilePathTemplate) ? specialFolderOptions.Value.FilePathFormat : preferences.FilePathTemplate;
         Manga = await crawlerAgentRepository.GetMangaAsync(crawlerAgentId, mangaId, cancellationToken);
         TemplateResults = [.. GetTemplateResults(FilePathTemplate, Manga)];
-        var chapter = ChapterBuilder.Create()
+        Chapter chapter = ChapterBuilder.Create()
             .WithNumber(1)
             .WithTitle(I18n.ChapterFunnyTemplate1)
             .WithVolume(1)
@@ -60,41 +61,41 @@ public class AddToCollectionModel(
 
     public async Task<IActionResult> OnPostPreviewAsync(CancellationToken cancellationToken)
     {
-        var manga = await crawlerAgentRepository.GetMangaAsync(CrawlerAgentId, MangaId, cancellationToken);
+        Manga manga = await crawlerAgentRepository.GetMangaAsync(CrawlerAgentId, MangaId, cancellationToken);
 
-        TemplateResults = GetTemplateResults(FilePathTemplate, manga).ToArray();
+        TemplateResults = [.. GetTemplateResults(FilePathTemplate, manga)];
 
         return Partial("_PathTemplatePreview", TemplateResults);
     }
 
     private List<string> GetTemplateResults(string template, Manga manga)
     {
-        var chapter1 = ChapterBuilder.Create()
+        Chapter chapter1 = ChapterBuilder.Create()
                                 .WithNumber(1)
                                 .WithTitle(I18n.ChapterFunnyTemplate1)
                                 .WithVolume(1)
                                 .Build();
 
-        var chapter2 = ChapterBuilder.Create()
+        Chapter chapter2 = ChapterBuilder.Create()
                         .WithNumber(2)
                         .WithTitle(I18n.ChapterFunnyTemplate2)
                         .WithVolume(1)
                         .Build();
 
-        var chapter3 = ChapterBuilder.Create()
+        Chapter chapter3 = ChapterBuilder.Create()
                         .WithNumber(3)
                         .WithTitle(I18n.ChapterFunnyTemplate3)
                         .WithVolume(2)
                         .Build();
 
-        var chapter4 = ChapterBuilder.Create()
+        Chapter chapter4 = ChapterBuilder.Create()
                         .WithNumber(4)
                         .WithTitle(I18n.ChapterFunnyTemplate4)
                         .WithVolume(2)
                         .Build();
 
-        var results = new List<string>
-            {
+        List<string> results =
+        [
                 TemplateResolver.Resolve(template, manga, chapter1),
 
                 TemplateResolver.Resolve(
@@ -117,7 +118,7 @@ public class AddToCollectionModel(
                     chapter4,
                     DateTime.Now.AddMinutes(3)
                 ),
-            };
+            ];
 
         if (results.All(string.IsNullOrWhiteSpace))
         {
@@ -125,11 +126,11 @@ public class AddToCollectionModel(
         }
         else
         {
-            var distinctCount = results.Where(x => !string.IsNullOrWhiteSpace(x))
+            int distinctCount = results.Where(x => !string.IsNullOrWhiteSpace(x))
                                        .Distinct()
                                        .Count();
 
-            var totalCount = results.Count(x => !string.IsNullOrWhiteSpace(x));
+            int totalCount = results.Count(x => !string.IsNullOrWhiteSpace(x));
 
             bool allDifferent = distinctCount == totalCount;
 
@@ -147,7 +148,7 @@ public class AddToCollectionModel(
 
 public class TemplateVariablesViewModel
 {
-    public Dictionary<string, string> Manga { get; set; } = new();
-    public Dictionary<string, string> Chapter { get; set; } = new();
-    public Dictionary<string, string> DateTime { get; set; } = new();
+    public Dictionary<string, string> Manga { get; set; } = [];
+    public Dictionary<string, string> Chapter { get; set; } = [];
+    public Dictionary<string, string> DateTime { get; set; } = [];
 }

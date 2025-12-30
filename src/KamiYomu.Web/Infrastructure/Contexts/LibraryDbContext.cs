@@ -1,4 +1,5 @@
 ﻿using KamiYomu.Web.Entities;
+
 using LiteDB;
 
 namespace KamiYomu.Web.Infrastructure.Contexts;
@@ -32,7 +33,9 @@ public class LibraryDbContext : IDisposable
     protected virtual void Dispose(bool disposing)
     {
         if (_disposed)
+        {
             return;
+        }
 
         if (disposing)
         {

@@ -1,4 +1,4 @@
-﻿using KamiYomu.CrawlerAgents.Core.Catalog.Builders;
+using KamiYomu.CrawlerAgents.Core.Catalog.Builders;
 using KamiYomu.Web.Infrastructure.Services;
 
 namespace KamiYomu.Web.Tests.Services;
@@ -8,7 +8,7 @@ public class TemplateResolverTest
     [Fact]
     public void GetMangaVariables_ReturnsEmpty_WhenNull()
     {
-        var result = TemplateResolver.GetMangaVariables(null);
+        Dictionary<string, string> result = TemplateResolver.GetMangaVariables(null);
 
         Assert.Equal("", result["manga_title"]);
         Assert.Equal("", result["manga_title_slug"]);
@@ -18,12 +18,12 @@ public class TemplateResolverTest
     [Fact]
     public void GetMangaVariables_ReturnsCorrectValues()
     {
-        var manga = MangaBuilder.Create()
+        CrawlerAgents.Core.Catalog.Manga manga = MangaBuilder.Create()
             .WithTitle("One Piece")
             .WithIsFamilySafe(true)
             .Build();
 
-        var result = TemplateResolver.GetMangaVariables(manga);
+        Dictionary<string, string> result = TemplateResolver.GetMangaVariables(manga);
 
         Assert.Equal("One Piece", result["manga_title"]);
         Assert.Equal("one-piece", result["manga_title_slug"]);
@@ -33,7 +33,7 @@ public class TemplateResolverTest
     [Fact]
     public void GetChapterVariables_ReturnsEmpty_WhenNull()
     {
-        var result = TemplateResolver.GetChapterVariables(null);
+        Dictionary<string, string> result = TemplateResolver.GetChapterVariables(null);
 
         Assert.Equal("", result["chapter"]);
         Assert.Equal("", result["chapter"]);
@@ -45,13 +45,13 @@ public class TemplateResolverTest
     [Fact]
     public void GetChapterVariables_ReturnsCorrectValues()
     {
-        var chapter = ChapterBuilder.Create()
+        CrawlerAgents.Core.Catalog.Chapter chapter = ChapterBuilder.Create()
             .WithNumber(12)
             .WithTitle("Romance Dawn")
             .WithVolume(3)
             .Build();
 
-        var result = TemplateResolver.GetChapterVariables(chapter);
+        Dictionary<string, string> result = TemplateResolver.GetChapterVariables(chapter);
 
         Assert.Equal("0012", result["chapter_padded_4"]);
         Assert.Equal("12", result["chapter"]);
@@ -63,19 +63,19 @@ public class TemplateResolverTest
     [Fact]
     public void Resolve_ReturnsEmpty_WhenTemplateIsNull()
     {
-        var result = TemplateResolver.Resolve(null, null, null, null);
+        string result = TemplateResolver.Resolve(null, null, null, null);
         Assert.Equal("", result);
     }
 
     [Fact]
     public void Resolve_ReplacesAllVariablesCorrectly()
     {
-        var manga = MangaBuilder.Create()
+        CrawlerAgents.Core.Catalog.Manga manga = MangaBuilder.Create()
             .WithTitle("One Piece")
             .WithIsFamilySafe(true)
             .Build();
 
-        var chapter = ChapterBuilder.Create()
+        CrawlerAgents.Core.Catalog.Chapter chapter = ChapterBuilder.Create()
             .WithNumber(1)
             .WithTitle("Romance Dawn")
             .WithVolume(1)
@@ -92,12 +92,12 @@ public class TemplateResolverTest
     [Fact]
     public void Slugify_IsAppliedCorrectly()
     {
-        var manga = MangaBuilder.Create()
+        CrawlerAgents.Core.Catalog.Manga manga = MangaBuilder.Create()
             .WithTitle("My Manga_Title Test")
             .WithIsFamilySafe(false)
             .Build();
 
-        var result = TemplateResolver.GetMangaVariables(manga);
+        Dictionary<string, string> result = TemplateResolver.GetMangaVariables(manga);
 
         Assert.Equal("my-manga-title-test", result["manga_title_slug"]);
     }

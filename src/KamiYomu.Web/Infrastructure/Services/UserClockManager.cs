@@ -13,24 +13,21 @@ public class UserClockManager : IUserClockManager
 
     public TimeZoneInfo GetTimeZone()
     {
-        var tzId = _contextAccessor.HttpContext?.Request.Cookies["UserTimeZone"];
-        if (string.IsNullOrEmpty(tzId))
-            return TimeZoneInfo.Utc;
-
-        return TimeZoneInfo.FindSystemTimeZoneById(tzId);
+        string? tzId = _contextAccessor.HttpContext?.Request.Cookies["UserTimeZone"];
+        return string.IsNullOrEmpty(tzId) ? TimeZoneInfo.Utc : TimeZoneInfo.FindSystemTimeZoneById(tzId);
     }
 
     public DateTimeOffset ConvertToUserTime(DateTimeOffset utc)
     {
-        var tz = GetTimeZone();
+        TimeZoneInfo tz = GetTimeZone();
         return TimeZoneInfo.ConvertTime(utc, tz);
     }
 
     public DateTimeOffset ConvertToUtc(DateTimeOffset local)
     {
-        var tz = GetTimeZone();
+        TimeZoneInfo tz = GetTimeZone();
 
-        var targetTime = TimeZoneInfo.ConvertTime(local, tz);
+        DateTimeOffset targetTime = TimeZoneInfo.ConvertTime(local, tz);
 
         return targetTime.ToUniversalTime();
     }

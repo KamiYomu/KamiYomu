@@ -1,5 +1,6 @@
 ﻿using Hangfire;
 using Hangfire.Server;
+
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
@@ -7,7 +8,9 @@ using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
+
 using Microsoft.Extensions.Options;
+
 using System.Globalization;
 
 namespace KamiYomu.Web.Worker;
@@ -25,8 +28,8 @@ public class ChapterDiscoveryJob(
     {
         logger.LogInformation("Dispatch \"{title}\".", nameof(ChapterDiscoveryJob));
 
-        var userPreference = dbContext.UserPreferences.FindOne(p => true);
-        var culture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
+        UserPreference userPreference = dbContext.UserPreferences.FindOne(p => true);
+        CultureInfo culture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
 
         Thread.CurrentThread.CurrentCulture = culture;
         Thread.CurrentThread.CurrentUICulture = culture;
@@ -37,7 +40,7 @@ public class ChapterDiscoveryJob(
             return;
         }
 
-        var library = dbContext.Libraries.FindById(libraryId);
+        Library library = dbContext.Libraries.FindById(libraryId);
 
         if (library == null)
         {
@@ -45,12 +48,12 @@ public class ChapterDiscoveryJob(
             return;
         }
 
-        using var libDbContext = library.GetDbContext();
-        var mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Library.Id == libraryId);
-        var files = Directory.GetFiles(library.GetMangaDirectory(), "*.cbz", SearchOption.AllDirectories);
+        using LibraryDbContext libDbContext = library.GetDbContext();
+        MangaDownloadRecord mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Library.Id == libraryId);
+        string[] files = Directory.GetFiles(library.GetMangaDirectory(), "*.cbz", SearchOption.AllDirectories);
 
-        var crawlerAgent = mangaDownload.Library.CrawlerAgent;
-        var mangaId = mangaDownload.Library.Manga!.Id;
+        CrawlerAgent crawlerAgent = mangaDownload.Library.CrawlerAgent;
+        string mangaId = mangaDownload.Library.Manga!.Id;
 
         int offset = 0;
         const int limit = 100;
@@ -64,23 +67,23 @@ public class ChapterDiscoveryJob(
             {
                 logger.LogWarning("Dispatch cancelled during chapter fetch for manga: '{MangaId}'", mangaId);
                 mangaDownload.Cancelled($"Cancelled during the running job: {mangaId}");
-                libDbContext.MangaDownloadRecords.Update(mangaDownload);
+                _ = libDbContext.MangaDownloadRecords.Update(mangaDownload);
                 return;
             }
 
-            var page = await agentCrawlerRepository.GetMangaChaptersAsync(
+            PagedResult<Chapter> page = await agentCrawlerRepository.GetMangaChaptersAsync(
                 crawlerAgent.Id, mangaId, new PaginationOptions(offset, limit), cancellationToken);
 
             total = page.PaginationOptions.Total;
 
-            foreach (var chapter in page.Data)
+            foreach (Chapter chapter in page.Data)
             {
                 if (File.Exists(library.GetCbzFilePath(chapter)))
                 {
                     continue;
                 }
 
-                var record = libDbContext.ChapterDownloadRecords
+                ChapterDownloadRecord record = libDbContext.ChapterDownloadRecords
                                          .FindOne(p => p.Chapter!.Id == chapter.Id
                                                     && p.CrawlerAgent!.Id == crawlerAgent.Id)
                                          ?? new ChapterDownloadRecord(crawlerAgent, mangaDownload, chapter);
@@ -92,12 +95,12 @@ public class ChapterDiscoveryJob(
 
                 record.ToBeRescheduled();
 
-                libDbContext.ChapterDownloadRecords.Upsert(record);
-                var queueState = hangfireRepository.GetLeastLoadedDownloadChapterQueue();
-                var backgroundJobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(queueState.Queue, p => p.DispatchAsync(queueState.Queue, library.CrawlerAgent.Id, library.Id, mangaDownload.Id, record.Id, library.GetCbzFileName(chapter), null!, CancellationToken.None));
+                _ = libDbContext.ChapterDownloadRecords.Upsert(record);
+                Hangfire.States.EnqueuedState queueState = hangfireRepository.GetLeastLoadedDownloadChapterQueue();
+                string backgroundJobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(queueState.Queue, p => p.DispatchAsync(queueState.Queue, library.CrawlerAgent.Id, library.Id, mangaDownload.Id, record.Id, library.GetCbzFileName(chapter), null!, CancellationToken.None));
 
                 record.Scheduled(backgroundJobId);
-                libDbContext.ChapterDownloadRecords.Update(record);
+                _ = libDbContext.ChapterDownloadRecords.Update(record);
                 await Task.Delay(_workerOptions.GetWaitPeriod(), cancellationToken);
             }
 

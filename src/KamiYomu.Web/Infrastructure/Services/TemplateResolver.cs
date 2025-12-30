@@ -8,15 +8,17 @@ public static class TemplateResolver
     public static string Resolve(string template, Manga? manga, Chapter? chapter, DateTime? date = null)
     {
         if (string.IsNullOrWhiteSpace(template))
+        {
             return string.Empty;
+        }
 
-        var map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        Dictionary<string, string> map = new(StringComparer.OrdinalIgnoreCase);
 
         Merge(map, GetMangaVariables(manga));
         Merge(map, GetChapterVariables(chapter));
         Merge(map, GetDateTimeVariables(date));
 
-        foreach (var kv in map)
+        foreach (KeyValuePair<string, string> kv in map)
         {
             template = template.Replace("{" + kv.Key + "}", kv.Value ?? string.Empty);
         }
@@ -26,23 +28,22 @@ public static class TemplateResolver
 
     private static void Merge(Dictionary<string, string> target, Dictionary<string, string> source)
     {
-        foreach (var kv in source)
+        foreach (KeyValuePair<string, string> kv in source)
+        {
             target[kv.Key] = kv.Value;
+        }
     }
 
     public static Dictionary<string, string> GetMangaVariables(Manga? manga)
     {
-        if(manga == null)
-        {
-            return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        return manga == null
+            ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 ["manga_title"] = "",
                 ["manga_title_slug"] = "",
                 ["manga_familysafe"] = "",
-            };
-        }
-
-        return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            }
+            : new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
             ["manga_title"] = FileNameHelper.SanitizeFileName(manga.Title) ?? "",
             ["manga_title_slug"] = Slugify(FileNameHelper.SanitizeFileName(manga.Title) ?? ""),
@@ -53,9 +54,8 @@ public static class TemplateResolver
 
     public static Dictionary<string, string> GetChapterVariables(Chapter? chapter)
     {
-        if(chapter == null)
-        {
-            return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        return chapter == null
+            ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 ["chapter"] = "",
                 ["chapter_padded_1"] = "",
@@ -71,11 +71,8 @@ public static class TemplateResolver
                 ["volume_padded_3"] = "",
                 ["volume_padded_4"] = "",
                 ["volume_padded_5"] = ""
-            };
-        }
-
-
-        return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            }
+            : new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
             ["chapter"] = chapter.Number.ToString(),
             ["chapter_padded_1"] = chapter.Number.ToString("0"),
@@ -122,10 +119,9 @@ public static class TemplateResolver
 
     private static string Slugify(string? text)
     {
-        if (string.IsNullOrWhiteSpace(text))
-            return "";
-
-        return text
+        return string.IsNullOrWhiteSpace(text)
+            ? ""
+            : text
             .ToLowerInvariant()
             .Replace(" ", "-")
             .Replace("_", "-");

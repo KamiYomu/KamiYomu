@@ -2,10 +2,14 @@
 
 using Hangfire.Common;
 using Hangfire.Server;
+
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
+
 using Microsoft.Extensions.Logging;
+
 using System;
+
 using static KamiYomu.Web.AppOptions.Defaults;
 
 [AttributeUsage(AttributeTargets.Method)]
@@ -35,9 +39,9 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
     {
         try
         {
-            var args = context.BackgroundJob.Job.Args;
-            var method = context.BackgroundJob.Job.Method;
-            var parameters = method.GetParameters();
+            IReadOnlyList<object> args = context.BackgroundJob.Job.Args;
+            System.Reflection.MethodInfo method = context.BackgroundJob.Job.Method;
+            System.Reflection.ParameterInfo[] parameters = method.GetParameters();
 
             int index = Array.FindIndex(parameters, p => p.Name == _parameterName);
 
@@ -51,11 +55,11 @@ public class PerKeyConcurrencyAttribute : JobFilterAttribute, IServerFilter
 
             string key = args[index]?.ToString() ?? "null";
 
-            var handle = _lockManager.TryAcquireAsync(key);
+            IDisposable? handle = _lockManager.TryAcquireAsync(key);
 
             if (handle == null)
             {
-                var delay = TimeSpan.FromMinutes(_rescheduleDelayMinutes);
+                TimeSpan delay = TimeSpan.FromMinutes(_rescheduleDelayMinutes);
                 _logger.LogDebug(
                     "PerKeyConcurrency: Job '{JobId}' deferred — key '{Key}' is at max concurrency. Rescheduling in '{Delay}'.",
                     context.BackgroundJob.Id, key, delay);

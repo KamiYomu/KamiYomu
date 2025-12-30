@@ -1,6 +1,7 @@
 ﻿using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+
 using SkiaSharp;
 
 namespace KamiYomu.Web.Infrastructure.Reports;
@@ -19,15 +20,15 @@ public class MangaChaptersPdfReport(List<string> images, string fileName, string
 
     public void Compose(IDocumentContainer container)
     {
-        var svgMarkup = File.ReadAllText(logoPath);
+        string svgMarkup = File.ReadAllText(logoPath);
         if (svgMarkup.Contains("<svg"))
         {
             svgMarkup = svgMarkup.Replace("<svg", "<svg opacity=\"0.25\"");
         }
 
-        foreach (var imgPath in images)
+        foreach (string imgPath in images)
         {
-            using var codec = SKCodec.Create(imgPath);
+            using SKCodec codec = SKCodec.Create(imgPath);
 
             int width, height;
 
@@ -38,7 +39,7 @@ public class MangaChaptersPdfReport(List<string> images, string fileName, string
             }
             else
             {
-                using var bitmap = SKBitmap.Decode(imgPath);
+                using SKBitmap bitmap = SKBitmap.Decode(imgPath);
                 if (bitmap == null)
                 {
                     continue;
@@ -52,7 +53,7 @@ public class MangaChaptersPdfReport(List<string> images, string fileName, string
             float heightPoints = height * 72f / 96f;
 
 
-            container.Page(page =>
+            _ = container.Page(page =>
             {
                 page.Size(widthPoints, heightPoints);
                 page.Margin(0);
@@ -61,7 +62,7 @@ public class MangaChaptersPdfReport(List<string> images, string fileName, string
                     .Padding(10)
                     .Column(column =>
                     {
-                        column.Item()
+                        _ = column.Item()
                             .AlignBottom()
                             .AlignRight()
                             .Width(200).Height(200).ScaleToFit()
@@ -69,7 +70,7 @@ public class MangaChaptersPdfReport(List<string> images, string fileName, string
                     });
 
 
-                page.Content()
+                _ = page.Content()
                     .Image(imgPath)
                     .FitArea();
 

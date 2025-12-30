@@ -3,105 +3,105 @@ using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 
-namespace KamiYomu.Web.Areas.Libraries.Pages.Download
+namespace KamiYomu.Web.Areas.Libraries.Pages.Downloads;
+
+public class IndexModel(
+    ILogger<IndexModel> logger,
+    IOptions<SpecialFolderOptions> specialFolderOptions,
+    DbContext dbContext,
+    ICrawlerAgentRepository agentCrawlerRepository,
+    IWorkerService workerService,
+    INotificationService notificationService) : PageModel
 {
-    public class IndexModel(
-        ILogger<IndexModel> logger,
-        IOptions<SpecialFolderOptions> specialFolderOptions,
-        DbContext dbContext,
-        ICrawlerAgentRepository agentCrawlerRepository,
-        IWorkerService workerService,
-        INotificationService notificationService) : PageModel
+    public IEnumerable<CrawlerAgent> CrawlerAgents { get; set; } = [];
+
+    [BindProperty]
+    public required string MangaId { get; set; }
+
+    [BindProperty]
+    public Guid CrawlerAgentId { get; set; }
+
+    [BindProperty]
+    public string FilePathTemplate { get; set; } = string.Empty;
+    public void OnGet()
     {
-        public IEnumerable<CrawlerAgent> CrawlerAgents { get; set; } = [];
+        CrawlerAgents = dbContext.CrawlerAgents.FindAll();
+    }
 
-        [BindProperty]
-        public string MangaId { get; set; }
-
-        [BindProperty]
-        public Guid CrawlerAgentId { get; set; }
-
-        [BindProperty]
-        public string FilePathTemplate { get; set; } = string.Empty;
-        public void OnGet()
+    public async Task<IActionResult> OnPostAddToCollectionAsync(CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid)
         {
-            CrawlerAgents = dbContext.CrawlerAgents.FindAll();
+            return BadRequest("Invalid manga data.");
         }
 
-        public async Task<IActionResult> OnPostAddToCollectionAsync(CancellationToken cancellationToken)
+        using CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(CrawlerAgentId);
+
+        CrawlerAgents.Core.Catalog.Manga manga = await agentCrawlerRepository.GetMangaAsync(crawlerAgent.Id, MangaId, cancellationToken);
+
+        string filePathTemplateFormat = string.IsNullOrWhiteSpace(FilePathTemplate) ? specialFolderOptions.Value.FilePathFormat : FilePathTemplate;
+
+        Library library = new(crawlerAgent, manga, filePathTemplateFormat);
+
+        _ = dbContext.Libraries.Insert(library);
+
+        MangaDownloadRecord downloadRecord = new(library, string.Empty);
+
+        using LibraryDbContext libDbContext = library.GetDbContext();
+
+        _ = libDbContext.MangaDownloadRecords.Insert(downloadRecord);
+
+        string backgroundJobId = workerService.ScheduleMangaDownload(downloadRecord);
+
+        downloadRecord.Schedule(backgroundJobId);
+
+        _ = libDbContext.MangaDownloadRecords.Update(downloadRecord);
+
+        await notificationService.PushSuccessAsync($"{I18n.TitleAddedToYourCollection}: {library.Manga.Title} ", cancellationToken);
+
+        UserPreference preferences = dbContext.UserPreferences.FindOne(p => true);
+        preferences.SetFilePathTemplate(filePathTemplateFormat);
+        _ = dbContext.UserPreferences.Upsert(preferences);
+
+        return Partial("_LibraryCard", library);
+    }
+
+    public async Task<IActionResult> OnPostRemoveFromCollectionAsync(CancellationToken cancellationToken)
+    {
+        _ = ModelState.Remove(nameof(FilePathTemplate));
+
+        if (!ModelState.IsValid)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Invalid manga data.");
-            }
-            
-            using var crawlerAgent = dbContext.CrawlerAgents.FindById(CrawlerAgentId);
-
-            var manga = await agentCrawlerRepository.GetMangaAsync(crawlerAgent.Id, MangaId, cancellationToken);
-
-            var filePathTemplateFormat = string.IsNullOrWhiteSpace(FilePathTemplate) ? specialFolderOptions.Value.FilePathFormat : FilePathTemplate;
-            
-            var library = new Library(crawlerAgent, manga, filePathTemplateFormat);
-
-            dbContext.Libraries.Insert(library);
-
-            var downloadRecord = new MangaDownloadRecord(library, string.Empty);
-
-            using var libDbContext = library.GetDbContext();
-
-            libDbContext.MangaDownloadRecords.Insert(downloadRecord);
-
-            string backgroundJobId = workerService.ScheduleMangaDownload(downloadRecord);
-
-            downloadRecord.Schedule(backgroundJobId);
-
-            libDbContext.MangaDownloadRecords.Update(downloadRecord);
-
-            await notificationService.PushSuccessAsync($"{I18n.TitleAddedToYourCollection}: {library.Manga.Title} ", cancellationToken);
-
-            var preferences = dbContext.UserPreferences.FindOne(p => true);
-            preferences.SetFilePathTemplate(filePathTemplateFormat);
-            dbContext.UserPreferences.Upsert(preferences);
-
-            return Partial("_LibraryCard", library);
+            return BadRequest("Invalid manga data.");
         }
 
-        public async Task<IActionResult> OnPostRemoveFromCollectionAsync(CancellationToken cancellationToken)
+        Library library = dbContext.Libraries.Include(p => p.Manga)
+                                         .Include(p => p.CrawlerAgent)
+                                         .FindOne(p => p.Manga.Id == MangaId && p.CrawlerAgent.Id == CrawlerAgentId);
+        string mangaTitle = library.Manga.Title;
+
+        using LibraryDbContext libDbContext = library.GetDbContext();
+
+        MangaDownloadRecord mangaDownload = libDbContext.MangaDownloadRecords.Include(p => p.Library).FindOne(p => p.Library.Id == library.Id);
+
+        if (mangaDownload != null)
         {
-            ModelState.Remove(nameof(FilePathTemplate));
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Invalid manga data.");
-            }
-
-            var library = dbContext.Libraries.Include(p => p.Manga)
-                                             .Include(p => p.CrawlerAgent)
-                                             .FindOne(p => p.Manga.Id == MangaId && p.CrawlerAgent.Id == CrawlerAgentId);
-            var mangaTitle = library.Manga.Title;
-
-            using var libDbContext = library.GetDbContext();
-
-            var mangaDownload = libDbContext.MangaDownloadRecords.Include(p => p.Library).FindOne(p => p.Library.Id == library.Id);
-
-            if (mangaDownload != null)
-            {
-               workerService.CancelMangaDownload(mangaDownload);
-            }
-
-            library.DropDbContext();
-
-            dbContext.Libraries.Delete(library.Id);
-
-            logger.LogInformation("Drop Database {database}", libDbContext.DatabaseFilePath());
-
-            await notificationService.PushSuccessAsync($"{I18n.YourCollectionNoLongerIncludes}: {mangaTitle}.", cancellationToken);
-
-            return Partial("_LibraryCard", new Library(library.CrawlerAgent, library.Manga, null));
+            workerService.CancelMangaDownload(mangaDownload);
         }
+
+        library.DropDbContext();
+
+        _ = dbContext.Libraries.Delete(library.Id);
+
+        logger.LogInformation("Drop Database {database}", libDbContext.DatabaseFilePath());
+
+        await notificationService.PushSuccessAsync($"{I18n.YourCollectionNoLongerIncludes}: {mangaTitle}.", cancellationToken);
+
+        return Partial("_LibraryCard", new Library(library.CrawlerAgent, library.Manga, null));
     }
 }

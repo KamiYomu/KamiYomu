@@ -1,9 +1,10 @@
 ﻿@page
-@using KamiYomu.Web.Extensions
 @using System.Text
+@using KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
+@using KamiYomu.Web.Extensions
 @using KamiYomu.Web.Infrastructure.Services.Interfaces
 @inject IUserClockManager UserClockService
-@model KamiYomu.Web.Areas.Libraries.Pages.Mangas.Dialogs.DownloadStatusModel
+@model KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs.DownloadStatusModel
 @{
     Layout = null;
     using var crawlerInstance = Model.Library.CrawlerAgent.GetCrawlerInstance();
