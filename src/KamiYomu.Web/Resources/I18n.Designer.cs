@@ -844,6 +844,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File Path.
+        /// </summary>
+        internal static string FilePath {
+            get {
+                return ResourceManager.GetString("FilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File Path Format.
         /// </summary>
         internal static string FilePathFormat {
@@ -1682,11 +1691,29 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Series Name Format.
+        /// </summary>
+        internal static string SeriesNameFormat {
+            get {
+                return ResourceManager.GetString("SeriesNameFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         internal static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Up Your Download.
+        /// </summary>
+        internal static string SetUpYourDownload {
+            get {
+                return ResourceManager.GetString("SetUpYourDownload", resourceCulture);
             }
         }
         
@@ -1853,6 +1880,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Title Format.
+        /// </summary>
+        internal static string TitleFormat {
+            get {
+                return ResourceManager.GetString("TitleFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to To Be Rescheduled.
         /// </summary>
         internal static string ToBeRescheduled {
@@ -1876,6 +1912,15 @@ namespace KamiYomu.Web.Resources {
         internal static string TotalDownloads {
             get {
                 return ResourceManager.GetString("TotalDownloads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Available.
+        /// </summary>
+        internal static string UpdateAvailable {
+            get {
+                return ResourceManager.GetString("UpdateAvailable", resourceCulture);
             }
         }
         

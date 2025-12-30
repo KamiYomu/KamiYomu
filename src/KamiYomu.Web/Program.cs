@@ -71,7 +71,7 @@ builder.Services.AddSignalR();
 builder.Services.Configure<BasicAuthOptions>(builder.Configuration.GetSection("BasicAuth"));
 builder.Services.Configure<SpecialFolderOptions>(builder.Configuration.GetSection("SpecialFolders"));
 builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection("Worker"));
-builder.Services.Configure<Defaults.NugetFeeds>(builder.Configuration.GetSection("UI"));
+builder.Services.Configure<NugetFeeds>(builder.Configuration.GetSection("UI"));
 builder.Services.Configure<GzipCompressionProviderOptions>(options =>
 {
     options.Level = System.IO.Compression.CompressionLevel.Fastest;
@@ -86,10 +86,10 @@ builder.Services.AddResponseCompression(options =>
 
 
 builder.Services.AddSingleton<CacheContext>();
-builder.Services.AddSingleton<ImageDbContext>(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb")));
+builder.Services.AddSingleton(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb")));
 builder.Services.AddSingleton<IUserClockManager, UserClockManager>();
 builder.Services.AddSingleton<ILockManager, LockManager>();
-builder.Services.AddScoped<DbContext>(_ => new DbContext(builder.Configuration.GetConnectionString("AgentDb")));
+builder.Services.AddScoped(_ => new DbContext(builder.Configuration.GetConnectionString("AgentDb")));
 
 builder.Services.AddTransient<ICrawlerAgentRepository, CrawlerAgentRepository>();
 builder.Services.AddTransient<IHangfireRepository, HangfireRepository>();
@@ -100,6 +100,7 @@ builder.Services.AddTransient<IDeferredExecutionCoordinator, DeferredExecutionCo
 builder.Services.AddTransient<INugetService, NugetService>();
 builder.Services.AddTransient<INotificationService, NotificationService>();
 builder.Services.AddTransient<IWorkerService, WorkerService>();
+builder.Services.AddTransient<IGitHubService, GitHubService>();
 
 builder.Services.AddHealthChecks()
                 .AddCheck<DatabaseHealthCheck>(nameof(DatabaseHealthCheck), tags: ["storage"])
@@ -110,14 +111,14 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
-    CultureInfo[] supportedCultures = new[]
-    {
+    CultureInfo[] supportedCultures =
+    [
             new CultureInfo("en-US"),
             new CultureInfo("pt-BR"),
             new CultureInfo("fr"),
             new CultureInfo("es"),
             new CultureInfo("nl")
-    };
+    ];
 
     options.DefaultRequestCulture = new RequestCulture("en-US");
     options.SupportedCultures = supportedCultures;
@@ -143,7 +144,7 @@ Polly.Retry.AsyncRetryPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtens
 
 Polly.Timeout.AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(Worker.HttpTimeOutInSeconds);
 
-builder.Services.AddHttpClient(Worker.HttpClientBackground, client =>
+builder.Services.AddHttpClient(Worker.HttpClientApp, client =>
 {
     client.DefaultRequestHeaders.UserAgent.ParseAdd(CrawlerAgentSettings.HttpUserAgent);
 })
@@ -154,7 +155,7 @@ AddHangfireConfig(builder);
 
 
 WebApplication app = builder.Build();
-Defaults.ServiceLocator.Configure(() => app.Services);
+ServiceLocator.Configure(() => app.Services);
 
 if (!app.Environment.IsDevelopment())
 {
@@ -240,7 +241,7 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
                                                            new SQLiteStorageOptions
                                                            {
                                                                QueuePollInterval = TimeSpan.FromSeconds(15),
-                                                               DistributedLockLifetime = TimeSpan.FromMinutes(Defaults.Worker.StaleLockTimeout),
+                                                               DistributedLockLifetime = TimeSpan.FromMinutes(Worker.StaleLockTimeout),
                                                                JobExpirationCheckInterval = TimeSpan.FromHours(1),
                                                                CountersAggregateInterval = TimeSpan.FromMinutes(5)
                                                            }));
@@ -273,5 +274,5 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
 
 static bool IsRunningInDocker()
 {
-    return System.IO.File.Exists("/.dockerenv");
+    return File.Exists("/.dockerenv");
 }

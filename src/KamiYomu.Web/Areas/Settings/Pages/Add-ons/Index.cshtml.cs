@@ -128,7 +128,7 @@ public class IndexModel(ILogger<IndexModel> logger,
             string crawlerAgentDir = CrawlerAgent.GetAgentDir(packageFileName);
 
             List<string> savedPaths = [];
-            string mainPackagePath = null;
+            string tempPackagePath = null;
 
             for (int i = 0; i < streams.Length; i++)
             {
@@ -143,15 +143,15 @@ public class IndexModel(ILogger<IndexModel> logger,
                 savedPaths.Add(filePath);
                 if (i == 0)
                 {
-                    mainPackagePath = filePath;
+                    tempPackagePath = filePath;
                 }
             }
 
             // Extract main package first into a dedicated subfolder
-            ZipFile.ExtractToDirectory(mainPackagePath, crawlerAgentDir, overwriteFiles: true);
+            ZipFile.ExtractToDirectory(tempPackagePath, crawlerAgentDir, overwriteFiles: true);
 
             // Scan only the main package's extracted folder for the DLL
-            string dllPath = Directory.EnumerateFiles(crawlerAgentDir, "*.dll", SearchOption.AllDirectories).FirstOrDefault() ?? throw new FileNotFoundException("Main package DLL not found.");
+            string dllPath = Directory.EnumerateFiles(crawlerAgentDir, "*.dll", SearchOption.AllDirectories).FirstOrDefault(p => p.EndsWith($"{packageId}.dll")) ?? throw new FileNotFoundException("Main package DLL not found.");
 
             // Extract dependencies into the same root directory
             foreach (string? path in savedPaths.Skip(1))

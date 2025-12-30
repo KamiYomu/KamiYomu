@@ -168,6 +168,9 @@ public class CrawlerAgent : IDisposable
     {
         Dictionary<string, string> metadata = [];
 
+        //Path
+        metadata["FilePath"] = assembly.Location;
+
         // Title
         AssemblyTitleAttribute? titleAttr = assembly.GetCustomAttribute<AssemblyTitleAttribute>();
         if (titleAttr != null)

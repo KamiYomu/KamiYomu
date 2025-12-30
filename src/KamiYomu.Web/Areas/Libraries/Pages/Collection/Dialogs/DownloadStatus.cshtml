@@ -1,4 +1,4 @@
-﻿@page
+@page
 @using System.Text
 @using KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 @using KamiYomu.Web.Extensions
@@ -69,11 +69,11 @@
                         </span>
                     </div>
                 </div>
-                <div class="mb-3 row align-items-center">
+                <div class="mb-1 row align-items-center">
                     <partial name="_DownloadProgress" model="Model.Library"/>
                 </div>
 
-                <div class="mb-3 row">
+                <div class="mb-1 row">
                     <label class="col-sm-3 col-form-label fw-semibold">
                         @I18n.FilePathFormat
                     </label>
@@ -86,7 +86,32 @@
                     </div>
                 </div>
 
-                <div class="mb-3 row">
+                <div class="mb-1 row">
+                    <label class="col-sm-3 col-form-label fw-semibold">
+                        @I18n.TitleFormat
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext">
+                            <code class="text-muted text-break">
+                                @Model.Library.GetComicInfoTitleTemplate()
+                            </code>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-1 row">
+                    <label class="col-sm-3 col-form-label fw-semibold">
+                        @I18n.SeriesNameFormat
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext">
+                            <code class="text-muted text-break">
+                                @Model.Library.GetComicInfoSeriesTemplate()
+                            </code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-1 row">
                     <label class="col-sm-3 col-form-label fw-semibold">
                         @I18n.CurrentDirectory
                     </label>
@@ -98,28 +123,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="mb-3 row">
-                    <label class="col-sm-3 col-form-label fw-semibold">
-                        @I18n.ChaptersFound
-                    </label>
-                    <div class="col-sm-9">
-                        <div class="form-control-plaintext">
-                            @Model.Total
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label class="col-sm-3 col-form-label fw-semibold">
-                        @I18n.Downloaded
-                    </label>
-                    <div class="col-sm-9">
-                        <div class="form-control-plaintext">
-                            @Model.Completed
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
         <div class="accordion g-4 mt-2" id="downloadAccordion">

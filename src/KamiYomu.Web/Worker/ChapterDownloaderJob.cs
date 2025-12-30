@@ -1,20 +1,17 @@
-﻿using Hangfire.Server;
+using System.Globalization;
+using System.IO.Compression;
+
+using Hangfire.Server;
 
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
-using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
-using KamiYomu.Web.Infrastructure.Services;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
 
 using Microsoft.Extensions.Options;
-
-using System.Globalization;
-using System.IO.Compression;
-using System.Runtime.InteropServices;
 
 namespace KamiYomu.Web.Worker;
 
@@ -27,7 +24,7 @@ public class ChapterDownloaderJob(
     INotificationService notificationService) : IChapterDownloaderJob, IDisposable
 {
     private readonly WorkerOptions _workerOptions = workerOptions.Value;
-    private readonly HttpClient _httpClient = httpClientFactory.CreateClient(Defaults.Worker.HttpClientBackground);
+    private readonly HttpClient _httpClient = httpClientFactory.CreateClient(Defaults.Worker.HttpClientApp);
     private bool disposedValue;
 
     public async Task DispatchAsync(string queue, Guid crawlerId, Guid libraryId, Guid mangaDownloadId, Guid chapterDownloadId, string title, PerformContext context, CancellationToken cancellationToken)

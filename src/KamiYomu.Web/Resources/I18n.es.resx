@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -796,14 +796,29 @@ para que la configuración &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire cont
   <data name="LoggingOut" xml:space="preserve">
     <value>Cerrar sesión...</value>
   </data>
+  <data name="AvailableTemplateVariables" xml:space="preserve">
+    <value>Variables de plantilla disponibles</value>
+  </data>
+  <data name="Series" xml:space="preserve">
+    <value>Serie</value>
+  </data>
+  <data name="DownloadProgress" xml:space="preserve">
+    <value>Descargar Progreso</value>
+  </data>
+  <data name="SetUpYourDownload" xml:space="preserve">
+    <value>Configura tu descarga</value>
+  </data>
+  <data name="FilePath" xml:space="preserve">
+    <value>Ruta del archivo</value>
+  </data>
+  <data name="SeriesNameFormat" xml:space="preserve">
+    <value>Formato del nombre de la serie</value>
+  </data>
+  <data name="TitleFormat" xml:space="preserve">
+    <value>Formato del título</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="AvailableTemplateVariables" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="Series" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="DownloadProgress" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="UpdateAvailable" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
 </root>

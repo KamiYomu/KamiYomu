@@ -22,8 +22,6 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
     [BindProperty]
     public required FollowButtonViewModel FollowButtonViewModel { get; set; }
     public required Entities.Library Library { get; set; }
-    public decimal Completed { get; set; } = 0;
-    public decimal Total { get; set; } = 0;
     public MangaDownloadRecord? Record { get; set; } = null;
 
 
@@ -51,8 +49,6 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
         Record = downloadManga;
         FollowButtonViewModel.IsFollowing = recurringJobs.Any(job => string.Equals(job.Id, Library.GetDiscovertyJobId(), StringComparison.OrdinalIgnoreCase));
         List<ChapterDownloadRecord> downloadChapters = [.. libDbContext.ChapterDownloadRecords.Find(p => p.MangaDownload.Id == downloadManga.Id).OrderBy(p => p.Chapter.Number)];
-        Completed = downloadChapters.Count(p => p.DownloadStatus == DownloadStatus.Completed);
-        Total = downloadChapters.Count;
     }
 
     public async Task<IActionResult> OnPostToggleFollowingAsync(CancellationToken cancellationToken)

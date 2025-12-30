@@ -1,14 +1,18 @@
-﻿@using KamiYomu.Web.Entities
+@using KamiYomu.Web.Entities
 @using KamiYomu.Web.Entities.Definitions
 @model Library
 
 @{
     var libDbContext = Model.GetReadOnlyDbContext();
     MangaDownloadRecord downloadManga = libDbContext.MangaDownloadRecords.FindOne(p => p.Library.Id == Model.Id);
+    if(downloadManga == null)
+    {
+        return;
+    }
     List<ChapterDownloadRecord> downloadChapters = [.. libDbContext.ChapterDownloadRecords.Find(p => p.MangaDownload.Id == downloadManga.Id)];
-    var completed = downloadChapters.Count(p => p.DownloadStatus == DownloadStatus.Completed);
-    var total = downloadChapters.Count;
-    var progress = total > 0 ? completed / total * 100 : 0;
+    decimal completed = downloadChapters.Count(p => p.DownloadStatus == DownloadStatus.Completed);
+    decimal total = downloadChapters.Count;
+    decimal progress = total > 0 ? completed / total * 100 : 0;
 }
 
 <div class="mb-2">
@@ -16,7 +20,7 @@
         @I18n.DownloadProgress
     </div>
 
-    <div class="progress">
+    <div class="progress" style="background-color: var(--bs-gray-600);">
         <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
              role="progressbar"
              style="width: @progress.ToString("F0")%;"
@@ -26,6 +30,7 @@
             @progress.ToString("F0")%
         </div>
     </div>
+
 </div>
 
 <div class="row text-center text-sm-start align-items-center">

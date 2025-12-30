@@ -1,4 +1,4 @@
-﻿using System.Xml.Linq;
+using System.Xml.Linq;
 
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
@@ -114,6 +114,18 @@ public class Library
         return comicInfoSeriesTemplate;
     }
 
+    public string GetComicInfoSeriesTemplateResolved(Chapter? chapter = null)
+    {
+        string template = GetComicInfoSeriesTemplate();
+        return TemplateResolver.Resolve(template, Manga, chapter);
+    }
+
+    public string GetComicInfoTitleTemplateResolved(Chapter? chapter = null)
+    {
+        string template = GetComicInfoTitleTemplate();
+        return TemplateResolver.Resolve(template, Manga, chapter);
+    }
+
     public string GetFilePathTemplateResolved(Chapter? chapter = null)
     {
         string filePathTemplate = GetFilePathTemplate();
@@ -210,8 +222,8 @@ public class Library
     public string ToComicInfo(Chapter chapter)
     {
         XElement comicInfo = new("ComicInfo",
-            new XElement("Title", $"{GetComicInfoTitleTemplate()}"),
-            new XElement("Series", $"{GetComicInfoSeriesTemplate()}"),
+            new XElement("Title", $"{GetComicInfoTitleTemplateResolved(chapter)}"),
+            new XElement("Series", $"{GetComicInfoSeriesTemplateResolved(chapter)}"),
             new XElement("Number", chapter?.Number.ToString() ?? string.Empty),
             new XElement("Volume", chapter?.Volume.ToString() ?? string.Empty),
             new XElement("Writer", string.Join(", ", chapter?.ParentManga?.Authors ?? [])),

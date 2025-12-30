@@ -1,4 +1,4 @@
-﻿@page
+@page
 @using KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.Dialogs
 @model AgentDetailsModel
 @{
@@ -54,7 +54,7 @@
                     @I18n.AssemblyProperties
                 </td>
             </tr>
-            @foreach (var key in new[] { "Title", "Description", "Company", "Product", "Version", "FileVersion", "InformationalVersion" })
+            @foreach (var key in new[] { "FilePath", "Title", "Description", "Company", "Product", "Version", "FileVersion", "InformationalVersion" })
             {
                 <tr>
                     <td>@I18n.ResourceManager.GetString(key)</td>

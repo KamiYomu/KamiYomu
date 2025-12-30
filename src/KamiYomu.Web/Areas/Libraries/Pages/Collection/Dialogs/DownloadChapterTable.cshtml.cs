@@ -26,10 +26,10 @@ public class DownloadChapterTableModel(DbContext dbContext,
     public int CurrentPage { get; set; } = 0;
     public int TotalPages { get; set; } = 0;
     public Guid LibraryId { get; set; } = Guid.Empty;
-    public string SortColumn { get; set; } = nameof(ChapterDownloadRecord.StatusUpdateAt);
+    public string SortColumn { get; set; } = nameof(ChapterDownloadRecord.Chapter);
     public bool SortAsc { get; set; } = true;
 
-    public void OnGet(Guid libraryId, string sort = nameof(ChapterDownloadRecord.StatusUpdateAt), bool asc = true, int pageIndex = 1, int pageSize = 10)
+    public void OnGet(Guid libraryId, string sort = nameof(ChapterDownloadRecord.Chapter), bool asc = true, int pageIndex = 1, int pageSize = 10)
     {
         if (libraryId == Guid.Empty)
         {

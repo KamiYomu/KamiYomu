@@ -1,4 +1,4 @@
-﻿using KamiYomu.CrawlerAgents.Core.Catalog.Definitions;
+using KamiYomu.CrawlerAgents.Core.Catalog.Definitions;
 using KamiYomu.Web.Entities.Definitions;
 using KamiYomu.Web.Entities.Notifications.Definitions;
 
@@ -43,7 +43,7 @@ public partial class Defaults
 
     public static class Worker
     {
-        public const string HttpClientBackground = nameof(HttpClientBackground);
+        public const string HttpClientApp = nameof(HttpClientApp);
         public const int HttpTimeOutInSeconds = 60;
         public const int StaleLockTimeout = 20;
         public const int DeferredExecutionInMinutes = 5;

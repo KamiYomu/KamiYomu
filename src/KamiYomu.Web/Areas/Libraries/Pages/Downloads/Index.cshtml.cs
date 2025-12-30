@@ -84,6 +84,8 @@ public class IndexModel(
     public async Task<IActionResult> OnPostRemoveFromCollectionAsync(CancellationToken cancellationToken)
     {
         _ = ModelState.Remove(nameof(FilePathTemplate));
+        _ = ModelState.Remove(nameof(ComicInfoTitleTemplate));
+        _ = ModelState.Remove(nameof(ComicInfoSeriesTemplate));
 
         if (!ModelState.IsValid)
         {

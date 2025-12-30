@@ -47,9 +47,7 @@ public class SearchResultsModel(DbContext dbContext, ICrawlerAgentRepository age
     public IActionResult OnGetSearch(
         string query,
         int offset = 0,
-        int limit = 30,
-        string continuationToken = "",
-        CancellationToken cancellationToken = default)
+        int limit = 30)
     {
         Entities.UserPreference userPreference = dbContext.UserPreferences.FindOne(p => true);
         Results = [.. dbContext.Libraries.Include(p => p.CrawlerAgent)
