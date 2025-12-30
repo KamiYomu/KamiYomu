@@ -62,7 +62,7 @@ public class ChapterCancelOnFailAttribute : JobFilterAttribute, IApplyStateFilte
 
                 if (library != null)
                 {
-                    using LibraryDbContext libDbContext = library.GetDbContext();
+                    using LibraryDbContext libDbContext = library.GetReadWriteDbContext();
 
                     Entities.ChapterDownloadRecord downloadChapter = libDbContext.ChapterDownloadRecords.FindOne(p => p.BackgroundJobId == jobId);
 

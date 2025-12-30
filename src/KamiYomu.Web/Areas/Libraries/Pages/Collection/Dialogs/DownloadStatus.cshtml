@@ -70,21 +70,7 @@
                     </div>
                 </div>
                 <div class="mb-3 row align-items-center">
-                    <label class="col-sm-3 col-form-label fw-semibold">
-                        Download Progress
-                    </label>
-                    <div class="col-sm-9">
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
-                                 role="progressbar"
-                                 style="width: @Model.Progress.ToString("F0")%;"
-                                 aria-valuenow="@Model.Progress.ToString("F0")"
-                                 aria-valuemin="0"
-                                 aria-valuemax="100">
-                                @Model.Progress.ToString("F0")%
-                            </div>
-                        </div>
-                    </div>
+                    <partial name="_DownloadProgress" model="Model.Library"/>
                 </div>
 
                 <div class="mb-3 row">

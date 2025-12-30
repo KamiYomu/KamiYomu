@@ -803,4 +803,7 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="Series" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="DownloadProgress" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
 </root>

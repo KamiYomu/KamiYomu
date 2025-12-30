@@ -34,7 +34,7 @@ public class WorkerService(IOptions<WorkerOptions> workerOptions,
 
     public void CancelMangaDownload(MangaDownloadRecord mangaDownloadRecord)
     {
-        using LibraryDbContext libDbContext = mangaDownloadRecord.Library.GetDbContext();
+        using LibraryDbContext libDbContext = mangaDownloadRecord.Library.GetReadWriteDbContext();
 
         mangaDownloadRecord.Cancelled("User remove manga from the library.");
 

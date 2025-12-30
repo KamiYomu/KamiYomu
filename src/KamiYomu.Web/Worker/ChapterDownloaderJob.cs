@@ -48,7 +48,7 @@ public class ChapterDownloaderJob(
             return;
         }
 
-        using LibraryDbContext libDbContext = library.GetDbContext();
+        using LibraryDbContext libDbContext = library.GetReadWriteDbContext();
 
         MangaDownloadRecord mangaDownload = libDbContext.MangaDownloadRecords
             .Include(p => p.Library)

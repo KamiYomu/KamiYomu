@@ -802,4 +802,7 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="Series" xml:space="preserve">
     <value>Series</value>
   </data>
+  <data name="DownloadProgress" xml:space="preserve">
+    <value>Download Progress</value>
+  </data>
 </root>

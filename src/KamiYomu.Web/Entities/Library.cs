@@ -1,22 +1,25 @@
-﻿using KamiYomu.CrawlerAgents.Core.Catalog;
+﻿using System.Xml.Linq;
+
+using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
-using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services;
-using KamiYomu.Web.Infrastructure.Storage;
 
 using Microsoft.Extensions.Options;
-
-using System.Xml.Linq;
 
 namespace KamiYomu.Web.Entities;
 
 public class Library
 {
-    private LibraryDbContext _libraryDbContext;
+    private readonly Lazy<LibraryDbContext> _libraryReadWriteDbContext;
+    private readonly Lazy<LibraryDbContext> _libraryReadOnlyDbContext;
 
-    protected Library() { }
-    public Library(CrawlerAgent agentCrawler, Manga manga, string? filePathTemplate, string? comicInfoTitleTemplateFormat, string? comicInfoSeriesTemplate)
+    protected Library()
+    {
+        _libraryReadOnlyDbContext = new Lazy<LibraryDbContext>(CreateReadOnlyDbContext);
+        _libraryReadWriteDbContext = new Lazy<LibraryDbContext>(CreateReadWriteDbContext);
+    }
+    public Library(CrawlerAgent agentCrawler, Manga manga, string? filePathTemplate, string? comicInfoTitleTemplateFormat, string? comicInfoSeriesTemplate) : this()
     {
         CrawlerAgent = agentCrawler;
         Manga = string.IsNullOrEmpty(manga.Title) ? null : manga;
@@ -25,14 +28,29 @@ public class Library
         ComicInfoSeriesTemplate = comicInfoSeriesTemplate;
     }
 
-    public LibraryDbContext GetDbContext()
+    private LibraryDbContext CreateReadWriteDbContext()
     {
-        return _libraryDbContext ??= new LibraryDbContext(Id);
+        return new LibraryDbContext(Id, false);
+    }
+
+    private LibraryDbContext CreateReadOnlyDbContext()
+    {
+        return new LibraryDbContext(Id, true);
+    }
+
+    public LibraryDbContext GetReadOnlyDbContext()
+    {
+        return _libraryReadOnlyDbContext.Value;
+    }
+
+    public LibraryDbContext GetReadWriteDbContext()
+    {
+        return _libraryReadWriteDbContext.Value;
     }
 
     public void DropDbContext()
     {
-        _libraryDbContext.DropDatabase();
+        _libraryReadWriteDbContext.Value.DropDatabase();
     }
 
     public string GetDiscovertyJobId()

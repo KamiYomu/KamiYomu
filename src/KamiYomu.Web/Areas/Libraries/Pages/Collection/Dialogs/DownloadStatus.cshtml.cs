@@ -24,7 +24,6 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
     public required Entities.Library Library { get; set; }
     public decimal Completed { get; set; } = 0;
     public decimal Total { get; set; } = 0;
-    public decimal Progress { get; set; } = 0;
     public MangaDownloadRecord? Record { get; set; } = null;
 
 
@@ -37,7 +36,7 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
         };
 
         Library = dbContext.Libraries.FindOne(p => p.Id == libraryId);
-        using LibraryDbContext libDbContext = Library.GetDbContext();
+        using LibraryDbContext libDbContext = Library.GetReadOnlyDbContext();
 
         MangaDownloadRecord downloadManga = libDbContext.MangaDownloadRecords.FindOne(p => p.Library.Id == Library.Id);
 
@@ -54,14 +53,6 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
         List<ChapterDownloadRecord> downloadChapters = [.. libDbContext.ChapterDownloadRecords.Find(p => p.MangaDownload.Id == downloadManga.Id).OrderBy(p => p.Chapter.Number)];
         Completed = downloadChapters.Count(p => p.DownloadStatus == DownloadStatus.Completed);
         Total = downloadChapters.Count;
-        if (Total > 0)
-        {
-            Progress = Completed / Total * 100;
-        }
-        else
-        {
-            Progress = 0;
-        }
     }
 
     public async Task<IActionResult> OnPostToggleFollowingAsync(CancellationToken cancellationToken)

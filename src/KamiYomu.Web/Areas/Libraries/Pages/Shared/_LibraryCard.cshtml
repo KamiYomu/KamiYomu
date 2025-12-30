@@ -1,4 +1,6 @@
-﻿@using KamiYomu.Web.Extensions
+﻿@using KamiYomu.Web.Entities
+@using KamiYomu.Web.Entities.Definitions
+@using KamiYomu.Web.Extensions
 @model KamiYomu.Web.Entities.Library
 
 @{
@@ -25,6 +27,11 @@
                 <img src="@faviconUrl.ToInternalImageUrl()" width="20" class="me-2" alt="favicon" />
                 <span class="text-muted">@Model.CrawlerAgent.DisplayName</span>
             </div>
+
+            @if (!isNew)
+            {
+                <partial name="_DownloadProgress" model="Model" />
+            }
 
 
             <div class="mt-auto d-flex justify-content-end">

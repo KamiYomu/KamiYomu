@@ -48,7 +48,7 @@ public class ChapterDiscoveryJob(
             return;
         }
 
-        using LibraryDbContext libDbContext = library.GetDbContext();
+        using LibraryDbContext libDbContext = library.GetReadWriteDbContext();
         MangaDownloadRecord mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Library.Id == libraryId);
         string[] files = Directory.GetFiles(library.GetMangaDirectory(), "*.cbz", SearchOption.AllDirectories);
 

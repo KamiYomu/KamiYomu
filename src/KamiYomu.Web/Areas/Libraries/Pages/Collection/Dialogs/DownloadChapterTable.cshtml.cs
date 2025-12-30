@@ -42,7 +42,7 @@ public class DownloadChapterTableModel(DbContext dbContext,
         CurrentPage = pageIndex;
 
         Library downloadChapterRecords = dbContext.Libraries.FindById(LibraryId);
-        using LibraryDbContext db = downloadChapterRecords.GetDbContext();
+        using LibraryDbContext db = downloadChapterRecords.GetReadOnlyDbContext();
 
         // Get all records for this library
         List<ChapterDownloadRecord> allRecords = [.. db.ChapterDownloadRecords.Find(p => true)];
@@ -63,7 +63,7 @@ public class DownloadChapterTableModel(DbContext dbContext,
         Records = [.. query.Skip((pageIndex - 1) * pageSize).Take(pageSize)];
     }
 
-    public async Task<IActionResult> OnGetDownloadCbzAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
+    public IActionResult OnGetDownloadCbz(Guid libraryId, Guid recordId)
     {
         Library library = dbContext.Libraries.FindById(libraryId);
         if (library == null)
@@ -71,7 +71,7 @@ public class DownloadChapterTableModel(DbContext dbContext,
             return NotFound();
         }
 
-        using LibraryDbContext db = library.GetDbContext();
+        using LibraryDbContext db = library.GetReadOnlyDbContext();
 
         ChapterDownloadRecord record = db.ChapterDownloadRecords.FindById(recordId);
         if (record == null || !record.IsCompleted())
@@ -99,7 +99,7 @@ public class DownloadChapterTableModel(DbContext dbContext,
 
     }
 
-    public async Task<IActionResult> OnGetDownloadZipAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
+    public IActionResult OnGetDownloadZip(Guid libraryId, Guid recordId)
     {
         Library library = dbContext.Libraries.FindById(libraryId);
         if (library == null)
@@ -107,7 +107,7 @@ public class DownloadChapterTableModel(DbContext dbContext,
             return NotFound();
         }
 
-        using LibraryDbContext db = library.GetDbContext();
+        using LibraryDbContext db = library.GetReadOnlyDbContext();
 
         ChapterDownloadRecord record = db.ChapterDownloadRecords.FindById(recordId);
         if (record == null || !record.IsCompleted())
@@ -136,7 +136,7 @@ public class DownloadChapterTableModel(DbContext dbContext,
 
     }
 
-    public async Task<IActionResult> OnGetDownloadPdfAsync(Guid libraryId, Guid recordId, CancellationToken cancellationToken)
+    public IActionResult OnGetDownloadPdf(Guid libraryId, Guid recordId)
     {
         Library library = dbContext.Libraries.FindById(libraryId);
         if (library == null)
@@ -144,7 +144,7 @@ public class DownloadChapterTableModel(DbContext dbContext,
             return NotFound();
         }
 
-        using LibraryDbContext db = library.GetDbContext();
+        using LibraryDbContext db = library.GetReadOnlyDbContext();
 
         ChapterDownloadRecord record = db.ChapterDownloadRecords.FindById(recordId);
         if (record == null || !record.IsCompleted())
@@ -200,7 +200,7 @@ public class DownloadChapterTableModel(DbContext dbContext,
             return NotFound();
         }
 
-        using LibraryDbContext db = library.GetDbContext();
+        using LibraryDbContext db = library.GetReadWriteDbContext();
         ChapterDownloadRecord record = db.ChapterDownloadRecords.FindById(recordId);
         if (record == null || !(record.IsCompleted() || record.IsCancelled()))
         {
@@ -232,7 +232,7 @@ public class DownloadChapterTableModel(DbContext dbContext,
             return NotFound();
         }
 
-        using LibraryDbContext db = library.GetDbContext();
+        using LibraryDbContext db = library.GetReadWriteDbContext();
         ChapterDownloadRecord record = db.ChapterDownloadRecords.FindById(recordId);
         if (record == null)
         {

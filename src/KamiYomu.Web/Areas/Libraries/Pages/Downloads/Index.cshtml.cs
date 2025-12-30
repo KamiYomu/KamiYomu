@@ -60,7 +60,7 @@ public class IndexModel(
 
         MangaDownloadRecord downloadRecord = new(library, string.Empty);
 
-        using LibraryDbContext libDbContext = library.GetDbContext();
+        using LibraryDbContext libDbContext = library.GetReadWriteDbContext();
 
         _ = libDbContext.MangaDownloadRecords.Insert(downloadRecord);
 
@@ -95,7 +95,7 @@ public class IndexModel(
                                          .FindOne(p => p.Manga.Id == MangaId && p.CrawlerAgent.Id == CrawlerAgentId);
         string mangaTitle = library.Manga.Title;
 
-        using LibraryDbContext libDbContext = library.GetDbContext();
+        using LibraryDbContext libDbContext = library.GetReadWriteDbContext();
 
         MangaDownloadRecord mangaDownload = libDbContext.MangaDownloadRecords.Include(p => p.Library).FindOne(p => p.Library.Id == library.Id);
 
