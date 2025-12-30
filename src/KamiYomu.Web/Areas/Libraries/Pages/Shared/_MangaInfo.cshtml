@@ -9,7 +9,7 @@
 }
 <div class="container-fluid">
     <div class="row g-4">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="border rounded shadow-sm overflow-hidden">
                 <a href="@Model.WebSiteUrl" alt="@Model.Title" target="_blank">
                     <img src="@Model.CoverUrl.ToInternalImageUrl()" alt="@Model.Title"
@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <div class="col-md-8">
+        <div class="col-md-9">
             <h2 class="fw-bold mb-3">@Model.Title</h2>
 
             @if (!string.IsNullOrWhiteSpace(desc))

@@ -28,6 +28,12 @@ public class IndexModel(
 
     [BindProperty]
     public string FilePathTemplate { get; set; } = string.Empty;
+
+    [BindProperty]
+    public required string ComicInfoTitleTemplate { get; set; }
+
+    [BindProperty]
+    public required string ComicInfoSeriesTemplate { get; set; }
     public void OnGet()
     {
         CrawlerAgents = dbContext.CrawlerAgents.FindAll();
@@ -45,8 +51,10 @@ public class IndexModel(
         CrawlerAgents.Core.Catalog.Manga manga = await agentCrawlerRepository.GetMangaAsync(crawlerAgent.Id, MangaId, cancellationToken);
 
         string filePathTemplateFormat = string.IsNullOrWhiteSpace(FilePathTemplate) ? specialFolderOptions.Value.FilePathFormat : FilePathTemplate;
+        string comicInfoTitleTemplateFormat = string.IsNullOrWhiteSpace(ComicInfoTitleTemplate) ? specialFolderOptions.Value.ComicInfoTitleFormat : ComicInfoTitleTemplate;
+        string comicInfoSeriesTemplate = string.IsNullOrWhiteSpace(ComicInfoSeriesTemplate) ? specialFolderOptions.Value.ComicInfoSeriesFormat : ComicInfoSeriesTemplate;
 
-        Library library = new(crawlerAgent, manga, filePathTemplateFormat);
+        Library library = new(crawlerAgent, manga, filePathTemplateFormat, comicInfoTitleTemplateFormat, comicInfoSeriesTemplate);
 
         _ = dbContext.Libraries.Insert(library);
 
@@ -66,6 +74,8 @@ public class IndexModel(
 
         UserPreference preferences = dbContext.UserPreferences.FindOne(p => true);
         preferences.SetFilePathTemplate(filePathTemplateFormat);
+        preferences.SetComicInfoTitleTemplate(comicInfoTitleTemplateFormat);
+        preferences.SetComicInfoSeriesTemplate(comicInfoSeriesTemplate);
         _ = dbContext.UserPreferences.Upsert(preferences);
 
         return Partial("_LibraryCard", library);

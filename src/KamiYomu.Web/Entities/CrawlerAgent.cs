@@ -234,6 +234,11 @@ public class CrawlerAgent : IDisposable
 
     public static string GetAgentDirName(string fileName)
     {
+        return Path.GetFileNameWithoutExtension(fileName);
+    }
+
+    public static string GetAgentDllFileName(string fileName)
+    {
         string name = Path.GetFileNameWithoutExtension(fileName);
         string[] parts = name.Split('.');
 

@@ -1,3 +1,7 @@
+using System.ComponentModel;
+using System.IO.Compression;
+
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Areas.Settings.Pages.Shared;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
@@ -6,15 +10,12 @@ using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Infrastructure.Storage;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
-using System.ComponentModel;
-using System.IO.Compression;
+using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.Create;
 
-public class IndexModel(DbContext dbContext, INotificationService notificationService) : PageModel
+public class IndexModel(DbContext dbContext, IOptions<SpecialFolderOptions> specialFolderOptions, INotificationService notificationService) : PageModel
 {
 
     [BindProperty]
@@ -57,7 +58,7 @@ public class IndexModel(DbContext dbContext, INotificationService notificationSe
         // Create a temp file with the correct extension
         Guid tempUploadId = Guid.NewGuid();
         string tempFileName = $"{tempUploadId}{extension}";
-        string tempDirPath = Path.Combine(Path.GetTempPath(), AppOptions.Defaults.Worker.TempDirName);
+        string tempDirPath = Path.Combine(Path.GetTempPath(), Defaults.Worker.TempDirName);
         string tempFilePath = Path.Combine(tempDirPath, tempFileName);
 
         _ = Directory.CreateDirectory(tempDirPath);
@@ -66,7 +67,7 @@ public class IndexModel(DbContext dbContext, INotificationService notificationSe
         _ = dbContext.CrawlerAgentFileStorage.Upload(tempUploadId, agentFile.FileName, agentFile.OpenReadStream());
         LiteDB.LiteFileInfo<Guid> fileStorage = dbContext.CrawlerAgentFileStorage.FindById(tempUploadId);
         fileStorage.SaveAs(tempFilePath, true);
-        string crawlerAgentTempDir = Path.Combine(Path.GetTempPath(), AppOptions.Defaults.Worker.TempDirName, CrawlerAgent.GetAgentDirName(agentFile.FileName));
+        string crawlerAgentTempDir = Path.Combine(Path.GetTempPath(), Defaults.Worker.TempDirName, CrawlerAgent.GetAgentDirName(agentFile.FileName));
         string? dllPath = "";
         if (isNuget && NugetHelper.IsNugetPackage(tempFilePath))
         {
@@ -117,20 +118,21 @@ public class IndexModel(DbContext dbContext, INotificationService notificationSe
             notificationService.EnqueueErrorForNextPage(I18n.OnlyDllOrNupkgSupported);
             return Page();
         }
-        string agentDir = CrawlerAgent.GetAgentDir(fileStorage.Filename);
-        string agentPath = Path.Combine(CrawlerAgent.GetAgentDir(fileStorage.Filename), fileStorage.Filename);
+        string agentDirName = CrawlerAgent.GetAgentDirName(fileStorage.Filename);
+        string agentDirPath = Path.Combine(specialFolderOptions.Value.AgentsDir, agentDirName);
+        string tempAgentPath = Path.Combine(Path.GetTempPath(), Defaults.Worker.TempDirName, agentDirName, fileStorage.Filename);
 
-        fileStorage.SaveAs(agentPath, true);
+        fileStorage.SaveAs(tempAgentPath, true);
 
         string? dllPath = string.Empty;
-        if (isNuget && NugetHelper.IsNugetPackage(agentPath))
+        if (isNuget && NugetHelper.IsNugetPackage(tempAgentPath))
         {
-            _ = Directory.CreateDirectory(agentDir);
+            _ = Directory.CreateDirectory(agentDirPath);
 
-            ZipFile.ExtractToDirectory(agentPath, agentDir, true);
+            ZipFile.ExtractToDirectory(tempAgentPath, agentDirPath, true);
 
-            dllPath = Directory.EnumerateFiles(agentDir, searchPattern: "*.dll", SearchOption.AllDirectories)
-                               .FirstOrDefault(p => p.EndsWith($"{CrawlerAgent.GetAgentDirName(fileStorage.Filename)}.dll", StringComparison.OrdinalIgnoreCase));
+            dllPath = Directory.EnumerateFiles(agentDirPath, searchPattern: "*.dll", SearchOption.AllDirectories)
+                               .FirstOrDefault(p => p.EndsWith($"{CrawlerAgent.GetAgentDllFileName(fileStorage.Filename)}.dll", StringComparison.OrdinalIgnoreCase));
 
 
             if (dllPath == null)
@@ -141,7 +143,7 @@ public class IndexModel(DbContext dbContext, INotificationService notificationSe
         }
         else
         {
-            dllPath = agentPath;
+            dllPath = tempAgentPath;
         }
 
         // Register agent

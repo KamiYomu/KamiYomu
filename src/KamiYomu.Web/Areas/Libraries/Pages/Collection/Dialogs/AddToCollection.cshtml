@@ -6,11 +6,17 @@
 @{
     Layout = null;
 
-    var previewUrl = Url.Page(
+    var titlePreviewUrl = Url.Page(
         "/Collection/Dialogs/AddToCollection",
         "Preview",
         new { area = "Libraries" }
     );
+
+    var comicInfoPreviewUrl = Url.Page(
+    "/Collection/Dialogs/AddToCollection",
+    "ComicInfoPreview",
+    new { area = "Libraries" }
+);
 }
 <div class="modal-header">
     <h5 class="modal-title">@I18n.AddToYourCollection</h5>
@@ -22,36 +28,100 @@
           hx-post="/Libraries/Downloads/Index?handler=AddToCollection"
           hx-target="#@Model.RefreshElementId"
           hx-swap="innerHTML">
-        <fieldset class="mt-4 border rounded p-3">
-            <legend class="float-none w-auto px-2">@I18n.FilePathFormat</legend>
-            <div class="input-group">
-                <span class="input-group-text">
-                    <i class="bi bi-braces"></i>
-                </span>
+        <div class="accordion mt-4" id="mangaDetailsAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="mangaDetailsAccordionTitle">
+                    <button class="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseMangaDetailsAccordion">
+                        <i class="bi bi-braces me-2"></i> @I18n.Details
+                    </button>
+                </h2>
 
-                <input class="form-control"
-                       id="template-input"
-                       name="FilePathTemplate"
-                       value="@Model.FilePathTemplate"
-                       placeholder="@Model.FilePathTemplate"
-                       hx-post="@previewUrl"
-                       hx-trigger="keyup changed delay:300ms"
-                       hx-target="#template-preview"
-                       hx-swap="innerHTML"
-                       hx-include="closest fieldset" />
+                <div id="collapseMangaDetailsAccordion"
+                     class="accordion-collapse collapse"
+                     data-bs-parent="#templateVariablesAccordion">
+                    <div class="accordion-body">
+                        <fieldset class="mt-4 border rounded p-3">
+                            <legend class="float-none w-auto px-2">@I18n.FilePathFormat</legend>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-braces"></i>
+                                </span>
 
+                                <input class="form-control"
+                                       id="template-input"
+                                       name="FilePathTemplate"
+                                       value="@Model.FilePathTemplate"
+                                       placeholder="@Model.FilePathTemplate"
+                                       hx-post="@titlePreviewUrl"
+                                       hx-trigger="keyup changed delay:300ms"
+                                       hx-target="#template-preview"
+                                       hx-swap="innerHTML"
+                                       hx-include="closest form" />
+
+                            </div>
+
+                            <div id="template-preview" class="mt-3">
+                                @await Html.PartialAsync("_PathTemplatePreview", Model.TemplateResults)
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="mt-4 border rounded p-3">
+                            <legend class="float-none w-auto px-2">ComicInfo.xml</legend>
+                            <div class="input-group mt-1">
+                                <span class="input-group-text">
+                                    <i class="bi bi-braces me-1"></i> @I18n.Title
+                                </span>
+
+                                <input class="form-control"
+                                       id="template-input"
+                                       name="ComicInfoTitleTemplate"
+                                       value="@Model.ComicInfoTitleTemplate"
+                                       placeholder="@Model.ComicInfoTitleTemplate"
+                                       hx-post="@comicInfoPreviewUrl"
+                                       hx-trigger="keyup changed delay:300ms"
+                                       hx-target="#comicinfo-template-preview"
+                                       hx-swap="innerHTML"
+                                       hx-include="closest form" />
+                            </div>
+
+                            <div class="input-group mt-1">
+                                <span class="input-group-text">
+                                    <i class="bi bi-braces me-1"></i> @I18n.Series
+                                </span>
+
+                                <input class="form-control"
+                                       id="template-input"
+                                       name="ComicInfoSeriesTemplate"
+                                       value="@Model.ComicInfoSeriesTemplate"
+                                       placeholder="@Model.ComicInfoSeriesTemplate"
+                                       hx-post="@comicInfoPreviewUrl"
+                                       hx-trigger="keyup changed delay:300ms"
+                                       hx-target="#comicinfo-template-preview"
+                                       hx-swap="innerHTML"
+                                       hx-include="closest form" />
+
+                            </div>
+
+                            <div id="comicinfo-template-preview" class="mt-3">
+                                @await Html.PartialAsync("_ComicInfoTemplatePreview", Model.ComicInfoTemplateViewModel)
+                            </div>
+                        </fieldset>
+
+                        <div>
+                            @await Html.PartialAsync("_PathTemplateVariables", Model.Variables)
+                        </div>
+                    </div>
+                </div>
             </div>
-            @Html.AntiForgeryToken()
-            <input type="hidden" asp-for="MangaId" />
-            <input type="hidden" asp-for="CrawlerAgentId" />
-            <input type="hidden" asp-for="RefreshElementId" />
+        </div>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="MangaId" />
+        <input type="hidden" asp-for="CrawlerAgentId" />
+        <input type="hidden" asp-for="RefreshElementId" />
 
-            <div id="template-preview" class="mt-3">
-                @await Html.PartialAsync("_PathTemplatePreview", Model.TemplateResults)
-            </div>
-
-            @await Html.PartialAsync("_PathTemplateVariables", Model.Variables)
-        </fieldset>
         <div class="modal-footer">
             <input type="hidden" id="FilePathTemplate" name="FilePathTemplate" value="@Model.FilePathTemplate" />
             <button type="submit" class="btn btn-success" data-bs-dismiss="modal">@I18n.Add</button>

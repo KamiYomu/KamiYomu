@@ -790,17 +790,17 @@ para que la configuración &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire cont
   <data name="BaGetFeed" xml:space="preserve">
     <value>Feed de KamiYomu BaGet</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="SignOut" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="LoggingOut" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="SignOut" xml:space="preserve">
     <value>desconectar</value>
   </data>
   <data name="LoggingOut" xml:space="preserve">
     <value>Cerrar sesión...</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="AvailableTemplateVariables" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="Series" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

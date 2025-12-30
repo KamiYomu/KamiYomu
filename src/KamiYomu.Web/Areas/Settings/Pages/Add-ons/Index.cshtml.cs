@@ -127,13 +127,6 @@ public class IndexModel(ILogger<IndexModel> logger,
             string packageFileName = $"{packageId}.{packageVersion}.nupkg";
             string crawlerAgentDir = CrawlerAgent.GetAgentDir(packageFileName);
 
-            if (Directory.Exists(crawlerAgentDir))
-            {
-                Directory.Delete(crawlerAgentDir, recursive: true);
-            }
-
-            _ = Directory.CreateDirectory(crawlerAgentDir);
-
             List<string> savedPaths = [];
             string mainPackagePath = null;
 

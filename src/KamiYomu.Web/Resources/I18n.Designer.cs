@@ -259,6 +259,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Available Template Variables.
+        /// </summary>
+        internal static string AvailableTemplateVariables {
+            get {
+                return ResourceManager.GetString("AvailableTemplateVariables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back.
         /// </summary>
         internal static string Back {
@@ -1651,6 +1660,15 @@ namespace KamiYomu.Web.Resources {
         internal static string SelectSource {
             get {
                 return ResourceManager.GetString("SelectSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Series.
+        /// </summary>
+        internal static string Series {
+            get {
+                return ResourceManager.GetString("Series", resourceCulture);
             }
         }
         

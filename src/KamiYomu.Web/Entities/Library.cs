@@ -16,11 +16,13 @@ public class Library
     private LibraryDbContext _libraryDbContext;
 
     protected Library() { }
-    public Library(CrawlerAgent agentCrawler, Manga manga, string filePathTemplate)
+    public Library(CrawlerAgent agentCrawler, Manga manga, string filePathTemplate, string comicInfoTitleTemplateFormat, string comicInfoSeriesTemplate)
     {
         CrawlerAgent = agentCrawler;
         Manga = string.IsNullOrEmpty(manga.Title) ? null : manga;
         FilePathTemplate = filePathTemplate;
+        ComicInfoTitleTemplateFormat = comicInfoTitleTemplateFormat;
+        ComicInfoSeriesTemplate = comicInfoSeriesTemplate;
     }
 
     public LibraryDbContext GetDbContext()
@@ -70,6 +72,28 @@ public class Library
             filePathTemplate = specialFolderOptions.Value.FilePathFormat;
         }
         return filePathTemplate;
+    }
+
+    public string GetComicInfoTitleTemplate()
+    {
+        string comicInfoTitleTemplate = ComicInfoTitleTemplateFormat;
+        if (string.IsNullOrWhiteSpace(comicInfoTitleTemplate))
+        {
+            IOptions<SpecialFolderOptions> specialFolderOptions = Defaults.ServiceLocator.Instance.GetRequiredService<IOptions<SpecialFolderOptions>>();
+            comicInfoTitleTemplate = specialFolderOptions.Value.ComicInfoTitleFormat;
+        }
+        return comicInfoTitleTemplate;
+    }
+
+    public string GetComicInfoSeriesTemplate()
+    {
+        string comicInfoSeriesTemplate = ComicInfoSeriesTemplate;
+        if (string.IsNullOrWhiteSpace(comicInfoSeriesTemplate))
+        {
+            IOptions<SpecialFolderOptions> specialFolderOptions = Defaults.ServiceLocator.Instance.GetRequiredService<IOptions<SpecialFolderOptions>>();
+            comicInfoSeriesTemplate = specialFolderOptions.Value.ComicInfoSeriesFormat;
+        }
+        return comicInfoSeriesTemplate;
     }
 
     public string GetFilePathTemplateResolved(Chapter? chapter = null)
@@ -168,8 +192,8 @@ public class Library
     public string ToComicInfo(Chapter chapter)
     {
         XElement comicInfo = new("ComicInfo",
-            new XElement("Title", $"{GetCbzFileNameWithoutExtension(chapter)} {chapter?.Title ?? "Untitled Chapter"}"),
-            new XElement("Series", chapter?.ParentManga?.Title ?? string.Empty),
+            new XElement("Title", $"{GetComicInfoTitleTemplate()}"),
+            new XElement("Series", $"{GetComicInfoSeriesTemplate()}"),
             new XElement("Number", chapter?.Number.ToString() ?? string.Empty),
             new XElement("Volume", chapter?.Volume.ToString() ?? string.Empty),
             new XElement("Writer", string.Join(", ", chapter?.ParentManga?.Authors ?? [])),
@@ -190,4 +214,6 @@ public class Library
     public CrawlerAgent CrawlerAgent { get; private set; }
     public Manga Manga { get; private set; }
     public string FilePathTemplate { get; private set; }
+    public string ComicInfoTitleTemplateFormat { get; private set; }
+    public string ComicInfoSeriesTemplate { get; private set; }
 }

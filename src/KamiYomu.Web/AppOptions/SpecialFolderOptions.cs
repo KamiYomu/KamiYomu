@@ -7,4 +7,6 @@ public class SpecialFolderOptions
     public string DbDir { get; init; } = "/db";
     public string MangaDir { get; init; } = "/manga";
     public string FilePathFormat { get; init; } = "{manga_title}/{manga_title} ch.{chapter_padded_4}";
+    public string ComicInfoTitleFormat { get; init; } = "{manga_title} ch.{chapter_padded_4}";
+    public string ComicInfoSeriesFormat { get; set; } = "{manga_title}";
 }
