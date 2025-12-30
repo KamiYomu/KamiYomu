@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -790,17 +790,35 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="BaGetFeed" xml:space="preserve">
     <value>KamiYomu BaGet Feed</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="SignOut" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="LoggingOut" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="SignOut" xml:space="preserve">
     <value>se déconnecter</value>
   </data>
   <data name="LoggingOut" xml:space="preserve">
     <value>Déconnexion...</value>
+  </data>
+  <data name="AvailableTemplateVariables" xml:space="preserve">
+    <value>Variables de modèle disponibles</value>
+  </data>
+  <data name="Series" xml:space="preserve">
+    <value>Série</value>
+  </data>
+  <data name="DownloadProgress" xml:space="preserve">
+    <value>Progression du téléchargement</value>
+  </data>
+  <data name="SetUpYourDownload" xml:space="preserve">
+    <value>Configurez votre téléchargement</value>
+  </data>
+  <data name="FilePath" xml:space="preserve">
+    <value>Chemin du fichier</value>
+  </data>
+  <data name="SeriesNameFormat" xml:space="preserve">
+    <value>Format du nom de série</value>
+  </data>
+  <data name="TitleFormat" xml:space="preserve">
+    <value>Format du titre</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="UpdateAvailable" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

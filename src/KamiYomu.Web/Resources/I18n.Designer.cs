@@ -259,6 +259,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Available Template Variables.
+        /// </summary>
+        internal static string AvailableTemplateVariables {
+            get {
+                return ResourceManager.GetString("AvailableTemplateVariables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back.
         /// </summary>
         internal static string Back {
@@ -691,6 +700,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Download Progress.
+        /// </summary>
+        internal static string DownloadProgress {
+            get {
+                return ResourceManager.GetString("DownloadProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Download Status.
         /// </summary>
         internal static string DownloadStatus {
@@ -822,6 +840,15 @@ namespace KamiYomu.Web.Resources {
         internal static string FamilySafeModeEnableMessage {
             get {
                 return ResourceManager.GetString("FamilySafeModeEnableMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Path.
+        /// </summary>
+        internal static string FilePath {
+            get {
+                return ResourceManager.GetString("FilePath", resourceCulture);
             }
         }
         
@@ -1655,11 +1682,38 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Series.
+        /// </summary>
+        internal static string Series {
+            get {
+                return ResourceManager.GetString("Series", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Series Name Format.
+        /// </summary>
+        internal static string SeriesNameFormat {
+            get {
+                return ResourceManager.GetString("SeriesNameFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         internal static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Up Your Download.
+        /// </summary>
+        internal static string SetUpYourDownload {
+            get {
+                return ResourceManager.GetString("SetUpYourDownload", resourceCulture);
             }
         }
         
@@ -1826,6 +1880,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Title Format.
+        /// </summary>
+        internal static string TitleFormat {
+            get {
+                return ResourceManager.GetString("TitleFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to To Be Rescheduled.
         /// </summary>
         internal static string ToBeRescheduled {
@@ -1849,6 +1912,15 @@ namespace KamiYomu.Web.Resources {
         internal static string TotalDownloads {
             get {
                 return ResourceManager.GetString("TotalDownloads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Available.
+        /// </summary>
+        internal static string UpdateAvailable {
+            get {
+                return ResourceManager.GetString("UpdateAvailable", resourceCulture);
             }
         }
         

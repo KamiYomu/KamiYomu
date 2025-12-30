@@ -1,36 +1,56 @@
-﻿using KamiYomu.CrawlerAgents.Core.Catalog;
+using System.Xml.Linq;
+
+using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
-using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services;
-using KamiYomu.Web.Infrastructure.Storage;
 
 using Microsoft.Extensions.Options;
-
-using System.Xml.Linq;
 
 namespace KamiYomu.Web.Entities;
 
 public class Library
 {
-    private LibraryDbContext _libraryDbContext;
+    private readonly Lazy<LibraryDbContext> _libraryReadWriteDbContext;
+    private readonly Lazy<LibraryDbContext> _libraryReadOnlyDbContext;
 
-    protected Library() { }
-    public Library(CrawlerAgent agentCrawler, Manga manga, string filePathTemplate)
+    protected Library()
+    {
+        _libraryReadOnlyDbContext = new Lazy<LibraryDbContext>(CreateReadOnlyDbContext);
+        _libraryReadWriteDbContext = new Lazy<LibraryDbContext>(CreateReadWriteDbContext);
+    }
+    public Library(CrawlerAgent agentCrawler, Manga manga, string? filePathTemplate, string? comicInfoTitleTemplateFormat, string? comicInfoSeriesTemplate) : this()
     {
         CrawlerAgent = agentCrawler;
         Manga = string.IsNullOrEmpty(manga.Title) ? null : manga;
         FilePathTemplate = filePathTemplate;
+        ComicInfoTitleTemplateFormat = comicInfoTitleTemplateFormat;
+        ComicInfoSeriesTemplate = comicInfoSeriesTemplate;
     }
 
-    public LibraryDbContext GetDbContext()
+    private LibraryDbContext CreateReadWriteDbContext()
     {
-        return _libraryDbContext ??= new LibraryDbContext(Id);
+        return new LibraryDbContext(Id, false);
+    }
+
+    private LibraryDbContext CreateReadOnlyDbContext()
+    {
+        return new LibraryDbContext(Id, true);
+    }
+
+    public LibraryDbContext GetReadOnlyDbContext()
+    {
+        return _libraryReadOnlyDbContext.Value;
+    }
+
+    public LibraryDbContext GetReadWriteDbContext()
+    {
+        return _libraryReadWriteDbContext.Value;
     }
 
     public void DropDbContext()
     {
-        _libraryDbContext.DropDatabase();
+        _libraryReadWriteDbContext.Value.DropDatabase();
     }
 
     public string GetDiscovertyJobId()
@@ -70,6 +90,40 @@ public class Library
             filePathTemplate = specialFolderOptions.Value.FilePathFormat;
         }
         return filePathTemplate;
+    }
+
+    public string GetComicInfoTitleTemplate()
+    {
+        string comicInfoTitleTemplate = ComicInfoTitleTemplateFormat;
+        if (string.IsNullOrWhiteSpace(comicInfoTitleTemplate))
+        {
+            IOptions<SpecialFolderOptions> specialFolderOptions = Defaults.ServiceLocator.Instance.GetRequiredService<IOptions<SpecialFolderOptions>>();
+            comicInfoTitleTemplate = specialFolderOptions.Value.ComicInfoTitleFormat;
+        }
+        return comicInfoTitleTemplate;
+    }
+
+    public string GetComicInfoSeriesTemplate()
+    {
+        string comicInfoSeriesTemplate = ComicInfoSeriesTemplate;
+        if (string.IsNullOrWhiteSpace(comicInfoSeriesTemplate))
+        {
+            IOptions<SpecialFolderOptions> specialFolderOptions = Defaults.ServiceLocator.Instance.GetRequiredService<IOptions<SpecialFolderOptions>>();
+            comicInfoSeriesTemplate = specialFolderOptions.Value.ComicInfoSeriesFormat;
+        }
+        return comicInfoSeriesTemplate;
+    }
+
+    public string GetComicInfoSeriesTemplateResolved(Chapter? chapter = null)
+    {
+        string template = GetComicInfoSeriesTemplate();
+        return TemplateResolver.Resolve(template, Manga, chapter);
+    }
+
+    public string GetComicInfoTitleTemplateResolved(Chapter? chapter = null)
+    {
+        string template = GetComicInfoTitleTemplate();
+        return TemplateResolver.Resolve(template, Manga, chapter);
     }
 
     public string GetFilePathTemplateResolved(Chapter? chapter = null)
@@ -168,8 +222,8 @@ public class Library
     public string ToComicInfo(Chapter chapter)
     {
         XElement comicInfo = new("ComicInfo",
-            new XElement("Title", $"{GetCbzFileNameWithoutExtension(chapter)} {chapter?.Title ?? "Untitled Chapter"}"),
-            new XElement("Series", chapter?.ParentManga?.Title ?? string.Empty),
+            new XElement("Title", $"{GetComicInfoTitleTemplateResolved(chapter)}"),
+            new XElement("Series", $"{GetComicInfoSeriesTemplateResolved(chapter)}"),
             new XElement("Number", chapter?.Number.ToString() ?? string.Empty),
             new XElement("Volume", chapter?.Volume.ToString() ?? string.Empty),
             new XElement("Writer", string.Join(", ", chapter?.ParentManga?.Authors ?? [])),
@@ -189,5 +243,7 @@ public class Library
     public Guid Id { get; private set; }
     public CrawlerAgent CrawlerAgent { get; private set; }
     public Manga Manga { get; private set; }
-    public string FilePathTemplate { get; private set; }
+    public string? FilePathTemplate { get; private set; }
+    public string? ComicInfoTitleTemplateFormat { get; private set; }
+    public string? ComicInfoSeriesTemplate { get; private set; }
 }

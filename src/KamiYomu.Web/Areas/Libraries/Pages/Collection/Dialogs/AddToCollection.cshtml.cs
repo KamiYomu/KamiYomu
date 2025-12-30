@@ -28,9 +28,15 @@ public class AddToCollectionModel(
     public Guid CrawlerAgentId { get; set; } = Guid.Empty;
     [BindProperty]
     public required string FilePathTemplate { get; set; }
+    [BindProperty]
+    public required string ComicInfoTitleTemplate { get; set; }
 
+    [BindProperty]
+    public required string ComicInfoSeriesTemplate { get; set; }
     public string[] TemplateResults { get; private set; } = [];
-
+    public string ComicInfoTitleTemplateResult { get; private set; } = "";
+    public string ComicInfoSeriesTemplateResult { get; private set; } = "";
+    public ComicInfoTemplateViewModel ComicInfoTemplateViewModel { get; set; }
     public async Task OnGetAsync(Guid crawlerAgentId, string mangaId, string refreshElementId, CancellationToken cancellationToken)
     {
         if (crawlerAgentId == Guid.Empty || string.IsNullOrWhiteSpace(mangaId))
@@ -43,8 +49,16 @@ public class AddToCollectionModel(
         CrawlerAgentId = crawlerAgentId;
         MangaId = mangaId;
         FilePathTemplate = string.IsNullOrWhiteSpace(preferences.FilePathTemplate) ? specialFolderOptions.Value.FilePathFormat : preferences.FilePathTemplate;
+        ComicInfoTitleTemplate = string.IsNullOrWhiteSpace(preferences.ComicInfoTitleTemplate) ? specialFolderOptions.Value.ComicInfoTitleFormat : preferences.ComicInfoTitleTemplate;
+        ComicInfoSeriesTemplate = string.IsNullOrWhiteSpace(preferences.ComicInfoSeriesTemplate) ? specialFolderOptions.Value.ComicInfoSeriesFormat : preferences.ComicInfoSeriesTemplate;
         Manga = await crawlerAgentRepository.GetMangaAsync(crawlerAgentId, mangaId, cancellationToken);
         TemplateResults = [.. GetTemplateResults(FilePathTemplate, Manga)];
+        ComicInfoTemplateViewModel = new ComicInfoTemplateViewModel
+        {
+            Manga = Manga,
+            SeriesTemplatePreview = ComicInfoSeriesTemplate,
+            TitleTemplatePreview = ComicInfoTitleTemplate
+        };
         Chapter chapter = ChapterBuilder.Create()
             .WithNumber(1)
             .WithTitle(I18n.ChapterFunnyTemplate1)
@@ -66,6 +80,31 @@ public class AddToCollectionModel(
         TemplateResults = [.. GetTemplateResults(FilePathTemplate, manga)];
 
         return Partial("_PathTemplatePreview", TemplateResults);
+    }
+
+    public async Task<IActionResult> OnPostComicInfoPreviewAsync(CancellationToken cancellationToken)
+    {
+        Manga manga = await crawlerAgentRepository.GetMangaAsync(CrawlerAgentId, MangaId, cancellationToken);
+
+        ComicInfoTitleTemplateResult = GetComicInfoTemplateResults(ComicInfoTitleTemplate, manga);
+        ComicInfoSeriesTemplateResult = GetComicInfoTemplateResults(ComicInfoSeriesTemplate, manga);
+        return Partial("_ComicInfoTemplatePreview", new ComicInfoTemplateViewModel
+        {
+            Manga = manga,
+            TitleTemplatePreview = ComicInfoTitleTemplateResult,
+            SeriesTemplatePreview = ComicInfoSeriesTemplateResult,
+        });
+    }
+
+    private string GetComicInfoTemplateResults(string template, Manga manga)
+    {
+        Chapter chapter1 = ChapterBuilder.Create()
+                                .WithNumber(1)
+                                .WithTitle(I18n.ChapterFunnyTemplate1)
+                                .WithVolume(1)
+                                .Build();
+
+        return TemplateResolver.Resolve(template, manga, chapter1);
     }
 
     private List<string> GetTemplateResults(string template, Manga manga)
@@ -151,4 +190,12 @@ public class TemplateVariablesViewModel
     public Dictionary<string, string> Manga { get; set; } = [];
     public Dictionary<string, string> Chapter { get; set; } = [];
     public Dictionary<string, string> DateTime { get; set; } = [];
+}
+
+
+public class ComicInfoTemplateViewModel
+{
+    public string TitleTemplatePreview { get; set; }
+    public Manga Manga { get; set; }
+    public string SeriesTemplatePreview { get; set; }
 }

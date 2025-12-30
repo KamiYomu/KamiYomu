@@ -1,4 +1,4 @@
-﻿@using System.Globalization
+@using System.Globalization
 @using Microsoft.AspNetCore.Localization
 @using KamiYomu.Web.Infrastructure.Services.Interfaces
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
@@ -84,17 +84,18 @@
                     </div>
                 </div>
             </div>
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 h-100">
+            <main class="col-md-9 ms-sm-auto col-lg-10 flex-grow-1 h-100">
                 @RenderBody()
-                <div class="mt-5 text-center">
-                    <partial name="_AppVersion" />
-                </div>
+                <partial name="_AppVersion" />
                 <partial name="_TimeZoneCheck" />
                 <partial name="_Dialogs" />
                 <partial name="_Loading" />
             </main>
+
         </div>
+
     </div>
+
     <partial name="_NotificationToast" />
     <script src="~/js/color-modes.js" asp-append-version="true"></script>
     <script src="~/lib/htmx/htmx.min.js"></script>

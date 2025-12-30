@@ -1,0 +1,45 @@
+﻿@using KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
+@model ComicInfoTemplateViewModel
+
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <h6 class="mb-2">@I18n.PleaseFixFollowingErrors:</h6>
+
+        <ul class="mb-0">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+
+@if (string.IsNullOrWhiteSpace(Model.TitleTemplatePreview))
+{
+    <span class="text-muted">@I18n.PreviewWillAppearHere</span>
+}
+else
+{
+    <div class="alert alert-secondary">
+        <strong>ComicInfo.xml</strong>
+        <pre>
+            &lt;ComicInfo&gt;
+                &lt;Title&gt;@Html.Raw($"{Model.TitleTemplatePreview}")&lt;/Title&gt;
+                &lt;Series&gt;@Html.Raw($"{Model.SeriesTemplatePreview}")&lt;/Series&gt;
+                &lt;Number&gt;7&lt;/Number&gt;
+                &lt;Volume&gt;0&lt;/Volume&gt;
+                &lt;Writer&gt;@Html.Raw($"{Model.Manga.Authors.FirstOrDefault()}")&lt;/Writer&gt;
+                &lt;Penciller&gt;DDOT&lt;/Penciller&gt;
+                &lt;CoverArtist&gt;DDOT&lt;/CoverArtist&gt;
+                &lt;LanguageISO&gt;ko&lt;/LanguageISO&gt;
+                &lt;@Html.Raw($"{string.Join(",", Model.Manga.Tags)}")&lt;/Genre&gt;
+                &lt;ScanInformation&gt;KamiYomu&lt;/ScanInformation&gt;
+                &lt;Web&gt;@Html.Raw($"{Model.Manga.WebSiteUrl}");/Web&gt;
+                &lt;AgeRating&gt;@Html.Raw($"{(Model.Manga.IsFamilySafe ? "12+" : "Mature")}")&lt;/AgeRating&gt;
+            &lt;/ComicInfo&gt;
+        </pre>
+
+    </div>
+}

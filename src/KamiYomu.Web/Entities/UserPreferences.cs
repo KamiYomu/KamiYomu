@@ -31,9 +31,21 @@ public class UserPreference
         FilePathTemplate = filePathTemplate;
     }
 
+    internal void SetComicInfoTitleTemplate(string comicInfoTitleTemplateFormat)
+    {
+        ComicInfoTitleTemplate = comicInfoTitleTemplateFormat;
+    }
+
+    internal void SetComicInfoSeriesTemplate(string comicInfoSeriesTemplate)
+    {
+        ComicInfoSeriesTemplate = comicInfoSeriesTemplate;
+    }
+
     public Guid Id { get; private set; }
     public string Language { get; private set; }
     public int LanguageId { get; private set; }
     public bool FamilySafeMode { get; private set; } = true;
     public string FilePathTemplate { get; private set; }
+    public string ComicInfoTitleTemplate { get; private set; }
+    public string ComicInfoSeriesTemplate { get; private set; }
 }

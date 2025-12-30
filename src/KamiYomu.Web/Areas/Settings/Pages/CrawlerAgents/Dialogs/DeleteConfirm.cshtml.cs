@@ -29,7 +29,7 @@ public class DeleteConfirmModel(DbContext dbContext, IBackgroundJobClient jobCli
 
         foreach (Entities.Library lib in libraries)
         {
-            using LibraryDbContext libDbContext = lib.GetDbContext();
+            using LibraryDbContext libDbContext = lib.GetReadWriteDbContext();
             IEnumerable<Entities.MangaDownloadRecord> downloadMangas = libDbContext.MangaDownloadRecords.Find(p => p.Library.CrawlerAgent.Id == agentCrawler.Id);
             IEnumerable<Entities.ChapterDownloadRecord> downloadChapters = libDbContext.ChapterDownloadRecords.Find(p => p.CrawlerAgent.Id == agentCrawler.Id);
 

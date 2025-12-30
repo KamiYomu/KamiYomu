@@ -168,6 +168,9 @@ public class CrawlerAgent : IDisposable
     {
         Dictionary<string, string> metadata = [];
 
+        //Path
+        metadata["FilePath"] = assembly.Location;
+
         // Title
         AssemblyTitleAttribute? titleAttr = assembly.GetCustomAttribute<AssemblyTitleAttribute>();
         if (titleAttr != null)
@@ -233,6 +236,11 @@ public class CrawlerAgent : IDisposable
     }
 
     public static string GetAgentDirName(string fileName)
+    {
+        return Path.GetFileNameWithoutExtension(fileName);
+    }
+
+    public static string GetAgentDllFileName(string fileName)
     {
         string name = Path.GetFileNameWithoutExtension(fileName);
         string[] parts = name.Split('.');

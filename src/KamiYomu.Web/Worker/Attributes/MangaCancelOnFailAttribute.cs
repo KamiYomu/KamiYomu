@@ -63,7 +63,7 @@ public class MangaCancelOnFailAttribute : JobFilterAttribute, IApplyStateFilter,
 
                 if (library != null)
                 {
-                    using LibraryDbContext libDbContext = library.GetDbContext();
+                    using LibraryDbContext libDbContext = library.GetReadWriteDbContext();
 
                     Entities.MangaDownloadRecord downloadManga = libDbContext.MangaDownloadRecords.FindOne(p => p.BackgroundJobId == jobId);
 

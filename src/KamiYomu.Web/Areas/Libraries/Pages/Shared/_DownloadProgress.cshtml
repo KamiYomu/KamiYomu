@@ -1,0 +1,47 @@
+@using KamiYomu.Web.Entities
+@using KamiYomu.Web.Entities.Definitions
+@model Library
+
+@{
+    var libDbContext = Model.GetReadOnlyDbContext();
+    MangaDownloadRecord downloadManga = libDbContext.MangaDownloadRecords.FindOne(p => p.Library.Id == Model.Id);
+    if(downloadManga == null)
+    {
+        return;
+    }
+    List<ChapterDownloadRecord> downloadChapters = [.. libDbContext.ChapterDownloadRecords.Find(p => p.MangaDownload.Id == downloadManga.Id)];
+    decimal completed = downloadChapters.Count(p => p.DownloadStatus == DownloadStatus.Completed);
+    decimal total = downloadChapters.Count;
+    decimal progress = total > 0 ? completed / total * 100 : 0;
+}
+
+<div class="mb-2">
+    <div class="fw-semibold mb-1">
+        @I18n.DownloadProgress
+    </div>
+
+    <div class="progress" style="background-color: var(--bs-gray-600);">
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+             role="progressbar"
+             style="width: @progress.ToString("F0")%;"
+             aria-valuenow="@progress.ToString("F0")"
+             aria-valuemin="0"
+             aria-valuemax="100">
+            @progress.ToString("F0")%
+        </div>
+    </div>
+
+</div>
+
+<div class="row text-center text-sm-start align-items-center">
+    <div class="col-sm-6 mb-2 mb-sm-0">
+        <div class="fw-semibold">@I18n.ChaptersFound</div>
+        <div class="text-muted">@total</div>
+    </div>
+
+    <div class="col-sm-6">
+        <div class="fw-semibold">@I18n.Downloaded</div>
+        <div class="text-muted">@completed</div>
+    </div>
+</div>
+

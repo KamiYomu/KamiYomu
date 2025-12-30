@@ -42,7 +42,7 @@ public class MangaDownloaderJob(
             logger.LogWarning("Dispatch \"{title}\" could not proceed — the associated library record no longer exists.", title);
             return;
         }
-        using LibraryDbContext libDbContext = library.GetDbContext();
+        using LibraryDbContext libDbContext = library.GetReadWriteDbContext();
         MangaDownloadRecord mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Id == mangaDownloadId);
         try
         {

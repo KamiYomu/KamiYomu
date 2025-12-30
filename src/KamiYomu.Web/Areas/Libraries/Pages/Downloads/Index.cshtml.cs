@@ -28,6 +28,12 @@ public class IndexModel(
 
     [BindProperty]
     public string FilePathTemplate { get; set; } = string.Empty;
+
+    [BindProperty]
+    public required string ComicInfoTitleTemplate { get; set; }
+
+    [BindProperty]
+    public required string ComicInfoSeriesTemplate { get; set; }
     public void OnGet()
     {
         CrawlerAgents = dbContext.CrawlerAgents.FindAll();
@@ -45,14 +51,16 @@ public class IndexModel(
         CrawlerAgents.Core.Catalog.Manga manga = await agentCrawlerRepository.GetMangaAsync(crawlerAgent.Id, MangaId, cancellationToken);
 
         string filePathTemplateFormat = string.IsNullOrWhiteSpace(FilePathTemplate) ? specialFolderOptions.Value.FilePathFormat : FilePathTemplate;
+        string comicInfoTitleTemplateFormat = string.IsNullOrWhiteSpace(ComicInfoTitleTemplate) ? specialFolderOptions.Value.ComicInfoTitleFormat : ComicInfoTitleTemplate;
+        string comicInfoSeriesTemplate = string.IsNullOrWhiteSpace(ComicInfoSeriesTemplate) ? specialFolderOptions.Value.ComicInfoSeriesFormat : ComicInfoSeriesTemplate;
 
-        Library library = new(crawlerAgent, manga, filePathTemplateFormat);
+        Library library = new(crawlerAgent, manga, filePathTemplateFormat, comicInfoTitleTemplateFormat, comicInfoSeriesTemplate);
 
         _ = dbContext.Libraries.Insert(library);
 
         MangaDownloadRecord downloadRecord = new(library, string.Empty);
 
-        using LibraryDbContext libDbContext = library.GetDbContext();
+        using LibraryDbContext libDbContext = library.GetReadWriteDbContext();
 
         _ = libDbContext.MangaDownloadRecords.Insert(downloadRecord);
 
@@ -66,6 +74,8 @@ public class IndexModel(
 
         UserPreference preferences = dbContext.UserPreferences.FindOne(p => true);
         preferences.SetFilePathTemplate(filePathTemplateFormat);
+        preferences.SetComicInfoTitleTemplate(comicInfoTitleTemplateFormat);
+        preferences.SetComicInfoSeriesTemplate(comicInfoSeriesTemplate);
         _ = dbContext.UserPreferences.Upsert(preferences);
 
         return Partial("_LibraryCard", library);
@@ -74,6 +84,8 @@ public class IndexModel(
     public async Task<IActionResult> OnPostRemoveFromCollectionAsync(CancellationToken cancellationToken)
     {
         _ = ModelState.Remove(nameof(FilePathTemplate));
+        _ = ModelState.Remove(nameof(ComicInfoTitleTemplate));
+        _ = ModelState.Remove(nameof(ComicInfoSeriesTemplate));
 
         if (!ModelState.IsValid)
         {
@@ -85,7 +97,7 @@ public class IndexModel(
                                          .FindOne(p => p.Manga.Id == MangaId && p.CrawlerAgent.Id == CrawlerAgentId);
         string mangaTitle = library.Manga.Title;
 
-        using LibraryDbContext libDbContext = library.GetDbContext();
+        using LibraryDbContext libDbContext = library.GetReadWriteDbContext();
 
         MangaDownloadRecord mangaDownload = libDbContext.MangaDownloadRecords.Include(p => p.Library).FindOne(p => p.Library.Id == library.Id);
 
@@ -102,6 +114,6 @@ public class IndexModel(
 
         await notificationService.PushSuccessAsync($"{I18n.YourCollectionNoLongerIncludes}: {mangaTitle}.", cancellationToken);
 
-        return Partial("_LibraryCard", new Library(library.CrawlerAgent, library.Manga, null));
+        return Partial("_LibraryCard", new Library(library.CrawlerAgent, library.Manga, null, null, null));
     }
 }

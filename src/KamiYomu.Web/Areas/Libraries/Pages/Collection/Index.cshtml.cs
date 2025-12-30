@@ -33,7 +33,7 @@ public class IndexModel(
 
         if (!fs.Exists(uri))
         {
-            using HttpClient httpClient = httpClientFactory.CreateClient(Defaults.Worker.HttpClientBackground);
+            using HttpClient httpClient = httpClientFactory.CreateClient(Defaults.Worker.HttpClientApp);
             try
             {
                 using HttpResponseMessage response = await httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
