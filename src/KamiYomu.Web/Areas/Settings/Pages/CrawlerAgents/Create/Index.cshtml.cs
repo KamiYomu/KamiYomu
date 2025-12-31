@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO.Compression;
 
 using KamiYomu.Web.AppOptions;
@@ -39,7 +40,7 @@ public class IndexModel(DbContext dbContext, IOptions<SpecialFolderOptions> spec
         }
     }
 
-    public IActionResult OnPostUpload(IFormFile agentFile, CancellationToken cancellationToken)
+    public IActionResult OnPostUpload(IFormFile agentFile)
     {
         if (agentFile == null || agentFile.Length == 0)
         {
@@ -143,7 +144,16 @@ public class IndexModel(DbContext dbContext, IOptions<SpecialFolderOptions> spec
         }
         else
         {
-            dllPath = tempAgentPath;
+            string destinationPath = Path.Combine(agentDirPath, fileStorage.Filename);
+
+            if (!Directory.Exists(agentDirPath))
+            {
+                _ = Directory.CreateDirectory(agentDirPath);
+            }
+
+            System.IO.File.Move(tempAgentPath, destinationPath, overwrite: true);
+
+            dllPath = destinationPath;
         }
 
         // Register agent
