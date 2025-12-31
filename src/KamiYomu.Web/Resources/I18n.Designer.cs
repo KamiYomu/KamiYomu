@@ -430,6 +430,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Community.
+        /// </summary>
+        internal static string Community {
+            get {
+                return ResourceManager.GetString("Community", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Company.
         /// </summary>
         internal static string Company {
@@ -858,6 +867,15 @@ namespace KamiYomu.Web.Resources {
         internal static string FilePathFormat {
             get {
                 return ResourceManager.GetString("FilePathFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This template defines how your series will be saved. Each / represents a folder, so avoid starting or ending the file path with a slash. You can also use template variables to customize the path..
+        /// </summary>
+        internal static string FilePathFormatDetails {
+            get {
+                return ResourceManager.GetString("FilePathFormatDetails", resourceCulture);
             }
         }
         
@@ -1691,6 +1709,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This is used by reader programs to organize chapters into series. It helps the programs identify which series a chapter belongs to, making navigation and management easier for the user..
+        /// </summary>
+        internal static string SeriesFormatDetails {
+            get {
+                return ResourceManager.GetString("SeriesFormatDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Series Name Format.
         /// </summary>
         internal static string SeriesNameFormat {
@@ -1718,6 +1745,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use this section to customize how downloaded files are saved, including the file path and comic information. You can use template variables (defined below) that automatically update based on manga and chapter details. Example data for these variables is available in the template variable section..
+        /// </summary>
+        internal static string SetUpYourDownloadDetails {
+            get {
+                return ResourceManager.GetString("SetUpYourDownloadDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sign out.
         /// </summary>
         internal static string SignOut {
@@ -1732,6 +1768,15 @@ namespace KamiYomu.Web.Resources {
         internal static string Size {
             get {
                 return ResourceManager.GetString("Size", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Social Media.
+        /// </summary>
+        internal static string SocialMedia {
+            get {
+                return ResourceManager.GetString("SocialMedia", resourceCulture);
             }
         }
         
@@ -1885,6 +1930,15 @@ namespace KamiYomu.Web.Resources {
         internal static string TitleFormat {
             get {
                 return ResourceManager.GetString("TitleFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is used by reader programs to organize chapter order. It helps the program determine the correct sequence of chapters in a series or manga, making navigation and management easier for the user..
+        /// </summary>
+        internal static string TitleFormatDetails {
+            get {
+                return ResourceManager.GetString("TitleFormatDetails", resourceCulture);
             }
         }
         
