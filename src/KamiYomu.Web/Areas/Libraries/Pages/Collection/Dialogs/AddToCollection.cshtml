@@ -55,7 +55,7 @@
                                 </span>
 
                                 <input class="form-control"
-                                       id="template-input"
+                                       id="file-path-template-input"
                                        name="FilePathTemplate"
                                        value="@Model.FilePathTemplate"
                                        placeholder="@Model.FilePathTemplate"
@@ -64,6 +64,13 @@
                                        hx-target="#template-preview"
                                        hx-swap="innerHTML"
                                        hx-include="closest form" />
+
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
+                                        title="Reset to default"
+                                        hx-on:click="resetfilePathTemplate()">
+                                    <i class="bi bi-arrow-counterclockwise"></i>
+                                </button>
 
                             </div>
                             <div class="form-text">
@@ -83,7 +90,7 @@
                                 </span>
 
                                 <input class="form-control"
-                                       id="template-input"
+                                       id="comic-info-title-template-input"
                                        name="ComicInfoTitleTemplate"
                                        value="@Model.ComicInfoTitleTemplate"
                                        placeholder="@Model.ComicInfoTitleTemplate"
@@ -92,6 +99,13 @@
                                        hx-target="#comicinfo-template-preview"
                                        hx-swap="innerHTML"
                                        hx-include="closest form" />
+
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
+                                        title="Reset to default"
+                                        hx-on:click="resetComicInfoTitleTemplate()">
+                                    <i class="bi bi-arrow-counterclockwise"></i>
+                                </button>
                             </div>
                             <div class="form-text">
                                 @I18n.TitleFormatDetails
@@ -103,7 +117,7 @@
                                 </span>
 
                                 <input class="form-control"
-                                       id="template-input"
+                                       id="comic-info-series-template-input"
                                        name="ComicInfoSeriesTemplate"
                                        value="@Model.ComicInfoSeriesTemplate"
                                        placeholder="@Model.ComicInfoSeriesTemplate"
@@ -113,6 +127,12 @@
                                        hx-swap="innerHTML"
                                        hx-include="closest form" />
 
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
+                                        title="Reset to default"
+                                        hx-on:click="resetComicInfoSeriesTemplate()">
+                                    <i class="bi bi-arrow-counterclockwise"></i>
+                                </button>
                             </div>
                             <div class="form-text">
                                 @I18n.SeriesFormatDetails
@@ -133,7 +153,9 @@
         <input type="hidden" asp-for="MangaId" />
         <input type="hidden" asp-for="CrawlerAgentId" />
         <input type="hidden" asp-for="RefreshElementId" />
-
+        <input type="hidden" id="default-file-path-format" value="@Model.SpecialFolderOptions.FilePathFormat" />
+        <input type="hidden" id="default-comic-info-title-format" value="@Model.SpecialFolderOptions.ComicInfoTitleFormat" />
+        <input type="hidden" id="default-comic-info-series-format" value="@Model.SpecialFolderOptions.ComicInfoSeriesFormat" />
         <div class="modal-footer">
             <input type="hidden" id="FilePathTemplate" name="FilePathTemplate" value="@Model.FilePathTemplate" />
             <button type="submit" class="btn btn-success" data-bs-dismiss="modal">@I18n.Add</button>
@@ -142,3 +164,35 @@
     </form>
 </div>
 
+
+<script>
+    function resetfilePathTemplate() {
+        const input = document.getElementById('file-path-template-input');
+        const def = document.getElementById('default-file-path-format');
+
+        if (!input || !def) return;
+
+        input.value = def.value;
+        htmx.trigger(input, 'change');
+    }
+
+    function resetComicInfoTitleTemplate () {
+        const input = document.getElementById('comic-info-title-template-input');
+        const def = document.getElementById('default-comic-info-title-format');
+
+        if (!input || !def) return;
+
+        input.value = def.value;
+        htmx.trigger(input, 'change');
+    }
+
+    function resetComicInfoSeriesTemplate() {
+        const input = document.getElementById('comic-info-series-template-input');
+        const def = document.getElementById('default-comic-info-series-format');
+
+        if (!input || !def) return;
+
+        input.value = def.value;
+        htmx.trigger(input, 'change');
+    }
+</script>
