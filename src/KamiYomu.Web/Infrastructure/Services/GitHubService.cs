@@ -1,38 +1,41 @@
 using System.Text.Json;
 
+using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 
 namespace KamiYomu.Web.Infrastructure.Services;
 
-public class GitHubService(IHttpClientFactory httpClientFactory) : IDisposable, IGitHubService
+public class GitHubService(IHttpClientFactory httpClientFactory, CacheContext cacheContext) : IDisposable, IGitHubService
 {
     private readonly HttpClient _httpClient = httpClientFactory.CreateClient(AppOptions.Defaults.Worker.HttpClientApp);
     private bool disposedValue;
     private const string Owner = "KamiYomu";
     private const string Repo = "KamiYomu";
-    public async Task<string> GetLatestVersionAsync(CancellationToken cancellationToken)
+    public Task<string> GetLatestVersionAsync(CancellationToken cancellationToken)
     {
-
-        string url = $"https://api.github.com/repos/{Owner}/{Repo}/releases";
-
-        try
+        return cacheContext.GetOrSetAsync("github-version", async () =>
         {
-            string response = await _httpClient.GetStringAsync(url, cancellationToken);
+            string url = $"https://api.github.com/repos/{Owner}/{Repo}/releases";
 
-            JsonElement releases = JsonSerializer.Deserialize<JsonElement>(response);
-            if (releases.GetArrayLength() > 0)
+            try
             {
-                JsonElement latest = releases[0];
-                string? tagName = latest.GetProperty("tag_name").GetString();
-                return tagName ?? "No version found";
-            }
+                string response = await _httpClient.GetStringAsync(url, cancellationToken);
 
-            return "No releases found";
-        }
-        catch (Exception ex)
-        {
-            return $"Error: {ex.Message}";
-        }
+                JsonElement releases = JsonSerializer.Deserialize<JsonElement>(response);
+                if (releases.GetArrayLength() > 0)
+                {
+                    JsonElement latest = releases[0];
+                    string? tagName = latest.GetProperty("tag_name").GetString();
+                    return tagName ?? "No version found";
+                }
+
+                return "No releases found";
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
+        }, TimeSpan.FromDays(1));
     }
 
     public async Task<bool> CheckForUpdatesAsync(string currentVersion, CancellationToken cancellationToken)

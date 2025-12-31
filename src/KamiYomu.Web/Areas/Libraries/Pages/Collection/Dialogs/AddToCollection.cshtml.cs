@@ -1,5 +1,3 @@
-using System;
-
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.CrawlerAgents.Core.Catalog.Builders;
 using KamiYomu.Web.AppOptions;
@@ -21,6 +19,7 @@ public class AddToCollectionModel(
 
     public TemplateVariablesViewModel Variables { get; private set; } = new();
     public Manga? Manga { get; private set; }
+    public SpecialFolderOptions SpecialFolderOptions { get; private set; } = specialFolderOptions.Value;
 
     [BindProperty]
     public string MangaId { get; set; } = string.Empty;
@@ -50,9 +49,9 @@ public class AddToCollectionModel(
         RefreshElementId = refreshElementId;
         CrawlerAgentId = crawlerAgentId;
         MangaId = mangaId;
-        FilePathTemplate = string.IsNullOrWhiteSpace(preferences.FilePathTemplate) ? specialFolderOptions.Value.FilePathFormat : preferences.FilePathTemplate;
-        ComicInfoTitleTemplate = string.IsNullOrWhiteSpace(preferences.ComicInfoTitleTemplate) ? specialFolderOptions.Value.ComicInfoTitleFormat : preferences.ComicInfoTitleTemplate;
-        ComicInfoSeriesTemplate = string.IsNullOrWhiteSpace(preferences.ComicInfoSeriesTemplate) ? specialFolderOptions.Value.ComicInfoSeriesFormat : preferences.ComicInfoSeriesTemplate;
+        FilePathTemplate = string.IsNullOrWhiteSpace(preferences.FilePathTemplate) ? SpecialFolderOptions.FilePathFormat : preferences.FilePathTemplate;
+        ComicInfoTitleTemplate = string.IsNullOrWhiteSpace(preferences.ComicInfoTitleTemplate) ? SpecialFolderOptions.ComicInfoTitleFormat : preferences.ComicInfoTitleTemplate;
+        ComicInfoSeriesTemplate = string.IsNullOrWhiteSpace(preferences.ComicInfoSeriesTemplate) ? SpecialFolderOptions.ComicInfoSeriesFormat : preferences.ComicInfoSeriesTemplate;
         Manga = await crawlerAgentRepository.GetMangaAsync(crawlerAgentId, mangaId, cancellationToken);
         TemplateResults = [.. GetTemplateResults(FilePathTemplate, Manga)];
         ComicInfoTemplateViewModel = new ComicInfoTemplateViewModel

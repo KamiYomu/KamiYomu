@@ -17,6 +17,7 @@
     var copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
     var description = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description;
     var updateAvailable = await GitHubService.CheckForUpdatesAsync(version, Context.RequestAborted);
+    var updateVersionAvailable = await GitHubService.GetLatestVersionAsync(Context.RequestAborted);
 }
 
 <footer class="mt-4 text-secondary small">
@@ -32,7 +33,7 @@
                 <a class="btn btn-outline-success btn-sm d-flex align-items-center"
                    href="https://kamiyomu.com/docs/changelogs/" target="_blank" role="button">
                     <i class="bi bi-arrow-up-circle me-1"></i>
-                    @I18n.UpdateAvailable
+                    @I18n.UpdateAvailable @updateVersionAvailable
                 </a>
             }
         </div>

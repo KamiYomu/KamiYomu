@@ -1,7 +1,11 @@
+using System.Globalization;
+using System.Text.Json.Serialization;
+
 using Hangfire;
 using Hangfire.Storage.SQLite;
 
 using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Endpoints;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Filters;
 using KamiYomu.Web.HealthCheckers;
@@ -30,9 +34,6 @@ using QuestPDF.Fluent;
 using Serilog;
 
 using SQLite;
-
-using System.Globalization;
-using System.Text.Json.Serialization;
 
 using static KamiYomu.Web.AppOptions.Defaults;
 
@@ -101,6 +102,7 @@ builder.Services.AddTransient<INugetService, NugetService>();
 builder.Services.AddTransient<INotificationService, NotificationService>();
 builder.Services.AddTransient<IWorkerService, WorkerService>();
 builder.Services.AddTransient<IGitHubService, GitHubService>();
+builder.Services.AddTransient<IStatsService, StatsService>();
 
 builder.Services.AddHealthChecks()
                 .AddCheck<DatabaseHealthCheck>(nameof(DatabaseHealthCheck), tags: ["storage"])
@@ -194,6 +196,7 @@ app.UseResponseCompression();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseMiddleware<BasicAuthMiddleware>();
+app.MapStatsEndpoints();
 app.UseHangfireDashboard("/worker", new DashboardOptions
 {
     DisplayStorageConnectionString = false,
