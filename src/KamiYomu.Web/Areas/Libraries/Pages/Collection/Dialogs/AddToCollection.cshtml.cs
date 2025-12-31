@@ -1,3 +1,5 @@
+using System;
+
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.CrawlerAgents.Core.Catalog.Builders;
 using KamiYomu.Web.AppOptions;
@@ -56,8 +58,8 @@ public class AddToCollectionModel(
         ComicInfoTemplateViewModel = new ComicInfoTemplateViewModel
         {
             Manga = Manga,
-            SeriesTemplatePreview = ComicInfoSeriesTemplate,
-            TitleTemplatePreview = ComicInfoTitleTemplate
+            SeriesTemplatePreview = GetComicInfoTemplateResults(ComicInfoSeriesTemplate, Manga),
+            TitleTemplatePreview = GetComicInfoTemplateResults(ComicInfoTitleTemplate, Manga)
         };
         Chapter chapter = ChapterBuilder.Create()
             .WithNumber(1)

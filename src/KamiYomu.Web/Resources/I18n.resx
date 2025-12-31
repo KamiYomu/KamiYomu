@@ -820,4 +820,22 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="UpdateAvailable" xml:space="preserve">
     <value>Update Available</value>
   </data>
+  <data name="SeriesFormatDetails" xml:space="preserve">
+    <value>This is used by reader programs to organize chapters into series. It helps the programs identify which series a chapter belongs to, making navigation and management easier for the user.</value>
+  </data>
+  <data name="TitleFormatDetails" xml:space="preserve">
+    <value>This is used by reader programs to organize chapter order. It helps the program determine the correct sequence of chapters in a series or manga, making navigation and management easier for the user.</value>
+  </data>
+  <data name="FilePathFormatDetails" xml:space="preserve">
+    <value>This template defines how your series will be saved. Each / represents a folder, so avoid starting or ending the file path with a slash. You can also use template variables to customize the path.</value>
+  </data>
+  <data name="SetUpYourDownloadDetails" xml:space="preserve">
+    <value>Use this section to customize how downloaded files are saved, including the file path and comic information. You can use template variables (defined below) that automatically update based on manga and chapter details. Example data for these variables is available in the template variable section.</value>
+  </data>
+  <data name="SocialMedia" xml:space="preserve">
+    <value>Social Media</value>
+  </data>
+  <data name="Community" xml:space="preserve">
+    <value>Community</value>
+  </data>
 </root>

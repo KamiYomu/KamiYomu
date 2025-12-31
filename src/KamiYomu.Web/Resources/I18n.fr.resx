@@ -817,8 +817,29 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="TitleFormat" xml:space="preserve">
     <value>Format du titre</value>
   </data>
+  <data name="UpdateAvailable" xml:space="preserve">
+    <value>Mise à jour disponible</value>
+  </data>
+  <data name="SeriesFormatDetails" xml:space="preserve">
+    <value>Ceci est utilisé par les programmes de lecture pour organiser les chapitres en séries. Il aide les programmes à identifier à quelle série appartient un chapitre, facilitant ainsi la navigation et la gestion pour l'utilisateur.</value>
+  </data>
+  <data name="TitleFormatDetails" xml:space="preserve">
+    <value>Ceci est utilisé par les programmes de lecture pour organiser l’ordre des chapitres. Il aide le programme à déterminer la séquence correcte des chapitres dans une série ou un manga, facilitant ainsi la navigation et la gestion pour l'utilisateur.</value>
+  </data>
+  <data name="FilePathFormatDetails" xml:space="preserve">
+    <value>Ce modèle définit comment votre série sera enregistrée. Chaque / représente un dossier, évitez donc de commencer ou de terminer le chemin du fichier par une barre oblique. Vous pouvez également utiliser des variables de modèle pour personnaliser le chemin.</value>
+  </data>
+  <data name="SetUpYourDownloadDetails" xml:space="preserve">
+    <value>Utilisez cette section pour personnaliser la façon dont les fichiers téléchargés sont enregistrés, y compris le chemin du fichier et les informations sur la bande dessinée. Vous pouvez utiliser des variables de modèle (définies ci-dessous) qui se mettent automatiquement à jour en fonction des détails du manga et du chapitre. Des exemples de données pour ces variables sont disponibles dans la section des variables de modèle.</value>
+  </data>
+  <data name="SocialMedia" xml:space="preserve">
+    <value>Réseaux sociaux</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="UpdateAvailable" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="Community" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
+  </data>
+  <data name="Community" xml:space="preserve">
+    <value>Communauté</value>
   </data>
 </root>

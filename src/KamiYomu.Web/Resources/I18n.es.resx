@@ -817,8 +817,29 @@ para que la configuración &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire cont
   <data name="TitleFormat" xml:space="preserve">
     <value>Formato del título</value>
   </data>
+  <data name="UpdateAvailable" xml:space="preserve">
+    <value>Actualización disponible</value>
+  </data>
+  <data name="SeriesFormatDetails" xml:space="preserve">
+    <value>Esto lo utilizan los programas de lectura para organizar los capítulos en series. Ayuda a los programas a identificar a qué serie pertenece un capítulo, facilitando la navegación y gestión al usuario.</value>
+  </data>
+  <data name="TitleFormatDetails" xml:space="preserve">
+    <value>Esto lo utilizan los programas de lectura para organizar el orden de los capítulos. Ayuda al programa a determinar la secuencia correcta de capítulos de una serie o manga, facilitando la navegación y la gestión al usuario.</value>
+  </data>
+  <data name="FilePathFormatDetails" xml:space="preserve">
+    <value>Esta plantilla define cómo se guardará su serie. Cada / representa una carpeta, así que evite comenzar o finalizar la ruta del archivo con una barra. También puede utilizar variables de plantilla para personalizar la ruta.</value>
+  </data>
+  <data name="SetUpYourDownloadDetails" xml:space="preserve">
+    <value>Utilice esta sección para personalizar cómo se guardan los archivos descargados, incluida la ruta del archivo y la información del cómic. Puede utilizar variables de plantilla (definidas a continuación) que se actualizan automáticamente según los detalles del manga y del capítulo. Los datos de ejemplo para estas variables están disponibles en la sección de variables de plantilla.</value>
+  </data>
+  <data name="SocialMedia" xml:space="preserve">
+    <value>Redes Sociales</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="UpdateAvailable" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="Community" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
+  </data>
+  <data name="Community" xml:space="preserve">
+    <value>Comunidad</value>
   </data>
 </root>

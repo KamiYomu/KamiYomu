@@ -817,8 +817,29 @@ voor de &lt;code&gt;WorkerCount&lt;/code&gt;-instelling van Hangfire om te bepal
   <data name="TitleFormat" xml:space="preserve">
     <value>Titelformaat</value>
   </data>
+  <data name="UpdateAvailable" xml:space="preserve">
+    <value>Update beschikbaar</value>
+  </data>
+  <data name="SeriesFormatDetails" xml:space="preserve">
+    <value>Dit wordt door leesprogramma's gebruikt om hoofdstukken in series te ordenen. Het helpt de programma's te identificeren tot welke serie een hoofdstuk behoort, waardoor navigatie en beheer voor de gebruiker eenvoudiger wordt.</value>
+  </data>
+  <data name="TitleFormatDetails" xml:space="preserve">
+    <value>Dit wordt door leesprogramma's gebruikt om de hoofdstukvolgorde te ordenen. Het helpt het programma de juiste volgorde van hoofdstukken in een serie of manga te bepalen, waardoor navigatie en beheer voor de gebruiker eenvoudiger wordt.</value>
+  </data>
+  <data name="FilePathFormatDetails" xml:space="preserve">
+    <value>Deze sjabloon bepaalt hoe uw serie wordt opgeslagen. Elke / vertegenwoordigt een map, dus begin of eindig het bestandspad niet met een schuine streep. U kunt ook sjabloonvariabelen gebruiken om het pad aan te passen.</value>
+  </data>
+  <data name="SetUpYourDownloadDetails" xml:space="preserve">
+    <value>Gebruik dit gedeelte om aan te passen hoe gedownloade bestanden worden opgeslagen, inclusief het bestandspad en stripinformatie. U kunt sjabloonvariabelen gebruiken (hieronder gedefinieerd) die automatisch worden bijgewerkt op basis van manga- en hoofdstukdetails. Voorbeeldgegevens voor deze variabelen zijn beschikbaar in de sjabloonvariabelensectie.</value>
+  </data>
+  <data name="SocialMedia" xml:space="preserve">
+    <value>Sociale media</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="UpdateAvailable" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="Community" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
+  </data>
+  <data name="Community" xml:space="preserve">
+    <value>Gemeenschap</value>
   </data>
 </root>

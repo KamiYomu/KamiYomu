@@ -817,8 +817,29 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   <data name="TitleFormat" xml:space="preserve">
     <value>Formato do título</value>
   </data>
+  <data name="UpdateAvailable" xml:space="preserve">
+    <value>Atualização disponível</value>
+  </data>
+  <data name="SeriesFormatDetails" xml:space="preserve">
+    <value>Isso é usado por programas leitores para organizar capítulos em séries. Ajuda os programas a identificar a qual série pertence um capítulo, facilitando a navegação e o gerenciamento do usuário.</value>
+  </data>
+  <data name="TitleFormatDetails" xml:space="preserve">
+    <value>Isso é usado por programas leitores para organizar a ordem dos capítulos. Ajuda o programa a determinar a sequência correta dos capítulos de uma série ou mangá, facilitando a navegação e o gerenciamento do usuário.</value>
+  </data>
+  <data name="FilePathFormatDetails" xml:space="preserve">
+    <value>Este modelo define como sua série será salva. Cada / representa uma pasta, portanto evite iniciar ou terminar o caminho do arquivo com uma barra. Você também pode usar variáveis ​​de modelo para personalizar o caminho.</value>
+  </data>
+  <data name="SetUpYourDownloadDetails" xml:space="preserve">
+    <value>Use esta seção para personalizar como os arquivos baixados são salvos, incluindo o caminho do arquivo e as informações dos quadrinhos. Você pode usar variáveis ​​de modelo (definidas abaixo) que são atualizadas automaticamente com base nos detalhes do mangá e do capítulo. Dados de exemplo para essas variáveis ​​estão disponíveis na seção de variáveis ​​de modelo.</value>
+  </data>
+  <data name="SocialMedia" xml:space="preserve">
+    <value>Mídias Sociais</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="UpdateAvailable" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="Community" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
+  </data>
+  <data name="Community" xml:space="preserve">
+    <value>Comunidade</value>
   </data>
 </root>

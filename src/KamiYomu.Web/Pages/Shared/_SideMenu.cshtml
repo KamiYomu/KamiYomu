@@ -1,4 +1,4 @@
-﻿@using KamiYomu.Web.AppOptions
+@using KamiYomu.Web.AppOptions
 @using Microsoft.Extensions.Options
 @using Microsoft.AspNetCore.Authorization
 @inject IOptions<BasicAuthOptions> AuthOptions
@@ -119,6 +119,26 @@
             }
         }
        
+    </ul>
+
+    <hr class="my-4" />
+    <h6 class="text-uppercase text-muted px-3 mb-2">
+        <i class="bi bi-people-fill me-2"></i> @I18n.Community
+    </h6>
+
+    <ul class="nav flex-column">
+        <li class="nav-item d-flex align-items-center justify-content-between">
+            <a class="nav-link d-flex align-items-center gap-2"
+               href="https://github.com/KamiYomu/KamiYomu/discussions" target="_blank">
+                <i class="bi bi-github"></i> GitHub
+            </a>
+        </li>
+        <li class="nav-item d-flex align-items-center justify-content-between">
+            <a class="nav-link d-flex align-items-center gap-2"
+               href="https://www.reddit.com/r/KamiYomu/" target="_blank">
+                <i class="bi bi-reddit"></i> Reddit
+            </a>
+        </li>
     </ul>
 
     <!-- Bottom buttons -->
