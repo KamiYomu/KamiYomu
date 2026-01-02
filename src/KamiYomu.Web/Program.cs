@@ -196,7 +196,8 @@ app.UseResponseCompression();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseMiddleware<BasicAuthMiddleware>();
-app.MapStatsEndpoints();
+app.MapStatsEndpoints()
+   .MapLibraryEndpoints();
 app.UseHangfireDashboard("/worker", new DashboardOptions
 {
     DisplayStorageConnectionString = false,

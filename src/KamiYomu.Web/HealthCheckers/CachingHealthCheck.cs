@@ -1,4 +1,4 @@
-﻿using KamiYomu.Web.Infrastructure.Contexts;
+using KamiYomu.Web.Infrastructure.Contexts;
 
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -13,8 +13,8 @@ public class CachingHealthCheck(CacheContext cacheContext) : IHealthCheck
         try
         {
             cacheContext.Current.Add("health-check", "operational", TimeSpan.FromSeconds(1));
-            string result = cacheContext.GetOrSet("health-check", () => "operational", TimeSpan.FromSeconds(1));
-            return Task.FromResult(HealthCheckResult.Healthy($"Cache is {result}."));
+            string value = cacheContext.Current.Get<string>("health-check");
+            return Task.FromResult(HealthCheckResult.Healthy($"Cache is {value}."));
         }
         catch (Exception ex)
         {

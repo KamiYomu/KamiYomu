@@ -1,4 +1,4 @@
-﻿using Hangfire;
+using Hangfire;
 using Hangfire.Storage;
 
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -9,12 +9,13 @@ public class WorkerHealthCheck : IHealthCheck
 {
     public Task<HealthCheckResult> CheckHealthAsync(
         HealthCheckContext context,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken)
     {
         try
         {
             using IStorageConnection connection = JobStorage.Current.GetConnection();
-            List<RecurringJobDto> recurringJobs = connection.GetRecurringJobs();
+
+            _ = connection.FetchNextJob(["default"], cancellationToken);
 
             return Task.FromResult(HealthCheckResult.Healthy("Hangfire is operational."));
         }

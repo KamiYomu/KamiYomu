@@ -838,4 +838,13 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="Community" xml:space="preserve">
     <value>Community</value>
   </data>
+  <data name="System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="MakeThisTheDefaultSettingForFutureCollections" xml:space="preserve">
+    <value>Make this the default setting for future collections.</value>
+  </data>
+  <data name="StandardDefaultSettingsAreShownBelowExplain" xml:space="preserve">
+    <value>Standard default settings are shown below. You can modify these using environment variables.</value>
+  </data>
 </root>

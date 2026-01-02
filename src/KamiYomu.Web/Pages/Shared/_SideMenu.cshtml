@@ -95,7 +95,7 @@
         <li class="nav-item d-flex align-items-center justify-content-between">
             <a class="nav-link d-flex align-items-center gap-2 @( (ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/AuditTrail", StringComparison.OrdinalIgnoreCase) ?? false) ? "active" : "" )"
                asp-area="Settings" asp-page="/AuditTrail/Index">
-                <i class="bi bi-body-text"></i> @I18n.LogStream
+                <i class="bi bi-body-text"></i> @I18n.System
             </a>
             <a class="nav-link px-2 text-secondary"
                href="https://kamiyomu.com/docs/features/log-stream/"

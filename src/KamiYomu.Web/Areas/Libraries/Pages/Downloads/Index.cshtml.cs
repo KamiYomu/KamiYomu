@@ -34,6 +34,8 @@ public class IndexModel(
 
     [BindProperty]
     public required string ComicInfoSeriesTemplate { get; set; }
+    [BindProperty]
+    public required bool MakeThisConfigurationDefault { get; set; } = false;
     public void OnGet()
     {
         CrawlerAgents = dbContext.CrawlerAgents.FindAll();
@@ -72,11 +74,15 @@ public class IndexModel(
 
         await notificationService.PushSuccessAsync($"{I18n.TitleAddedToYourCollection}: {library.Manga.Title} ", cancellationToken);
 
-        UserPreference preferences = dbContext.UserPreferences.FindOne(p => true);
-        preferences.SetFilePathTemplate(filePathTemplateFormat);
-        preferences.SetComicInfoTitleTemplate(comicInfoTitleTemplateFormat);
-        preferences.SetComicInfoSeriesTemplate(comicInfoSeriesTemplate);
-        _ = dbContext.UserPreferences.Upsert(preferences);
+        if (MakeThisConfigurationDefault)
+        {
+            UserPreference preferences = dbContext.UserPreferences.FindOne(p => true);
+            preferences.SetFilePathTemplate(filePathTemplateFormat);
+            preferences.SetComicInfoTitleTemplate(comicInfoTitleTemplateFormat);
+            preferences.SetComicInfoSeriesTemplate(comicInfoSeriesTemplate);
+            _ = dbContext.UserPreferences.Upsert(preferences);
+        }
+
 
         return Partial("_LibraryCard", library);
     }
