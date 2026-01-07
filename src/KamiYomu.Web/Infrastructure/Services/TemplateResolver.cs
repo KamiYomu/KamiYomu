@@ -1,4 +1,6 @@
-﻿using KamiYomu.CrawlerAgents.Core.Catalog;
+using System.Globalization;
+
+using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Infrastructure.Storage;
 
 namespace KamiYomu.Web.Infrastructure.Services;
@@ -44,11 +46,11 @@ public static class TemplateResolver
                 ["manga_familysafe"] = "",
             }
             : new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["manga_title"] = FileNameHelper.SanitizeFileName(manga.Title) ?? "",
-            ["manga_title_slug"] = Slugify(FileNameHelper.SanitizeFileName(manga.Title) ?? ""),
-            ["manga_familysafe"] = manga.IsFamilySafe.ToString(),
-        };
+            {
+                ["manga_title"] = FileNameHelper.SanitizeFileName(manga.Title) ?? "",
+                ["manga_title_slug"] = Slugify(FileNameHelper.SanitizeFileName(manga.Title) ?? ""),
+                ["manga_familysafe"] = manga.IsFamilySafe.ToString(),
+            };
     }
 
 
@@ -73,22 +75,22 @@ public static class TemplateResolver
                 ["volume_padded_5"] = ""
             }
             : new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["chapter"] = chapter.Number.ToString(),
-            ["chapter_padded_1"] = chapter.Number.ToString("0"),
-            ["chapter_padded_2"] = chapter.Number.ToString("00"),
-            ["chapter_padded_3"] = chapter.Number.ToString("000"),
-            ["chapter_padded_4"] = chapter.Number.ToString("0000"),
-            ["chapter_padded_5"] = chapter.Number.ToString("00000"),
-            ["chapter_title"] = FileNameHelper.SanitizeFileName(chapter.Title) ?? "",
-            ["chapter_title_slug"] = Slugify(FileNameHelper.SanitizeFileName(chapter.Title) ?? ""),
-            ["volume"] = chapter.Volume.ToString(),
-            ["volume_padded_1"] = chapter.Volume.ToString("0"),
-            ["volume_padded_2"] = chapter.Volume.ToString("00"),
-            ["volume_padded_3"] = chapter.Volume.ToString("000"),
-            ["volume_padded_4"] = chapter.Volume.ToString("0000"),
-            ["volume_padded_5"] = chapter.Volume.ToString("00000")
-        };
+            {
+                ["chapter"] = chapter.Number.ToString(),
+                ["chapter_padded_1"] = PadNumber(chapter.Number, 1),
+                ["chapter_padded_2"] = PadNumber(chapter.Number, 2),
+                ["chapter_padded_3"] = PadNumber(chapter.Number, 3),
+                ["chapter_padded_4"] = PadNumber(chapter.Number, 4),
+                ["chapter_padded_5"] = PadNumber(chapter.Number, 5),
+                ["chapter_title"] = FileNameHelper.SanitizeFileName(chapter.Title) ?? "",
+                ["chapter_title_slug"] = Slugify(FileNameHelper.SanitizeFileName(chapter.Title) ?? ""),
+                ["volume"] = chapter.Volume.ToString(),
+                ["volume_padded_1"] = PadNumber(chapter.Volume, 1),
+                ["volume_padded_2"] = PadNumber(chapter.Volume, 2),
+                ["volume_padded_3"] = PadNumber(chapter.Volume, 3),
+                ["volume_padded_4"] = PadNumber(chapter.Volume, 4),
+                ["volume_padded_5"] = PadNumber(chapter.Volume, 5)
+            };
     }
 
 
@@ -126,6 +128,34 @@ public static class TemplateResolver
             .Replace(" ", "-")
             .Replace("_", "-");
     }
+
+
+    private static string PadNumber(decimal number, int pad)
+    {
+        string text = number.ToString(CultureInfo.InvariantCulture);
+        int dotIndex = text.IndexOf('.');
+
+        // No decimal
+        if (dotIndex < 0)
+        {
+            return text.Length >= pad
+                ? text
+                : text.PadLeft(pad, '0');
+        }
+
+        // With decimal
+        string integerPart = text[..dotIndex];
+        string decimalPart = text[dotIndex..]; // includes '.'
+
+        int targetWidth = pad - 1;
+
+        string paddedInteger = integerPart.Length >= targetWidth
+            ? integerPart
+            : integerPart.PadLeft(targetWidth, '0');
+
+        return paddedInteger + decimalPart;
+    }
+
 }
 
 
