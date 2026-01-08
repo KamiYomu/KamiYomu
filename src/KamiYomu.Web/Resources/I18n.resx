@@ -847,4 +847,7 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="StandardDefaultSettingsAreShownBelowExplain" xml:space="preserve">
     <value>Standard default settings are shown below. You can modify these using environment variables.</value>
   </data>
+  <data name="NotSafeForWork" xml:space="preserve">
+    <value>Not Safe For Work</value>
+  </data>
 </root>

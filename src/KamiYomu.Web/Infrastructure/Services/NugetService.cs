@@ -118,15 +118,11 @@ public class NugetService(DbContext dbContext) : INugetService
             }
 
             // Tags filter
-            if (searchUrl.Contains("nuget.org", StringComparison.OrdinalIgnoreCase))
+            string[] tags = ParseTags(result?["tags"]);
+            if (!tags.Any(tag => tag.Equals(value: Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase)))
             {
-                string[] tags = ParseTags(result?["tags"]);
-                if (!tags.Any(tag => tag.Equals(value: Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase)))
-                {
-                    continue;
-                }
+                continue;
             }
-
 
             // Fetch registration index
             string registrationIndexUrl = $"{registrationsUrl.TrimEnd('/')}/{packageId.ToLowerInvariant()}/index.json";
@@ -236,14 +232,16 @@ public class NugetService(DbContext dbContext) : INugetService
         return client;
     }
 
-    private static string[] ParseTags(JsonNode? tagsNode) =>
-        tagsNode switch
+    private static string[] ParseTags(JsonNode? tagsNode)
+    {
+        return tagsNode switch
         {
             JsonArray array => [.. array.Select(t => t?.ToString()).Where(t => !string.IsNullOrWhiteSpace(t))],
             { } node when !string.IsNullOrWhiteSpace(node.ToString()) =>
-                node.ToString().Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries),
+                node.ToString().Split([',', ';', ' '], StringSplitOptions.RemoveEmptyEntries),
             _ => []
         };
+    }
 
     private static NugetPackageInfo BuildPackageInfo(string packageId, JsonNode? result, JsonNode? catalogEntry)
     {
@@ -256,6 +254,7 @@ public class NugetService(DbContext dbContext) : INugetService
         {
             Id = packageId,
             Version = version,
+            Tags = ParseTags(result?["tags"]),
             IconUrl = TryUri(catalogEntry?["iconUrl"]),
             LicenseUrl = TryUri(catalogEntry?["licenseUrl"]),
             Description = catalogEntry?["description"]?.ToString(),
@@ -298,15 +297,19 @@ public class NugetService(DbContext dbContext) : INugetService
         return dependencies;
     }
 
-    private static string[] ParseAuthors(JsonNode? authorsNode) =>
-        authorsNode is JsonArray array
+    private static string[] ParseAuthors(JsonNode? authorsNode)
+    {
+        return authorsNode is JsonArray array
             ? [.. array.Select(p => p?.ToString()).Where(p => !string.IsNullOrEmpty(p))]
             : authorsNode?.ToString() is string singleAuthor && !string.IsNullOrEmpty(singleAuthor)
                 ? new[] { singleAuthor }
                 : [];
+    }
 
-    private static Uri? TryUri(JsonNode? node) =>
-        Uri.TryCreate(node?.ToString(), UriKind.Absolute, out Uri? uri) ? uri : null;
+    private static Uri? TryUri(JsonNode? node)
+    {
+        return Uri.TryCreate(node?.ToString(), UriKind.Absolute, out Uri? uri) ? uri : null;
+    }
 
     public async Task<Stream[]> OnGetDownloadAsync(Guid sourceId, string packageId, string packageVersion, CancellationToken cancellationToken)
     {

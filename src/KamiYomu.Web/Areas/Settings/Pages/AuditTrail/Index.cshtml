@@ -93,38 +93,6 @@
         </div>
     </div>
 
-    <!-- Settings -->
-    <div class="mb-3">
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-                <i class="bi bi-info-circle me-2"></i>@I18n.Settings
-            </div>
-            <div class="card-body">
-                <div class="alert alert-light border-start border-info border-4 d-flex align-items-center shadow-sm mb-4" role="alert">
-                    <i class="bi bi-info-circle-fill text-info fs-4 me-3"></i>
-                    <div class="text-muted">
-                        @I18n.StandardDefaultSettingsAreShownBelowExplain
-                    </div>
-                </div>
-                <ul class="list-group list-group-flush small">
-                    @foreach (var setting in filteredSettings)
-                    {
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong class="text-secondary">@setting.Key.Replace(":", "__")</strong>
-                                @if (Environment.GetEnvironmentVariable(setting.Key.Replace(":", "__")) != null)
-                                {
-                                    <span class="badge bg-success ms-2">Environment</span>
-                                }
-                            </div>
-                            <code class="text-dark">@setting.Value</code>
-                        </li>
-                    }
-                </ul>
-            </div>
-        </div>
-    </div>
-
     <!-- Log Stream / Terminal -->
     <div>
         <div class="card shadow-sm">

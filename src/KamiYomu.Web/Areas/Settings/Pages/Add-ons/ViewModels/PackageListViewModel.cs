@@ -10,6 +10,7 @@ public class PackageListViewModel
 
 public class NugetPackageGroupedViewModel
 {
+    private const string NotSafeForWork = "nsfw";
     public Guid SourceId { get; set; }
     public string Id { get; set; } = string.Empty;
     public Uri? IconUrl { get; set; }
@@ -22,4 +23,9 @@ public class NugetPackageGroupedViewModel
     public Uri? LicenseUrl { get; set; }
     public Uri? RepositoryUrl { get; set; }
     public Dictionary<string, List<NugetDependencyInfo>> DependenciesByVersion { get; set; } = [];
+
+    public bool IsNsfw()
+    {
+        return Tags.Any(p => string.Equals(p, NotSafeForWork, StringComparison.OrdinalIgnoreCase));
+    }
 }

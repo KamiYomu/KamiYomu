@@ -1,4 +1,4 @@
-﻿@using KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels
+@using KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels
 @model NugetPackageGroupedViewModel
 @{
     Layout = null;
@@ -20,7 +20,16 @@
 
                     <!-- Package details -->
                     <div class="col-12 col-md flex-grow-1">
-                        <h5 class="card-title mb-1">@Model.Id</h5>
+                        <h5 class="card-title mb-1">
+                            @Model.Id
+                            @if (Model.IsNsfw())
+                            {
+                                <span title="@I18n.NotSafeForWork">
+                                    <i class="bi bi-fire text-danger me-1"></i>
+                                    <i class="bi bi-explicit text-danger me-1"></i>
+                                </span>
+                            }
+                        </h5>
                         <h6 class="card-subtitle mb-2 text-muted d-flex align-items-center">
                             <i class="bi bi-123 me-2"></i>
                             @I18n.Version:

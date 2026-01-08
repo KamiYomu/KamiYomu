@@ -848,4 +848,13 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="StandardDefaultSettingsAreShownBelowExplain" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="NotSafeForWork" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="StandardDefaultSettingsAreShownBelowExplain" xml:space="preserve">
+    <value>Les paramètres par défaut standard sont indiqués ci-dessous. Vous pouvez les modifier à l'aide de variables d'environnement.</value>
+  </data>
+  <data name="NotSafeForWork" xml:space="preserve">
+    <value>Pas sécuritaire pour le travail</value>
+  </data>
 </root>

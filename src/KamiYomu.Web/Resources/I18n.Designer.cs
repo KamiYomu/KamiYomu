@@ -1312,6 +1312,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not Safe For Work.
+        /// </summary>
+        internal static string NotSafeForWork {
+            get {
+                return ResourceManager.GetString("NotSafeForWork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not Started.
         /// </summary>
         internal static string NotStarted {
