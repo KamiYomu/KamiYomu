@@ -90,6 +90,28 @@ public class TemplateResolverTest
 
 
     [Fact]
+    public void Resolve_ChapterWithDecimalValueCorrectly()
+    {
+        CrawlerAgents.Core.Catalog.Manga manga = MangaBuilder.Create()
+            .WithTitle("One Piece")
+            .WithIsFamilySafe(true)
+            .Build();
+
+        CrawlerAgents.Core.Catalog.Chapter chapter = ChapterBuilder.Create()
+            .WithNumber(1.1m)
+            .WithTitle("Romance Dawn")
+            .WithVolume(1)
+            .Build();
+
+        string template = "{manga_title}/ch.{chapter_padded_4}/{chapter_title_slug}";
+
+        string result = TemplateResolver.Resolve(template, manga, chapter);
+
+        Assert.Equal("One Piece/ch.001.1/romance-dawn", result);
+    }
+
+
+    [Fact]
     public void Slugify_IsAppliedCorrectly()
     {
         CrawlerAgents.Core.Catalog.Manga manga = MangaBuilder.Create()
