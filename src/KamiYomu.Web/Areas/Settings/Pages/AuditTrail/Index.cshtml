@@ -1,5 +1,7 @@
-﻿@page
+@page
+@using System.Collections
 @model KamiYomu.Web.Areas.Settings.Pages.AuditTrail.IndexModel
+@inject IConfiguration Configuration
 @section Styles {
     <link rel="stylesheet" href="~/lib/xterm/xterm.min.css" />
 }
@@ -36,10 +38,19 @@
 
 }
 
+@{
+
+    string[] allowedPrefixes = { "SpecialFolders", "UI", "Worker" };
+
+    var filteredSettings = Configuration.AsEnumerable()
+        .Where(c => allowedPrefixes.Any(p => c.Key.StartsWith(p)))
+        .OrderBy(c => c.Key);
+}
+
 <div class="d-flex justify-content-between align-items-center m-3">
     <h2 class="h5 mb-0 text-primary">
         <i class="bi bi-body-text me-3" aria-hidden="true"></i>
-        @I18n.LogStream
+        @I18n.System
     </h2>
 </div>
 <div class="container-fluid p-4">
@@ -55,9 +66,6 @@
                         <span>@I18n.ProcessorCount</span>
                         <span>
                             @Environment.ProcessorCount
-                            <small class="text-muted d-block">
-                                @I18n.ProcessorCountExplanation
-                            </small>
                         </span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between">

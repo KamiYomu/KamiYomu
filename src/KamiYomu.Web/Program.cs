@@ -85,12 +85,12 @@ builder.Services.AddResponseCompression(options =>
     options.Providers.Add<GzipCompressionProvider>();
 });
 
-
-builder.Services.AddSingleton<CacheContext>();
-builder.Services.AddSingleton(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb")));
 builder.Services.AddSingleton<IUserClockManager, UserClockManager>();
 builder.Services.AddSingleton<ILockManager, LockManager>();
+
 builder.Services.AddScoped(_ => new DbContext(builder.Configuration.GetConnectionString("AgentDb")));
+builder.Services.AddScoped<CacheContext>();
+builder.Services.AddScoped(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb")));
 
 builder.Services.AddTransient<ICrawlerAgentRepository, CrawlerAgentRepository>();
 builder.Services.AddTransient<IHangfireRepository, HangfireRepository>();
@@ -196,7 +196,8 @@ app.UseResponseCompression();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseMiddleware<BasicAuthMiddleware>();
-app.MapStatsEndpoints();
+app.MapStatsEndpoints()
+   .MapLibraryEndpoints();
 app.UseHangfireDashboard("/worker", new DashboardOptions
 {
     DisplayStorageConnectionString = false,

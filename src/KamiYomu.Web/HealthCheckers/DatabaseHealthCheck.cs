@@ -1,4 +1,4 @@
-﻿using KamiYomu.Web.Infrastructure.Contexts;
+using KamiYomu.Web.Infrastructure.Contexts;
 
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -12,7 +12,7 @@ public class DatabaseHealthCheck(DbContext dbContext) : IHealthCheck
     {
         try
         {
-            IEnumerable<string> col = dbContext.Raw.GetCollectionNames();
+            _ = dbContext.Raw.GetCollection("system");
 
             return Task.FromResult(HealthCheckResult.Healthy("Database is operational."));
         }

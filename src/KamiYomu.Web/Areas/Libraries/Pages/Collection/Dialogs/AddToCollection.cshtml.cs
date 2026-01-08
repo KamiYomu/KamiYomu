@@ -34,6 +34,10 @@ public class AddToCollectionModel(
 
     [BindProperty]
     public required string ComicInfoSeriesTemplate { get; set; }
+
+    [BindProperty]
+    public required bool MakeThisConfigurationDefault { get; set; } = false;
+
     public string[] TemplateResults { get; private set; } = [];
     public string ComicInfoTitleTemplateResult { get; private set; } = "";
     public string ComicInfoSeriesTemplateResult { get; private set; } = "";

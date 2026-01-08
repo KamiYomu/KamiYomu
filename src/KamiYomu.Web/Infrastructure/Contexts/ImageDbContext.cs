@@ -1,18 +1,12 @@
-﻿using LiteDB;
+using LiteDB;
 
 namespace KamiYomu.Web.Infrastructure.Contexts;
 
-public class ImageDbContext : IDisposable
+public class ImageDbContext(string connectionString) : IDisposable
 {
     private bool _disposed = false;
-    private readonly LiteDatabase _database;
-    public ImageDbContext(string connectionString)
-    {
-        _database = new(connectionString);
-    }
-
-    public ILiteStorage<Uri> CoverImageFileStorage => _database.GetStorage<Uri>("_cover_image_file_store", "_cover_images");
-    public LiteDatabase Raw => _database;
+    public ILiteStorage<Uri> CoverImageFileStorage => Raw.GetStorage<Uri>("_cover_image_file_store", "_cover_images");
+    public LiteDatabase Raw => new(connectionString);
     public void Dispose()
     {
         Dispose(true);
@@ -28,7 +22,7 @@ public class ImageDbContext : IDisposable
 
         if (disposing)
         {
-            _database?.Dispose();
+            Raw?.Dispose();
         }
         _disposed = true;
     }

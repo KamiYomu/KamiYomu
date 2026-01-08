@@ -1,3 +1,5 @@
+using System.IO.Compression;
+
 using KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Entities.Addons;
@@ -7,10 +9,6 @@ using KamiYomu.Web.Infrastructure.Services.Interfaces;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
-using System.IO.Compression;
-
-using static KamiYomu.Web.AppOptions.Defaults;
 
 namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers;
 

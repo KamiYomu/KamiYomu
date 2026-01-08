@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model KamiYomu.Web.Areas.Settings.Pages.Add_ons.EditModel
 @{
     ViewData["Title"] = Model.IsEditMode ? "Edit NuGet Source" : "Create NuGet Source";
@@ -24,7 +24,7 @@
             @I18n.Examples:
             <ul class="mb-0 ps-3">
                 <li><code>@Defaults.NugetFeeds.NugetFeedUrl</code> (@I18n.OfficialNuGetOrg)</li>
-                <li><code>@Defaults.NugetFeeds.BagGetFeedUrl</code> (@I18n.BaGetFeed)</li>
+                <li><code>@Defaults.NugetFeeds.GiteaFeedUrl</code> (@I18n.BaGetFeed)</li>
                 <li><code>@Defaults.NugetFeeds.KamiYomuFeedUrl</code> (@I18n.FromKamiYomuNuGetRepository)</li>
             </ul>
         </div>

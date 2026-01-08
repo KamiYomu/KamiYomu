@@ -1,28 +1,23 @@
-﻿using KamiYomu.Web.AppOptions;
-using KamiYomu.Web.Entities.Addons;
-using KamiYomu.Web.Infrastructure.Contexts;
-using KamiYomu.Web.Infrastructure.Services.Interfaces;
-
 using System.IO.Compression;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json.Nodes;
 
+using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Entities.Addons;
+using KamiYomu.Web.Infrastructure.Contexts;
+using KamiYomu.Web.Infrastructure.Services.Interfaces;
+
+using static KamiYomu.Web.AppOptions.Defaults;
+
 namespace KamiYomu.Web.Infrastructure.Services;
 
-public class NugetService : INugetService
+public class NugetService(DbContext dbContext) : INugetService
 {
-    private readonly DbContext _dbContext;
-
-    public NugetService(DbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public async Task<NugetPackageInfo?> GetPackageMetadataAsync(Guid sourceId, string packageId, string version, CancellationToken cancellationToken)
     {
         // Load source
-        NugetSource source = _dbContext.NugetSources.FindById(sourceId)
+        NugetSource source = dbContext.NugetSources.FindById(sourceId)
             ?? throw new InvalidOperationException("NuGet source not found.");
 
         using HttpClient client = CreateHttpClient(source);
@@ -82,7 +77,7 @@ public class NugetService : INugetService
 
     public async Task<IEnumerable<NugetPackageInfo>> SearchPackagesAsync(Guid sourceId, string query, bool includePreRelease, CancellationToken cancellationToken)
     {
-        NugetSource source = _dbContext.NugetSources.FindById(sourceId)
+        NugetSource source = dbContext.NugetSources.FindById(sourceId)
             ?? throw new InvalidOperationException("NuGet source not found.");
 
         using HttpClient client = CreateHttpClient(source);
@@ -124,7 +119,7 @@ public class NugetService : INugetService
 
             // Tags filter
             string[] tags = ParseTags(result?["tags"]);
-            if (!tags.Any(tag => tag.Equals(Defaults.Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase)))
+            if (!tags.Any(tag => tag.Equals(value: Package.KamiYomuCrawlerAgentTag, StringComparison.OrdinalIgnoreCase)))
             {
                 continue;
             }
@@ -166,7 +161,7 @@ public class NugetService : INugetService
     public async Task<IEnumerable<NugetPackageInfo>> GetAllPackageVersionsAsync(Guid sourceId, string packageId, CancellationToken cancellationToken)
     {
         // Load source
-        NugetSource source = _dbContext.NugetSources.FindById(sourceId)
+        NugetSource source = dbContext.NugetSources.FindById(sourceId)
             ?? throw new InvalidOperationException("NuGet source not found.");
 
         using HttpClient client = CreateHttpClient(source);
@@ -237,14 +232,16 @@ public class NugetService : INugetService
         return client;
     }
 
-    private static string[] ParseTags(JsonNode? tagsNode) =>
-        tagsNode switch
+    private static string[] ParseTags(JsonNode? tagsNode)
+    {
+        return tagsNode switch
         {
             JsonArray array => [.. array.Select(t => t?.ToString()).Where(t => !string.IsNullOrWhiteSpace(t))],
             { } node when !string.IsNullOrWhiteSpace(node.ToString()) =>
-                node.ToString().Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries),
+                node.ToString().Split([',', ';', ' '], StringSplitOptions.RemoveEmptyEntries),
             _ => []
         };
+    }
 
     private static NugetPackageInfo BuildPackageInfo(string packageId, JsonNode? result, JsonNode? catalogEntry)
     {
@@ -257,6 +254,7 @@ public class NugetService : INugetService
         {
             Id = packageId,
             Version = version,
+            Tags = ParseTags(result?["tags"]),
             IconUrl = TryUri(catalogEntry?["iconUrl"]),
             LicenseUrl = TryUri(catalogEntry?["licenseUrl"]),
             Description = catalogEntry?["description"]?.ToString(),
@@ -299,19 +297,23 @@ public class NugetService : INugetService
         return dependencies;
     }
 
-    private static string[] ParseAuthors(JsonNode? authorsNode) =>
-        authorsNode is JsonArray array
+    private static string[] ParseAuthors(JsonNode? authorsNode)
+    {
+        return authorsNode is JsonArray array
             ? [.. array.Select(p => p?.ToString()).Where(p => !string.IsNullOrEmpty(p))]
             : authorsNode?.ToString() is string singleAuthor && !string.IsNullOrEmpty(singleAuthor)
                 ? new[] { singleAuthor }
                 : [];
+    }
 
-    private static Uri? TryUri(JsonNode? node) =>
-        Uri.TryCreate(node?.ToString(), UriKind.Absolute, out Uri? uri) ? uri : null;
+    private static Uri? TryUri(JsonNode? node)
+    {
+        return Uri.TryCreate(node?.ToString(), UriKind.Absolute, out Uri? uri) ? uri : null;
+    }
 
     public async Task<Stream[]> OnGetDownloadAsync(Guid sourceId, string packageId, string packageVersion, CancellationToken cancellationToken)
     {
-        NugetSource source = _dbContext.NugetSources.FindById(sourceId);
+        NugetSource source = dbContext.NugetSources.FindById(sourceId);
         if (source == null || string.IsNullOrWhiteSpace(packageId) || string.IsNullOrWhiteSpace(packageVersion))
         {
             throw new FileNotFoundException("Invalid package or source.");
@@ -349,7 +351,7 @@ public class NugetService : INugetService
         HashSet<string> visited = new(StringComparer.OrdinalIgnoreCase);
         List<Stream> streams = [];
 
-        async Task DownloadWithDependenciesAsync(string id, string version)
+        async Task DownloadWithDependenciesAsync(string id, string version, bool mainPackage)
         {
             string key = $"{id.ToLowerInvariant()}:{version.ToLowerInvariant()}";
             if (!visited.Add(key))
@@ -368,7 +370,16 @@ public class NugetService : INugetService
 
             string registrationUrl = $"{registrationBaseUrl.TrimEnd('/')}/{id.ToLowerInvariant()}/index.json";
             using HttpResponseMessage response = await client.GetAsync(registrationUrl, cancellationToken);
-            _ = response.EnsureSuccessStatusCode();
+
+            if (!response.IsSuccessStatusCode && mainPackage)
+            {
+                _ = response.EnsureSuccessStatusCode();
+            }
+            else
+            {
+                return;
+
+            }
 
             using Stream regStream = await response.Content.ReadAsStreamAsync(cancellationToken);
             JsonNode reg;
@@ -411,14 +422,14 @@ public class NugetService : INugetService
                         string? depVersion = dep?["range"]?.ToString()?.Trim('[', ']');
                         if (!string.IsNullOrWhiteSpace(depId) && !string.IsNullOrWhiteSpace(depVersion))
                         {
-                            await DownloadWithDependenciesAsync(depId, depVersion);
+                            await DownloadWithDependenciesAsync(depId, depVersion, false);
                         }
                     }
                 }
             }
         }
 
-        await DownloadWithDependenciesAsync(packageId, packageVersion);
+        await DownloadWithDependenciesAsync(packageId, packageVersion, true);
         return [.. streams];
     }
 }

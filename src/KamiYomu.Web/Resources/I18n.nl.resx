@@ -835,11 +835,26 @@ voor de &lt;code&gt;WorkerCount&lt;/code&gt;-instelling van Hangfire om te bepal
   <data name="SocialMedia" xml:space="preserve">
     <value>Sociale media</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Community" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="Community" xml:space="preserve">
     <value>Gemeenschap</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>Systeem</value>
+  </data>
+  <data name="MakeThisTheDefaultSettingForFutureCollections" xml:space="preserve">
+    <value>Maak dit de standaardinstelling voor toekomstige incasso's.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="StandardDefaultSettingsAreShownBelowExplain" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="NotSafeForWork" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="StandardDefaultSettingsAreShownBelowExplain" xml:space="preserve">
+    <value>Standaard standaardinstellingen worden hieronder weergegeven. U kunt deze wijzigen met behulp van omgevingsvariabelen.</value>
+  </data>
+  <data name="NotSafeForWork" xml:space="preserve">
+    <value>Niet veilig voor werk</value>
   </data>
 </root>

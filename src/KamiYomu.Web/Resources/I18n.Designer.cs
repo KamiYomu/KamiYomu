@@ -1141,6 +1141,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Make this the default setting for future collections..
+        /// </summary>
+        internal static string MakeThisTheDefaultSettingForFutureCollections {
+            get {
+                return ResourceManager.GetString("MakeThisTheDefaultSettingForFutureCollections", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mangá.
         /// </summary>
         internal static string Manga {
@@ -1299,6 +1308,15 @@ namespace KamiYomu.Web.Resources {
         internal static string NotCompatible {
             get {
                 return ResourceManager.GetString("NotCompatible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Safe For Work.
+        /// </summary>
+        internal static string NotSafeForWork {
+            get {
+                return ResourceManager.GetString("NotSafeForWork", resourceCulture);
             }
         }
         
@@ -1826,6 +1844,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Standard default settings are shown below. You can modify these using environment variables..
+        /// </summary>
+        internal static string StandardDefaultSettingsAreShownBelowExplain {
+            get {
+                return ResourceManager.GetString("StandardDefaultSettingsAreShownBelowExplain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start Crawling Now.
         /// </summary>
         internal static string StartCrawlingNow {
@@ -1849,6 +1876,15 @@ namespace KamiYomu.Web.Resources {
         internal static string Status {
             get {
                 return ResourceManager.GetString("Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System.
+        /// </summary>
+        internal static string System {
+            get {
+                return ResourceManager.GetString("System", resourceCulture);
             }
         }
         

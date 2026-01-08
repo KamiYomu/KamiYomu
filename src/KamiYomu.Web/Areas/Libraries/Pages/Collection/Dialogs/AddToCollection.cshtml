@@ -145,6 +145,14 @@
                         <div>
                             @await Html.PartialAsync("_PathTemplateVariables", Model.Variables)
                         </div>
+
+                        <div class="form-check d-flex align-items-center">
+                            <input class="form-check-input me-2" type="checkbox" asp-for="MakeThisConfigurationDefault" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                <i class="bi bi-bookmark-star-fill text-primary me-1"></i>
+                                @I18n.MakeThisTheDefaultSettingForFutureCollections
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
