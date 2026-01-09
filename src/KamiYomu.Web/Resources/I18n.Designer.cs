@@ -493,6 +493,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connection successfully!.
+        /// </summary>
+        internal static string ConnectionSuccessfully {
+            get {
+                return ResourceManager.GetString("ConnectionSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Content Rating.
         /// </summary>
         internal static string ContentRating {
@@ -799,6 +808,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to Kavita..
+        /// </summary>
+        internal static string FailedConnectKavita {
+            get {
+                return ResourceManager.GetString("FailedConnectKavita", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to search packages from the source..
         /// </summary>
         internal static string FailedToSearch {
@@ -1038,6 +1056,24 @@ namespace KamiYomu.Web.Resources {
         internal static string InstallCrawlerAgentDescription {
             get {
                 return ResourceManager.GetString("InstallCrawlerAgentDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Integrations.
+        /// </summary>
+        internal static string Integrations {
+            get {
+                return ResourceManager.GetString("Integrations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kavita Integration Settings.
+        /// </summary>
+        internal static string KavitaIntegrationSettings {
+            get {
+                return ResourceManager.GetString("KavitaIntegrationSettings", resourceCulture);
             }
         }
         
@@ -1474,6 +1510,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Password / API Key.
+        /// </summary>
+        internal static string PasswordApiKey {
+            get {
+                return ResourceManager.GetString("PasswordApiKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password Required.
+        /// </summary>
+        internal static string PasswordRequired {
+            get {
+                return ResourceManager.GetString("PasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pending.
         /// </summary>
         internal static string Pending {
@@ -1497,6 +1551,15 @@ namespace KamiYomu.Web.Resources {
         internal static string PleaseFixFollowingErrors {
             get {
                 return ResourceManager.GetString("PleaseFixFollowingErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please fix validation errors.
+        /// </summary>
+        internal static string PleaseFixValidationErrors {
+            get {
+                return ResourceManager.GetString("PleaseFixValidationErrors", resourceCulture);
             }
         }
         
@@ -1745,11 +1808,38 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Service Uri Invalid.
+        /// </summary>
+        internal static string ServiceUriInvalid {
+            get {
+                return ResourceManager.GetString("ServiceUriInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service Uri Required.
+        /// </summary>
+        internal static string ServiceUriRequired {
+            get {
+                return ResourceManager.GetString("ServiceUriRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         internal static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings saved successfully!.
+        /// </summary>
+        internal static string SettingsSavedSuccessfully {
+            get {
+                return ResourceManager.GetString("SettingsSavedSuccessfully", resourceCulture);
             }
         }
         
@@ -1907,6 +1997,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Test Connection.
+        /// </summary>
+        internal static string TestConnection {
+            get {
+                return ResourceManager.GetString("TestConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The template must produce unique file names for different chapters..
         /// </summary>
         internal static string TheTemplateMustProduceUniqueFileNames {
@@ -2038,6 +2137,15 @@ namespace KamiYomu.Web.Resources {
         internal static string UserName {
             get {
                 return ResourceManager.GetString("UserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username Required.
+        /// </summary>
+        internal static string UsernameRequired {
+            get {
+                return ResourceManager.GetString("UsernameRequired", resourceCulture);
             }
         }
         

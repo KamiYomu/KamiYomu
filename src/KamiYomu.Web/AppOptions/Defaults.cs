@@ -30,7 +30,12 @@ public partial class Defaults
         public const string KamiYomuFeedUrl = "https://nuget.pkg.github.com/KamiYomu/index.json";
     }
 
-    public class UI
+    public static class Integrations
+    {
+        public const string HttpClientApp = $"{nameof(Integrations)}.{nameof(HttpClientApp)}";
+    }
+
+    public static class UI
     {
         public const string EnqueueNotification = nameof(EnqueueNotification);
         public const string PushNotification = nameof(PushNotification);
@@ -43,7 +48,7 @@ public partial class Defaults
 
     public static class Worker
     {
-        public const string HttpClientApp = nameof(HttpClientApp);
+        public const string HttpClientApp = $"{nameof(Worker)}.{nameof(HttpClientApp)}";
         public const int HttpTimeOutInSeconds = 60;
         public const int StaleLockTimeout = 20;
         public const int DeferredExecutionInMinutes = 5;

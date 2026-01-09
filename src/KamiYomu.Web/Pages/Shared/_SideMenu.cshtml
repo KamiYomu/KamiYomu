@@ -106,6 +106,13 @@
             </a>
         </li>
 
+        <li class="nav-item d-flex align-items-center justify-content-between">
+            <a class="nav-link d-flex align-items-center gap-2 @( (ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Integrations", StringComparison.OrdinalIgnoreCase) ?? false) ? "active" : "" )"
+               asp-area="Settings" asp-page="/Integrations/Index">
+                <i class="bi bi-puzzle"></i> @I18n.Integrations
+            </a>
+        </li>
+
         @if (AuthOptions.Value.Enabled)
         {
             @if (User.Identity?.IsAuthenticated == true)
@@ -118,7 +125,7 @@
                 </li>
             }
         }
-       
+
     </ul>
 
     <hr class="my-4" />

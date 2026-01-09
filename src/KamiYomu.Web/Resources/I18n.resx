@@ -850,4 +850,40 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="NotSafeForWork" xml:space="preserve">
     <value>Not Safe For Work</value>
   </data>
+  <data name="Integrations" xml:space="preserve">
+    <value>Integrations</value>
+  </data>
+  <data name="PasswordApiKey" xml:space="preserve">
+    <value>Password / API Key</value>
+  </data>
+  <data name="ServiceUriRequired" xml:space="preserve">
+    <value>Service Uri Required</value>
+  </data>
+  <data name="ServiceUriInvalid" xml:space="preserve">
+    <value>Service Uri Invalid</value>
+  </data>
+  <data name="UsernameRequired" xml:space="preserve">
+    <value>Username Required</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Password Required</value>
+  </data>
+  <data name="KavitaIntegrationSettings" xml:space="preserve">
+    <value>Kavita Integration Settings</value>
+  </data>
+  <data name="ConnectionSuccessfully" xml:space="preserve">
+    <value>Connection successfully!</value>
+  </data>
+  <data name="FailedConnectKavita" xml:space="preserve">
+    <value>Failed to connect to Kavita.</value>
+  </data>
+  <data name="SettingsSavedSuccessfully" xml:space="preserve">
+    <value>Settings saved successfully!</value>
+  </data>
+  <data name="TestConnection" xml:space="preserve">
+    <value>Test Connection</value>
+  </data>
+  <data name="PleaseFixValidationErrors" xml:space="preserve">
+    <value>Please fix validation errors</value>
+  </data>
 </root>

@@ -1,0 +1,92 @@
+@using KamiYomu.Web.Areas.Settings.Pages.Integrations
+@model KavitaIntegrationInput
+
+<div class="accordion" id="kavitaAccordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingKavita">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseKavita" aria-expanded="false" aria-controls="collapseKavita">
+                @I18n.KavitaIntegrationSettings
+            </button>
+        </h2>
+
+        <div id="collapseKavita" class="accordion-collapse collapse" aria-labelledby="headingKavita" data-bs-parent="#kavitaAccordion">
+            <div class="accordion-body">
+                <div class="card shadow-sm">
+                    <div class="card-body p-3">
+
+                        <form method="post" id="kavitaForm" class="small">
+                            <div class="mb-2">
+                                <label asp-for="ServiceUri" class="form-label"></label>
+                                <input name="KavitaIntegrationInput.ServiceUri" asp-for="ServiceUri" class="form-control form-control-sm" />
+                                <span asp-validation-for="ServiceUri" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-2">
+                                <label asp-for="Username" class="form-label"></label>
+                                <input name="KavitaIntegrationInput.Username" asp-for="Username" class="form-control form-control-sm" />
+                                <span asp-validation-for="Username" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-2">
+                                <label asp-for="Password" class="form-label"></label>
+                                <input name="KavitaIntegrationInput.Password" asp-for="Password" class="form-control form-control-sm" type="password" />
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-check mb-2">
+                                <input name="KavitaIntegrationInput.Enabled" asp-for="Enabled" class="form-check-input" />
+                                <label asp-for="Enabled" class="form-check-label"></label>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <!-- Test Connection Button -->
+                                <button type="button"
+                                        class="btn btn-secondary btn-sm"
+                                        hx-post="@Url.Page("Index", "TestConnection")"
+                                        hx-target="#connectionMessage"
+                                        hx-swap="innerHTML"
+                                        hx-include="#kavitaForm">
+                                    @I18n.TestConnection
+                                </button>
+
+                                <!-- Save Button -->
+                                <button type="submit"
+                                        class="btn btn-primary btn-sm"
+                                        hx-post="@Url.Page("Index", "Save")"
+                                        hx-target="#saveMessage"
+                                        hx-swap="innerHTML"
+                                        hx-include="#kavitaForm"
+                                        hx-disable="true"
+                                        id="saveButton">
+                                    @I18n.Save
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Messages -->
+                        <div id="connectionMessage" class="mt-2"></div>
+                        <div id="saveMessage" class="mt-2"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    // Enable Save button only if connection is successful
+    document.body.addEventListener('htmx:afterSwap', function(evt) {
+        if (evt.target.id === 'connectionMessage') {
+            const messageEl = evt.target;
+            const saveBtn = document.getElementById('saveButton');
+            if (messageEl.textContent.includes('successfully')) {
+                saveBtn.disabled = false;
+            } else {
+                saveBtn.disabled = true;
+            }
+        }
+    });
+</script>

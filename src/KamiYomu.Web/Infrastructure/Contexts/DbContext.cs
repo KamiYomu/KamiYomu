@@ -14,6 +14,7 @@ public class DbContext(string connectionString) : IDisposable
     public ILiteCollection<UserPreference> UserPreferences => Raw.GetCollection<UserPreference>("user_preferences");
     public ILiteCollection<NugetSource> NugetSources => Raw.GetCollection<NugetSource>("nuget_sources");
     public ILiteStorage<Guid> CrawlerAgentFileStorage => Raw.GetStorage<Guid>("_agent_crawler_file_storage", "_packages");
+
     public LiteDatabase Raw { get; } = new(connectionString);
     public void Dispose()
     {

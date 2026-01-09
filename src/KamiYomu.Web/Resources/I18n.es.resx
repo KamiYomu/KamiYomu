@@ -844,17 +844,47 @@ para que la configuración &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire cont
   <data name="MakeThisTheDefaultSettingForFutureCollections" xml:space="preserve">
     <value>Haga de esta la configuración predeterminada para futuras colecciones.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="StandardDefaultSettingsAreShownBelowExplain" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="NotSafeForWork" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="StandardDefaultSettingsAreShownBelowExplain" xml:space="preserve">
     <value>La configuración predeterminada estándar se muestra a continuación. Puede modificarlos utilizando variables de entorno.</value>
   </data>
   <data name="NotSafeForWork" xml:space="preserve">
     <value>No es seguro para el trabajo</value>
+  </data>
+  <data name="Integrations" xml:space="preserve">
+    <value>Integraciones</value>
+  </data>
+  <data name="PasswordApiKey" xml:space="preserve">
+    <value>Contraseña/Clave API</value>
+  </data>
+  <data name="ServiceUriRequired" xml:space="preserve">
+    <value>Uri de servicio requerido</value>
+  </data>
+  <data name="ServiceUriInvalid" xml:space="preserve">
+    <value>Uri de servicio no válido</value>
+  </data>
+  <data name="UsernameRequired" xml:space="preserve">
+    <value>Nombre de usuario requerido</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Contraseña requerida</value>
+  </data>
+  <data name="KavitaIntegrationSettings" xml:space="preserve">
+    <value>Configuración de integración de Kavita</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ConnectionSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="FailedConnectKavita" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="SettingsSavedSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="TestConnection" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="PleaseFixValidationErrors" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

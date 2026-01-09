@@ -1,0 +1,12 @@
+@page
+@model KamiYomu.Web.Areas.Settings.Pages.Integrations.IndexModel
+@{
+}
+<div class="d-flex justify-content-between align-items-center m-3">
+    <h2 class="h5 mb-0 text-primary">
+        <i class="bi bi-puzzle me-3" aria-hidden="true"></i>
+        @I18n.Integrations
+    </h2>
+</div>
+
+<partial name="_KavitaIntegration" model="Model.KavitaIntegrationInput"/>

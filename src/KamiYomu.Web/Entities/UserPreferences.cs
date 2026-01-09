@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 
 namespace KamiYomu.Web.Entities;
 
@@ -41,6 +41,11 @@ public class UserPreference
         ComicInfoSeriesTemplate = comicInfoSeriesTemplate;
     }
 
+    internal void SetKavitaSettings(KavitaSettings kavitaSettings)
+    {
+        KavitaSettings = kavitaSettings;
+    }
+
     public Guid Id { get; private set; }
     public string Language { get; private set; }
     public int LanguageId { get; private set; }
@@ -48,4 +53,5 @@ public class UserPreference
     public string FilePathTemplate { get; private set; }
     public string ComicInfoTitleTemplate { get; private set; }
     public string ComicInfoSeriesTemplate { get; private set; }
+    public KavitaSettings? KavitaSettings { get; private set; }
 }
