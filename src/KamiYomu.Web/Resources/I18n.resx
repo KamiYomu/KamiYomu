@@ -886,4 +886,10 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="PleaseFixValidationErrors" xml:space="preserve">
     <value>Please fix validation errors</value>
   </data>
+  <data name="ApiKeyOrPasswordIsRequired" xml:space="preserve">
+    <value>Api Key or Password is required.</value>
+  </data>
+  <data name="ServiceUri" xml:space="preserve">
+    <value>Service Uri</value>
+  </data>
 </root>

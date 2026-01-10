@@ -1,4 +1,4 @@
-﻿using Hangfire.Common;
+using Hangfire.Common;
 using Hangfire.States;
 using Hangfire.Storage;
 
@@ -8,7 +8,7 @@ namespace KamiYomu.Web.Worker.Attributes;
 
 public class MangaCancelOnFailAttribute : JobFilterAttribute, IApplyStateFilter, IDisposable
 {
-    private string _cancelReason { get; set; }
+    private readonly string _cancelReason;
     private readonly string _libraryIdParameterName;
     private readonly string _titleParameterName;
     private readonly IServiceScope _scope;

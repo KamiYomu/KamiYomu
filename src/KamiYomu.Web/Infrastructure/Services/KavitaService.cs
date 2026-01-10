@@ -35,7 +35,10 @@ public class KavitaService(ILogger<KavitaService> logger, IHttpClientFactory htt
 
         using HttpRequestMessage request = new(HttpMethod.Post, loginUri)
         {
-            Content = JsonContent.Create(new
+            Content = kavitaSettings.IsApiKey() ? JsonContent.Create(new
+            {
+                kavitaSettings.ApiKey
+            }) : JsonContent.Create(new
             {
                 kavitaSettings.Username,
                 kavitaSettings.Password
@@ -121,15 +124,17 @@ public class KavitaAuthHandler(DbContext dbContext) : DelegatingHandler
 
             Uri loginUri = new(preference.KavitaSettings.ServiceUri, "/api/Account/login");
 
-            HttpResponseMessage response = await httpClient.PostAsJsonAsync(
-                loginUri,
-                new
+            JsonContent content = preference.KavitaSettings.IsApiKey() ?
+                JsonContent.Create(new
+                {
+                    preference.KavitaSettings.ApiKey
+                }) : JsonContent.Create(new
                 {
                     preference.KavitaSettings.Username,
                     preference.KavitaSettings.Password
-                },
-                cancellationToken
-            );
+                });
+
+            HttpResponseMessage response = await httpClient.PostAsync(loginUri, content, cancellationToken);
 
             _ = response.EnsureSuccessStatusCode();
 

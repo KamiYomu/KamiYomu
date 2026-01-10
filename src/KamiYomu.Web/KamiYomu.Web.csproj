@@ -50,7 +50,7 @@
 
 	<ItemGroup>
 		<EmbeddedResource Update="Resources\I18n.resx">
-			<Generator>ResXFileCodeGenerator</Generator>
+			<Generator>PublicResXFileCodeGenerator</Generator>
 			<LastGenOutput>I18n.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 	</ItemGroup>

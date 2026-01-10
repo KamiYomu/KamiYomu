@@ -1,17 +1,16 @@
-﻿using Hangfire;
+using System.Globalization;
+
+using Hangfire;
 using Hangfire.Server;
 
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
-using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
 
 using Microsoft.Extensions.Options;
-
-using System.Globalization;
 
 namespace KamiYomu.Web.Worker;
 

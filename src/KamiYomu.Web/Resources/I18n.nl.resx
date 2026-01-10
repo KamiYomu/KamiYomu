@@ -887,4 +887,31 @@ voor de &lt;code&gt;WorkerCount&lt;/code&gt;-instelling van Hangfire om te bepal
   <data name="PleaseFixValidationErrors" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="ApiKeyOrPasswordIsRequired" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ServiceUri" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ConnectionSuccessfully" xml:space="preserve">
+    <value>Verbinding succesvol!</value>
+  </data>
+  <data name="FailedConnectKavita" xml:space="preserve">
+    <value>Kan geen verbinding maken met Kavita.</value>
+  </data>
+  <data name="SettingsSavedSuccessfully" xml:space="preserve">
+    <value>Instellingen succesvol opgeslagen!</value>
+  </data>
+  <data name="TestConnection" xml:space="preserve">
+    <value>Verbinding testen</value>
+  </data>
+  <data name="PleaseFixValidationErrors" xml:space="preserve">
+    <value>Los de validatiefouten op</value>
+  </data>
+  <data name="ApiKeyOrPasswordIsRequired" xml:space="preserve">
+    <value>API-sleutel of wachtwoord is vereist.</value>
+  </data>
+  <data name="ServiceUri" xml:space="preserve">
+    <value>Service Uri</value>
+  </data>
 </root>

@@ -1,4 +1,4 @@
-﻿using Hangfire;
+using Hangfire;
 using Hangfire.States;
 
 using KamiYomu.Web.AppOptions;
@@ -40,4 +40,8 @@ public class HangfireRepository(IOptions<WorkerOptions> options) : IHangfireRepo
         return new EnqueuedState(allQueuesWithStats.OrderBy(q => q.Length).First().Name);
     }
 
+    public EnqueuedState GetNotifyQueue()
+    {
+        return new EnqueuedState(Defaults.Worker.NotificationQueue);
+    }
 }

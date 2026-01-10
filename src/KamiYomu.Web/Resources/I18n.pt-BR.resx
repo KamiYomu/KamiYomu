@@ -887,4 +887,31 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   <data name="PleaseFixValidationErrors" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="ApiKeyOrPasswordIsRequired" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ServiceUri" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ConnectionSuccessfully" xml:space="preserve">
+    <value>Conexão com sucesso!</value>
+  </data>
+  <data name="FailedConnectKavita" xml:space="preserve">
+    <value>Falha ao conectar-se ao Kavita.</value>
+  </data>
+  <data name="SettingsSavedSuccessfully" xml:space="preserve">
+    <value>Configurações salvas com sucesso!</value>
+  </data>
+  <data name="TestConnection" xml:space="preserve">
+    <value>Conexão de teste</value>
+  </data>
+  <data name="PleaseFixValidationErrors" xml:space="preserve">
+    <value>Corrija os erros de validação</value>
+  </data>
+  <data name="ApiKeyOrPasswordIsRequired" xml:space="preserve">
+    <value>É necessária uma chave de API ou senha.</value>
+  </data>
+  <data name="ServiceUri" xml:space="preserve">
+    <value>Uri de serviço</value>
+  </data>
 </root>

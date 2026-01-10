@@ -1,4 +1,4 @@
-﻿namespace KamiYomu.Web.AppOptions;
+namespace KamiYomu.Web.AppOptions;
 
 public class WorkerOptions
 {
@@ -80,6 +80,7 @@ public class WorkerOptions
         return [
         Defaults.Worker.DefaultQueue,
         Defaults.Worker.DeferredExecutionQueue,
+        Defaults.Worker.NotificationQueue,
         .. DownloadChapterQueues,
         .. MangaDownloadSchedulerQueues,
         .. DiscoveryNewChapterQueues,
