@@ -892,4 +892,10 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="ServiceUri" xml:space="preserve">
     <value>Service Uri</value>
   </data>
+  <data name="DeleteIntegration" xml:space="preserve">
+    <value>Delete Integration</value>
+  </data>
+  <data name="SettingsRemovedSuccessfully" xml:space="preserve">
+    <value>Settings Removed Successfully!</value>
+  </data>
 </root>

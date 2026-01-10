@@ -8,7 +8,7 @@ namespace KamiYomu.Web.Worker.Attributes;
 
 public class MangaCancelOnFailAttribute : JobFilterAttribute, IApplyStateFilter, IDisposable
 {
-    private readonly string _cancelReason;
+    private string _cancelReason;
     private readonly string _libraryIdParameterName;
     private readonly string _titleParameterName;
     private readonly IServiceScope _scope;

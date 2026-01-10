@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using System.Threading;
 
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.Contexts;
@@ -34,7 +33,7 @@ public class IndexModel(DbContext dbContext, IKavitaService kavitaService) : Pag
         }
     }
 
-    public async Task<IActionResult> OnPostTestConnectionAsync(CancellationToken cancellationToken)
+    public async Task<IActionResult> OnPostTestKavitaConnectionAsync(CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
         {
@@ -62,7 +61,7 @@ public class IndexModel(DbContext dbContext, IKavitaService kavitaService) : Pag
         }
     }
 
-    public async Task<IActionResult> OnPostSaveAsync(CancellationToken cancellationToken)
+    public async Task<IActionResult> OnPostSaveKavitaAsync(CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
         {
@@ -105,6 +104,31 @@ public class IndexModel(DbContext dbContext, IKavitaService kavitaService) : Pag
             _ = dbContext.UserPreferences.Upsert(preferences);
 
             return Partial("_MessageSuccess", I18n.SettingsSavedSuccessfully);
+        }
+        catch (Exception ex)
+        {
+            return Partial("_MessageError", ex.Message);
+        }
+    }
+
+
+    public IActionResult OnPostDeleteKavita()
+    {
+        try
+        {
+            // Save preferences to DB
+            UserPreference preferences = dbContext.UserPreferences.Query().FirstOrDefault();
+
+            if (preferences?.KavitaSettings == null)
+            {
+                return Partial("_MessageSuccess", I18n.SettingsRemovedSuccessfully);
+            }
+
+            preferences.SetKavitaSettings(null!);
+
+            _ = dbContext.UserPreferences.Update(preferences);
+
+            return Partial("_MessageSuccess", I18n.SettingsRemovedSuccessfully);
         }
         catch (Exception ex)
         {

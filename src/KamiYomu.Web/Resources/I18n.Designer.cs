@@ -637,6 +637,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete Integration.
+        /// </summary>
+        public static string DeleteIntegration {
+            get {
+                return ResourceManager.GetString("DeleteIntegration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Description.
         /// </summary>
         public static string Description {
@@ -1849,6 +1858,15 @@ namespace KamiYomu.Web.Resources {
         public static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings Removed Successfully!.
+        /// </summary>
+        public static string SettingsRemovedSuccessfully {
+            get {
+                return ResourceManager.GetString("SettingsRemovedSuccessfully", resourceCulture);
             }
         }
         
