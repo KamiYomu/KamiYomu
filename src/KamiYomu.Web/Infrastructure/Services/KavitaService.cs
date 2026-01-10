@@ -8,10 +8,21 @@ using KamiYomu.Web.Infrastructure.Services.Interfaces;
 
 namespace KamiYomu.Web.Infrastructure.Services;
 
-public class KavitaService(ILogger<KavitaService> logger, IHttpClientFactory httpClientFactory) : IKavitaService
+public class KavitaService(ILogger<KavitaService> logger, DbContext dbContext, IHttpClientFactory httpClientFactory) : IKavitaService
 {
     private readonly Lazy<HttpClient> _httpClient = new(() =>
-            httpClientFactory.CreateClient(Defaults.Integrations.HttpClientApp));
+    {
+        HttpClient client = httpClientFactory.CreateClient(Defaults.Integrations.HttpClientApp);
+
+        UserPreference preferences = dbContext.UserPreferences.Query().FirstOrDefault();
+
+        if(preferences?.KavitaSettings?.ServiceUri != null)
+        {
+            client.BaseAddress = preferences.KavitaSettings.ServiceUri;
+        }
+
+        return client;
+    });
 
     private HttpClient Client => _httpClient.Value;
 
@@ -35,7 +46,10 @@ public class KavitaService(ILogger<KavitaService> logger, IHttpClientFactory htt
 
         using HttpRequestMessage request = new(HttpMethod.Post, loginUri)
         {
-            Content = JsonContent.Create(new
+            Content = kavitaSettings.IsApiKey() ? JsonContent.Create(new
+            {
+                kavitaSettings.ApiKey
+            }) : JsonContent.Create(new
             {
                 kavitaSettings.Username,
                 kavitaSettings.Password
@@ -59,6 +73,7 @@ public class KavitaService(ILogger<KavitaService> logger, IHttpClientFactory htt
 
     public async Task UpdateAllCollectionsAsync(CancellationToken cancellationToken)
     {
+        
         using HttpRequestMessage request = new(HttpMethod.Post, "/api/Library/scan-all");
 
         using HttpResponseMessage response = await Client.SendAsync(request, cancellationToken);
@@ -121,15 +136,17 @@ public class KavitaAuthHandler(DbContext dbContext) : DelegatingHandler
 
             Uri loginUri = new(preference.KavitaSettings.ServiceUri, "/api/Account/login");
 
-            HttpResponseMessage response = await httpClient.PostAsJsonAsync(
-                loginUri,
-                new
+            JsonContent content = preference.KavitaSettings.IsApiKey() ?
+                JsonContent.Create(new
+                {
+                    preference.KavitaSettings.ApiKey
+                }) : JsonContent.Create(new
                 {
                     preference.KavitaSettings.Username,
                     preference.KavitaSettings.Password
-                },
-                cancellationToken
-            );
+                });
+
+            HttpResponseMessage response = await httpClient.PostAsync(loginUri, content, cancellationToken);
 
             _ = response.EnsureSuccessStatusCode();
 

@@ -33,38 +33,49 @@
                                 <span asp-validation-for="Password" class="text-danger small"></span>
                             </div>
 
+                            <div class="mb-2">
+                                <label asp-for="ApiKey" class="form-label"></label>
+                                <input name="KavitaIntegrationInput.ApiKey" asp-for="ApiKey" class="form-control form-control-sm" type="password" />
+                                <span asp-validation-for="ApiKey" class="text-danger small"></span>
+                            </div>
+
                             <div class="form-check mb-2">
-                                <input name="KavitaIntegrationInput.Enabled" asp-for="Enabled" class="form-check-input" />
-                                <label asp-for="Enabled" class="form-check-label"></label>
+                                <input asp-for="Enabled" class="form-check-input" />
+                                <label name="KavitaIntegrationInput.Enabled" asp-for="Enabled" class="form-check-label"></label>
                             </div>
 
                             <div class="d-flex gap-2">
-                                <!-- Test Connection Button -->
                                 <button type="button"
                                         class="btn btn-secondary btn-sm"
-                                        hx-post="@Url.Page("Index", "TestConnection")"
-                                        hx-target="#connectionMessage"
+                                        hx-post="@Url.Page("Index", "TestKavitaConnection")"
+                                        hx-target="#saveMessage"
                                         hx-swap="innerHTML"
                                         hx-include="#kavitaForm">
+                                    <i class="bi bi-plug me-1"></i>
                                     @I18n.TestConnection
                                 </button>
 
-                                <!-- Save Button -->
-                                <button type="submit"
+                                <button type="button"
                                         class="btn btn-primary btn-sm"
-                                        hx-post="@Url.Page("Index", "Save")"
+                                        hx-post="@Url.Page("Index", "SaveKavita")"
                                         hx-target="#saveMessage"
                                         hx-swap="innerHTML"
-                                        hx-include="#kavitaForm"
-                                        hx-disable="true"
-                                        id="saveButton">
+                                        hx-include="#kavitaForm">
+                                    <i class="bi bi-save me-1"></i>
                                     @I18n.Save
+                                </button>
+
+                                <button type="button"
+                                        class="btn btn-outline-danger btn-sm"
+                                        hx-post="@Url.Page("Index", "DeleteKavita")"
+                                        hx-target="#saveMessage"
+                                        hx-swap="innerHTML"
+                                        hx-include="#kavitaForm">
+                                    <i class="bi bi-trash me-1"></i>
+                                    @I18n.DeleteIntegration
                                 </button>
                             </div>
                         </form>
-
-                        <!-- Messages -->
-                        <div id="connectionMessage" class="mt-2"></div>
                         <div id="saveMessage" class="mt-2"></div>
 
                     </div>
@@ -74,19 +85,3 @@
     </div>
 </div>
 
-
-
-<script>
-    // Enable Save button only if connection is successful
-    document.body.addEventListener('htmx:afterSwap', function(evt) {
-        if (evt.target.id === 'connectionMessage') {
-            const messageEl = evt.target;
-            const saveBtn = document.getElementById('saveButton');
-            if (messageEl.textContent.includes('successfully')) {
-                saveBtn.disabled = false;
-            } else {
-                saveBtn.disabled = true;
-            }
-        }
-    });
-</script>

@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.IO.Compression;
 
+using Hangfire;
 using Hangfire.Server;
 
 using KamiYomu.CrawlerAgents.Core.Catalog;
@@ -19,8 +20,11 @@ public class ChapterDownloaderJob(
     ILogger<ChapterDownloaderJob> logger,
     IOptions<WorkerOptions> workerOptions,
     DbContext dbContext,
+    CacheContext cacheContext,
     ICrawlerAgentRepository agentCrawlerRepository,
     IHttpClientFactory httpClientFactory,
+    IHangfireRepository hangfireRepository,
+    IBackgroundJobClient backgroundJobClient,
     INotificationService notificationService) : IChapterDownloaderJob, IDisposable
 {
     private readonly WorkerOptions _workerOptions = workerOptions.Value;
@@ -31,7 +35,7 @@ public class ChapterDownloaderJob(
     {
         logger.LogInformation("Dispatch \"{title}\".", title);
 
-        UserPreference? userPreference = dbContext.UserPreferences.FindOne(p => true);
+        UserPreference? userPreference = dbContext.UserPreferences.Include(p => p.KavitaSettings).Query().FirstOrDefault();
         CultureInfo culture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
 
         Thread.CurrentThread.CurrentCulture = culture;
@@ -151,10 +155,15 @@ public class ChapterDownloaderJob(
             chapterDownload.Complete();
             _ = libDbContext.ChapterDownloadRecords.Update(chapterDownload);
 
-            if (userPreference.FamilySafeMode && chapterDownload.MangaDownload.Library.Manga.IsFamilySafe ||
+            if ((userPreference.FamilySafeMode && chapterDownload.MangaDownload.Library.Manga.IsFamilySafe) ||
                 !userPreference.FamilySafeMode)
             {
                 await notificationService.PushSuccessAsync($"{I18n.ChapterDownloaded}: {Path.GetFileNameWithoutExtension(library.GetCbzFileName(chapterDownload.Chapter))}", cancellationToken);
+            }
+
+            if (userPreference?.KavitaSettings?.Enabled == true)
+            {
+                ScheduleKavitaNotify(libraryId);
             }
         }
         catch (Exception ex) when (!context.CancellationToken.ShutdownToken.IsCancellationRequested)
@@ -249,6 +258,27 @@ public class ChapterDownloaderJob(
 
         long size = new FileInfo(cbzFilePath).Length;
         return size;
+    }
+
+    public void ScheduleKavitaNotify(Guid libraryId)
+    {
+        string cacheJobId = $"{Defaults.Worker.NotifyKavitaJob}-{libraryId}";
+        Hangfire.States.EnqueuedState queueState = hangfireRepository.GetNotifyQueue();
+
+        string? existingJobId = cacheContext.Current.Get<string>(cacheJobId);
+
+        if (!string.IsNullOrEmpty(existingJobId))
+        {
+            _ = BackgroundJob.Delete(existingJobId);
+        }
+
+        string newJobId = BackgroundJob.Schedule<INotifyKavitaJob>(
+            queueState.Queue,
+            d => d.DispatchAsync(queueState.Queue, null!, CancellationToken.None),
+            TimeSpan.FromMinutes(5)
+        );
+
+        cacheContext.Current.Add(cacheJobId, newJobId, TimeSpan.FromDays(365));
     }
 
     protected virtual void Dispose(bool disposing)
