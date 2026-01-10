@@ -6,6 +6,8 @@ using KamiYomu.Web.Entities.Kavita;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 
+using PuppeteerSharp;
+
 namespace KamiYomu.Web.Infrastructure.Services;
 
 public class KavitaService(ILogger<KavitaService> logger, DbContext dbContext, IHttpClientFactory httpClientFactory) : IKavitaService
@@ -16,7 +18,7 @@ public class KavitaService(ILogger<KavitaService> logger, DbContext dbContext, I
 
         UserPreference preferences = dbContext.UserPreferences.Query().FirstOrDefault();
 
-        if(preferences?.KavitaSettings?.ServiceUri != null)
+        if (preferences?.KavitaSettings?.ServiceUri != null)
         {
             client.BaseAddress = preferences.KavitaSettings.ServiceUri;
         }
@@ -41,20 +43,7 @@ public class KavitaService(ILogger<KavitaService> logger, DbContext dbContext, I
 
     public async Task<bool> TryConnectToKavita(KavitaSettings kavitaSettings, CancellationToken cancellationToken)
     {
-        // Build the login URL safely
-        Uri loginUri = new(kavitaSettings.ServiceUri, "/api/Account/login");
-
-        using HttpRequestMessage request = new(HttpMethod.Post, loginUri)
-        {
-            Content = kavitaSettings.IsApiKey() ? JsonContent.Create(new
-            {
-                kavitaSettings.ApiKey
-            }) : JsonContent.Create(new
-            {
-                kavitaSettings.Username,
-                kavitaSettings.Password
-            })
-        };
+        using HttpRequestMessage request = GetAuthenticationRequestMessage(kavitaSettings);
 
         try
         {
@@ -73,11 +62,38 @@ public class KavitaService(ILogger<KavitaService> logger, DbContext dbContext, I
 
     public async Task UpdateAllCollectionsAsync(CancellationToken cancellationToken)
     {
-        
+
         using HttpRequestMessage request = new(HttpMethod.Post, "/api/Library/scan-all");
 
         using HttpResponseMessage response = await Client.SendAsync(request, cancellationToken);
         _ = response.EnsureSuccessStatusCode();
+    }
+
+
+    public static HttpRequestMessage GetAuthenticationRequestMessage(KavitaSettings kavitaSettings)
+    {
+        HttpRequestMessage request;
+
+        if (kavitaSettings.IsApiKey())
+        {
+            Uri loginUri = new(kavitaSettings.ServiceUri, $"/api/Plugin/authenticate?apiKey={kavitaSettings.ApiKey}&pluginName=KamiYomu");
+
+            request = new(HttpMethod.Post, loginUri);
+        }
+        else
+        {
+            Uri loginUri = new(kavitaSettings.ServiceUri, "/api/Account/login");
+
+            request = new(HttpMethod.Post, loginUri)
+            {
+                Content = JsonContent.Create(new
+                {
+                    kavitaSettings.Username,
+                    kavitaSettings.Password
+                })
+            };
+        }
+        return request;
     }
 }
 
@@ -133,20 +149,9 @@ public class KavitaAuthHandler(DbContext dbContext) : DelegatingHandler
 
             using HttpClient httpClient = new();
 
+            using HttpRequestMessage request = KavitaService.GetAuthenticationRequestMessage(preference?.KavitaSettings);
 
-            Uri loginUri = new(preference.KavitaSettings.ServiceUri, "/api/Account/login");
-
-            JsonContent content = preference.KavitaSettings.IsApiKey() ?
-                JsonContent.Create(new
-                {
-                    preference.KavitaSettings.ApiKey
-                }) : JsonContent.Create(new
-                {
-                    preference.KavitaSettings.Username,
-                    preference.KavitaSettings.Password
-                });
-
-            HttpResponseMessage response = await httpClient.PostAsync(loginUri, content, cancellationToken);
+            HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken);
 
             _ = response.EnsureSuccessStatusCode();
 
@@ -163,6 +168,8 @@ public class KavitaAuthHandler(DbContext dbContext) : DelegatingHandler
             _ = _authLock.Release();
         }
     }
+
+
 
     private sealed record LoginResponse(string Token);
 }
