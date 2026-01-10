@@ -35,7 +35,7 @@ public class ChapterDownloaderJob(
     {
         logger.LogInformation("Dispatch \"{title}\".", title);
 
-        UserPreference? userPreference = dbContext.UserPreferences.FindOne(p => true);
+        UserPreference? userPreference = dbContext.UserPreferences.Include(p => p.KavitaSettings).Query().FirstOrDefault();
         CultureInfo culture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
 
         Thread.CurrentThread.CurrentCulture = culture;
@@ -163,7 +163,7 @@ public class ChapterDownloaderJob(
 
             if (userPreference?.KavitaSettings?.Enabled == true)
             {
-                ScheduleKavitaNotify();
+                ScheduleKavitaNotify(libraryId);
             }
         }
         catch (Exception ex) when (!context.CancellationToken.ShutdownToken.IsCancellationRequested)
@@ -260,11 +260,12 @@ public class ChapterDownloaderJob(
         return size;
     }
 
-    public void ScheduleKavitaNotify()
+    public void ScheduleKavitaNotify(Guid libraryId)
     {
+        string cacheJobId = $"{Defaults.Worker.NotifyKavitaJob}-{libraryId}";
         Hangfire.States.EnqueuedState queueState = hangfireRepository.GetNotifyQueue();
 
-        string? existingJobId = cacheContext.Current.Get<string>(Defaults.Worker.NotifyKavitaJob);
+        string? existingJobId = cacheContext.Current.Get<string>(cacheJobId);
 
         if (!string.IsNullOrEmpty(existingJobId))
         {
@@ -274,10 +275,10 @@ public class ChapterDownloaderJob(
         string newJobId = BackgroundJob.Schedule<INotifyKavitaJob>(
             queueState.Queue,
             d => d.DispatchAsync(queueState.Queue, null!, CancellationToken.None),
-            TimeSpan.FromMinutes(10)
+            TimeSpan.FromMinutes(5)
         );
 
-        cacheContext.Current.Add(Defaults.Worker.NotifyKavitaJob, newJobId, TimeSpan.FromDays(365));
+        cacheContext.Current.Add(cacheJobId, newJobId, TimeSpan.FromDays(365));
     }
 
     protected virtual void Dispose(bool disposing)

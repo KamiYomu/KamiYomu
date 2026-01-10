@@ -8,10 +8,21 @@ using KamiYomu.Web.Infrastructure.Services.Interfaces;
 
 namespace KamiYomu.Web.Infrastructure.Services;
 
-public class KavitaService(ILogger<KavitaService> logger, IHttpClientFactory httpClientFactory) : IKavitaService
+public class KavitaService(ILogger<KavitaService> logger, DbContext dbContext, IHttpClientFactory httpClientFactory) : IKavitaService
 {
     private readonly Lazy<HttpClient> _httpClient = new(() =>
-            httpClientFactory.CreateClient(Defaults.Integrations.HttpClientApp));
+    {
+        HttpClient client = httpClientFactory.CreateClient(Defaults.Integrations.HttpClientApp);
+
+        UserPreference preferences = dbContext.UserPreferences.Query().FirstOrDefault();
+
+        if(preferences?.KavitaSettings?.ServiceUri != null)
+        {
+            client.BaseAddress = preferences.KavitaSettings.ServiceUri;
+        }
+
+        return client;
+    });
 
     private HttpClient Client => _httpClient.Value;
 
@@ -62,6 +73,7 @@ public class KavitaService(ILogger<KavitaService> logger, IHttpClientFactory htt
 
     public async Task UpdateAllCollectionsAsync(CancellationToken cancellationToken)
     {
+        
         using HttpRequestMessage request = new(HttpMethod.Post, "/api/Library/scan-all");
 
         using HttpResponseMessage response = await Client.SendAsync(request, cancellationToken);

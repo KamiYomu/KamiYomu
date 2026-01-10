@@ -55,19 +55,17 @@
                                     @I18n.TestConnection
                                 </button>
 
-                                <button type="submit"
+                                <button type="button"
                                         class="btn btn-primary btn-sm"
                                         hx-post="@Url.Page("Index", "SaveKavita")"
                                         hx-target="#saveMessage"
                                         hx-swap="innerHTML"
-                                        hx-include="#kavitaForm"
-                                        hx-disable="true"
-                                        id="saveButton">
+                                        hx-include="#kavitaForm">
                                     <i class="bi bi-save me-1"></i>
                                     @I18n.Save
                                 </button>
 
-                                <button type="submit"
+                                <button type="button"
                                         class="btn btn-outline-danger btn-sm"
                                         hx-post="@Url.Page("Index", "DeleteKavita")"
                                         hx-target="#saveMessage"
@@ -87,19 +85,3 @@
     </div>
 </div>
 
-
-
-<script>
-    // Enable Save button only if connection is successful
-    document.body.addEventListener('htmx:afterSwap', function(evt) {
-        if (evt.target.id === 'connectionMessage') {
-            const messageEl = evt.target;
-            const saveBtn = document.getElementById('saveButton');
-            if (messageEl.textContent.includes('successfully')) {
-                saveBtn.disabled = false;
-            } else {
-                saveBtn.disabled = true;
-            }
-        }
-    });
-</script>

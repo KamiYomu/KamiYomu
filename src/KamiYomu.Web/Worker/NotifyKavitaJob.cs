@@ -15,19 +15,8 @@ public class NotifyKavitaJob(
 {
     public Task DispatchAsync(string queue, PerformContext context, CancellationToken cancellationToken)
     {
-        try
-        {
-            UserPreference? preferences = dbContext.UserPreferences.Query().FirstOrDefault();
+        UserPreference? preferences = dbContext.UserPreferences.Include(p => p.KavitaSettings).Query().FirstOrDefault();
 
-            if (preferences?.KavitaSettings?.Enabled == true)
-            {
-                return kavitaService.UpdateAllCollectionsAsync(cancellationToken);
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, ex.Message);
-        }
-        return Task.CompletedTask;
+        return preferences?.KavitaSettings?.Enabled == true ? kavitaService.UpdateAllCollectionsAsync(cancellationToken) : Task.CompletedTask;
     }
 }

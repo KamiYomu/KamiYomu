@@ -28,7 +28,8 @@ public class IndexModel(DbContext dbContext, IKavitaService kavitaService) : Pag
                 Enabled = preferences.KavitaSettings.Enabled,
                 Username = preferences.KavitaSettings.Username,
                 ServiceUri = preferences.KavitaSettings.ServiceUri,
-                Password = PasswordEmptyValue
+                Password = PasswordEmptyValue,
+                ApiKey = PasswordEmptyValue
             };
         }
     }
