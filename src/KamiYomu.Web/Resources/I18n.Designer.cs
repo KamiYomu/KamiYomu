@@ -826,6 +826,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to External Readers.
+        /// </summary>
+        public static string ExternalReaders {
+            get {
+                return ResourceManager.GetString("ExternalReaders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to connect to Kavita..
         /// </summary>
         public static string FailedConnectKavita {
@@ -979,6 +988,42 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open your Gotify instance in a browser..
+        /// </summary>
+        public static string GotifyTutorialApiKey01 {
+            get {
+                return ResourceManager.GetString("GotifyTutorialApiKey01", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to the Applications section..
+        /// </summary>
+        public static string GotifyTutorialApiKey02 {
+            get {
+                return ResourceManager.GetString("GotifyTutorialApiKey02", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create a new application and name it KamiYomu..
+        /// </summary>
+        public static string GotifyTutorialApiKey03 {
+            get {
+                return ResourceManager.GetString("GotifyTutorialApiKey03", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy the generated token and paste it into the input above..
+        /// </summary>
+        public static string GotifyTutorialApiKey04 {
+            get {
+                return ResourceManager.GetString("GotifyTutorialApiKey04", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Got it.
         /// </summary>
         public static string GotIt {
@@ -1002,6 +1047,15 @@ namespace KamiYomu.Web.Resources {
         public static string HasTermsAccepted {
             get {
                 return ResourceManager.GetString("HasTermsAccepted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to How to get your Gotify token:.
+        /// </summary>
+        public static string HowToGetYourGotifyToken {
+            get {
+                return ResourceManager.GetString("HowToGetYourGotifyToken", resourceCulture);
             }
         }
         
@@ -1366,6 +1420,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Notification Providers.
+        /// </summary>
+        public static string NotificationProviders {
+            get {
+                return ResourceManager.GetString("NotificationProviders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not Safe For Work.
         /// </summary>
         public static string NotSafeForWork {
@@ -1542,6 +1605,15 @@ namespace KamiYomu.Web.Resources {
         public static string PasswordRequired {
             get {
                 return ResourceManager.GetString("PasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste your Gotify app token here..
+        /// </summary>
+        public static string PasteYourGotifyAppTokenHere {
+            get {
+                return ResourceManager.GetString("PasteYourGotifyAppTokenHere", resourceCulture);
             }
         }
         
@@ -2038,6 +2110,15 @@ namespace KamiYomu.Web.Resources {
         public static string TestConnection {
             get {
                 return ResourceManager.GetString("TestConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TheConnectionHasFailed.
+        /// </summary>
+        public static string TheConnectionHasFailed {
+            get {
+                return ResourceManager.GetString("TheConnectionHasFailed", resourceCulture);
             }
         }
         

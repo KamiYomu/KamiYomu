@@ -1,4 +1,4 @@
-namespace KamiYomu.Web.Entities;
+namespace KamiYomu.Web.Entities.Integrations;
 
 public class KavitaSettings
 {

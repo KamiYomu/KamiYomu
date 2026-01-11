@@ -1,0 +1,9 @@
+using KamiYomu.Web.Entities.Integrations;
+
+namespace KamiYomu.Web.Infrastructure.Services.Interfaces;
+
+public interface IGotifyService
+{
+    Task<bool> TestConnection(GotifySettings settings, CancellationToken cancellationToken);
+    Task PushNotificationAsync(string message, CancellationToken cancellationToken);
+}

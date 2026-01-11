@@ -1,5 +1,7 @@
 using System.Globalization;
 
+using KamiYomu.Web.Entities.Integrations;
+
 namespace KamiYomu.Web.Entities;
 
 public class UserPreference
@@ -41,9 +43,14 @@ public class UserPreference
         ComicInfoSeriesTemplate = comicInfoSeriesTemplate;
     }
 
-    internal void SetKavitaSettings(KavitaSettings kavitaSettings)
+    internal void SetKavitaSettings(KavitaSettings settings)
     {
-        KavitaSettings = kavitaSettings;
+        KavitaSettings = settings;
+    }
+
+    internal void SetGotifySettings(GotifySettings settings)
+    {
+        GotifySettings = settings;
     }
 
     public Guid Id { get; private set; }
@@ -54,4 +61,5 @@ public class UserPreference
     public string ComicInfoTitleTemplate { get; private set; }
     public string ComicInfoSeriesTemplate { get; private set; }
     public KavitaSettings? KavitaSettings { get; private set; }
+    public GotifySettings? GotifySettings { get; private set; }
 }

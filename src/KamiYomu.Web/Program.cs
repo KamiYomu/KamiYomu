@@ -91,20 +91,27 @@ builder.Services.AddScoped(_ => new DbContext(builder.Configuration.GetConnectio
 builder.Services.AddScoped<CacheContext>();
 builder.Services.AddScoped(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb")));
 
+// Repositories
 builder.Services.AddTransient<ICrawlerAgentRepository, CrawlerAgentRepository>();
 builder.Services.AddTransient<IHangfireRepository, HangfireRepository>();
+
+// Worker jobs
 builder.Services.AddTransient<IChapterDiscoveryJob, ChapterDiscoveryJob>();
 builder.Services.AddTransient<IChapterDownloaderJob, ChapterDownloaderJob>();
 builder.Services.AddTransient<IMangaDownloaderJob, MangaDownloaderJob>();
 builder.Services.AddTransient<IDeferredExecutionCoordinator, DeferredExecutionCoordinator>();
 builder.Services.AddTransient<INotifyKavitaJob, NotifyKavitaJob>();
+
+// Services
 builder.Services.AddTransient<INugetService, NugetService>();
 builder.Services.AddTransient<INotificationService, NotificationService>();
 builder.Services.AddTransient<IWorkerService, WorkerService>();
 builder.Services.AddTransient<IGitHubService, GitHubService>();
 builder.Services.AddTransient<IStatsService, StatsService>();
 builder.Services.AddTransient<IKavitaService, KavitaService>();
+builder.Services.AddTransient<IGotifyService, GotifyService>();
 
+// HeathCheckers
 builder.Services.AddHealthChecks()
                 .AddCheck<DatabaseHealthCheck>(nameof(DatabaseHealthCheck), tags: ["storage"])
                 .AddCheck<WorkerHealthCheck>(nameof(WorkerHealthCheck), tags: ["worker"])
@@ -284,13 +291,10 @@ static void AddHttpClients(WebApplicationBuilder builder)
         .AddPolicyHandler(retryPolicy)
         .AddPolicyHandler(timeoutPolicy);
 
-    _ = builder.Services.AddTransient<KavitaAuthHandler>();
-
     _ = builder.Services.AddHttpClient(Integrations.HttpClientApp, client =>
     {
         client.DefaultRequestHeaders.UserAgent.ParseAdd(CrawlerAgentSettings.HttpUserAgent);
     })
-        .AddHttpMessageHandler<KavitaAuthHandler>()
         .AddPolicyHandler(retryPolicy)
         .AddPolicyHandler(timeoutPolicy)
         .ConfigurePrimaryHttpMessageHandler(() =>

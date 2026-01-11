@@ -9,14 +9,55 @@
     </h2>
 </div>
 
-<partial name="_KavitaIntegration" model="Model.KavitaIntegrationInput"/>
+
+<div class="container mt-4">
+    <div class="row g-4">
+
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white d-flex align-items-center">
+                    <i class="bi bi-bell-fill me-2 fs-5"></i>
+                    <h5 class="mb-0">@I18n.NotificationProviders</h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="accordion" id="notificationProviders">
+
+                        <partial name="_GotifyIntegration" model="Model.GotifyIntegrationInput" />
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- External Readers -->
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-secondary text-white d-flex align-items-center">
+                    <i class="bi bi-book-half me-2 fs-5"></i>
+                    <h5 class="mb-0">@I18n.ExternalReaders</h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="accordion" id="externalReaders">
+                        <partial name="_KavitaIntegration" model="Model.KavitaIntegrationInput" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 
 @section Styles {
-    <link rel="preload"
-          href="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/kavita.svg"
-          as="image"
-          type="image/svg+xml"
-          crossorigin="anonymous">
+
+    <style>
+        img.img-header {
+            height: 2.5em;
+        }
+
+    </style>
 
 }
+

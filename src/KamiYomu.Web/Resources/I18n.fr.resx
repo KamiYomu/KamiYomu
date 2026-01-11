@@ -892,11 +892,38 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="ServiceUri" xml:space="preserve">
     <value>Service Uri</value>
   </data>
+  <data name="DeleteIntegration" xml:space="preserve">
+    <value>Supprimer l'intégration</value>
+  </data>
+  <data name="SettingsRemovedSuccessfully" xml:space="preserve">
+    <value>Paramètres supprimés avec succès !</value>
+  </data>
+  <data name="TheConnectionHasFailed" xml:space="preserve">
+    <value>La connexion a échoué</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="DeleteIntegration" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="PasteYourGotifyAppTokenHere" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
-  <data name="SettingsRemovedSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="HowToGetYourGotifyToken" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="GotifyTutorialApiKey01" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="GotifyTutorialApiKey02" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="GotifyTutorialApiKey03" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="GotifyTutorialApiKey04" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="NotificationProviders" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ExternalReaders" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
 </root>

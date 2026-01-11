@@ -898,4 +898,31 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="SettingsRemovedSuccessfully" xml:space="preserve">
     <value>Settings Removed Successfully!</value>
   </data>
+  <data name="TheConnectionHasFailed" xml:space="preserve">
+    <value>TheConnectionHasFailed</value>
+  </data>
+  <data name="PasteYourGotifyAppTokenHere" xml:space="preserve">
+    <value>Paste your Gotify app token here.</value>
+  </data>
+  <data name="HowToGetYourGotifyToken" xml:space="preserve">
+    <value>How to get your Gotify token:</value>
+  </data>
+  <data name="GotifyTutorialApiKey01" xml:space="preserve">
+    <value>Open your Gotify instance in a browser.</value>
+  </data>
+  <data name="GotifyTutorialApiKey02" xml:space="preserve">
+    <value>Go to the Applications section.</value>
+  </data>
+  <data name="GotifyTutorialApiKey03" xml:space="preserve">
+    <value>Create a new application and name it KamiYomu.</value>
+  </data>
+  <data name="GotifyTutorialApiKey04" xml:space="preserve">
+    <value>Copy the generated token and paste it into the input above.</value>
+  </data>
+  <data name="NotificationProviders" xml:space="preserve">
+    <value>Notification Providers</value>
+  </data>
+  <data name="ExternalReaders" xml:space="preserve">
+    <value>External Readers</value>
+  </data>
 </root>

@@ -1,85 +1,87 @@
 @using KamiYomu.Web.Areas.Settings.Pages.Integrations
-@model KavitaIntegrationInput
+@model GotifyIntegrationInput
 
-<div class="accordion" id="kavitaAccordion">
+<div class="accordion" id="gotifyAccordion">
     <div class="accordion-item">
-        <h2 class="accordion-header" id="headingKavita">
+        <h2 class="accordion-header" id="headingGotify">
             <button class="accordion-button collapsed d-flex align-items-center gap-2"
                     type="button"
                     data-bs-toggle="collapse"
-                    data-bs-target="#collapseKavita"
+                    data-bs-target="#collapseGotify"
                     aria-expanded="true"
-                    aria-controls="collapseKavita">
+                    aria-controls="collapseGotify">
 
-                <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/kavita.svg"
-                     alt="Kavita logo"
+                <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/gotify.svg"
+                     alt="Gotify logo"
                      class="img-header img-fluid d-inline-block align-middle me-2"
                      loading="lazy"
                      decoding="async">
 
-                <span class="h3 text-muted">Kavita</span>
+                <span class="h3 text-muted">Gotify</span>
             </button>
         </h2>
 
-        <div id="collapseKavita" class="accordion-collapse collapse show" aria-labelledby="headingKavita" data-bs-parent="#kavitaAccordion">
+        <div id="collapseGotify" class="accordion-collapse collapse show" aria-labelledby="headingGotify" data-bs-parent="#gotifyAccordion">
             <div class="accordion-body">
-                <form method="post" id="kavitaForm" class="small">
+                <form method="post" id="gotifyForm" class="small">
                     <div class="mb-2">
                         <label asp-for="ServiceUri" class="form-label"></label>
                         <input name="Input.ServiceUri" asp-for="ServiceUri" class="form-control form-control-sm" />
                         <span asp-validation-for="ServiceUri" class="text-danger small"></span>
                     </div>
 
-                    <div class="mb-2">
-                        <label asp-for="Username" class="form-label"></label>
-                        <input name="Input.Username" asp-for="Username" class="form-control form-control-sm" />
-                        <span asp-validation-for="Username" class="text-danger small"></span>
-                    </div>
-
-                    <div class="mb-2">
-                        <label asp-for="Password" class="form-label"></label>
-                        <input name="Input.Password" asp-for="Password" class="form-control form-control-sm" type="password" />
-                        <span asp-validation-for="Password" class="text-danger small"></span>
-                    </div>
-
-                    <div class="mb-2">
-                        <label asp-for="ApiKey" class="form-label"></label>
-                        <input name="Input.ApiKey" asp-for="ApiKey" class="form-control form-control-sm" type="password" />
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="ApiKey"></label>
+                        <input name="Input.ApiKey" asp-for="ApiKey"
+                               class="form-control form-control-sm"
+                               type="password"
+                               placeholder="@I18n.PasteYourGotifyAppTokenHere" />
                         <span asp-validation-for="ApiKey" class="text-danger small"></span>
+
+                        <div class="alert alert-info mt-2 p-2 small">
+                            <strong>@I18n.HowToGetYourGotifyToken</strong>
+                            <ol class="mb-0 ps-3">
+                                <li>@I18n.GotifyTutorialApiKey01</li>
+                                <li>@I18n.GotifyTutorialApiKey02</li>
+                                <li>@I18n.GotifyTutorialApiKey03</li>
+                                <li>@I18n.GotifyTutorialApiKey04</li>
+                            </ol>
+                        </div>
                     </div>
+
 
                     <div class="form-check mb-2">
-                        <input name="Input.Enabled" asp-for="Enabled" class="form-check-input" />
+                        <input name="Input.Enabled" class="form-check-input" asp-for="Enabled" />
                         <label asp-for="Enabled" class="form-check-label"></label>
                     </div>
 
                     <div class="d-flex gap-2">
                         <button type="button"
                                 class="btn btn-secondary btn-sm"
-                                hx-post="@Url.Page("KavitaIntegration", "TestKavitaConnection")"
+                                hx-post="@Url.Page("GotifyIntegration", "TestGotifyConnection")"
                                 hx-target="closest .accordion"
                                 hx-swap="outerHTML"
-                                hx-include="#kavitaForm">
+                                hx-include="closest #gotifyForm">
                             <i class="bi bi-plug me-1"></i>
                             @I18n.TestConnection
                         </button>
 
                         <button type="button"
                                 class="btn btn-primary btn-sm"
-                                hx-post="@Url.Page("KavitaIntegration", "SaveKavita")"
+                                hx-post="@Url.Page("GotifyIntegration", "SaveGotify")"
                                 hx-target="closest .accordion"
                                 hx-swap="outerHTML"
-                                hx-include="#kavitaForm">
+                                hx-include="closest #gotifyForm">
                             <i class="bi bi-save me-1"></i>
                             @I18n.Save
                         </button>
 
                         <button type="button"
                                 class="btn btn-outline-danger btn-sm"
-                                hx-post="@Url.Page("KavitaIntegration", "DeleteKavita")"
+                                hx-post="@Url.Page("GotifyIntegration", "DeleteGotify")"
                                 hx-target="closest .accordion"
                                 hx-swap="outerHTML"
-                                hx-include="#kavitaForm">
+                                hx-include="closest #gotifyForm">
                             <i class="bi bi-trash me-1"></i>
                             @I18n.DeleteIntegration
                         </button>
@@ -95,5 +97,3 @@
         </div>
     </div>
 </div>
-
-
