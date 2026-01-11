@@ -15,7 +15,7 @@ public class WorkerHealthCheck : IHealthCheck
         {
             using IStorageConnection connection = JobStorage.Current.GetConnection();
 
-            _ = connection.FetchNextJob(["default"], cancellationToken);
+            _ = connection.GetRecurringJobs();
 
             return Task.FromResult(HealthCheckResult.Healthy("Hangfire is operational."));
         }
