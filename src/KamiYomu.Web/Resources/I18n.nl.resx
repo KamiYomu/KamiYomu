@@ -926,4 +926,58 @@ voor de &lt;code&gt;WorkerCount&lt;/code&gt;-instelling van Hangfire om te bepal
   <data name="ExternalReaders" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="SeeTheDocumentation" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="KavitaTutorialApiKey01" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="KavitaTutorialApiKey02" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="KavitaTutorialApiKey03" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="KavitaTutorialApiKey04" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="PasteYourGotifyAppTokenHere" xml:space="preserve">
+    <value>Plak hier uw Gotify-app-token.</value>
+  </data>
+  <data name="HowToGetYourGotifyToken" xml:space="preserve">
+    <value>Hoe u uw Gotify-token kunt verkrijgen:</value>
+  </data>
+  <data name="GotifyTutorialApiKey01" xml:space="preserve">
+    <value>Open uw Gotify-instantie in een browser.</value>
+  </data>
+  <data name="GotifyTutorialApiKey02" xml:space="preserve">
+    <value>Ga naar het gedeelte Toepassingen.</value>
+  </data>
+  <data name="GotifyTutorialApiKey03" xml:space="preserve">
+    <value>Maak een nieuwe applicatie en noem deze KamiYomu.</value>
+  </data>
+  <data name="GotifyTutorialApiKey04" xml:space="preserve">
+    <value>Kopieer het gegenereerde token en plak het in de bovenstaande invoer.</value>
+  </data>
+  <data name="NotificationProviders" xml:space="preserve">
+    <value>Meldingsaanbieders</value>
+  </data>
+  <data name="ExternalReaders" xml:space="preserve">
+    <value>Externe lezers</value>
+  </data>
+  <data name="SeeTheDocumentation" xml:space="preserve">
+    <value>Zie de documentatie.</value>
+  </data>
+  <data name="KavitaTutorialApiKey01" xml:space="preserve">
+    <value>Toegang tot uw Kavita-instantie</value>
+  </data>
+  <data name="KavitaTutorialApiKey02" xml:space="preserve">
+    <value>Log in op uw account</value>
+  </data>
+  <data name="KavitaTutorialApiKey03" xml:space="preserve">
+    <value>Ga naar de configuratie &gt; API Key / OPDS</value>
+  </data>
+  <data name="KavitaTutorialApiKey04" xml:space="preserve">
+    <value>Kopieer het gegenereerde token en plak het in de bovenstaande invoer</value>
+  </data>
 </root>

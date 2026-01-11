@@ -42,4 +42,14 @@ public class KavitaSettings
         ApiKey = apiKey;
         Enabled = enabled;
     }
+
+    internal void Disable()
+    {
+        Enabled = false;
+    }
+
+    internal void Enable()
+    {
+        Enabled = true;
+    }
 }

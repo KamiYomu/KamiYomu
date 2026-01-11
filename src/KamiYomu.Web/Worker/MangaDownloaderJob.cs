@@ -1,4 +1,6 @@
-﻿using Hangfire;
+using System.Globalization;
+
+using Hangfire;
 using Hangfire.Server;
 
 using KamiYomu.CrawlerAgents.Core.Catalog;
@@ -7,12 +9,11 @@ using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
+using KamiYomu.Web.Infrastructure.Services;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
 
 using Microsoft.Extensions.Options;
-
-using System.Globalization;
 
 namespace KamiYomu.Web.Worker;
 
@@ -22,7 +23,8 @@ public class MangaDownloaderJob(
     DbContext dbContext,
     ICrawlerAgentRepository agentCrawlerRepository,
     IHangfireRepository hangfireRepository,
-    INotificationService notificationService) : IMangaDownloaderJob
+    INotificationService notificationService,
+    IGotifyService gotifyService) : IMangaDownloaderJob
 {
     private readonly WorkerOptions _workerOptions = workerOptions.Value;
 
@@ -30,7 +32,7 @@ public class MangaDownloaderJob(
     {
         logger.LogInformation("Dispatch \"{title}\".", title);
 
-        UserPreference? userPreference = dbContext.UserPreferences.FindOne(p => true);
+        UserPreference? userPreference = dbContext.UserPreferences.Include(p => p.GotifySettings).Query().FirstOrDefault();
         CultureInfo culture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
 
         Thread.CurrentThread.CurrentCulture = culture;
@@ -118,9 +120,14 @@ public class MangaDownloaderJob(
              mangaDownload.Library.Manga.Id,
              total);
 
-            if (userPreference.FamilySafeMode && mangaDownload.Library.Manga.IsFamilySafe || !userPreference.FamilySafeMode)
+            if ((userPreference.FamilySafeMode && mangaDownload.Library.Manga.IsFamilySafe) || !userPreference.FamilySafeMode)
             {
                 await notificationService.PushSuccessAsync($"{mangaDownload.Library.Manga.Title}: {I18n.SearchForChaptersCompleted}.", cancellationToken);
+            }
+
+            if (userPreference?.GotifySettings?.Enabled == true)
+            {
+                await PushGotifyNotificationAsync(mangaDownload, cancellationToken);
             }
 
         }
@@ -139,5 +146,18 @@ public class MangaDownloaderJob(
         }
 
         logger.LogInformation("Dispatch \"{title}\" completed.", title);
+    }
+
+
+    private async Task PushGotifyNotificationAsync(MangaDownloadRecord mangaDownload, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await gotifyService.PushSearchForChaptersCompletedNotificationAsync(mangaDownload, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, ex.Message);
+        }
     }
 }

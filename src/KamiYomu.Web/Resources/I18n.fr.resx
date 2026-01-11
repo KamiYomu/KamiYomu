@@ -926,4 +926,58 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="ExternalReaders" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="SeeTheDocumentation" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="KavitaTutorialApiKey01" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="KavitaTutorialApiKey02" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="KavitaTutorialApiKey03" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="KavitaTutorialApiKey04" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="PasteYourGotifyAppTokenHere" xml:space="preserve">
+    <value>Collez votre jeton d'application Gotify ici.</value>
+  </data>
+  <data name="HowToGetYourGotifyToken" xml:space="preserve">
+    <value>Comment obtenir votre jeton Gotify :</value>
+  </data>
+  <data name="GotifyTutorialApiKey01" xml:space="preserve">
+    <value>Ouvrez votre instance Gotify dans un navigateur.</value>
+  </data>
+  <data name="GotifyTutorialApiKey02" xml:space="preserve">
+    <value>Accédez à la section Applications.</value>
+  </data>
+  <data name="GotifyTutorialApiKey03" xml:space="preserve">
+    <value>Créez une nouvelle application et nommez-la KamiYomu.</value>
+  </data>
+  <data name="GotifyTutorialApiKey04" xml:space="preserve">
+    <value>Copiez le jeton généré et collez-le dans l'entrée ci-dessus.</value>
+  </data>
+  <data name="NotificationProviders" xml:space="preserve">
+    <value>Fournisseurs de notifications</value>
+  </data>
+  <data name="ExternalReaders" xml:space="preserve">
+    <value>Lecteurs externes</value>
+  </data>
+  <data name="SeeTheDocumentation" xml:space="preserve">
+    <value>Voir la documentation.</value>
+  </data>
+  <data name="KavitaTutorialApiKey01" xml:space="preserve">
+    <value>Accédez à votre instance Kavita</value>
+  </data>
+  <data name="KavitaTutorialApiKey02" xml:space="preserve">
+    <value>Connectez-vous à votre compte</value>
+  </data>
+  <data name="KavitaTutorialApiKey03" xml:space="preserve">
+    <value>Accéder à la configuration &gt; Clé API / OPDS</value>
+  </data>
+  <data name="KavitaTutorialApiKey04" xml:space="preserve">
+    <value>Copiez le jeton généré et collez-le dans l'entrée ci-dessus</value>
+  </data>
 </root>

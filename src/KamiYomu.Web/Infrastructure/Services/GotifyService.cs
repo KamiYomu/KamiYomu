@@ -168,5 +168,59 @@ public sealed class GotifyService(
         }
     }
 
+
+    public async Task PushSearchForChaptersCompletedNotificationAsync(
+    MangaDownloadRecord mangaDownload,
+    CancellationToken cancellationToken)
+    {
+        GotifySettings? settings = dbContext.UserPreferences
+            .Query()
+            .Include(p => p.GotifySettings)
+            .FirstOrDefault()
+            ?.GotifySettings;
+
+        if (settings == null)
+        {
+            logger.LogWarning("Gotify settings not configured");
+            return;
+        }
+
+        var extras = new
+        {
+            chapter = new
+            {
+                mangaDownload.Id,
+                mangaDownload.Library.Manga.Title,
+                mangaDownload.Library.Manga.CoverUrl,
+                mangaDownload.Library.Manga.Tags,
+                MangaDirectory = mangaDownload.Library.GetMangaDirectory(),
+                DownloadStatus = mangaDownload.DownloadStatus.ToString()
+            }
+        };
+
+        HttpRequestMessage request = CreateMessageRequest(
+            settings,
+            title: I18n.SearchForChaptersCompleted,
+            message: mangaDownload.Library.Manga.Title,
+            priority: 5,
+            extras: extras);
+
+        HttpResponseMessage response = await _httpClient.Value.SendAsync(
+            request,
+            cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            string content = await response.Content.ReadAsStringAsync(cancellationToken);
+
+            logger.LogError(
+                "Gotify push failed ({StatusCode}): {Response}",
+                response.StatusCode,
+                content);
+
+            _ = response.EnsureSuccessStatusCode();
+        }
+    }
+
 }
 

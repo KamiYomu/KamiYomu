@@ -46,6 +46,17 @@
                         <label asp-for="ApiKey" class="form-label"></label>
                         <input name="Input.ApiKey" asp-for="ApiKey" class="form-control form-control-sm" type="password" />
                         <span asp-validation-for="ApiKey" class="text-danger small"></span>
+
+                        <div class="alert alert-info mt-2 p-2 small">
+                            <strong>@I18n.HowToGetYourGotifyToken</strong>
+                            <ol class="mb-0 ps-3">
+                                <li>@I18n.KavitaTutorialApiKey01</li>
+                                <li>@I18n.KavitaTutorialApiKey02</li>
+                                <li>@I18n.KavitaTutorialApiKey03</li>
+                                <li>@I18n.KavitaTutorialApiKey04</li>
+                            </ol>
+                            <a href="https://wiki.kavitareader.com/getting-started/">@I18n.SeeTheDocumentation</a>
+                        </div>
                     </div>
 
                     <div class="form-check mb-2">
@@ -85,7 +96,7 @@
                         </button>
                     </div>
                 </form>
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div asp-validation-summary="All" class="text-danger"></div>
 
                 @if (!string.IsNullOrWhiteSpace(Model?.SucessMessage))
                 {

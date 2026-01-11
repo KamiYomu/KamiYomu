@@ -8,4 +8,5 @@ public interface IGotifyService
     Task<bool> TestConnection(GotifySettings settings, CancellationToken cancellationToken);
     Task PushNotificationAsync(string message, CancellationToken cancellationToken);
     Task PushChapterDownloadedNotificationAsync(ChapterDownloadRecord chapterDownload, CancellationToken cancellationToken);
+    Task PushSearchForChaptersCompletedNotificationAsync(MangaDownloadRecord mangaDownload, CancellationToken cancellationToken);
 }

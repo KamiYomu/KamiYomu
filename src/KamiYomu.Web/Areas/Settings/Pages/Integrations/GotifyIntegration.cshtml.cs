@@ -3,6 +3,7 @@ using System.Globalization;
 
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Entities.Integrations;
+using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Validators;
@@ -16,8 +17,6 @@ public class GotifyIntegrationModel(ILogger<IndexModel> logger, DbContext dbCont
 {
     [BindProperty]
     public GotifyIntegrationInput Input { get; set; }
-
-    private const string PasswordEmptyValue = "***";
 
     public void OnGet()
     {
@@ -60,6 +59,11 @@ public class GotifyIntegrationModel(ILogger<IndexModel> logger, DbContext dbCont
 
     public async Task<IActionResult> OnPostSaveGotifyAsync(CancellationToken cancellationToken)
     {
+        if (!Input.Enabled)
+        {
+            ModelState.RemoveWithSuffix(nameof(Input.ApiKey));
+        }
+
         if (!ModelState.IsValid)
         {
             return Partial("_GotifyIntegration", Input);
@@ -67,23 +71,33 @@ public class GotifyIntegrationModel(ILogger<IndexModel> logger, DbContext dbCont
 
         try
         {
-            // Save preferences to DB
             UserPreference preferences = dbContext.UserPreferences.Include(p => p.GotifySettings).Query().FirstOrDefault();
             preferences ??= new UserPreference(CultureInfo.CurrentCulture);
 
-            GotifySettings settings = new(Input.Enabled, Input.ServiceUri, Input.ApiKey);
+            GotifySettings settings = preferences?.GotifySettings ?? new(Input.Enabled, Input.ServiceUri, Input.ApiKey);
 
-            bool success = await gotifyService.TestConnection(settings, cancellationToken);
-
-
-            if (!success)
+            if (Input.Enabled)
             {
-                ModelState.AddModelError("", I18n.FailedConnectKavita);
+                bool success = await gotifyService.TestConnection(settings, cancellationToken);
+
+                if (!success)
+                {
+                    ModelState.AddModelError("", I18n.TheConnectionHasFailed);
+                }
             }
 
-            if (Input.ApiKey != PasswordEmptyValue)
+            if (!string.IsNullOrWhiteSpace(Input.ApiKey))
             {
                 settings.UpdateApiKey(Input.ApiKey);
+            }
+
+            if (Input.Enabled)
+            {
+                settings.Disable();
+            }
+            else
+            {
+                settings.Enable();
             }
 
             preferences.SetGotifySettings(settings);
@@ -107,7 +121,7 @@ public class GotifyIntegrationModel(ILogger<IndexModel> logger, DbContext dbCont
             // Save preferences to DB
             UserPreference preferences = dbContext.UserPreferences.Include(p => p.GotifySettings).Query().FirstOrDefault();
 
-            if (preferences?.KavitaSettings == null)
+            if (preferences?.GotifySettings == null)
             {
                 Input = new GotifyIntegrationInput
                 {
@@ -116,7 +130,7 @@ public class GotifyIntegrationModel(ILogger<IndexModel> logger, DbContext dbCont
                 return Partial("_GotifyIntegration", Input);
             }
 
-            preferences.SetKavitaSettings(null!);
+            preferences.SetGotifySettings(null!);
 
             _ = dbContext.UserPreferences.Update(preferences);
             Input = new GotifyIntegrationInput
@@ -144,7 +158,7 @@ public class GotifyIntegrationInput
     public string? ApiKey { get; set; }
 
     [Display(ResourceType = typeof(I18n), Name = nameof(I18n.Enable))]
-    public bool Enabled { get; set; } = true;
+    public bool Enabled { get; set; }
 
     public string? SucessMessage { get; set; } = string.Empty;
 }

@@ -3,7 +3,9 @@ using System.Globalization;
 
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Entities.Integrations;
+using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
+using KamiYomu.Web.Infrastructure.Services;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Validators;
 
@@ -17,7 +19,6 @@ public class KavitaIntegrationModel(ILogger<IndexModel> logger, DbContext dbCont
     [BindProperty]
     public KavitaIntegrationInput Input { get; set; }
 
-    private const string PasswordEmptyValue = "***";
 
     public void OnGet()
     {
@@ -68,48 +69,59 @@ public class KavitaIntegrationModel(ILogger<IndexModel> logger, DbContext dbCont
 
         try
         {
-            // Save preferences to DB
             UserPreference preferences = dbContext.UserPreferences.Query().FirstOrDefault();
             preferences ??= new UserPreference(CultureInfo.CurrentCulture);
 
-            KavitaSettings settings = new(
+            KavitaSettings settings = preferences?.KavitaSettings ?? new(
                 Input.ServiceUri,
                 Input.Username,
                 Input.Password,
                 Input.ApiKey,
                 Input.Enabled);
 
-            bool success = await kavitaService.TestConnection(settings, cancellationToken);
-
-
-            if (!success)
-            {
-                ModelState.AddModelError("", I18n.FailedConnectKavita);
-                return Partial("_KavitaIntegration", Input);
-            }
-
-            if (Input.Password != PasswordEmptyValue)
+            if (!string.IsNullOrWhiteSpace(Input.Password))
             {
                 settings.UpdatePassword(Input.Password);
             }
 
-            if (Input.ApiKey != PasswordEmptyValue)
+            if (!string.IsNullOrWhiteSpace(Input.ApiKey))
             {
                 settings.UpdateApiKey(Input.ApiKey);
+            }
+
+            if (Input.Enabled)
+            {
+                bool success = await kavitaService.TestConnection(settings, cancellationToken);
+
+                if (!success)
+                {
+                    ModelState.AddModelError("", I18n.TheConnectionHasFailed);
+                }
+            }
+
+            if (Input.Enabled)
+            {
+                settings.Enable();
+            }
+            else
+            {
+                settings.Disable();
             }
 
             preferences.SetKavitaSettings(settings);
 
             _ = dbContext.UserPreferences.Upsert(preferences);
 
-            return Partial("_KavitaIntegration", Input);
+            Input.SucessMessage = I18n.SettingsSavedSuccessfully;
+
         }
         catch (Exception ex)
         {
             logger.LogError(ex, ex.Message);
             ModelState.AddModelError("", I18n.SomethingWentWrong);
-            return Partial("_KavitaIntegration", Input);
         }
+
+        return Partial("_KavitaIntegration", Input);
     }
 
     public IActionResult OnPostDeleteKavita()
@@ -144,7 +156,6 @@ public class KavitaIntegrationModel(ILogger<IndexModel> logger, DbContext dbCont
     }
 }
 
-[RequireFields(nameof(ApiKey), nameof(Password), ErrorMessageResourceType = typeof(I18n), ErrorMessageResourceName = nameof(I18n.ApiKeyOrPasswordIsRequired))]
 
 public class KavitaIntegrationInput
 {
@@ -164,7 +175,7 @@ public class KavitaIntegrationInput
     public string? ApiKey { get; set; }
 
     [Display(ResourceType = typeof(I18n), Name = nameof(I18n.Enable))]
-    public bool Enabled { get; set; } = true;
+    public bool Enabled { get; set; }
 
     public string? SucessMessage { get; set; } = string.Empty;
 }

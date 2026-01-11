@@ -925,4 +925,19 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="ExternalReaders" xml:space="preserve">
     <value>External Readers</value>
   </data>
+  <data name="SeeTheDocumentation" xml:space="preserve">
+    <value>See the documentation.</value>
+  </data>
+  <data name="KavitaTutorialApiKey01" xml:space="preserve">
+    <value>Access your Kavita instance</value>
+  </data>
+  <data name="KavitaTutorialApiKey02" xml:space="preserve">
+    <value>Log in in your account</value>
+  </data>
+  <data name="KavitaTutorialApiKey03" xml:space="preserve">
+    <value>Access the configuration &gt; API Key / OPDS</value>
+  </data>
+  <data name="KavitaTutorialApiKey04" xml:space="preserve">
+    <value>Copy the generated token and paste it into the input above</value>
+  </data>
 </root>

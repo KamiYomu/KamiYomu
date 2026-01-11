@@ -1150,6 +1150,42 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Access your Kavita instance.
+        /// </summary>
+        public static string KavitaTutorialApiKey01 {
+            get {
+                return ResourceManager.GetString("KavitaTutorialApiKey01", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log in in your account.
+        /// </summary>
+        public static string KavitaTutorialApiKey02 {
+            get {
+                return ResourceManager.GetString("KavitaTutorialApiKey02", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Access the configuration &gt; API Key / OPDS.
+        /// </summary>
+        public static string KavitaTutorialApiKey03 {
+            get {
+                return ResourceManager.GetString("KavitaTutorialApiKey03", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy the generated token and paste it into the input above.
+        /// </summary>
+        public static string KavitaTutorialApiKey04 {
+            get {
+                return ResourceManager.GetString("KavitaTutorialApiKey04", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language.
         /// </summary>
         public static string Language {
@@ -1831,6 +1867,15 @@ namespace KamiYomu.Web.Resources {
         public static string SearchManga {
             get {
                 return ResourceManager.GetString("SearchManga", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to See the documentation..
+        /// </summary>
+        public static string SeeTheDocumentation {
+            get {
+                return ResourceManager.GetString("SeeTheDocumentation", resourceCulture);
             }
         }
         

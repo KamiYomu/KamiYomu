@@ -20,6 +20,16 @@ public class GotifySettings
         ApiKey = apiKey;
     }
 
+    internal void Disable()
+    {
+        Enabled = false;
+    }
+
+    internal void Enable()
+    {
+        Enabled = true;
+    }
+
     public bool Enabled { get; private set; }
     public Uri ServiceUri { get; private set; }
     public string ApiKey { get; private set; }
