@@ -7,6 +7,7 @@ using Hangfire.Server;
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.Integrations;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
@@ -25,7 +26,8 @@ public class ChapterDownloaderJob(
     IHttpClientFactory httpClientFactory,
     IHangfireRepository hangfireRepository,
     IBackgroundJobClient backgroundJobClient,
-    INotificationService notificationService) : IChapterDownloaderJob, IDisposable
+    INotificationService notificationService,
+    IGotifyService gotifyService) : IChapterDownloaderJob, IDisposable
 {
     private readonly WorkerOptions _workerOptions = workerOptions.Value;
     private readonly HttpClient _httpClient = httpClientFactory.CreateClient(Defaults.Worker.HttpClientApp);
@@ -35,7 +37,10 @@ public class ChapterDownloaderJob(
     {
         logger.LogInformation("Dispatch \"{title}\".", title);
 
-        UserPreference? userPreference = dbContext.UserPreferences.Include(p => p.KavitaSettings).Query().FirstOrDefault();
+        UserPreference? userPreference = dbContext.UserPreferences
+                                                  .Include(p => p.KavitaSettings)
+                                                  .Include(p => p.GotifySettings)
+                                                  .Query().FirstOrDefault();
         CultureInfo culture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
 
         Thread.CurrentThread.CurrentCulture = culture;
@@ -165,6 +170,11 @@ public class ChapterDownloaderJob(
             {
                 ScheduleKavitaNotify(libraryId);
             }
+
+            if (userPreference?.GotifySettings?.Enabled == true)
+            {
+                await PushGotifyNotificationAsync(chapterDownload, cancellationToken);
+            }
         }
         catch (Exception ex) when (!context.CancellationToken.ShutdownToken.IsCancellationRequested)
         {
@@ -186,6 +196,8 @@ public class ChapterDownloaderJob(
 
         logger.LogInformation("Dispatch \"{title}\" completed.", title);
     }
+
+
 
     private async Task SavePageAsync(string filePath, Page page, CancellationToken cancellationToken)
     {
@@ -279,6 +291,18 @@ public class ChapterDownloaderJob(
         );
 
         cacheContext.Current.Add(cacheJobId, newJobId, TimeSpan.FromDays(365));
+    }
+
+    private async Task PushGotifyNotificationAsync(ChapterDownloadRecord chapterDownload, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await gotifyService.PushChapterDownloadedNotificationAsync(chapterDownload, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, ex.Message);
+        }
     }
 
     protected virtual void Dispose(bool disposing)

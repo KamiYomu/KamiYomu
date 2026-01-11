@@ -92,7 +92,8 @@ public sealed class GotifyService(
         GotifySettings settings,
         string title,
         string message,
-        int priority)
+        int priority,
+        object? extras = null)
     {
         Uri uri = new(
             settings.ServiceUri,
@@ -102,7 +103,8 @@ public sealed class GotifyService(
         {
             title,
             message,
-            priority
+            priority,
+            extras
         };
 
         HttpRequestMessage request = new(HttpMethod.Post, uri)
@@ -112,5 +114,59 @@ public sealed class GotifyService(
 
         return request;
     }
+
+    public async Task PushChapterDownloadedNotificationAsync(
+    ChapterDownloadRecord chapterDownload,
+    CancellationToken cancellationToken)
+    {
+        GotifySettings? settings = dbContext.UserPreferences
+            .Query()
+            .Include(p => p.GotifySettings)
+            .FirstOrDefault()
+            ?.GotifySettings;
+
+        if (settings == null)
+        {
+            logger.LogWarning("Gotify settings not configured");
+            return;
+        }
+
+        var extras = new
+        {
+            chapter = new
+            {
+                chapterDownload.Id,
+                chapterDownload.Chapter.Number,
+                chapterDownload.MangaDownload.Library.Manga.Title,
+                chapterDownload.Chapter.Uri,
+                FilePath = chapterDownload.MangaDownload.Library.GetCbzFilePath(chapterDownload.Chapter),
+                DownloadStatus = chapterDownload.DownloadStatus.ToString()
+            }
+        };
+
+        HttpRequestMessage request = CreateMessageRequest(
+            settings,
+            title: I18n.ChapterDownloaded,
+            message: chapterDownload.MangaDownload.Library.GetFilePathTemplateResolved(chapterDownload.Chapter),
+            priority: 5,
+            extras: extras);
+
+        HttpResponseMessage response = await _httpClient.Value.SendAsync(
+            request,
+            cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            string content = await response.Content.ReadAsStringAsync(cancellationToken);
+
+            logger.LogError(
+                "Gotify push failed ({StatusCode}): {Response}",
+                response.StatusCode,
+                content);
+
+            _ = response.EnsureSuccessStatusCode();
+        }
+    }
+
 }
 
