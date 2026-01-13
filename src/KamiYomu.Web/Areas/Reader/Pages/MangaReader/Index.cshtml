@@ -1,0 +1,43 @@
+@page "{libraryId:guid}/{chapterId:guid}"
+@using KamiYomu.Web.Areas.Reader.Pages.MangaReader
+@model IndexModel
+
+<div id="readerShell" class="reader-shell d-flex flex-column vh-100 overflow-hidden">
+
+    <div class="main-viewer d-flex flex-column flex-grow-1 overflow-hidden" id="mainViewer">
+
+        <div class="offcanvas offcanvas-start bg-dark text-white"
+             tabindex="-1"
+             id="readerSettings"
+             data-bs-container="#mainViewer">
+            <div class="offcanvas-header border-bottom border-secondary">
+                <h5 class="offcanvas-title">Settings</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+            </div>
+            <div class="offcanvas-body">
+                <partial name="Partials/_ReaderControls" />
+            </div>
+        </div>
+
+        <partial name="Partials/_ReaderHeader" model="Model" />
+
+        <div id="readerContainer" class="webtoon-mode flex-grow-1 overflow-auto bg-black">
+            @for (int i = 0; i < Model.PageUrls.Count; i++)
+            {
+                <div class="manga-page-wrapper" data-page-index="@(i + 1)">
+                    <img src="@Url.Page("/MangaReader/Index", "Image", new { area = "Reader", id = Model.ChapterId, fileName = Model.PageUrls[i] })"
+                         class="reader-img"
+                         loading="lazy"
+                         alt="Page @(i + 1)" />
+                </div>
+            }
+        </div>
+
+        <partial name="Partials/_ReaderFooter" model="Model" />
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/reader.js" asp-append-version="true"></script>
+}

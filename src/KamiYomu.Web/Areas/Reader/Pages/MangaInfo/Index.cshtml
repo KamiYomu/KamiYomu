@@ -1,0 +1,51 @@
+@page
+@using KamiYomu.Web.Areas.Reader.Pages.MangaInfo
+@using KamiYomu.Web.Extensions
+@model IndexModel
+@{
+}
+<div class="row mt-4">
+    <div class="col-md-4">
+        <img src="@Model.Manga.CoverUrl.ToInternalImageUrl()" class="img-fluid rounded shadow" />
+    </div>
+    <div class="col-md-8">
+        <h1>@Model.Manga.Title</h1>
+        <p class="text-muted">By @Model.Manga.Authors.FirstOrDefault()</p>
+        <div class="mb-3">
+            @foreach (var tag in Model.Manga.Tags)
+            {
+                <span class="badge bg-secondary me-1">@tag</span>
+            }
+        </div>
+        <hr />
+        <h3>Chapters</h3>
+        <div class="list-group shadow-sm">
+            @foreach (var ch in Model.Chapters)
+            {
+                var isCompleted = ch.DownloadStatus == Entities.Definitions.DownloadStatus.Completed;
+
+                @if (isCompleted)
+                {
+                    <a asp-area="Reader"
+                       asp-page="/MangaReader/Index"
+                       asp-route-chapterId="@ch.Id"
+                       asp-route-libraryId="@Model.Library.Id"
+                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+
+                        <span>Chapter @ch.Chapter.Number: @ch.Chapter.Title</span>
+
+                        <partial name="_BadgeChapterDownloadStatus" model="@ch" />
+                    </a>
+                }
+                else
+                {
+                    <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <span>Chapter @ch.Chapter.Number: @ch.Chapter.Title (Unavailable)</span>
+
+                        <partial name="_BadgeChapterDownloadStatus" model="@ch" />
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

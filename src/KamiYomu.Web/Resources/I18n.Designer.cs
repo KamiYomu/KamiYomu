@@ -1330,6 +1330,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Manga Reader.
+        /// </summary>
+        public static string MangaReader {
+            get {
+                return ResourceManager.GetString("MangaReader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mangás.
         /// </summary>
         public static string Mangas {

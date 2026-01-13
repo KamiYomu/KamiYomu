@@ -949,11 +949,11 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="ExternalReadersExplanation" xml:space="preserve">
     <value>Configurez les services externes pour recevoir des mises à jour automatiques sur les téléchargements de nouveaux chapitres.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="PackagesFeed" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="PackagesFeed" xml:space="preserve">
     <value>Flux de packages</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="MangaReader" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

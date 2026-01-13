@@ -1,0 +1,18 @@
+@page
+@using KamiYomu.Web.Areas.Reader.Pages.MangaGallery
+@model IndexModel
+@{
+}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <input type="text" name="search" class="form-control" 
+               placeholder="Search manga..."
+               hx-get="/Gallery?handler=Search" 
+               hx-target="#manga-grid" 
+               hx-trigger="keyup changed delay:500ms">
+    </div>
+</div>
+
+<div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-4" id="manga-grid">
+    <partial name="_MangaGrid" model="Model.Libraries" />
+</div>

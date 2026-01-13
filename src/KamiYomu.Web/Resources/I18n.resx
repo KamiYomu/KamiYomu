@@ -952,4 +952,7 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="PackagesFeed" xml:space="preserve">
     <value>Packages feed</value>
   </data>
+  <data name="MangaReader" xml:space="preserve">
+    <value>Manga Reader</value>
+  </data>
 </root>

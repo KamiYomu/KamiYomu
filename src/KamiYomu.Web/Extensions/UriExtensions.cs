@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Reflection;
+using System.Net;
 
 namespace KamiYomu.Web.Extensions;
 
@@ -11,7 +10,7 @@ public static class UriExtensions
         {
             return false;
         }
-        string[] validExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".ico", ".svg" };
+        string[] validExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".ico", ".svg"];
         string extension = Path.GetExtension(uri.LocalPath).ToLowerInvariant();
         return validExtensions.Contains(extension);
     }
@@ -24,6 +23,11 @@ public static class UriExtensions
     public static string GetContentType(this Uri uri)
     {
         string extension = Path.GetExtension(uri.LocalPath).ToLowerInvariant();
+        return ExtensionToContentType(extension);
+    }
+
+    public static string ExtensionToContentType(string extension)
+    {
         return extension switch
         {
             ".jpg" or ".jpeg" => "image/jpeg",
