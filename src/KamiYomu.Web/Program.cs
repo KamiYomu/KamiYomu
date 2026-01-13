@@ -69,6 +69,7 @@ builder.Host.UseSerilog((context, services, configuration) =>
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSignalR();
+builder.Services.Configure<StartupOptions>(builder.Configuration.GetSection("StartupOptions"));
 builder.Services.Configure<BasicAuthOptions>(builder.Configuration.GetSection("BasicAuth"));
 builder.Services.Configure<SpecialFolderOptions>(builder.Configuration.GetSection("SpecialFolders"));
 builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection("Worker"));
@@ -164,7 +165,6 @@ using (IServiceScope appScoped = app.Services.CreateScope())
     SpecialFolderOptions specialFolderOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<SpecialFolderOptions>>().Value;
     StartupOptions startupOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<StartupOptions>>().Value;
     IOptions<RequestLocalizationOptions> localizationOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<RequestLocalizationOptions>>();
-
 
     _ = Directory.CreateDirectory(specialFolderOptions.LogDir);
     _ = Directory.CreateDirectory(specialFolderOptions.DbDir);
