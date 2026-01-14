@@ -949,11 +949,47 @@ para que la configuración &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire cont
   <data name="ExternalReadersExplanation" xml:space="preserve">
     <value>Configure servicios externos para recibir actualizaciones automáticas sobre las descargas de nuevos capítulos.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="PackagesFeed" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="PackagesFeed" xml:space="preserve">
     <value>Feed de paquetes</value>
+  </data>
+  <data name="MangaReader" xml:space="preserve">
+    <value>Lector de manga</value>
+  </data>
+  <data name="Zoom" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Ancho</value>
+  </data>
+  <data name="Fullscreen" xml:space="preserve">
+    <value>Pantalla completa</value>
+  </data>
+  <data name="ReadingMode" xml:space="preserve">
+    <value>Modo de lectura</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Contenido</value>
+  </data>
+  <data name="ArtBy" xml:space="preserve">
+    <value>Arte por</value>
+  </data>
+  <data name="AlsoKnownAs" xml:space="preserve">
+    <value>También conocido como</value>
+  </data>
+  <data name="NotDownloadedYet" xml:space="preserve">
+    <value>Aún no descargado</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Anterior</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Próximo</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="UnknownAuthor" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="By" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

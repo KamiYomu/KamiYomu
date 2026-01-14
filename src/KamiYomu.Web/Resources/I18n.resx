@@ -952,4 +952,43 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="PackagesFeed" xml:space="preserve">
     <value>Packages feed</value>
   </data>
+  <data name="MangaReader" xml:space="preserve">
+    <value>Manga Reader</value>
+  </data>
+  <data name="Zoom" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Width</value>
+  </data>
+  <data name="Fullscreen" xml:space="preserve">
+    <value>Fullscreen</value>
+  </data>
+  <data name="ReadingMode" xml:space="preserve">
+    <value>Reading Mode</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Content</value>
+  </data>
+  <data name="ArtBy" xml:space="preserve">
+    <value>Art by</value>
+  </data>
+  <data name="AlsoKnownAs" xml:space="preserve">
+    <value>Also known as</value>
+  </data>
+  <data name="NotDownloadedYet" xml:space="preserve">
+    <value>Not Downloaded Yet</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="UnknownAuthor" xml:space="preserve">
+    <value>Unknown Author</value>
+  </data>
+  <data name="By" xml:space="preserve">
+    <value>By</value>
+  </data>
 </root>

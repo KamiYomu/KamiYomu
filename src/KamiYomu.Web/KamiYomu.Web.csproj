@@ -55,5 +55,11 @@
 		</EmbeddedResource>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Areas\Reader\Controllers\" />
+	  <Folder Include="Areas\Reader\Data\" />
+	  <Folder Include="Areas\Reader\Models\" />
+	</ItemGroup>
+
 	<Import Project="KamiYomu.Web.props" />
 </Project>

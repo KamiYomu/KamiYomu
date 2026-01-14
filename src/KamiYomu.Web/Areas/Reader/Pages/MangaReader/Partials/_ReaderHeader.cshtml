@@ -1,0 +1,23 @@
+@using KamiYomu.Web.Areas.Reader.Pages.MangaReader
+@model IndexModel
+<header class="reader-header bg-dark text-white p-2 border-bottom border-secondary d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#readerSettings">
+            <i class="bi bi-gear-fill"></i>
+        </button>
+        <a asp-area="Reader"
+           asp-page="/MangaInfo/Index"
+           asp-route-mangaId="@Model.ChapterDownloaded.MangaDownload.Library.Manga.Id"
+           class="btn btn-sm btn-outline-light border-0">
+            <i class="bi bi-chevron-left"></i>
+        </a>
+    </div>
+
+    <span class="small text-truncate px-3 fw-semibold">@Model.ChapterDownloaded.Chapter.Title</span>
+
+    <div class="d-flex gap-2">
+        <button class="btn btn-sm btn-outline-info" onclick="toggleFullscreen()">
+            <i class="bi bi-fullscreen"></i>
+        </button>
+    </div>
+</header>

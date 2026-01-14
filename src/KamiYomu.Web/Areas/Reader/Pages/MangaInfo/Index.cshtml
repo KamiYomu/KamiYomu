@@ -1,0 +1,125 @@
+@page "{mangaId}"
+@using KamiYomu.Web.Areas.Reader.Pages.MangaInfo
+@using KamiYomu.Web.Extensions
+@model IndexModel
+@{
+}
+<header class="reader-header bg-dark text-white p-2 border-bottom border-secondary d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-2">
+        <a asp-area="Reader"
+           asp-page="/MangaGallery/Index"
+           class="btn btn-sm btn-outline-light border-0">
+            <i class="bi bi-chevron-left"></i>
+        </a>
+    </div>
+</header>
+
+
+<div class="row mt-4">
+    <div class="col-lg-3 col-md-4 mb-4">
+        <img src="@Model.Manga.CoverUrl.ToInternalImageUrl()" class="img-fluid rounded shadow-lg w-100" alt="@Model.Manga.Title" />
+
+        <div class="mt-3 card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="row text-center mt-3">
+                    <div>
+                        <small class="text-muted d-block">Year</small>
+                        <strong>@(Model.Manga.Year?.ToString() ?? "N/A")</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Manga.Links?.Any() == true)
+        {
+            <div class="mt-3 d-grid gap-2">
+                @foreach (var link in Model.Manga.Links)
+                {
+                    <a href="@link.Value" target="_blank" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-box-arrow-up-right me-1"></i> @link.Key
+                    </a>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="col-lg-9 col-md-8">
+        <div class="d-flex justify-content-between align-items-start flex-wrap">
+            <div>
+                <h1 class="display-6 fw-bold mb-1">@Model.Manga.Title</h1>
+                <p class="fs-5 text-primary mb-2">
+                    @string.Join(", ", Model.Manga.Authors)
+                    @if (Model.Manga.Artists?.Any() == true)
+                    {
+                        <span class="text-muted fs-6"> (@I18n.ArtBy @string.Join(", ", Model.Manga.Artists))</span>
+                    }
+                </p>
+            </div>
+            <div  class="d-inline-block">
+
+                <partial name="_BadgeMangaDownloadStatus" model="Model.MangaDownloadRecord" />
+
+                @if (!Model.Manga.IsFamilySafe)
+                {
+                    <span class="badge bg-danger">@I18n.Content: 18+ </span>
+                }
+            </div>
+            
+        </div>
+
+        @if (Model.Manga.AlternativeTitles?.Any() == true)
+        {
+            <p class="text-muted small italic">@I18n.AlsoKnownAs: @string.Join(" • ", Model.Manga.AlternativeTitles.Values)</p>
+        }
+
+        <div class="mb-3 card-tags">
+            @foreach (var tag in Model.Manga.Tags)
+            {
+                <span class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle small-badge me-1">@tag</span>
+            }
+        </div>
+
+        <div class="manga-description mb-4">
+            <p class="text-secondary" style="white-space: pre-line;">@Model.Manga.Description</p>
+        </div>
+
+        <hr class="my-4" />
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0">@I18n.Chapters</h3>
+            <span class="text-muted">Latest: @Model.Manga.LatestChapterAvailable</span>
+        </div>
+
+        <div class="list-group list-group-flush shadow-sm border rounded">
+            @foreach (var ch in Model.Chapters.OrderByDescending(c => c.Chapter.Number))
+            {
+                var isCompleted = ch.DownloadStatus == Entities.Definitions.DownloadStatus.Completed;
+
+                @if (isCompleted)
+                {
+                    <a asp-area="Reader"
+                       asp-page="/MangaReader/Index"
+                       asp-route-chapterId="@ch.Id"
+                       asp-route-libraryId="@Model.Library.Id"
+                       class="list-group-item list-group-item-action py-3 d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="fw-bold">Chapter @ch.Chapter.Number</span>
+                            <span class="ms-2 text-secondary">@ch.Chapter.Title</span>
+                        </div>
+                        <partial name="_BadgeChapterDownloadStatus" model="@ch" />
+                    </a>
+                }
+                else
+                {
+                    <div class="list-group-item py-3 d-flex justify-content-between align-items-center text-muted">
+                        <div>
+                            <span>Chapter @ch.Chapter.Number: @ch.Chapter.Title</span>
+                            <small class="ms-2">(@I18n.NotDownloadedYet)</small>
+                        </div>
+                        <partial name="_BadgeChapterDownloadStatus" model="@ch" />
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

@@ -949,11 +949,47 @@ voor de &lt;code&gt;WorkerCount&lt;/code&gt;-instelling van Hangfire om te bepal
   <data name="ExternalReadersExplanation" xml:space="preserve">
     <value>Configureer externe services om automatische updates te ontvangen over nieuwe hoofdstukdownloads.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="PackagesFeed" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="PackagesFeed" xml:space="preserve">
     <value>Pakketten voeden</value>
+  </data>
+  <data name="MangaReader" xml:space="preserve">
+    <value>Manga-lezer</value>
+  </data>
+  <data name="Zoom" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Breedte</value>
+  </data>
+  <data name="Fullscreen" xml:space="preserve">
+    <value>Volledig scherm</value>
+  </data>
+  <data name="ReadingMode" xml:space="preserve">
+    <value>Leesmodus</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Inhoud</value>
+  </data>
+  <data name="ArtBy" xml:space="preserve">
+    <value>Kunst door</value>
+  </data>
+  <data name="AlsoKnownAs" xml:space="preserve">
+    <value>Ook bekend als</value>
+  </data>
+  <data name="NotDownloadedYet" xml:space="preserve">
+    <value>Nog niet gedownload</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Vorig</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Volgende</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="UnknownAuthor" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="By" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>
