@@ -11,6 +11,7 @@ public class IndexModel(DbContext dbContext) : PageModel
     public Library Library { get; set; } = default!;
     public Manga Manga { get; set; } = default!;
     public List<ChapterDownloadRecord> Chapters { get; set; } = [];
+    public MangaDownloadRecord MangaDownloadRecord { get; set; }
 
     public void OnGet(string id)
     {
@@ -22,5 +23,7 @@ public class IndexModel(DbContext dbContext) : PageModel
         using LibraryDbContext libDb = Library.GetReadOnlyDbContext();
 
         Chapters = libDb.ChapterDownloadRecords.Query().OrderBy(p => p.Chapter.Number).ToList();
+
+        MangaDownloadRecord = libDb.MangaDownloadRecords.Query().Where(p => p.Library.Manga.Id == id).FirstOrDefault();
     }
 }

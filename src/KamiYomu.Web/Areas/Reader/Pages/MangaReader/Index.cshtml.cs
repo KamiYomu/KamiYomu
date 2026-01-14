@@ -42,6 +42,7 @@ public class IndexModel(DbContext dbContext) : PageModel
             .Where(e => e.FullName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
                         e.FullName.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
                         e.FullName.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
+            .Where(p => !p.FullName.EndsWith("cover" + Path.GetExtension(p.FullName)))
             .OrderBy(e => e.FullName)
             .Select(e => e.FullName)];
     }

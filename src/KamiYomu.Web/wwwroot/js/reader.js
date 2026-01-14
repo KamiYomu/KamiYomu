@@ -3,99 +3,91 @@
  */
 let currentZoom = 1.0;
 let currentPageIndex = 0;
+let isDown = false;
+let startX, startY, scrollLeft, scrollTop;
 
 document.addEventListener("DOMContentLoaded", function () {
-    // 1. Scroll to the reader shell on load
+    const container = document.getElementById('readerContainer');
     const readerShell = document.getElementById('readerShell');
+
+    // 1. Initial Scroll to Reader Shell
     if (readerShell) {
         setTimeout(() => {
             readerShell.scrollIntoView({
                 behavior: 'smooth',
                 block: 'end'
             });
-        }, 100);
+        }, 150);
     }
 
-    // 2. Initialize the Scroll Observer for Webtoon Mode
+    // 2. Initialize Grab-to-Scroll Logic
+    if (container) {
+        container.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return; // Only left click
+            isDown = true;
+            container.classList.add('grabbing');
+            startX = e.pageX - container.offsetLeft;
+            startY = e.pageY - container.offsetTop;
+            scrollLeft = container.scrollLeft;
+            scrollTop = container.scrollTop;
+        });
+
+        container.addEventListener('mouseleave', () => {
+            isDown = false;
+            container.classList.remove('grabbing');
+        });
+
+        container.addEventListener('mouseup', () => {
+            isDown = false;
+            container.classList.remove('grabbing');
+        });
+
+        container.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - container.offsetLeft;
+            const y = e.pageY - container.offsetTop;
+            const walkX = (x - startX) * 2;
+            const walkY = (y - startY) * 2;
+            container.scrollLeft = scrollLeft - walkX;
+            container.scrollTop = scrollTop - walkY;
+        });
+    }
+
+    // 3. Start watching page positions
     initScrollObserver();
 });
 
-// Add these variables to the top of your reader.js
-let isDown = false;
-let startX;
-let startY;
-let scrollLeft;
-let scrollTop;
-
-document.addEventListener("DOMContentLoaded", function () {
-    const container = document.getElementById('readerContainer');
-
-    // Mouse Down - Start Grabbing
-    container.addEventListener('mousedown', (e) => {
-        // Only trigger if middle mouse button or left click is used
-        if (e.button !== 0) return;
-
-        isDown = true;
-        container.classList.add('grabbing'); // UI feedback
-
-        startX = e.pageX - container.offsetLeft;
-        startY = e.pageY - container.offsetTop;
-        scrollLeft = container.scrollLeft;
-        scrollTop = container.scrollTop;
-    });
-
-    // Mouse Leave/Up - Stop Grabbing
-    container.addEventListener('mouseleave', () => {
-        isDown = false;
-        container.classList.remove('grabbing');
-    });
-
-    container.addEventListener('mouseup', () => {
-        isDown = false;
-        container.classList.remove('grabbing');
-    });
-
-    // Mouse Move - The actual scroll logic
-    container.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault(); // Stop text selection while dragging
-
-        const x = e.pageX - container.offsetLeft;
-        const y = e.pageY - container.offsetTop;
-
-        // Adjust the multiplier (2) to make the scroll faster or slower
-        const walkX = (x - startX) * 2;
-        const walkY = (y - startY) * 2;
-
-        container.scrollLeft = scrollLeft - walkX;
-        container.scrollTop = scrollTop - walkY;
-    });
-});
-
 /**
- * Detects which page is visible during scroll (Webtoon Mode)
+ * Intersection Observer: Updates the Page Number based on scroll position
  */
 function initScrollObserver() {
     const container = document.getElementById('readerContainer');
+    if (!container) return;
+
+    // Use a lower threshold (0.2) so the index updates as soon as a page is partly visible
     const observerOptions = {
         root: container,
-        threshold: 0.5 // Trigger when 50% of a page is visible
+        threshold: 0.2,
+        rootMargin: '0px 0px -10% 0px'
     };
 
     const observer = new IntersectionObserver((entries) => {
-        // Only track scroll position if we are in webtoon mode
-        if (!container.classList.contains('webtoon-mode')) return;
-
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                const index = parseInt(entry.target.getAttribute('data-page-index'));
-                currentPageIndex = index - 1;
-                updatePageDisplay(index);
+                const indexAttr = entry.target.getAttribute('data-page-index');
+                if (indexAttr) {
+                    const index = parseInt(indexAttr);
+                    currentPageIndex = index - 1;
+                    updatePageDisplay(index);
+                }
             }
         });
     }, observerOptions);
 
+    // Observe all wrappers
     document.querySelectorAll('.manga-page-wrapper').forEach(wrapper => {
+        observer.unobserve(wrapper); // Clear previous observation to prevent duplicates
         observer.observe(wrapper);
     });
 }
@@ -105,45 +97,45 @@ function initScrollObserver() {
  */
 function changeMode(mode) {
     const container = document.getElementById('readerContainer');
+    if (!container) return;
 
-    // Instead of className = '', we remove only the "mode" classes
+    // Remove only mode classes, preserve structural classes like flex-grow-1
     container.classList.remove('webtoon-mode', 'paged-mode', 'rtl-mode');
-
-    currentPageIndex = 0; // Reset to first page
+    currentPageIndex = 0;
 
     if (mode === 'webtoon') {
         container.classList.add('webtoon-mode');
-        // Ensure webtoon mode uses vertical block display
-        container.style.display = 'block';
-        container.scrollTo(0, 0);
+        container.style.display = 'flex'; // Centering requires flex
     } else {
         container.classList.add('paged-mode');
-        // Ensure paged mode uses flex for horizontal alignment
         container.style.display = 'flex';
         if (mode === 'rtl') container.classList.add('rtl-mode');
-        updatePagedView();
     }
 
-    // Always sync the UI after a mode change
-    updatePageDisplay(1);
+    // Re-sync UI and Observer for the new layout
+    setTimeout(() => {
+        initScrollObserver();
+        updatePageDisplay(1);
+        container.scrollTo(0, 0);
+    }, 50);
 }
 
 /**
- * Zoom Logic
+ * Zoom Logic (Webtoon = MaxWidth, Paged = CSS Zoom)
  */
 function adjustZoom(delta) {
-    currentZoom = Math.min(Math.max(0.5, currentZoom + delta), 2.0);
+    currentZoom = Math.min(Math.max(0.3, currentZoom + delta), 2.0);
+
     const zoomInput = document.getElementById('zoomVal');
     if (zoomInput) zoomInput.value = Math.round(currentZoom * 100) + "%";
 
     const container = document.getElementById('readerContainer');
-    if (container.classList.contains('webtoon-mode')) {
-        const imgs = container.querySelectorAll('img');
-        imgs.forEach(img => img.style.maxWidth = (800 * currentZoom) + "px");
-    } else {
-        // In paged mode, we use CSS zoom or transform
-        container.style.zoom = currentZoom;
-    }
+    const imgs = container.querySelectorAll('.reader-img');
+    const baseWidth = 800;
+
+    imgs.forEach(img => {
+        img.style.maxWidth = (baseWidth * currentZoom) + "px";
+    });
 }
 
 /**
@@ -151,69 +143,41 @@ function adjustZoom(delta) {
  */
 function toggleFullscreen() {
     const elem = document.getElementById('mainViewer');
-
-    if (!document.fullscreenElement &&
-        !document.webkitFullscreenElement &&
-        !document.msFullscreenElement) {
-
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) {
-            elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) {
-            elem.msRequestFullscreen();
-        }
+    if (!document.fullscreenElement) {
+        if (elem.requestFullscreen) elem.requestFullscreen();
+        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+        else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
     } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
-        }
+        if (document.exitFullscreen) document.exitFullscreen();
     }
 }
 
 document.addEventListener('fullscreenchange', handleFullscreenUI);
-document.addEventListener('webkitfullscreenchange', handleFullscreenUI);
 
 function handleFullscreenUI() {
     const fsBtn = document.querySelector('.bi-fullscreen') || document.querySelector('.bi-fullscreen-exit');
     if (!fsBtn) return;
-
-    if (document.fullscreenElement) {
-        fsBtn.classList.replace('bi-fullscreen', 'bi-fullscreen-exit');
-    } else {
-        fsBtn.classList.replace('bi-fullscreen-exit', 'bi-fullscreen');
-    }
+    if (document.fullscreenElement) fsBtn.classList.replace('bi-fullscreen', 'bi-fullscreen-exit');
+    else fsBtn.classList.replace('bi-fullscreen-exit', 'bi-fullscreen');
 }
 
 /**
- * Page Navigation logic
+ * Footer & Page Indicators
  */
-function updatePagedView() {
-    const container = document.getElementById('readerContainer');
-    if (!container.classList.contains('paged-mode')) return;
-
-    const pages = document.querySelectorAll('.manga-page-wrapper');
-    pages[currentPageIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-}
-
 function updatePageDisplay(index) {
     const display = document.getElementById('currentPageDisplay');
     if (display) display.innerText = index;
 
-    // Fixed: Calculate total pages from DOM instead of Razor @Model
-    const pages = document.querySelectorAll('.manga-page-wrapper');
-    const totalPages = pages.length;
+    const totalPages = document.querySelectorAll('.manga-page-wrapper').length;
     const percentage = (index / (totalPages || 1)) * 100;
 
     const progressBar = document.getElementById('readerProgressBar');
-    if (progressBar) {
-        progressBar.style.width = percentage + "%";
-    }
+    if (progressBar) progressBar.style.width = percentage + "%";
 }
 
+/**
+ * Navigation Actions
+ */
 function nextPage() {
     const pages = document.querySelectorAll('.manga-page-wrapper');
     if (currentPageIndex < pages.length - 1) {

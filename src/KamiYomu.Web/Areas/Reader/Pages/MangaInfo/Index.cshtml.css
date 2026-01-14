@@ -1,0 +1,38 @@
+.uppercase-label {
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.list-group-item-action:hover {
+    background-color: #f8f9fa;
+    border-left: 4px solid #0d6efd;
+    padding-left: calc(1rem - 4px) !important;
+}
+
+.small-badge {
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    overflow: hidden;
+    max-height: 24px; /* Keeps tags to a single row */
+}
+
+/* Dark Mode specific badge adjustments if using Bootstrap 5.3+ */
+[data-bs-theme="dark"] .small-badge {
+    background-color: rgba(114, 83, 237, 0.2) !important;
+    color: #a28df2 !important;
+    border-color: #7253ed !important;
+}
