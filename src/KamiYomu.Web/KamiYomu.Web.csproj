@@ -17,6 +17,21 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Areas\Reader\Controllers\**" />
+	  <Compile Remove="Areas\Reader\Data\**" />
+	  <Compile Remove="Areas\Reader\Models\**" />
+	  <Content Remove="Areas\Reader\Controllers\**" />
+	  <Content Remove="Areas\Reader\Data\**" />
+	  <Content Remove="Areas\Reader\Models\**" />
+	  <EmbeddedResource Remove="Areas\Reader\Controllers\**" />
+	  <EmbeddedResource Remove="Areas\Reader\Data\**" />
+	  <EmbeddedResource Remove="Areas\Reader\Models\**" />
+	  <None Remove="Areas\Reader\Controllers\**" />
+	  <None Remove="Areas\Reader\Data\**" />
+	  <None Remove="Areas\Reader\Models\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.22" />
 		<PackageReference Include="Hangfire.Storage.SQLite" Version="0.4.2" />
 		<PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.2" />
@@ -53,12 +68,6 @@
 			<Generator>PublicResXFileCodeGenerator</Generator>
 			<LastGenOutput>I18n.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Areas\Reader\Controllers\" />
-	  <Folder Include="Areas\Reader\Data\" />
-	  <Folder Include="Areas\Reader\Models\" />
 	</ItemGroup>
 
 	<Import Project="KamiYomu.Web.props" />

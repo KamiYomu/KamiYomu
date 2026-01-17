@@ -7,11 +7,13 @@ using KamiYomu.Web.Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
+using static KamiYomu.Web.AppOptions.Defaults;
+
 using Library = KamiYomu.Web.Entities.Library;
 
 namespace KamiYomu.Web.Areas.Reader.Pages.MangaReader;
 
-public class IndexModel(DbContext dbContext) : PageModel
+public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext) : PageModel
 {
     public Guid ChapterId { get; set; }
     public ChapterDownloadRecord ChapterDownloaded { get; set; }

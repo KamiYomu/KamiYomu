@@ -11,6 +11,9 @@ public partial class Defaults
 {
     public static class ServiceLocator
     {
+        public const string ReadOnlyDbContext = nameof(ReadOnlyDbContext);
+        public const string ReadOnlyImageDbContext = nameof(ReadOnlyImageDbContext);
+
         private static readonly Lazy<IServiceProvider?> _lazyProvider = new(() => _providerFactory(), true);
 
         private static Func<IServiceProvider?> _providerFactory = () => null;

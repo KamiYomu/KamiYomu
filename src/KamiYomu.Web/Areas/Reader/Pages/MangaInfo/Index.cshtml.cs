@@ -4,9 +4,11 @@ using KamiYomu.Web.Infrastructure.Contexts;
 
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
+using static KamiYomu.Web.AppOptions.Defaults;
+
 namespace KamiYomu.Web.Areas.Reader.Pages.MangaInfo;
 
-public class IndexModel(DbContext dbContext) : PageModel
+public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext) : PageModel
 {
     public Library Library { get; set; } = default!;
     public Manga Manga { get; set; } = default!;

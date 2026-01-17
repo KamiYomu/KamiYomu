@@ -5,9 +5,11 @@ using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
+using static KamiYomu.Web.AppOptions.Defaults;
+
 namespace KamiYomu.Web.Areas.Libraries.Pages.Collection;
 
-public class SearchResultsModel(DbContext dbContext, ICrawlerAgentRepository agentCrawlerRepository) : PageModel
+public class SearchResultsModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext, ICrawlerAgentRepository agentCrawlerRepository) : PageModel
 {
     public IEnumerable<Entities.Library> Results { get; set; } = [];
 

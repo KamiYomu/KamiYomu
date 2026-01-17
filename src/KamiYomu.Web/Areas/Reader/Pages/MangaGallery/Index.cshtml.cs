@@ -1,13 +1,14 @@
-using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.Contexts;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
+using static KamiYomu.Web.AppOptions.Defaults;
+
 namespace KamiYomu.Web.Areas.Reader.Pages.MangaGallery;
 
-public class IndexModel(DbContext dbContext) : PageModel
+public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext) : PageModel
 {
 
     public List<Library> Libraries { get; set; } = [];

@@ -33,18 +33,26 @@
             </a>
         </li>
         <li class="nav-item d-flex align-items-center justify-content-between">
-            <a class="nav-link d-flex align-items-center gap-2 @( (ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Collection", StringComparison.OrdinalIgnoreCase) ?? false) ? "active" : "" )"
-               asp-area="Reader" asp-page="/MangaGallery/Index">
-                <i class="bi bi-book-half"></i> @I18n.MangaReader
-            </a>
-        </li>
-        <li class="nav-item d-flex align-items-center justify-content-between">
             <a class="nav-link d-flex align-items-center gap-2 @( (ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Downloads", StringComparison.OrdinalIgnoreCase) ?? false) ? "active" : "" )"
                asp-area="Libraries" asp-page="/Downloads/Index">
                 <i class="bi bi-cloud-download"></i> @I18n.Download
             </a>
             <a class="nav-link px-2 text-secondary"
                href="https://kamiyomu.com/docs/features/download/"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="Open documentation">
+                <i class="bi bi-question-circle"></i>
+            </a>
+        </li>
+        <li class="nav-item d-flex align-items-center justify-content-between">
+            <a class="nav-link d-flex align-items-center gap-2 @( (ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Collection", StringComparison.OrdinalIgnoreCase) ?? false) ? "active" : "" )"
+               asp-area="Reader" asp-page="/MangaGallery/Index">
+                <i class="bi bi-book-half"></i> @I18n.MangaReader
+            </a>
+
+            <a class="nav-link px-2 text-secondary"
+               href="https://kamiyomu.com/docs/features/built-in-reader/"
                target="_blank"
                rel="noopener noreferrer"
                title="Open documentation">
