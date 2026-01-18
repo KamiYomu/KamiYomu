@@ -1,5 +1,7 @@
 using System.IO.Compression;
 
+using KamiYomu.Web.Areas.Reader.Data;
+using KamiYomu.Web.Areas.Reader.Models;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
@@ -13,12 +15,16 @@ using Library = KamiYomu.Web.Entities.Library;
 
 namespace KamiYomu.Web.Areas.Reader.Pages.MangaReader;
 
-public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext) : PageModel
+public class IndexModel(
+    [FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext,
+    ReadingDbContext readingDbContext) : PageModel
 {
     public Guid ChapterId { get; set; }
     public ChapterDownloadRecord ChapterDownloaded { get; set; }
     public List<string> PageUrls { get; set; } = [];
     public Guid LibraryId { get; private set; }
+
+    public int LastReadPage { get; private set; }
 
     public void OnGet(Guid libraryId, Guid chapterId)
     {
@@ -49,6 +55,11 @@ public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] Db
             .Where(p => !p.FullName.EndsWith("cover" + Path.GetExtension(p.FullName)))
             .OrderBy(e => e.FullName)
             .Select(e => e.FullName)];
+
+
+        ChapterProgress progress = readingDbContext.ChapterProgress.Query().Where(p => p.LibraryId == libraryId && p.ChapterId == chapterId).FirstOrDefault();
+
+        LastReadPage = progress?.LastPageRead ?? 0;
     }
 
     public IActionResult OnGetImage(Guid chapterId, Guid libraryId, string fileName)
@@ -82,5 +93,26 @@ public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] Db
         // Determine content type
         string contentType = UriExtensions.ExtensionToContentType(Path.GetExtension(fileName));
         return File(ms, contentType);
+    }
+
+    public IActionResult OnPostPageViewed(Guid libraryId, Guid chapterId, int pageNumber, bool isLastPage)
+    {
+        ChapterProgress chapterProgres = readingDbContext.ChapterProgress
+                                                         .Query()
+                                                         .Where(p => p.ChapterId == chapterId && p.LibraryId == libraryId)
+                                                         .FirstOrDefault() ?? new(libraryId, chapterId);
+
+        if (isLastPage)
+        {
+            chapterProgres.SetAsCompleted();
+        }
+        else
+        {
+            chapterProgres.SetLastPageRead(pageNumber);
+        }
+
+        _ = readingDbContext.ChapterProgress.Upsert(chapterProgres);
+
+        return new EmptyResult();
     }
 }

@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Localization
 @using KamiYomu.Web.Infrastructure.Services.Interfaces
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 
 @{
     var culture = HttpContextAccessor.HttpContext?.Features.Get<IRequestCultureFeature>()?.RequestCulture.Culture;
@@ -15,6 +16,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(HttpContextAccessor.HttpContext).RequestToken" />
     <title>@(ViewData["Title"] ?? "KamiYomu") | Manga Reader</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -6,6 +6,30 @@ let currentPageIndex = 0;
 let isDown = false;
 let startX, startY, scrollLeft, scrollTop;
 
+// add "page-passed" event
+(function () {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const el = entry.target;
+
+            // Fire only once
+            if (el.dataset.fired === "true") return;
+
+            // Element is ABOVE viewport (user scrolled past it)
+            if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+                el.dataset.fired = "true";
+                htmx.trigger(el, "page-passed");
+            }
+        });
+    }, {
+        threshold: 0
+    });
+
+    document.querySelectorAll(".manga-page-wrapper")
+        .forEach(el => observer.observe(el));
+})();
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const container = document.getElementById('readerContainer');
     const readerShell = document.getElementById('readerShell');
@@ -206,3 +230,55 @@ function scrollToPage(index) {
         updatePageDisplay(index + 1);
     }
 }
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const readerShell = document.getElementById("readerContainer");
+    if (!readerShell) return;
+
+    const page = readerShell.dataset.lastPage;
+    if (!page) return;
+
+    const target = document.getElementById(`manga-page-${page}`);
+    if (!target) return;
+
+    const images = readerShell.querySelectorAll("img");
+
+    // No images? Scroll immediately
+    if (images.length === 0) {
+        scrollToTarget();
+        return;
+    }
+
+    let loaded = 0;
+
+    function onImageDone() {
+        loaded++;
+        if (loaded === images.length) {
+            scrollToTarget();
+        }
+    }
+
+    images.forEach(img => {
+        if (img.complete) {
+            onImageDone();
+        } else {
+            img.addEventListener("load", onImageDone, { once: true });
+            img.addEventListener("error", onImageDone, { once: true });
+        }
+    });
+
+    function scrollToTarget() {
+        const top =
+            target.offsetTop -
+            readerShell.offsetTop +
+            readerShell.scrollTop;
+
+        readerShell.scrollTo({
+            top: top,
+            behavior: "auto" // change to "smooth" if desired
+        });
+    }
+});
+

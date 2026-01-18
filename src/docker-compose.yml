@@ -1,4 +1,4 @@
-﻿services:
+services:
     kamiyomu.web:
       image: ${DOCKER_REGISTRY-}kamiyomuweb
       build:
@@ -6,7 +6,7 @@
         dockerfile: KamiYomu.Web/Dockerfile
       volumes:
         - ./AppData/manga:/manga
-        - kamiyomu_database:/db 
+        - ./AppData/db:/db 
         - ./AppData/agents:/agents 
         - kamiyomu_logs:/logs 
       healthcheck:

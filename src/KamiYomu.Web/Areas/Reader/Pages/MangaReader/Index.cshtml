@@ -2,7 +2,7 @@
 @using KamiYomu.Web.Areas.Reader.Pages.MangaReader
 @model IndexModel
 
-<div id="readerShell" class="reader-shell d-flex flex-column vh-100 overflow-hidden">
+<div id="readerShell" class="reader-shell d-flex flex-column vh-100 overflow-hidden" >
 
     <div class="main-viewer d-flex flex-column flex-grow-1 overflow-hidden" id="mainViewer">
 
@@ -21,10 +21,25 @@
 
         <partial name="Partials/_ReaderHeader" model="Model" />
 
-        <div id="readerContainer" class="webtoon-mode flex-grow-1 overflow-auto bg-black">
+        <div id="readerContainer" class="webtoon-mode flex-grow-1 overflow-auto bg-black" data-last-page="@Model.LastReadPage">
             @for (int i = 0; i < Model.PageUrls.Count; i++)
             {
-                <div class="manga-page-wrapper" data-page-index="@(i + 1)">
+                int pageNumber = i + 1;
+                bool isLastPage = (i == Model.PageUrls.Count - 1);
+
+                <div class="manga-page-wrapper" 
+                     id="manga-page-@(pageNumber)"
+                     data-page-index="@(pageNumber)"
+                     hx-post="@Url.Page("/MangaReader/Index", "PageViewed", 
+                     new { 
+                            Area = "Reader",
+                            ChapterId = Model.ChapterId,
+                            LibraryId = Model.LibraryId,
+                            IsLastPage = isLastPage,
+                            PageNumber = pageNumber
+                     })"
+                     hx-trigger="page-passed"
+                     hx-swap="none">
                     <img src="@Url.Page("/MangaReader/Index", "Image", new { area = "Reader", id = Model.ChapterId, fileName = Model.PageUrls[i] })"
                          class="reader-img"
                          loading="lazy"
@@ -40,4 +55,15 @@
 
 @section Scripts {
     <script src="~/js/reader.js" asp-append-version="true"></script>
+
+    <script>
+    document.body.addEventListener("htmx:configRequest", function (event) {
+        const token = document.querySelector('meta[name="csrf-token"]')?.content;
+        if (token) {
+            event.detail.headers['RequestVerificationToken'] = token;
+        }
+    });
+
+</script>
+
 }

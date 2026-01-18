@@ -1,8 +1,10 @@
+using KamiYomu.Web.Areas.Reader.Models;
+
 using LiteDB;
 
-namespace KamiYomu.Web.Infrastructure.Contexts;
+namespace KamiYomu.Web.Areas.Reader.Data;
 
-public class ImageDbContext(string fileName, bool isReadOnly = false) : IDisposable
+public class ReadingDbContext(string fileName, bool isReadOnly) : IDisposable
 {
     private bool _disposed = false;
     public LiteDatabase Raw => new(new ConnectionString
@@ -12,7 +14,7 @@ public class ImageDbContext(string fileName, bool isReadOnly = false) : IDisposa
         ReadOnly = isReadOnly
     });
 
-    public ILiteStorage<Uri> CoverImageFileStorage => Raw.GetStorage<Uri>("_cover_image_file_store", "_cover_images");
+    public ILiteCollection<ChapterProgress> ChapterProgress => Raw.GetCollection<ChapterProgress>("chapter_progress");
 
     public void Dispose()
     {
@@ -34,7 +36,7 @@ public class ImageDbContext(string fileName, bool isReadOnly = false) : IDisposa
         _disposed = true;
     }
 
-    ~ImageDbContext()
+    ~ReadingDbContext()
     {
         Dispose(false);
     }
