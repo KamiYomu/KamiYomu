@@ -240,9 +240,6 @@
   <data name="WelcomeToKamiYomu" xml:space="preserve">
     <value>Bienvenido a KamiYomu</value>
   </data>
-  <data name="WelcomeToKamiYomuDescription" xml:space="preserve">
-    <value>Un rastreador de manga totalmente autohospedado. Sin servidores externos ni seguimiento: su colección permanece completamente bajo su control.</value>
-  </data>
   <data name="ConfirmDelete" xml:space="preserve">
     <value>Confirmar eliminación</value>
   </data>
@@ -985,11 +982,22 @@ para que la configuración &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire cont
   <data name="Next" xml:space="preserve">
     <value>Próximo</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="UnknownAuthor" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="UnknownAuthor" xml:space="preserve">
+    <value>Autor desconocido</value>
   </data>
-  <data name="By" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="By" xml:space="preserve">
+    <value>Por</value>
+  </data>
+  <data name="ContinueReading" xml:space="preserve">
+    <value>Continuar leyendo</value>
+  </data>
+  <data name="StartReading" xml:space="preserve">
+    <value>Empezar a leer</value>
+  </data>
+  <data name="NextChapter" xml:space="preserve">
+    <value>Siguiente capítulo</value>
+  </data>
+  <data name="PreviousChapter" xml:space="preserve">
+    <value>Capítulo anterior</value>
   </data>
 </root>

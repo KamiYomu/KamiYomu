@@ -241,7 +241,8 @@
     <value>Welcome to KamiYomu</value>
   </data>
   <data name="WelcomeToKamiYomuDescription" xml:space="preserve">
-    <value>A fully self-hosted manga crawler. No external servers, no tracking — your collection stays entirely under your control.</value>
+    <value>A fully self-hosted manga reader and downloader.
+No external servers. No tracking. Your collection stays entirely under your control.</value>
   </data>
   <data name="ConfirmDelete" xml:space="preserve">
     <value>Confirm Delete</value>
@@ -990,5 +991,17 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   </data>
   <data name="By" xml:space="preserve">
     <value>By</value>
+  </data>
+  <data name="ContinueReading" xml:space="preserve">
+    <value>Continue Reading</value>
+  </data>
+  <data name="StartReading" xml:space="preserve">
+    <value>Start Reading</value>
+  </data>
+  <data name="NextChapter" xml:space="preserve">
+    <value>Next Chapter</value>
+  </data>
+  <data name="PreviousChapter" xml:space="preserve">
+    <value>Previous Chaper</value>
   </data>
 </root>

@@ -86,9 +86,54 @@
         <hr class="my-4" />
 
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-0">@I18n.Chapters</h3>
-            <span class="text-muted">Latest: @Model.Manga.LatestChapterAvailable</span>
+            <h3 class="mb-0 d-flex align-items-baseline gap-2">
+                <span>@I18n.Chapters</span>
+            </h3>
+
+            <div class="d-flex align-items-center gap-2">
+                @if (Model.CurrentReadingChapter != null)
+                {
+                    <a asp-area="Reader"
+                       asp-page="/MangaReader/Index"
+                       asp-route-chapterId="@Model.CurrentReadingChapter.Id"
+                       asp-route-libraryId="@Model.Library.Id"
+                       class="btn btn-primary btn-sm d-inline-flex align-items-center gap-2"
+                       aria-label="@I18n.ContinueReading">
+
+                        <i class="bi bi-play-fill fs-5"></i>
+
+                        <span class="fw-semibold">
+                            @I18n.ContinueReading
+                        </span>
+
+                        <span class="badge bg-light text-primary">
+                            @I18n.Chapter @Model.CurrentReadingChapter.Chapter.Number
+                        </span>
+                    </a>
+                }
+                else if(Model.FirstChapterAvailable != null)
+                {
+                     <a asp-area="Reader"
+                        asp-page="/MangaReader/Index"
+                        asp-route-chapterId="@Model.FirstChapterAvailable.Id"
+                        asp-route-libraryId="@Model.Library.Id"
+                        class="btn btn-primary btn-sm d-inline-flex align-items-center gap-2"
+                        aria-label="@I18n.StartReading">
+
+                        <i class="bi bi-play-fill fs-5"></i>
+
+                        <span class="fw-semibold">
+                            @I18n.StartReading
+                        </span>
+
+                        <span class="badge bg-light text-primary">
+                            @I18n.Chapter @Model.FirstChapterAvailable.Chapter.Number
+                        </span>
+                    </a>
+                }
+            </div>
         </div>
+
 
         <div class="list-group list-group-flush shadow-sm border rounded">
             @foreach (var ch in Model.Chapters.OrderByDescending(c => c.Chapter.Number))

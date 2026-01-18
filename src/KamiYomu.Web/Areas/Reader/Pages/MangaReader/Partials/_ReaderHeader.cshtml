@@ -1,6 +1,6 @@
 @using KamiYomu.Web.Areas.Reader.Pages.MangaReader
 @model IndexModel
-<header class="reader-header bg-dark text-white p-2 border-bottom border-secondary d-flex justify-content-between align-items-center">
+<header class="reader-header text-white p-2 border-bottom border-secondary d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-2">
         <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#readerSettings">
             <i class="bi bi-gear-fill"></i>
@@ -13,7 +13,66 @@
         </a>
     </div>
 
-    <span class="small text-truncate px-3 fw-semibold">@Model.ChapterDownloaded.Chapter.Title</span>
+    <div class="d-flex align-items-center justify-content-between gap-3 small px-3">
+
+        <!-- Previous -->
+        @if (Model.PreviousChapterId != null)
+        {
+            <a asp-area="Reader"
+               asp-page="/MangaReader/Index"
+               asp-route-chapterId="@Model.PreviousChapterId"
+               asp-route-libraryId="@Model.LibraryId"
+               class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-2"
+               aria-label="@I18n.PreviousChapter">
+
+                <i class="bi bi-chevron-left"></i>
+                <span>@I18n.PreviousChapter</span>
+            </a>
+        }
+        else
+        {
+            <button class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
+                    disabled
+                    aria-disabled="true">
+                <i class="bi bi-chevron-left"></i>
+                <span>@I18n.PreviousChapter</span>
+            </button>
+        }
+
+        <!-- Chapter title -->
+        <div class="text-truncate text-center flex-grow-1 fw-semibold">
+            @I18n.Chapter @Model.ChapterDownloaded.Chapter.Number:
+            <span class="fw-normal">
+                @Model.ChapterDownloaded.Chapter.Title
+            </span>
+        </div>
+
+        <!-- Next -->
+        @if (Model.NextChapterId != null)
+        {
+            <a asp-area="Reader"
+               asp-page="/MangaReader/Index"
+               asp-route-chapterId="@Model.NextChapterId"
+               asp-route-libraryId="@Model.LibraryId"
+               class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-2"
+               aria-label="@I18n.NextChapter">
+
+                <span>@I18n.NextChapter</span>
+                <i class="bi bi-chevron-right"></i>
+            </a>
+        }
+        else
+        {
+            <button class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
+                    disabled
+                    aria-disabled="true">
+                <span>@I18n.NextChapter</span>
+                <i class="bi bi-chevron-right"></i>
+            </button>
+        }
+
+    </div>
+
 
     <div class="d-flex gap-2">
         <button class="btn btn-sm btn-outline-info" onclick="toggleFullscreen()">

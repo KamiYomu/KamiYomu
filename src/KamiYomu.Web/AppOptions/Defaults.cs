@@ -13,6 +13,7 @@ public partial class Defaults
     {
         public const string ReadOnlyDbContext = nameof(ReadOnlyDbContext);
         public const string ReadOnlyImageDbContext = nameof(ReadOnlyImageDbContext);
+        public const string ReadOnlyReadingDbContext = nameof(ReadOnlyReadingDbContext);
 
         private static readonly Lazy<IServiceProvider?> _lazyProvider = new(() => _providerFactory(), true);
 

@@ -3,6 +3,7 @@ using System.IO.Compression;
 using KamiYomu.Web.Areas.Reader.Data;
 using KamiYomu.Web.Areas.Reader.Models;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.Definitions;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 
@@ -26,18 +27,22 @@ public class IndexModel(
 
     public int LastReadPage { get; private set; }
 
+    public Guid? PreviousChapterId { get; private set; }
+    public Guid? NextChapterId { get; private set; }
+
     public void OnGet(Guid libraryId, Guid chapterId)
     {
         LibraryId = libraryId;
-        Library library = dbContext.Libraries.Query()
-            .Where(x => x.Id == LibraryId)
-            .FirstOrDefault();
+        ChapterId = chapterId;
+
+        Library library = dbContext.Libraries
+                                   .Query()
+                                   .Where(x => x.Id == LibraryId)
+                                   .FirstOrDefault();
 
         using LibraryDbContext libDb = library.GetReadOnlyDbContext();
 
-        ChapterId = chapterId;
-
-        ChapterDownloaded = libDb.ChapterDownloadRecords.FindOne(p => p.Id == ChapterId);
+        ChapterDownloaded = libDb.ChapterDownloadRecords.Query().Where(p => p.Id == ChapterId).FirstOrDefault();
 
         string cbzFilePath = library.GetCbzFilePath(ChapterDownloaded.Chapter);
 
@@ -48,18 +53,33 @@ public class IndexModel(
 
         using ZipArchive archive = ZipFile.OpenRead(cbzFilePath);
 
-        PageUrls = [.. archive.Entries
-            .Where(e => e.FullName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                        e.FullName.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-                        e.FullName.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
-            .Where(p => !p.FullName.EndsWith("cover" + Path.GetExtension(p.FullName)))
-            .OrderBy(e => e.FullName)
-            .Select(e => e.FullName)];
+        PageUrls = [..
+                archive.Entries
+                       .Where(e => e.FullName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                                   e.FullName.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                                   e.FullName.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
+                       .Where(p => !p.FullName.EndsWith("cover" + Path.GetExtension(p.FullName)))
+                       .OrderBy(e => e.FullName)
+                       .Select(e => e.FullName)
+                       ];
 
 
-        ChapterProgress progress = readingDbContext.ChapterProgress.Query().Where(p => p.LibraryId == libraryId && p.ChapterId == chapterId).FirstOrDefault();
+        ChapterProgress progress = readingDbContext.ChapterProgress
+                                                   .Query()
+                                                   .Where(p => p.LibraryId == libraryId &&
+                                                               p.ChapterId == chapterId)
+                                                   .FirstOrDefault();
 
         LastReadPage = progress?.LastPageRead ?? 0;
+
+        ChapterDownloadRecord previous = libDb.ChapterDownloadRecords.Query()
+                                                        .Where(p => p.Chapter.Number == ChapterDownloaded.Chapter.Number - 1)
+                                                        .FirstOrDefault();
+        ChapterDownloadRecord next = libDb.ChapterDownloadRecords.Query()
+                                                    .Where(p => p.Chapter.Number == ChapterDownloaded.Chapter.Number + 1)
+                                                    .FirstOrDefault();
+        PreviousChapterId = previous?.DownloadStatus == DownloadStatus.Completed ? previous.Id : null;
+        NextChapterId = next?.DownloadStatus == DownloadStatus.Completed ? next.Id : null;
     }
 
     public IActionResult OnGetImage(Guid chapterId, Guid libraryId, string fileName)

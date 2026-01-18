@@ -556,6 +556,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Continue Reading.
+        /// </summary>
+        public static string ContinueReading {
+            get {
+                return ResourceManager.GetString("ContinueReading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crawler.
         /// </summary>
         public static string Crawler {
@@ -1483,6 +1492,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Next Chapter.
+        /// </summary>
+        public static string NextChapter {
+            get {
+                return ResourceManager.GetString("NextChapter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Add-ons Available.
         /// </summary>
         public static string NoAddonsAvailable {
@@ -1821,6 +1839,15 @@ namespace KamiYomu.Web.Resources {
         public static string Previous {
             get {
                 return ResourceManager.GetString("Previous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous Chaper.
+        /// </summary>
+        public static string PreviousChapter {
+            get {
+                return ResourceManager.GetString("PreviousChapter", resourceCulture);
             }
         }
         
@@ -2240,6 +2267,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start Reading.
+        /// </summary>
+        public static string StartReading {
+            get {
+                return ResourceManager.GetString("StartReading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Status.
         /// </summary>
         public static string Status {
@@ -2591,7 +2627,8 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A fully self-hosted manga crawler. No external servers, no tracking — your collection stays entirely under your control..
+        ///   Looks up a localized string similar to A fully self-hosted manga reader and downloader.
+        ///No external servers. No tracking. Your collection stays entirely under your control..
         /// </summary>
         public static string WelcomeToKamiYomuDescription {
             get {

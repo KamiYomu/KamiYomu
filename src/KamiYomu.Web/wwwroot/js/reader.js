@@ -44,44 +44,99 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 150);
     }
 
-    // 2. Initialize Grab-to-Scroll Logic
     if (container) {
-        container.addEventListener('mousedown', (e) => {
-            if (e.button !== 0) return; // Only left click
-            isDown = true;
-            container.classList.add('grabbing');
-            startX = e.pageX - container.offsetLeft;
-            startY = e.pageY - container.offsetTop;
-            scrollLeft = container.scrollLeft;
-            scrollTop = container.scrollTop;
-        });
-
-        container.addEventListener('mouseleave', () => {
-            isDown = false;
-            container.classList.remove('grabbing');
-        });
-
-        container.addEventListener('mouseup', () => {
-            isDown = false;
-            container.classList.remove('grabbing');
-        });
-
-        container.addEventListener('mousemove', (e) => {
-            if (!isDown) return;
-            e.preventDefault();
-            const x = e.pageX - container.offsetLeft;
-            const y = e.pageY - container.offsetTop;
-            const walkX = (x - startX) * 2;
-            const walkY = (y - startY) * 2;
-            container.scrollLeft = scrollLeft - walkX;
-            container.scrollTop = scrollTop - walkY;
-        });
+        initGrabToScroll(container);
     }
 
-    // 3. Start watching page positions
     initScrollObserver();
+
+    initAtScrollPosition();
+
+    document.addEventListener('fullscreenchange', handleFullscreenUI);
 });
 
+function initGrabToScroll(container) {
+    container.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return; // Only left click
+        isDown = true;
+        container.classList.add('grabbing');
+        startX = e.pageX - container.offsetLeft;
+        startY = e.pageY - container.offsetTop;
+        scrollLeft = container.scrollLeft;
+        scrollTop = container.scrollTop;
+    });
+
+    container.addEventListener('mouseleave', () => {
+        isDown = false;
+        container.classList.remove('grabbing');
+    });
+
+    container.addEventListener('mouseup', () => {
+        isDown = false;
+        container.classList.remove('grabbing');
+    });
+
+    container.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - container.offsetLeft;
+        const y = e.pageY - container.offsetTop;
+        const walkX = (x - startX) * 2;
+        const walkY = (y - startY) * 2;
+        container.scrollLeft = scrollLeft - walkX;
+        container.scrollTop = scrollTop - walkY;
+    });
+}
+
+
+function initAtScrollPosition() {
+    const readerShell = document.getElementById("readerContainer");
+    if (!readerShell) return;
+
+    const page = readerShell.dataset.lastPage;
+    if (!page) return;
+
+    const target = document.getElementById(`manga-page-${page}`);
+    if (!target) return;
+
+    const images = readerShell.querySelectorAll("img");
+
+    // No images? Scroll immediately
+    if (images.length === 0) {
+        scrollToTarget();
+        return;
+    }
+
+    let loaded = 0;
+
+    function onImageDone() {
+        loaded++;
+        if (loaded === images.length) {
+            scrollToTarget();
+        }
+    }
+
+    images.forEach(img => {
+        if (img.complete) {
+            onImageDone();
+        } else {
+            img.addEventListener("load", onImageDone, { once: true });
+            img.addEventListener("error", onImageDone, { once: true });
+        }
+    });
+
+    function scrollToTarget() {
+        const top =
+            target.offsetTop -
+            readerShell.offsetTop +
+            readerShell.scrollTop;
+
+        readerShell.scrollTo({
+            top: top,
+            behavior: "auto" // change to "smooth" if desired
+        });
+    }
+}
 /**
  * Intersection Observer: Updates the Page Number based on scroll position
  */
@@ -176,8 +231,6 @@ function toggleFullscreen() {
     }
 }
 
-document.addEventListener('fullscreenchange', handleFullscreenUI);
-
 function handleFullscreenUI() {
     const fsBtn = document.querySelector('.bi-fullscreen') || document.querySelector('.bi-fullscreen-exit');
     if (!fsBtn) return;
@@ -231,54 +284,9 @@ function scrollToPage(index) {
     }
 }
 
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    const readerShell = document.getElementById("readerContainer");
-    if (!readerShell) return;
-
-    const page = readerShell.dataset.lastPage;
-    if (!page) return;
-
-    const target = document.getElementById(`manga-page-${page}`);
-    if (!target) return;
-
-    const images = readerShell.querySelectorAll("img");
-
-    // No images? Scroll immediately
-    if (images.length === 0) {
-        scrollToTarget();
-        return;
-    }
-
-    let loaded = 0;
-
-    function onImageDone() {
-        loaded++;
-        if (loaded === images.length) {
-            scrollToTarget();
-        }
-    }
-
-    images.forEach(img => {
-        if (img.complete) {
-            onImageDone();
-        } else {
-            img.addEventListener("load", onImageDone, { once: true });
-            img.addEventListener("error", onImageDone, { once: true });
-        }
+function scrollToTop() {
+    document.getElementById("readerContainer").scrollTo(0, 0);
+    document.querySelectorAll("#readerContainer .manga-page-wrapper").forEach(el => {
+        el.dataset.fired = "false";
     });
-
-    function scrollToTarget() {
-        const top =
-            target.offsetTop -
-            readerShell.offsetTop +
-            readerShell.scrollTop;
-
-        readerShell.scrollTo({
-            top: top,
-            behavior: "auto" // change to "smooth" if desired
-        });
-    }
-});
-
+}

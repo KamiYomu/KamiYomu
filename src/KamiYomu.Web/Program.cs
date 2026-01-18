@@ -94,7 +94,9 @@ builder.Services.AddScoped(_ => new DbContext(builder.Configuration.GetConnectio
 builder.Services.AddScoped(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb"), false));
 builder.Services.AddScoped(_ => new ReadingDbContext(builder.Configuration.GetConnectionString("ReadingDb"), false));
 builder.Services.AddKeyedScoped(ServiceLocator.ReadOnlyDbContext, (sp, _) => new DbContext(builder.Configuration.GetConnectionString("AgentDb"), true));
-builder.Services.AddKeyedScoped(ServiceLocator.ReadOnlyImageDbContext, (sp, _) => new DbContext(builder.Configuration.GetConnectionString("ImageDb"), true));
+builder.Services.AddKeyedScoped(ServiceLocator.ReadOnlyImageDbContext, (sp, _) => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb"), true));
+builder.Services.AddKeyedScoped(ServiceLocator.ReadOnlyReadingDbContext, (sp, _) => new ReadingDbContext(builder.Configuration.GetConnectionString("ReadingDb"), true));
+
 
 // Repositories
 builder.Services.AddTransient<ICrawlerAgentRepository, CrawlerAgentRepository>();

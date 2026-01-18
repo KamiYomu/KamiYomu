@@ -56,14 +56,13 @@
 @section Scripts {
     <script src="~/js/reader.js" asp-append-version="true"></script>
 
-    <script>
+<script>
     document.body.addEventListener("htmx:configRequest", function (event) {
         const token = document.querySelector('meta[name="csrf-token"]')?.content;
         if (token) {
             event.detail.headers['RequestVerificationToken'] = token;
         }
     });
-
 </script>
 
 }
