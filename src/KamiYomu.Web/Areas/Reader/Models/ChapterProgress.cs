@@ -6,22 +6,25 @@ public class ChapterProgress
     {
     }
 
-    public ChapterProgress(Guid libraryId, Guid chapterId)
+    public ChapterProgress(Guid libraryId, Guid chapterId, decimal chapterNumber)
     {
         LibraryId = libraryId;
         ChapterId = chapterId;
+        ChapterNumber = chapterNumber;
     }
 
-    public void SetLastPageRead(int lastPageRead)
+    public void SetLastPageRead(int lastPageRead, int totalPages)
     {
         LastPageRead = lastPageRead;
+        TotalPages = totalPages;
         IsCompleted = false;
         LastReadAt = DateTimeOffset.UtcNow;
     }
 
-    public void SetAsCompleted()
+    public void SetAsCompleted(int totalPages)
     {
         LastPageRead = 0;
+        TotalPages = totalPages;
         IsCompleted = true;
         LastReadAt = DateTimeOffset.UtcNow;
     }
@@ -29,7 +32,9 @@ public class ChapterProgress
     public Guid Id { get; private set; }
     public Guid LibraryId { get; private set; }
     public Guid ChapterId { get; private set; }
+    public decimal ChapterNumber { get; private set; }
     public int LastPageRead { get; private set; }
     public DateTimeOffset LastReadAt { get; set; }
     public bool IsCompleted { get; private set; } = false;
+    public int TotalPages { get; private set; }
 }

@@ -20,6 +20,7 @@ public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] Db
 
     public PartialViewResult OnGetSearch(string search)
     {
+        
         List<Library> filtered = dbContext.Libraries.Query()
                                        .Where(p => p.Manga.Title.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
 

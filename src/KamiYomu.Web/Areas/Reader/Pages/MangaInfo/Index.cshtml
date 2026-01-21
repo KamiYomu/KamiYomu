@@ -55,7 +55,7 @@
                     }
                 </p>
             </div>
-            <div  class="d-inline-block">
+            <div class="d-inline-block">
 
                 <partial name="_BadgeMangaDownloadStatus" model="Model.MangaDownloadRecord" />
 
@@ -64,7 +64,7 @@
                     <span class="badge bg-danger">@I18n.Content: 18+ </span>
                 }
             </div>
-            
+
         </div>
 
         @if (Model.Manga.AlternativeTitles?.Any() == true)
@@ -97,6 +97,7 @@
                        asp-page="/MangaReader/Index"
                        asp-route-chapterId="@Model.CurrentReadingChapter.Id"
                        asp-route-libraryId="@Model.Library.Id"
+                       asp-route-returnUrl="@($"{Request.Path}{Request.QueryString}")"
                        class="btn btn-primary btn-sm d-inline-flex align-items-center gap-2"
                        aria-label="@I18n.ContinueReading">
 
@@ -111,14 +112,15 @@
                         </span>
                     </a>
                 }
-                else if(Model.FirstChapterAvailable != null)
+                else if (Model.FirstChapterAvailable != null)
                 {
-                     <a asp-area="Reader"
-                        asp-page="/MangaReader/Index"
-                        asp-route-chapterId="@Model.FirstChapterAvailable.Id"
-                        asp-route-libraryId="@Model.Library.Id"
-                        class="btn btn-primary btn-sm d-inline-flex align-items-center gap-2"
-                        aria-label="@I18n.StartReading">
+                    <a asp-area="Reader"
+                       asp-page="/MangaReader/Index"
+                       asp-route-chapterId="@Model.FirstChapterAvailable.Id"
+                       asp-route-libraryId="@Model.Library.Id"
+                       asp-route-returnUrl="@($"{Request.Path}{Request.QueryString}")"
+                       class="btn btn-primary btn-sm d-inline-flex align-items-center gap-2"
+                       aria-label="@I18n.StartReading">
 
                         <i class="bi bi-play-fill fs-5"></i>
 
@@ -146,6 +148,7 @@
                        asp-page="/MangaReader/Index"
                        asp-route-chapterId="@ch.Id"
                        asp-route-libraryId="@Model.Library.Id"
+                       asp-route-returnUrl="@($"{Request.Path}{Request.QueryString}")"
                        class="list-group-item list-group-item-action py-3 d-flex justify-content-between align-items-center">
                         <div>
                             <span class="fw-bold">Chapter @ch.Chapter.Number</span>

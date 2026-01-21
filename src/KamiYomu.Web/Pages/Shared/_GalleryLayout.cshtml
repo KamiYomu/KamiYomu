@@ -71,6 +71,7 @@
             color: #000 !important;
         }
     </style>
+    @await RenderSectionAsync("Head", required: false)
 </head>
 <body>
     <partial name="_Sprites" />
@@ -78,7 +79,7 @@
     <header class="p-3 border-bottom mb-4">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center gap-3">
-                <a class="navbar-brand d-flex align-items-center fs-5" 
+                <a class="navbar-brand d-flex align-items-center fs-5"
                    asp-area="Reader"
                    asp-page="/MangaGallery/Index">
                     <svg viewBox="0 0 647 232" class="me-2" style="width:40px; height:auto;">
@@ -90,7 +91,7 @@
 
             <div>
                 <a href="@Url.Page("/Index")" class="btn btn-primary btn-sm rounded-pill px-3">
-                    Back to Platform <i class="bi bi-box-arrow-right ms-1"></i>
+                    @I18n.BackToPlatform <i class="bi bi-box-arrow-right ms-1"></i>
                 </a>
             </div>
         </div>
@@ -101,25 +102,51 @@
     </main>
 
     <button class="btn btn-dark theme-switcher-fixed border" onclick="toggleTheme()" id="themeBtn">
-        <i class="bi bi-moon-stars-fill me-1"></i> Mode
+        <i class="bi bi-moon-stars-fill me-1"></i> @I18n.ToggleTheme
     </button>
 
     <script>
+
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+            const storedTheme = getStoredTheme()
+            if (storedTheme) {
+                return storedTheme
+            }
+
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+            if (theme === 'auto') {
+                document.documentElement.setAttribute('data-bs-theme', (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
+            } else {
+                document.documentElement.setAttribute('data-bs-theme', theme)
+            }
+        }
+
+        setTheme(getPreferredTheme());
+
         function toggleTheme() {
             const html = document.documentElement;
             const current = html.getAttribute('data-bs-theme');
             const next = current === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-bs-theme', next);
+            setTheme(next);
 
             // Update button icon/style dynamically
             const btn = document.getElementById('themeBtn');
             if(next === 'light') {
                 btn.className = 'btn btn-light theme-switcher-fixed border';
-                btn.innerHTML = '<i class="bi bi-sun-fill me-1"></i> Light';
+                btn.innerHTML = '<i class="bi bi-sun-fill me-1"></i> @I18n.Light';
             } else {
                 btn.className = 'btn btn-dark theme-switcher-fixed border';
-                btn.innerHTML = '<i class="bi bi-moon-stars-fill me-1"></i> Dark';
+                btn.innerHTML = '<i class="bi bi-moon-stars-fill me-1"></i> @I18n.Dark';
             }
+
+            setStoredTheme(next)
+            setTheme(next)
         }
     </script>
 

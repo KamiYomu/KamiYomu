@@ -4,12 +4,23 @@
 @{
 }
 <div class="row mb-4">
-    <div class="col-md-6">
-        <input type="text" name="search" class="form-control" 
-               placeholder="@I18n.SearchManga"
-               hx-get="/Reader/MangaGallery?handler=Search" 
-               hx-target="#manga-grid" 
-               hx-trigger="keyup changed delay:500ms">
+    <div class="col-md-8 col-lg-6">
+        <div class="input-group">
+            <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-search text-muted"></i>
+            </span>
+
+            <input type="text" name="search" class="form-control border-start-0"
+                   placeholder="@I18n.SearchManga"
+                   hx-get="/Reader/MangaGallery?handler=Search"
+                   hx-target="#manga-grid"
+                   hx-trigger="keyup changed delay:500ms">
+
+            <a asp-area="Reader" asp-page="/History/Index" class="btn btn-outline-primary d-flex align-items-center">
+                <i class="bi bi-clock-history me-2"></i>
+                @I18n.ReadingHistory
+            </a>
+        </div>
     </div>
 </div>
 

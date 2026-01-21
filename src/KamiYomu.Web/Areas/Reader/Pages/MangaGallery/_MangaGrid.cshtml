@@ -9,6 +9,7 @@
         <a asp-area="Reader"
            asp-page="/MangaInfo/Index"
            asp-route-mangaId="@library.Manga.Id"
+           asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")"
            class="card h-100 manga-card text-decoration-none shadow-sm">
             <img src="@library.Manga.CoverUrl.ToInternalImageUrl()" class="card-img-top" alt="@library.Manga.Title">
 

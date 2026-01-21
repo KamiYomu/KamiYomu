@@ -36,7 +36,9 @@
                             ChapterId = Model.ChapterId,
                             LibraryId = Model.LibraryId,
                             IsLastPage = isLastPage,
-                            PageNumber = pageNumber
+                            PageNumber = pageNumber,
+                            ChapterNumber = Model.ChapterDownloaded.Chapter.Number,
+                            TotalPages = Model.TotalPages
                      })"
                      hx-trigger="page-passed"
                      hx-swap="none">

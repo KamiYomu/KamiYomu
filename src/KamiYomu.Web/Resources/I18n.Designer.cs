@@ -313,6 +313,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Back to platform.
+        /// </summary>
+        public static string BackToPlatform {
+            get {
+                return ResourceManager.GetString("BackToPlatform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to KamiYomu BaGet Feed.
         /// </summary>
         public static string BaGetFeed {
@@ -1726,6 +1735,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Page.
+        /// </summary>
+        public static string Page {
+            get {
+                return ResourceManager.GetString("Page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Look for new titles across your selected sources..
         /// </summary>
         public static string PageSubtitleCrawler {
@@ -1903,6 +1921,15 @@ namespace KamiYomu.Web.Resources {
         public static string Property {
             get {
                 return ResourceManager.GetString("Property", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading History.
+        /// </summary>
+        public static string ReadingHistory {
+            get {
+                return ResourceManager.GetString("ReadingHistory", resourceCulture);
             }
         }
         

@@ -29,7 +29,7 @@ public class IndexModel(
 
     public Guid? PreviousChapterId { get; private set; }
     public Guid? NextChapterId { get; private set; }
-
+    public int TotalPages => PageUrls.Count;
     public void OnGet(Guid libraryId, Guid chapterId)
     {
         LibraryId = libraryId;
@@ -115,20 +115,20 @@ public class IndexModel(
         return File(ms, contentType);
     }
 
-    public IActionResult OnPostPageViewed(Guid libraryId, Guid chapterId, int pageNumber, bool isLastPage)
+    public IActionResult OnPostPageViewed(Guid libraryId, Guid chapterId, decimal chapterNumber, int pageNumber, bool isLastPage, int totalPages)
     {
         ChapterProgress chapterProgres = readingDbContext.ChapterProgress
                                                          .Query()
                                                          .Where(p => p.ChapterId == chapterId && p.LibraryId == libraryId)
-                                                         .FirstOrDefault() ?? new(libraryId, chapterId);
+                                                         .FirstOrDefault() ?? new(libraryId, chapterId, chapterNumber);
 
         if (isLastPage)
         {
-            chapterProgres.SetAsCompleted();
+            chapterProgres.SetAsCompleted(totalPages);
         }
         else
         {
-            chapterProgres.SetLastPageRead(pageNumber);
+            chapterProgres.SetLastPageRead(pageNumber, totalPages);
         }
 
         _ = readingDbContext.ChapterProgress.Upsert(chapterProgres);

@@ -1004,4 +1004,13 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="PreviousChapter" xml:space="preserve">
     <value>Previous Chaper</value>
   </data>
+  <data name="BackToPlatform" xml:space="preserve">
+    <value>Back to platform</value>
+  </data>
+  <data name="ReadingHistory" xml:space="preserve">
+    <value>Reading History</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Page</value>
+  </data>
 </root>
