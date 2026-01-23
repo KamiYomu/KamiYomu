@@ -1,4 +1,4 @@
-﻿@using System.Net
+@using System.Net
 <div id="loading-indicator"
      class="d-none position-fixed top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center text-center"
      style="background-color: rgba(255,255,255,0.25); z-index: 2000;">
@@ -27,17 +27,17 @@
     let messageInterval = null;
 
     const messages = [
-        "@(WebUtility.HtmlDecode(I18n.ProcessingCertainCrawlerAgentaRequireMoreTime))",
-        "@(WebUtility.HtmlDecode(I18n.WaitProcessing1)) 💪",
-        "@(WebUtility.HtmlDecode(I18n.WaitProcessing2)) 🤞",
+        "@Html.Raw(I18n.ProcessingCertainCrawlerAgentaRequireMoreTime)",
+        "@Html.Raw(I18n.WaitProcessing1) 💪",
+        "@Html.Raw(I18n.WaitProcessing2) 🤞",
         "Baby shark dodododo 🦈🎶",
         "Mommy shark dodododo 🦈🎶",
         "Daddy shark dodododo 🦈🎶",
         "Grandma shark dodododo 🦈🎶",
         "Grandpa shark dodododo 🦈🎶",
-        "@(WebUtility.HtmlDecode(I18n.WaitProcessing3)) 🐢",
-        "@(WebUtility.HtmlDecode(I18n.WaitProcessing4)) 🎵",
-        "@(WebUtility.HtmlDecode(I18n.WaitProcessing5)) 🌀"
+        "@Html.Raw(I18n.WaitProcessing3) 🐢",
+        "@Html.Raw(I18n.WaitProcessing4) 🎵",
+        "@Html.Raw(I18n.WaitProcessing5) 🌀"
     ];
 
     function showLoading() {
