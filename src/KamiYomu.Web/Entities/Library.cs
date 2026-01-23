@@ -240,6 +240,7 @@ public class Library
         return comicInfo.ToString();
     }
 
+
     public Guid Id { get; private set; }
     public CrawlerAgent CrawlerAgent { get; private set; }
     public Manga Manga { get; private set; }

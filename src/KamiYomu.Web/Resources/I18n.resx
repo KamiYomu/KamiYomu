@@ -241,7 +241,8 @@
     <value>Welcome to KamiYomu</value>
   </data>
   <data name="WelcomeToKamiYomuDescription" xml:space="preserve">
-    <value>A fully self-hosted manga crawler. No external servers, no tracking — your collection stays entirely under your control.</value>
+    <value>A fully self-hosted manga reader and downloader.
+No external servers. No tracking. Your collection stays entirely under your control.</value>
   </data>
   <data name="ConfirmDelete" xml:space="preserve">
     <value>Confirm Delete</value>
@@ -951,5 +952,68 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   </data>
   <data name="PackagesFeed" xml:space="preserve">
     <value>Packages feed</value>
+  </data>
+  <data name="MangaReader" xml:space="preserve">
+    <value>Manga Reader</value>
+  </data>
+  <data name="Zoom" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Width</value>
+  </data>
+  <data name="Fullscreen" xml:space="preserve">
+    <value>Fullscreen</value>
+  </data>
+  <data name="ReadingMode" xml:space="preserve">
+    <value>Reading Mode</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Content</value>
+  </data>
+  <data name="ArtBy" xml:space="preserve">
+    <value>Art by</value>
+  </data>
+  <data name="AlsoKnownAs" xml:space="preserve">
+    <value>Also known as</value>
+  </data>
+  <data name="NotDownloadedYet" xml:space="preserve">
+    <value>Not Downloaded Yet</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="UnknownAuthor" xml:space="preserve">
+    <value>Unknown Author</value>
+  </data>
+  <data name="By" xml:space="preserve">
+    <value>By</value>
+  </data>
+  <data name="ContinueReading" xml:space="preserve">
+    <value>Continue Reading</value>
+  </data>
+  <data name="StartReading" xml:space="preserve">
+    <value>Start Reading</value>
+  </data>
+  <data name="NextChapter" xml:space="preserve">
+    <value>Next Chapter</value>
+  </data>
+  <data name="PreviousChapter" xml:space="preserve">
+    <value>Previous Chaper</value>
+  </data>
+  <data name="BackToPlatform" xml:space="preserve">
+    <value>Back to platform</value>
+  </data>
+  <data name="ReadingHistory" xml:space="preserve">
+    <value>Reading History</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="ViewAllHistory" xml:space="preserve">
+    <value>View All History</value>
   </data>
 </root>

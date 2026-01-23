@@ -240,9 +240,6 @@
   <data name="WelcomeToKamiYomu" xml:space="preserve">
     <value>Bem-vindo ao KamiYomu</value>
   </data>
-  <data name="WelcomeToKamiYomuDescription" xml:space="preserve">
-    <value>Um rastreador de mangá totalmente auto-hospedado. Sem servidores externos, sem rastreamento — sua coleção permanece inteiramente sob seu controle.</value>
-  </data>
   <data name="ConfirmDelete" xml:space="preserve">
     <value>Confirmar exclusão</value>
   </data>
@@ -949,11 +946,87 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   <data name="ExternalReadersExplanation" xml:space="preserve">
     <value>Configure serviços externos para receber atualizações automáticas em downloads de novos capítulos.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="PackagesFeed" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="PackagesFeed" xml:space="preserve">
     <value>Feed de pacotes</value>
+  </data>
+  <data name="MangaReader" xml:space="preserve">
+    <value>Leitor de mangá</value>
+  </data>
+  <data name="Zoom" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Largura</value>
+  </data>
+  <data name="Fullscreen" xml:space="preserve">
+    <value>Tela cheia</value>
+  </data>
+  <data name="ReadingMode" xml:space="preserve">
+    <value>Modo de leitura</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Contente</value>
+  </data>
+  <data name="ArtBy" xml:space="preserve">
+    <value>Arte de</value>
+  </data>
+  <data name="AlsoKnownAs" xml:space="preserve">
+    <value>Também conhecido como</value>
+  </data>
+  <data name="NotDownloadedYet" xml:space="preserve">
+    <value>Ainda não baixado</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Anterior</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Próximo</value>
+  </data>
+  <data name="UnknownAuthor" xml:space="preserve">
+    <value>Autor desconhecido</value>
+  </data>
+  <data name="By" xml:space="preserve">
+    <value>Por</value>
+  </data>
+  <data name="ContinueReading" xml:space="preserve">
+    <value>Continuar lendo</value>
+  </data>
+  <data name="StartReading" xml:space="preserve">
+    <value>Comece a ler</value>
+  </data>
+  <data name="NextChapter" xml:space="preserve">
+    <value>Próximo Capítulo</value>
+  </data>
+  <data name="PreviousChapter" xml:space="preserve">
+    <value>Capítulo Anterior</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="BackToPlatform" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ReadingHistory" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="Page" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ViewAllHistory" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="WelcomeToKamiYomuDescription" xml:space="preserve">
+    <value>Um leitor e downloader de mangá totalmente auto-hospedado.
+Nenhum servidor externo. Sem rastreamento. Sua coleção permanece inteiramente sob seu controle.</value>
+  </data>
+  <data name="BackToPlatform" xml:space="preserve">
+    <value>De volta à plataforma</value>
+  </data>
+  <data name="ReadingHistory" xml:space="preserve">
+    <value>História de leitura</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Página</value>
+  </data>
+  <data name="ViewAllHistory" xml:space="preserve">
+    <value>Ver todo o histórico</value>
   </data>
 </root>

@@ -5,9 +5,16 @@ using LiteDB;
 
 namespace KamiYomu.Web.Infrastructure.Contexts;
 
-public class DbContext(string connectionString) : IDisposable
+public class DbContext(string fileName, bool isReadOnly = false) : IDisposable
 {
     private bool _disposed = false;
+
+    public LiteDatabase Raw => new(new ConnectionString
+    {
+        Filename = fileName,
+        Connection = ConnectionType.Shared,
+        ReadOnly = isReadOnly
+    });
 
     public ILiteCollection<CrawlerAgent> CrawlerAgents => Raw.GetCollection<CrawlerAgent>("agent_crawlers");
     public ILiteCollection<Library> Libraries => Raw.GetCollection<Library>("libraries");
@@ -15,7 +22,6 @@ public class DbContext(string connectionString) : IDisposable
     public ILiteCollection<NugetSource> NugetSources => Raw.GetCollection<NugetSource>("nuget_sources");
     public ILiteStorage<Guid> CrawlerAgentFileStorage => Raw.GetStorage<Guid>("_agent_crawler_file_storage", "_packages");
 
-    public LiteDatabase Raw { get; } = new(connectionString);
     public void Dispose()
     {
         Dispose(true);

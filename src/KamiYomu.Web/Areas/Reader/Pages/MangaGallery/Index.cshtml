@@ -1,0 +1,83 @@
+@page
+@using KamiYomu.Web.Areas.Reader.Pages.MangaGallery
+@model IndexModel
+@{
+}
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="input-group">
+                <span class="input-group-text border-end-0">
+                    <i class="bi bi-search text-muted"></i>
+                </span>
+
+                <input type="text" id="mangaSearch" name="search" class="form-control border-start-0 border-end-0"
+                       placeholder="@I18n.SearchManga"
+                       hx-get="/Reader/MangaGallery?handler=Search"
+                       hx-target="#manga-grid"
+                       hx-trigger="keyup changed delay:500ms">
+
+                <button class="btn btn-primary"
+                        hx-get="/Reader/MangaGallery?handler=Search"
+                        hx-target="#manga-grid"
+                        hx-include="#mangaSearch">
+                    @I18n.Search
+                </button>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                <i class="bi bi-clock-history me-2"></i>
+                <span class="d-none d-sm-block">@I18n.ReadingHistory</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow shadow-sm" style="max-height: 400px; overflow-y: auto; min-width: 300px;">
+                <li>
+                    <a class="dropdown-item fw-bold text-primary" asp-area="Reader" asp-page="/History/Index">
+                        <i class="bi bi-list-ul me-2"></i> @I18n.ViewAllHistory
+                    </a>
+                </li>
+
+                @foreach (var dateGroup in Model.GroupedHistory)
+                {
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <h6 class="dropdown-header d-flex align-items-center">
+                            <i class="bi bi-calendar3 me-2"></i>
+                            @dateGroup.Key.ToLongDateString()
+                        </h6>
+                    </li>
+
+                    @foreach (var entry in dateGroup)
+                    {
+                        <li>
+                            <a class="dropdown-item py-2"
+                               asp-area="Reader"
+                               asp-page="/MangaReader/Index"
+                               asp-route-chapterId="@entry.ChapterProgress.ChapterId"
+                               asp-route-libraryId="@entry.Library.Id"
+                               asp-route-returnUrl="@($"{Request.Path}{Request.QueryString}")">
+
+                                <div class="d-flex flex-column">
+                                    <span class="text-wrap" style="max-width: 250px;">
+                                        @entry.Library.Manga.Title
+                                    </span>
+                                    <small class="text-muted">
+                                        @I18n.Chapter @entry.ChapterProgress.ChapterNumber
+                                    </small>
+                                </div>
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-4" id="manga-grid">
+    <partial name="_MangaGrid" model="Model.Libraries" />
+</div>

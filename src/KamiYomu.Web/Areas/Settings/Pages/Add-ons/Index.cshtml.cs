@@ -1,5 +1,6 @@
 using System.IO.Compression;
 
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Entities.Addons;
@@ -9,10 +10,12 @@ using KamiYomu.Web.Infrastructure.Services.Interfaces;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Areas.Settings.Pages.CommunityCrawlers;
 
 public class IndexModel(ILogger<IndexModel> logger,
+                        IOptions<StartupOptions> startupOptions,
                         DbContext dbContext,
                         INugetService nugetService,
                         INotificationService notificationService) : PageModel
@@ -75,7 +78,7 @@ public class IndexModel(ILogger<IndexModel> logger,
         {
             UserPreference preferences = dbContext.UserPreferences.Query().FirstOrDefault();
             bool familySafeMode = preferences?.FamilySafeMode ?? true;
-            string searchTerm = string.IsNullOrWhiteSpace(SearchBarViewModel.Search) ? "KamiYomu" : SearchBarViewModel.Search;
+            string searchTerm = string.IsNullOrWhiteSpace(SearchBarViewModel.Search) ? startupOptions.Value.DefaultSearchTerm : SearchBarViewModel.Search;
             IEnumerable<NugetPackageInfo> packages = await nugetService.SearchPackagesAsync(SearchBarViewModel.SourceId, searchTerm, SearchBarViewModel.IncludePrerelease, cancellationToken);
             packages = packages.Where(p => !familySafeMode || !p.IsNsfw()).OrderBy(p => p.Id).ThenByDescending(p => p.Version);
             PackageListViewModel = new PackageListViewModel
@@ -121,7 +124,7 @@ public class IndexModel(ILogger<IndexModel> logger,
             Stream[] streams = await nugetService.OnGetDownloadAsync(sourceId, packageId, packageVersion, cancellationToken);
 
             Guid tempUploadId = Guid.NewGuid();
-            string downloadDir = Path.Combine(Path.GetTempPath(), AppOptions.Defaults.Worker.TempDirName, tempUploadId.ToString());
+            string downloadDir = Path.Combine(Path.GetTempPath(), Defaults.Worker.TempDirName, tempUploadId.ToString());
             _ = Directory.CreateDirectory(downloadDir);
 
             string packageFileName = $"{packageId}.{packageVersion}.nupkg";

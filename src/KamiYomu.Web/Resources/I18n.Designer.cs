@@ -205,6 +205,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Also known as.
+        /// </summary>
+        public static string AlsoKnownAs {
+            get {
+                return ResourceManager.GetString("AlsoKnownAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to API Key.
         /// </summary>
         public static string APIKey {
@@ -237,6 +246,15 @@ namespace KamiYomu.Web.Resources {
         public static string AreYouCertainYouWantPermanentlyDeleteThisRecord {
             get {
                 return ResourceManager.GetString("AreYouCertainYouWantPermanentlyDeleteThisRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Art by.
+        /// </summary>
+        public static string ArtBy {
+            get {
+                return ResourceManager.GetString("ArtBy", resourceCulture);
             }
         }
         
@@ -295,11 +313,29 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Back to platform.
+        /// </summary>
+        public static string BackToPlatform {
+            get {
+                return ResourceManager.GetString("BackToPlatform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to KamiYomu BaGet Feed.
         /// </summary>
         public static string BaGetFeed {
             get {
                 return ResourceManager.GetString("BaGetFeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By.
+        /// </summary>
+        public static string By {
+            get {
+                return ResourceManager.GetString("By", resourceCulture);
             }
         }
         
@@ -511,11 +547,29 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Content.
+        /// </summary>
+        public static string Content {
+            get {
+                return ResourceManager.GetString("Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Content Rating.
         /// </summary>
         public static string ContentRating {
             get {
                 return ResourceManager.GetString("ContentRating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Continue Reading.
+        /// </summary>
+        public static string ContinueReading {
+            get {
+                return ResourceManager.GetString("ContinueReading", resourceCulture);
             }
         }
         
@@ -997,6 +1051,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fullscreen.
+        /// </summary>
+        public static string Fullscreen {
+            get {
+                return ResourceManager.GetString("Fullscreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open your Gotify instance in a browser..
         /// </summary>
         public static string GotifyTutorialApiKey01 {
@@ -1330,6 +1393,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Manga Reader.
+        /// </summary>
+        public static string MangaReader {
+            get {
+                return ResourceManager.GetString("MangaReader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mangás.
         /// </summary>
         public static string Mangas {
@@ -1420,6 +1492,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        public static string Next {
+            get {
+                return ResourceManager.GetString("Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next Chapter.
+        /// </summary>
+        public static string NextChapter {
+            get {
+                return ResourceManager.GetString("NextChapter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Add-ons Available.
         /// </summary>
         public static string NoAddonsAvailable {
@@ -1470,6 +1560,15 @@ namespace KamiYomu.Web.Resources {
         public static string NotCompatible {
             get {
                 return ResourceManager.GetString("NotCompatible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Downloaded Yet.
+        /// </summary>
+        public static string NotDownloadedYet {
+            get {
+                return ResourceManager.GetString("NotDownloadedYet", resourceCulture);
             }
         }
         
@@ -1636,6 +1735,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Page.
+        /// </summary>
+        public static string Page {
+            get {
+                return ResourceManager.GetString("Page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Look for new titles across your selected sources..
         /// </summary>
         public static string PageSubtitleCrawler {
@@ -1744,6 +1852,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Previous.
+        /// </summary>
+        public static string Previous {
+            get {
+                return ResourceManager.GetString("Previous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous Chaper.
+        /// </summary>
+        public static string PreviousChapter {
+            get {
+                return ResourceManager.GetString("PreviousChapter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Processing.
         /// </summary>
         public static string Processing {
@@ -1795,6 +1921,24 @@ namespace KamiYomu.Web.Resources {
         public static string Property {
             get {
                 return ResourceManager.GetString("Property", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading History.
+        /// </summary>
+        public static string ReadingHistory {
+            get {
+                return ResourceManager.GetString("ReadingHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading Mode.
+        /// </summary>
+        public static string ReadingMode {
+            get {
+                return ResourceManager.GetString("ReadingMode", resourceCulture);
             }
         }
         
@@ -2150,6 +2294,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start Reading.
+        /// </summary>
+        public static string StartReading {
+            get {
+                return ResourceManager.GetString("StartReading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Status.
         /// </summary>
         public static string Status {
@@ -2303,6 +2456,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unknown Author.
+        /// </summary>
+        public static string UnknownAuthor {
+            get {
+                return ResourceManager.GetString("UnknownAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Update Available.
         /// </summary>
         public static string UpdateAvailable {
@@ -2380,6 +2542,15 @@ namespace KamiYomu.Web.Resources {
         public static string Version {
             get {
                 return ResourceManager.GetString("Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View All History.
+        /// </summary>
+        public static string ViewAllHistory {
+            get {
+                return ResourceManager.GetString("ViewAllHistory", resourceCulture);
             }
         }
         
@@ -2492,11 +2663,21 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A fully self-hosted manga crawler. No external servers, no tracking — your collection stays entirely under your control..
+        ///   Looks up a localized string similar to A fully self-hosted manga reader and downloader.
+        ///No external servers. No tracking. Your collection stays entirely under your control..
         /// </summary>
         public static string WelcomeToKamiYomuDescription {
             get {
                 return ResourceManager.GetString("WelcomeToKamiYomuDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Width.
+        /// </summary>
+        public static string Width {
+            get {
+                return ResourceManager.GetString("Width", resourceCulture);
             }
         }
         
@@ -2560,6 +2741,15 @@ namespace KamiYomu.Web.Resources {
         public static string YouStartedFollowingThisTitle {
             get {
                 return ResourceManager.GetString("YouStartedFollowingThisTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom.
+        /// </summary>
+        public static string Zoom {
+            get {
+                return ResourceManager.GetString("Zoom", resourceCulture);
             }
         }
     }

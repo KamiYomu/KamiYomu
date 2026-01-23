@@ -1,0 +1,162 @@
+@using System.Globalization
+@using Microsoft.AspNetCore.Localization
+@using KamiYomu.Web.Infrastructure.Services.Interfaces
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+
+@{
+    var culture = HttpContextAccessor.HttpContext?.Features.Get<IRequestCultureFeature>()?.RequestCulture.Culture;
+
+    CultureInfo.CurrentCulture = culture;
+    CultureInfo.CurrentUICulture = culture;
+}
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(HttpContextAccessor.HttpContext).RequestToken" />
+    <title>@(ViewData["Title"] ?? "KamiYomu") | Manga Reader</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
+
+    <style>
+        :root {
+            --brand-color: #7253ed;
+        }
+
+        /* Fixed Theme Switcher at bottom right */
+        .theme-switcher-fixed {
+            position: fixed;
+            bottom: 50px;
+            right: 20px;
+            z-index: 1050;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            padding: 10px 15px;
+        }
+
+        /* Adjustments for the Manga Cards */
+        .manga-card {
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+            .manga-card:hover {
+                transform: translateY(-5px);
+                border-color: var(--brand-color);
+            }
+
+            .manga-card img {
+                aspect-ratio: 2/3;
+                object-fit: cover;
+            }
+
+        .gloria-hallelujah-regular {
+            font-family: "Gloria Hallelujah", cursive;
+        }
+
+        /* Dark/Light mode color overrides for logo text */
+        [data-bs-theme="dark"] .navbar-brand {
+            color: #fff !important;
+        }
+
+        [data-bs-theme="light"] .navbar-brand {
+            color: #000 !important;
+        }
+    </style>
+    @await RenderSectionAsync("Head", required: false)
+</head>
+<body>
+    <partial name="_Sprites" />
+
+    <header class="p-3 border-bottom mb-4">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-3">
+                <a class="navbar-brand d-flex align-items-center fs-5"
+                   asp-area="Reader"
+                   asp-page="/MangaGallery/Index">
+                    <svg viewBox="0 0 647 232" class="me-2" style="width:40px; height:auto;">
+                        <use href="#logo-owl"></use>
+                    </svg>
+                    <span class="gloria-hallelujah-regular fw-bold">KamiYomu</span>
+                </a>
+            </div>
+
+            <div>
+                <a href="@Url.Page("/Index")" class="btn btn-primary btn-sm rounded-pill px-3">
+                    @I18n.BackToPlatform <i class="bi bi-box-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        @RenderBody()
+    </main>
+
+    <button class="btn btn-dark theme-switcher-fixed border" onclick="toggleTheme()" id="themeBtn">
+        <i class="bi bi-moon-stars-fill me-1"></i> @I18n.ToggleTheme
+    </button>
+
+    <script>
+
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+            const storedTheme = getStoredTheme()
+            if (storedTheme) {
+                return storedTheme
+            }
+
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+            if (theme === 'auto') {
+                document.documentElement.setAttribute('data-bs-theme', (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
+            } else {
+                document.documentElement.setAttribute('data-bs-theme', theme)
+            }
+
+            updateThemeText(theme);
+        }
+
+        setTheme(getPreferredTheme());
+
+        function updateThemeText(theme) {
+            const btn = document.getElementById('themeBtn');
+            if(theme === 'light') {
+                btn.className = 'btn btn-light theme-switcher-fixed border opacity-75 opacity-sm-100';
+                btn.innerHTML = '<i class="bi bi-sun-fill me-1"></i> @I18n.Light';
+            } else {
+                btn.className = 'btn btn-dark theme-switcher-fixed border opacity-75 opacity-sm-100';
+                btn.innerHTML = '<i class="bi bi-moon-stars-fill me-1"></i> @I18n.Dark';
+            }
+        }
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-bs-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            setTheme(next);
+
+            // Update button icon/style dynamically
+            updateThemeText(next);
+            setStoredTheme(next)
+            setTheme(next)
+        }
+    </script>
+
+    <partial name="_NotificationToast" />
+    <script src="~/lib/htmx/htmx.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

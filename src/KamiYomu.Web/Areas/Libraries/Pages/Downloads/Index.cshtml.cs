@@ -1,3 +1,4 @@
+using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.Contexts;
@@ -50,7 +51,7 @@ public class IndexModel(
 
         using CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(CrawlerAgentId);
 
-        CrawlerAgents.Core.Catalog.Manga manga = await agentCrawlerRepository.GetMangaAsync(crawlerAgent.Id, MangaId, cancellationToken);
+        Manga manga = await agentCrawlerRepository.GetMangaAsync(crawlerAgent.Id, MangaId, cancellationToken);
 
         string filePathTemplateFormat = string.IsNullOrWhiteSpace(FilePathTemplate) ? specialFolderOptions.Value.FilePathFormat : FilePathTemplate;
         string comicInfoTitleTemplateFormat = string.IsNullOrWhiteSpace(ComicInfoTitleTemplate) ? specialFolderOptions.Value.ComicInfoTitleFormat : ComicInfoTitleTemplate;

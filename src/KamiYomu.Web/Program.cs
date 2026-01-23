@@ -5,6 +5,9 @@ using Hangfire;
 using Hangfire.Storage.SQLite;
 
 using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Areas.Reader.Data;
+using KamiYomu.Web.Areas.Reader.Repositories;
+using KamiYomu.Web.Areas.Reader.Repositories.Interfaces;
 using KamiYomu.Web.Endpoints;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Filters;
@@ -69,6 +72,7 @@ builder.Host.UseSerilog((context, services, configuration) =>
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSignalR();
+builder.Services.Configure<StartupOptions>(builder.Configuration.GetSection("StartupOptions"));
 builder.Services.Configure<BasicAuthOptions>(builder.Configuration.GetSection("BasicAuth"));
 builder.Services.Configure<SpecialFolderOptions>(builder.Configuration.GetSection("SpecialFolders"));
 builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection("Worker"));
@@ -87,13 +91,21 @@ builder.Services.AddResponseCompression(options =>
 builder.Services.AddSingleton<IUserClockManager, UserClockManager>();
 builder.Services.AddSingleton<ILockManager, LockManager>();
 
-builder.Services.AddScoped(_ => new DbContext(builder.Configuration.GetConnectionString("AgentDb")));
 builder.Services.AddScoped<CacheContext>();
-builder.Services.AddScoped(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb")));
+builder.Services.AddScoped(_ => new DbContext(builder.Configuration.GetConnectionString("AgentDb"), false));
+builder.Services.AddScoped(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb"), false));
+builder.Services.AddScoped(_ => new ReadingDbContext(builder.Configuration.GetConnectionString("ReadingDb"), false));
+builder.Services.AddKeyedScoped(ServiceLocator.ReadOnlyDbContext, (sp, _) => new DbContext(builder.Configuration.GetConnectionString("AgentDb"), true));
+builder.Services.AddKeyedScoped(ServiceLocator.ReadOnlyImageDbContext, (sp, _) => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb"), true));
+builder.Services.AddKeyedScoped(ServiceLocator.ReadOnlyReadingDbContext, (sp, _) => new ReadingDbContext(builder.Configuration.GetConnectionString("ReadingDb"), true));
+
 
 // Repositories
 builder.Services.AddTransient<ICrawlerAgentRepository, CrawlerAgentRepository>();
 builder.Services.AddTransient<IHangfireRepository, HangfireRepository>();
+
+builder.Services.AddTransient<IChapterProgressRepository, ChapterProgressRepository>();
+
 
 // Worker jobs
 builder.Services.AddTransient<IChapterDiscoveryJob, ChapterDiscoveryJob>();
@@ -164,7 +176,6 @@ using (IServiceScope appScoped = app.Services.CreateScope())
     SpecialFolderOptions specialFolderOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<SpecialFolderOptions>>().Value;
     StartupOptions startupOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<StartupOptions>>().Value;
     IOptions<RequestLocalizationOptions> localizationOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<RequestLocalizationOptions>>();
-
 
     _ = Directory.CreateDirectory(specialFolderOptions.LogDir);
     _ = Directory.CreateDirectory(specialFolderOptions.DbDir);

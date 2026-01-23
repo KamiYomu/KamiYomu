@@ -17,6 +17,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Areas\Reader\Controllers\**" />
+	  <Content Remove="Areas\Reader\Controllers\**" />
+	  <EmbeddedResource Remove="Areas\Reader\Controllers\**" />
+	  <None Remove="Areas\Reader\Controllers\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.22" />
 		<PackageReference Include="Hangfire.Storage.SQLite" Version="0.4.2" />
 		<PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.2" />

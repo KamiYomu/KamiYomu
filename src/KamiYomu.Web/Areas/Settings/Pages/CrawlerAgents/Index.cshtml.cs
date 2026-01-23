@@ -1,6 +1,8 @@
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Infrastructure.Contexts;
 
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents;
 
