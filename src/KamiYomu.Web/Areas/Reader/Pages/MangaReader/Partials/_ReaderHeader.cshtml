@@ -3,6 +3,10 @@
 
 @{
     var returnUrl = Context.Request.Query["returnUrl"].ToString();
+    if (string.IsNullOrWhiteSpace(returnUrl))
+    {
+        returnUrl = @Url.Page("/MangaInfo/Index", new { area = "Reader", libraryId = Model.LibraryId});
+    }
 }
 <header class="reader-header p-2 border-bottom border-secondary d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-2">
@@ -28,7 +32,7 @@
                aria-label="@I18n.PreviousChapter">
 
                 <i class="bi bi-chevron-left"></i>
-                <span>@I18n.PreviousChapter</span>
+                <span class="d-none d-sm-block">@I18n.PreviousChapter</span>
             </a>
         }
         else
@@ -37,14 +41,14 @@
                     disabled
                     aria-disabled="true">
                 <i class="bi bi-chevron-left"></i>
-                <span>@I18n.PreviousChapter</span>
+                <span class="d-none d-sm-block">@I18n.PreviousChapter</span>
             </button>
         }
 
         <!-- Chapter title -->
         <div class="text-truncate text-center flex-grow-1 fw-semibold">
             @I18n.Chapter @Model.ChapterDownloaded.Chapter.Number:
-            <span class="fw-normal">
+            <span class="fw-normal d-none d-sm-block">
                 @Model.ChapterDownloaded.Chapter.Title
             </span>
         </div>
@@ -59,7 +63,7 @@
                class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-2"
                aria-label="@I18n.NextChapter">
 
-                <span>@I18n.NextChapter</span>
+                <span class="d-none d-sm-block">@I18n.NextChapter</span>
                 <i class="bi bi-chevron-right"></i>
             </a>
         }
@@ -68,7 +72,7 @@
             <button class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
                     disabled
                     aria-disabled="true">
-                <span>@I18n.NextChapter</span>
+                <span class="d-none d-sm-block">@I18n.NextChapter</span>
                 <i class="bi bi-chevron-right"></i>
             </button>
         }

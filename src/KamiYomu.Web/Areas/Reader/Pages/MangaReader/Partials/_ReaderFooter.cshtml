@@ -1,7 +1,7 @@
 @using KamiYomu.Web.Areas.Reader.Pages.MangaReader
 @model IndexModel 
 
-<footer class="reader-footer bg-dark text-white border-top border-secondary">
+<footer class="reader-footer border-top border-secondary">
     <div class="progress rounded-0" style="height: 4px; background-color: rgba(255,255,255,0.1);">
         <div id="readerProgressBar" 
              class="progress-bar bg-primary" 
@@ -11,7 +11,7 @@
 
     <div class="container-fluid py-2 d-flex justify-content-between align-items-center">
         <div class="flex-1">
-            <button class="btn btn-sm btn-outline-light d-flex align-items-center gap-2 px-3" 
+            <button class="btn btn-sm btn-outline-primary d-flex align-items-center gap-2 px-3"
                     onclick="prevPage()" 
                     title="Previous Page (Left Arrow)">
                 <i class="bi bi-arrow-left"></i>
@@ -29,7 +29,7 @@
         </div>
 
         <div class="flex-1 text-end">
-            <button class="btn btn-sm btn-outline-light d-flex align-items-center gap-2 px-3 ms-auto" 
+            <button class="btn btn-sm btn-outline-primary d-flex align-items-center gap-2 px-3 ms-auto" 
                     onclick="nextPage()" 
                     title="Next Page (Right Arrow)">
                 <span class="d-none d-md-inline">@I18n.Next</span>

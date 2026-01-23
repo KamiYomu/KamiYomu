@@ -20,10 +20,10 @@ public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] Db
     public MangaDownloadRecord MangaDownloadRecord { get; set; }
     public ChapterDownloadRecord? FirstChapterAvailable { get; private set; }
     public ChapterDownloadRecord? CurrentReadingChapter { get; set; }
-    public void OnGet(string mangaId)
+    public void OnGet(Guid libraryId)
     {
         Library = dbContext.Libraries.Query()
-                                   .Where(p => p.Manga.Id == mangaId)
+                                   .Where(p => p.Id == libraryId)
                                    .FirstOrDefault();
         Manga = Library.Manga;
 
@@ -31,7 +31,7 @@ public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] Db
 
         Chapters = libDb.ChapterDownloadRecords.Query().OrderBy(p => p.Chapter.Number).ToList();
 
-        MangaDownloadRecord = libDb.MangaDownloadRecords.Query().Where(p => p.Library.Manga.Id == mangaId).FirstOrDefault();
+        MangaDownloadRecord = libDb.MangaDownloadRecords.Query().Where(p => p.Library.Id == libraryId).FirstOrDefault();
 
 
         ChapterProgress chapterProgress = readingDbContext.ChapterProgress

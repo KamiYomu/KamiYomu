@@ -188,7 +188,9 @@ function changeMode(mode) {
     } else {
         container.classList.add('paged-mode');
         container.style.display = 'flex';
-        if (mode === 'rtl') container.classList.add('rtl-mode');
+        if (mode === 'rtl') {
+            container.classList.add('rtl-mode');
+        };
     }
 
     // Re-sync UI and Observer for the new layout

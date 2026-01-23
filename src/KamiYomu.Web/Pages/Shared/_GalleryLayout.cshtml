@@ -34,7 +34,7 @@
         /* Fixed Theme Switcher at bottom right */
         .theme-switcher-fixed {
             position: fixed;
-            bottom: 20px;
+            bottom: 50px;
             right: 20px;
             z-index: 1050;
             border-radius: 50px;
@@ -125,10 +125,22 @@
             } else {
                 document.documentElement.setAttribute('data-bs-theme', theme)
             }
+
+            updateThemeText(theme);
         }
 
         setTheme(getPreferredTheme());
 
+        function updateThemeText(theme) {
+            const btn = document.getElementById('themeBtn');
+            if(theme === 'light') {
+                btn.className = 'btn btn-light theme-switcher-fixed border opacity-75 opacity-sm-100';
+                btn.innerHTML = '<i class="bi bi-sun-fill me-1"></i> @I18n.Light';
+            } else {
+                btn.className = 'btn btn-dark theme-switcher-fixed border opacity-75 opacity-sm-100';
+                btn.innerHTML = '<i class="bi bi-moon-stars-fill me-1"></i> @I18n.Dark';
+            }
+        }
         function toggleTheme() {
             const html = document.documentElement;
             const current = html.getAttribute('data-bs-theme');
@@ -136,15 +148,7 @@
             setTheme(next);
 
             // Update button icon/style dynamically
-            const btn = document.getElementById('themeBtn');
-            if(next === 'light') {
-                btn.className = 'btn btn-light theme-switcher-fixed border';
-                btn.innerHTML = '<i class="bi bi-sun-fill me-1"></i> @I18n.Light';
-            } else {
-                btn.className = 'btn btn-dark theme-switcher-fixed border';
-                btn.innerHTML = '<i class="bi bi-moon-stars-fill me-1"></i> @I18n.Dark';
-            }
-
+            updateThemeText(next);
             setStoredTheme(next)
             setTheme(next)
         }

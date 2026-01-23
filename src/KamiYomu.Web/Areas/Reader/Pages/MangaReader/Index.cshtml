@@ -6,13 +6,13 @@
 
     <div class="main-viewer d-flex flex-column flex-grow-1 overflow-hidden" id="mainViewer">
 
-        <div class="offcanvas offcanvas-start bg-dark text-white"
+        <div class="offcanvas offcanvas-start opacity-75 opacity-sm-100"
              tabindex="-1"
              id="readerSettings"
              data-bs-container="#mainViewer">
             <div class="offcanvas-header border-bottom border-secondary">
                 <h5 class="offcanvas-title">@I18n.Settings</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+                <button type="button" class="btn-close btn-primary" data-bs-dismiss="offcanvas"></button>
             </div>
             <div class="offcanvas-body">
                 <partial name="Partials/_ReaderControls" />
