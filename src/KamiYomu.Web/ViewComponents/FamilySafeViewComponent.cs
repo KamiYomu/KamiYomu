@@ -9,9 +9,7 @@ namespace KamiYomu.Web.ViewComponents;
 
 public class FamilySafeViewComponent(DbContext dbContext, IOptions<StartupOptions> startupOptions) : ViewComponent
 {
-
-
-    public async Task<IViewComponentResult> InvokeAsync(bool hasMobileMode = false)
+    public IViewComponentResult Invoke(bool hasMobileMode = false)
     {
         UserPreference userPreference = dbContext.UserPreferences.FindOne(p => true);
         bool isFamilySafe = userPreference?.FamilySafeMode ?? startupOptions.Value.FamilyMode;
