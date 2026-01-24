@@ -1,38 +1,27 @@
 @using KamiYomu.Web.AppOptions
 @using KamiYomu.Web.Entities
 @using KamiYomu.Web.Infrastructure.Contexts
+@using KamiYomu.Web.ViewComponents
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Options
-@inject DbContext dbContext
-@inject IOptions<StartupOptions> startupOptions;
-@model bool
-@{
-    var userPreference = dbContext.UserPreferences.FindOne(p => true);
-    var isFamilySafe = userPreference?.FamilySafeMode ?? startupOptions.Value.FamilyMode;
 
-    var familySafeModeText = isFamilySafe
-        ? I18n.FamilySafeModeEnableMessage
-        : I18n.FamilySafeModeDisableMessage;
-
-    var buttonClass = isFamilySafe ? "btn btn-outline-success no-hover" : "btn btn-outline-secondary no-hover";
-    var iconClass = isFamilySafe ? "bi-shield-check text-success" : "bi-shield-exclamation text-danger";
-}
+@model FamilySafeViewComponentModel
 
 
 <form method="post" asp-page="/Index" asp-page-handler="FamilySafe" asp-route-returnUrl="@Context.Request.Path" novalidate>
     @Html.AntiForgeryToken()
     <button type="submit"
-            class="btn @buttonClass btn-sm d-flex align-items-center shadow-sm w-100"
+            class="btn @Model.ButtonClass btn-sm d-flex align-items-center shadow-sm w-100"
             style="border-width: 1px;"
             data-bs-toggle="popover"
             data-bs-trigger="hover focus"
             data-bs-placement="top"
-            data-bs-content="@familySafeModeText"
+            data-bs-content="@Model.FamilySafeModeText"
             title="@I18n.FamilySafeMode">
 
-        <i class="@iconClass fs-6 me-auto"></i>
+        <i class="@Model.IconClass fs-6 me-auto"></i>
 
-        <span class="fw-normal flex-grow-1 text-center small pe-4 @(Model ? "d-none d-sm-inline" : "")">
+        <span class="fw-normal flex-grow-1 text-center small pe-4 @(Model.HasMobileMode ? "d-none d-sm-inline" : string.Empty)">
             @I18n.FamilySafeMode
         </span>
     </button>
