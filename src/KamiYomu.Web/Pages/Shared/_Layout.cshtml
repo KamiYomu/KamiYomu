@@ -86,10 +86,10 @@
             </div>
             <main class="col-md-9 ms-sm-auto col-lg-10 flex-grow-1 h-100">
                 @RenderBody()
-                <partial name="_AppVersion" />
-                <partial name="_TimeZoneCheck" />
-                <partial name="_Dialogs" />
-                <partial name="_Loading" />
+                <vc:app-version></vc:app-version>
+                <vc:time-zone-check></vc:time-zone-check>
+                <vc:dialogs></vc:dialogs>
+                <vc:loading></vc:loading>
             </main>
 
         </div>
@@ -100,6 +100,14 @@
     <script src="~/js/color-modes.js" asp-append-version="true"></script>
     <script src="~/lib/htmx/htmx.min.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+            popoverTriggerList.forEach(function (el) {
+                new bootstrap.Popover(el);
+            });
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

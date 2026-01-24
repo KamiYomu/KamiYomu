@@ -125,6 +125,13 @@
                asp-area="Settings" asp-page="/Integrations/Index">
                 <i class="bi bi-puzzle"></i> @I18n.Integrations
             </a>
+            <a class="nav-link px-2 text-secondary"
+               href="https://kamiyomu.com/docs/features/integrations/"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="Open documentation">
+                <i class="bi bi-question-circle"></i>
+            </a>
         </li>
 
         @if (AuthOptions.Value.Enabled)
@@ -165,13 +172,13 @@
     <!-- Bottom buttons -->
     <div class="mt-auto">
         <div class="nav flex-column m-1 mb-2">
-            <partial name="_FamilySafe" />
+            <vc:family-safe></vc:family-safe>
         </div>
         <div class="nav flex-column m-1 mb-2">
-            <partial name="_LanguageSelector" />
+            <vc:language-selector></vc:language-selector>
         </div>
         <div class="nav flex-column m-1 mb-2">
-            <partial name="_ThemeSelector" />
+           <vc:theme-selector></vc:theme-selector>
         </div>
     </div>
 </div>

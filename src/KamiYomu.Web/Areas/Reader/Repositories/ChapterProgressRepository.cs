@@ -15,6 +15,8 @@ public class ChapterProgressRepository([FromKeyedServices(ServiceLocator.ReadOnl
 {
     public IEnumerable<IGrouping<DateTime, ChapterViewModels>> FetchHistory(int offset, int length)
     {
+        UserPreference userPreference = dbContext.UserPreferences.Query().FirstOrDefault();
+
         List<ChapterProgress> chapterProgresses = readingDbContext.ChapterProgress.Query()
             .OrderByDescending(p => p.LastReadAt)
             .Skip(offset)
@@ -23,11 +25,12 @@ public class ChapterProgressRepository([FromKeyedServices(ServiceLocator.ReadOnl
 
         List<Guid> libraryIds = [.. chapterProgresses.Select(cp => cp.LibraryId).Distinct()];
         Dictionary<Guid, Library> libraries = dbContext.Libraries.Query()
-            .Where(l => libraryIds.Contains(l.Id))
+            .Where(l => libraryIds.Contains(l.Id) && (l.Manga.IsFamilySafe || !userPreference.FamilySafeMode))
             .ToList()
             .ToDictionary(l => l.Id);
 
         return chapterProgresses
+            .Where(p => libraries.GetValueOrDefault(p.LibraryId) != null)
             .Select(cp => new ChapterViewModels
             {
                 ChapterProgress = cp,

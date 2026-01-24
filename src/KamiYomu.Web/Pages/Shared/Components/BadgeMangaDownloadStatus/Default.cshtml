@@ -1,0 +1,23 @@
+@using KamiYomu.Web.Entities
+@using System.Text
+@using KamiYomu.Web.ViewComponents
+
+@model BadgeMangaDownloadStatusViewComponentModel
+
+<span class="badge @Model.BadgeClass" title="@Model.Legend"
+      data-bs-toggle="popover"
+      data-bs-trigger="hover focus"
+      data-bs-placement="top"
+      data-bs-content="@Model.Legend">
+    @(I18n.ResourceManager.GetString(Model.MangaDownloadRecord.DownloadStatus.ToString())
+        ?? Model.MangaDownloadRecord.DownloadStatus.ToString())
+</span>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+        popoverTriggerList.forEach(function (el) {
+            new bootstrap.Popover(el);
+        });
+    });
+</script>

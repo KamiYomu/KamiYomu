@@ -240,6 +240,10 @@
   <data name="WelcomeToKamiYomu" xml:space="preserve">
     <value>Bienvenue à KamiYomu</value>
   </data>
+  <data name="WelcomeToKamiYomuDescription" xml:space="preserve">
+    <value>Un lecteur et téléchargeur de mangas entièrement auto-hébergé.
+Pas de serveurs externes. Aucun suivi. Votre collection reste entièrement sous votre contrôle.</value>
+  </data>
   <data name="ConfirmDelete" xml:space="preserve">
     <value>Confirmer la suppression</value>
   </data>
@@ -1000,23 +1004,6 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="PreviousChapter" xml:space="preserve">
     <value>Chapitre précédent</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="BackToPlatform" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="ReadingHistory" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="Page" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="ViewAllHistory" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="WelcomeToKamiYomuDescription" xml:space="preserve">
-    <value>Un lecteur et téléchargeur de mangas entièrement auto-hébergé.
-Pas de serveurs externes. Aucun suivi. Votre collection reste entièrement sous votre contrôle.</value>
-  </data>
   <data name="BackToPlatform" xml:space="preserve">
     <value>Retour à la plateforme</value>
   </data>
@@ -1028,5 +1015,9 @@ Pas de serveurs externes. Aucun suivi. Votre collection reste entièrement sous 
   </data>
   <data name="ViewAllHistory" xml:space="preserve">
     <value>Afficher tout l'historique</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Loading" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>
