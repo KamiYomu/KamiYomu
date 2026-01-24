@@ -25,7 +25,8 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
-
+    <link rel="stylesheet" href="~/KamiYomu.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <style>
         :root {
             --brand-color: #7253ed;
@@ -89,9 +90,11 @@
                 </a>
             </div>
 
-            <div>
+            <div class="d-flex align-items-center gap-2">
+                <vc:family-safe has-mobile-mode="true"></vc:family-safe>
                 <a href="@Url.Page("/Index")" class="btn btn-primary btn-sm rounded-pill px-3">
-                    @I18n.BackToPlatform <i class="bi bi-box-arrow-right ms-1"></i>
+                    <span class="d-none d-sm-inline">@I18n.BackToPlatform</span>
+                    <i class="bi bi-box-arrow-right ms-1"></i>
                 </a>
             </div>
         </div>
@@ -153,10 +156,18 @@
             setTheme(next)
         }
     </script>
-
+   
     <partial name="_NotificationToast" />
     <script src="~/lib/htmx/htmx.min.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+            popoverTriggerList.forEach(function (el) {
+                new bootstrap.Popover(el);
+            });
+        });
+    </script>
 </body>
 </html>

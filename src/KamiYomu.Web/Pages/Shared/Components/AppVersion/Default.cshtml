@@ -1,45 +1,29 @@
 @using System.Threading
 @using System.Reflection
 @using KamiYomu.Web.Infrastructure.Services.Interfaces
-@inject IGitHubService GitHubService
-@{
-    var assembly = typeof(Program).Assembly;
-    var coreAssembly = typeof(KamiYomu.CrawlerAgents.Core.AbstractCrawlerAgent).Assembly;
-    var name = assembly.GetName();
-    var coreInformationalVersion = coreAssembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version;
-    var fullVersion = assembly
-        .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
-        .InformationalVersion;
-
-    var version = fullVersion?.Split('+')[0];
-    var company = assembly.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
-    var product = assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
-    var copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
-    var description = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description;
-    var updateAvailable = await GitHubService.CheckForUpdatesAsync(version, Context.RequestAborted);
-    var updateVersionAvailable = await GitHubService.GetLatestVersionAsync(Context.RequestAborted);
-}
+@using KamiYomu.Web.ViewComponents
+@model AppVersionViewComponentModel
 
 <footer class="mt-4 text-secondary small">
     <!-- Version & Update -->
     <div class="d-flex flex-wrap align-items-center justify-content-between p-2 rounded shadow-sm mb-2">
         <div class="d-flex align-items-center flex-wrap">
             <span class="me-2">
-                @I18n.Version: <span class="badge bg-primary">@version</span>
+                @I18n.Version: <span class="badge bg-primary">@Model.Version</span>
             </span>
 
-            @if (updateAvailable)
+            @if (Model.UpdateAvailable)
             {
                 <a class="btn btn-outline-success btn-sm d-flex align-items-center"
                    href="https://kamiyomu.com/docs/changelogs/" target="_blank" role="button">
                     <i class="bi bi-arrow-up-circle me-1"></i>
-                    @I18n.UpdateAvailable @updateVersionAvailable
+                    @I18n.UpdateAvailable @Model.UpdateVersionAvailable
                 </a>
             }
         </div>
 
         <div class="d-flex flex-wrap gap-2">
-            <span>@copyright</span>
+            <span>@Model.Copyright</span>
             <a href="https://raw.githubusercontent.com/KamiYomu/KamiYomu.Web/refs/heads/main/LICENSE.txt"
                class="text-decoration-none link-secondary" target="_blank" rel="noopener noreferrer">
                 @I18n.License
@@ -52,7 +36,7 @@
 
         <div class="d-flex align-items-center flex-wrap mt-1 mt-md-0">
             <span class="me-2">
-                Core @I18n.Version: <span class="badge bg-primary">@coreInformationalVersion</span>
+                Core @I18n.Version: <span class="badge bg-primary">@Model.CoreInformationalVersion</span>
             </span>
         </div>
     </div>

@@ -22,7 +22,7 @@
 
     <td>@Model.MangaDownload.Library.GetCbzFileSize(Model.Chapter)</td>
     <td>
-        <partial name="_BadgeChapterDownloadStatus" model="@Model" />
+        <vc:badge-chapter-download-status chapter-download-record="@Model"></vc:badge-chapter-download-status>
     </td>
     <td>@UserClockService.ConvertToUserTime(Model.StatusUpdateAt.GetValueOrDefault(Model.CreateAt)).ToString("g")</td>
     <td class="text-end">

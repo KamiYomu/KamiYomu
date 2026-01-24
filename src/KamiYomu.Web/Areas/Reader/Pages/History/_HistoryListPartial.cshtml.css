@@ -1,0 +1,48 @@
+/* Ensure the parent item has a fixed height and relative context */
+.history-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 80px; /* Force a standard height */
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+    z-index: 1;
+}
+
+/* The progress fill uses the parent's 100% height */
+.history-progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: rgba(25, 135, 84, 0.12); /* Subtle Green */
+    z-index: 2;
+}
+
+.history-cover-container {
+    position: relative; /* Change from absolute to relative to sit in the flex flow */
+    width: 160px;
+    min-width: 60px;
+    height: 100%;
+    z-index: 3;
+}
+
+    .history-cover-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.5;
+        display: block;
+    }
+
+.history-content {
+    position: relative;
+    flex-grow: 1;
+    z-index: 4;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+}

@@ -1,0 +1,38 @@
+@using KamiYomu.Web.AppOptions
+@using KamiYomu.Web.Entities
+@using KamiYomu.Web.Infrastructure.Contexts
+@using KamiYomu.Web.ViewComponents
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+
+@model FamilySafeViewComponentModel
+
+
+<form method="post" asp-page="/Index" asp-page-handler="FamilySafe" asp-route-returnUrl="@Context.Request.Path" novalidate>
+    @Html.AntiForgeryToken()
+    <button type="submit"
+            class="btn @Model.ButtonClass btn-sm d-flex align-items-center shadow-sm rounded-pill px-3 @(Model.HasMobileMode ? "justify-content-center" : "w-100")"
+            style="border-width: 1px;"
+            data-bs-toggle="popover"
+            data-bs-trigger="hover focus"
+            data-bs-placement="top"
+            data-bs-content="@Model.FamilySafeModeText"
+            title="@I18n.FamilySafeMode">
+
+        <i class="@Model.IconClass fs-6 @(Model.HasMobileMode ? "me-sm-2" : "me-2")"></i>
+
+        <span class="fw-normal flex-grow-1 text-center small pe-4 @(Model.HasMobileMode ? "d-none d-sm-inline" : string.Empty)">
+            @I18n.FamilySafeMode
+        </span>
+    </button>
+</form>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+        popoverTriggerList.forEach(function (el) {
+            new bootstrap.Popover(el);
+        });
+    });
+</script>

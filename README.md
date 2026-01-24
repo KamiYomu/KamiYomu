@@ -58,11 +58,11 @@ services:
       timeout: 10s
       retries: 3
     volumes:
+      - /etc/localtime:/etc/localtime:ro # Sync time with host
       - kamiyomu_manga:/manga
       - kamiyomu_database:/db
       - kamiyomu_agents:/agents
       - kamiyomu_logs:/logs
-
 volumes:
   kamiyomu_manga:
   kamiyomu_database:
@@ -78,9 +78,8 @@ docker-compose up -d
 
 3. Access the web interface at `http://localhost:8080`
 
-{: .note }
+> [!NOTE]
 > Map volumes to local paths as needed. Check [releases](https://github.com/KamiYomu/releases) for available versions.
-{: .note  }
 
 
 ## 🧠 Tech Stack
@@ -97,6 +96,7 @@ docker-compose up -d
 
 ### ✅ Does
 
+- Provide a self-hosted manga reading solution
 - Orchestrate and schedule crawler agent tasks (search, list, get, etc.)
 - Download images from websites that the crawler agent specify
 - Create local archives from downloaded images in specified folder location.
@@ -127,14 +127,11 @@ The KamiYomu project is licensed under the **AGPL-3.0 (Affero General Public Lic
 - **Freedom to Study and Modify**: Users can access the source code and modify it to suit their needs.
 - **Freedom to Distribute Copies**: Users can share the original software with others.
 - **Freedom to Distribute Modified Versions**: Users can distribute modified versions of the software, but they must also be licensed under AGPL-3.0, ensuring that the same freedoms are preserved for all users.
-
-This license is particularly important for software that is intended to be run on servers, as it requires that the source code be made available to users who interact with the software over a network.
-
 ---
 
 ## 🤝 Contributing
 
-Pull requests are welcome! See the [development guide](https://kamiyomu.github.io/docs/development/) to get started cloning the project and running it in Visual Studio or VS Code.
+Pull requests are welcome! See the [development guide](https://kamiyomu.github.io/docs/development/development/) to get started cloning the project and running it in Visual Studio or VS Code.
 
 Create your own crawler agents by following the [Crawler Agent development guide](https://kamiyomu.com/docs/crawler-agents/create/).
 
