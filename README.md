@@ -2,9 +2,21 @@
 
 ![KamiYomu Owl Logo](./Inkscape/logo-watermark.svg)
 
-**KamiYomu** is a powerful, extensible manga download built for manga enthusiasts who want full control over their collection. It scans and downloads manga from supported websites, stores them locally, and lets you host your own private manga reader—no ads, no subscriptions, no limits.
+**KamiYomu** is a high-performance, extensible manga manager designed for enthusiasts who demand total control. 
 
+By leveraging a modular **Crawler Agent** architecture, KamiYomu empowers you to discover, download, reading, and archive manga from any supported source into a private, self-hosted library.
+
+> [!NOTE]
+> **Total Extensibility:** If a site isn't supported yet, you can build your own Crawler Agent in C# and integrate it instantly.
+
+### 🚀 Core Capabilities
+* **Modular Crawling:** Support for any website via community-driven **Crawler Agents**.
+* **Local Archival:** Download and store high-quality images in a structured local library.
+* **Private Hosting:** A built-in web reader to access your collection from any device, anywhere.
+* **Developer Friendly:** Comprehensive SDK and Validator tools for building custom agents.
 [📖 Read the docs](https://kamiyomu.github.io)
+
+---
 
 [![GitHub followers](https://img.shields.io/github/followers/kamiyomu)](https://github.com/orgs/KamiYomu/followers)
 [![GitHub stars](https://img.shields.io/github/stars/kamiyomu/kamiyomu)](https://github.com/kamiyomu/kamiyomu/stargazers)
@@ -19,15 +31,6 @@
 Join the conversation and be part of the KamiYomu community:
 
 [![Join the discussion on Github](https://img.shields.io/github/discussions/kamiyomu/kamiyomu?logo=github&label=Join%20the%20community)](https://github.com/KamiYomu/KamiYomu/discussions)
-
----
-
-## ✨ Features
-
-- 🔍 **Automated Crawling** — Fetch chapters from supported manga sites with ease
-- 💾 **Local Storage** — Keep your manga files on your own server or device
-- 🧩 **Plugin Architecture** — Add support for new sources or customize crawling logic
-- 🛠️ **Built with .NET 8** — Lightweight, maintainable, and easy to extend
 
 ---
 
@@ -96,7 +99,7 @@ docker-compose up -d
 
 ### ✅ Does
 
-- Provide a self-hosted manga reading solution
+- A robust, self-hosted web interface designed for seamless reading across desktop and mobile.
 - Orchestrate and schedule crawler agent tasks (search, list, get, etc.)
 - Download images from websites that the crawler agent specify
 - Create local archives from downloaded images in specified folder location.
