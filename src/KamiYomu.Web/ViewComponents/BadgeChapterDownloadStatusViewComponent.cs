@@ -12,7 +12,6 @@ public class BadgeChapterDownloadStatusViewComponent(IUserClockManager userClock
 {
     public IViewComponentResult Invoke(ChapterDownloadRecord chapterDownloadRecord)
     {
-        string rowId = $"row-{chapterDownloadRecord.Id}";
         string badgeClass = chapterDownloadRecord.DownloadStatus switch
         {
             Entities.Definitions.DownloadStatus.ToBeRescheduled => "bg-warning",
@@ -23,7 +22,7 @@ public class BadgeChapterDownloadStatusViewComponent(IUserClockManager userClock
             _ => "bg-secondary"
         };
         StringBuilder lastUpdateBuilder = new();
-        _ = lastUpdateBuilder.AppendLine($"{I18n.LastUpdate}: {userClockService.ConvertToUserTime(Model.StatusUpdateAt.GetValueOrDefault()).ToString("g")}.");
+        _ = lastUpdateBuilder.AppendLine($"{I18n.LastUpdate}: {userClockService.ConvertToUserTime(chapterDownloadRecord.StatusUpdateAt.GetValueOrDefault()).ToString("g")}.");
         if (!string.IsNullOrWhiteSpace(chapterDownloadRecord.StatusReason))
         {
             _ = lastUpdateBuilder.AppendLine(chapterDownloadRecord.StatusReason);

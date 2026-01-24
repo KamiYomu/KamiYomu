@@ -5,11 +5,11 @@ services:
         context: .
         dockerfile: KamiYomu.Web/Dockerfile
       volumes:
+        - /etc/localtime:/etc/localtime:ro
         - ./AppData/manga:/manga
         - ./AppData/db:/db 
         - ./AppData/agents:/agents 
         - kamiyomu_logs:/logs 
-        - /etc/localtime:/etc/localtime:ro
       healthcheck:
         test: ["CMD", "curl", "-f", "https://localhost:5001/healthz"]
         interval: 30s
