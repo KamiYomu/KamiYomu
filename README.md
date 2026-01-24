@@ -1,4 +1,4 @@
-﻿# KamiYomu — Your Self-Hosted Manga Downloader
+﻿# KamiYomu — A self-hosted, extensible manga reader and download tool
 
 ![KamiYomu Owl Logo](./Inkscape/logo-watermark.svg)
 
