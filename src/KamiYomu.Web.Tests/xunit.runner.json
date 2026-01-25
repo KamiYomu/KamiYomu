@@ -12,7 +12,7 @@
 
   "longRunningTestSeconds": 30,
 
-  "methodDisplay": "classAndMethod",
+  "methodDisplay": "method",
   "methodDisplayOptions": "all",
 
   "appDomain": "ifAvailable",

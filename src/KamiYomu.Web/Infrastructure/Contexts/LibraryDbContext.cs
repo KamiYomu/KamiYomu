@@ -7,13 +7,19 @@ namespace KamiYomu.Web.Infrastructure.Contexts;
 public class LibraryDbContext(Guid libraryId, bool isReadOnly = false) : IDisposable
 {
     private bool _disposed = false;
+    private ILiteDatabase _raw;
 
     public ILiteCollection<ChapterDownloadRecord> ChapterDownloadRecords => Raw.GetCollection<ChapterDownloadRecord>("chapter_download_records");
     public ILiteCollection<MangaDownloadRecord> MangaDownloadRecords => Raw.GetCollection<MangaDownloadRecord>("manga_download_records");
-    public LiteDatabase Raw
+    public ILiteDatabase Raw
     {
         get
         {
+            if (_raw != null)
+            {
+                return _raw;
+            }
+
             string fileName = DatabaseFilePath();
             // 1. Ensure the directory exists (LiteDB won't create folders)
             string? directory = Path.GetDirectoryName(fileName);
@@ -32,12 +38,14 @@ public class LibraryDbContext(Guid libraryId, bool isReadOnly = false) : IDispos
 
             // 3. Initialize LiteDB
             // If the file is missing and effectiveReadOnly is false, LiteDB creates it.
-            return new LiteDatabase(new ConnectionString
+            _raw = fileName.StartsWith(":") ? new LiteDatabase(fileName) : new LiteDatabase(new ConnectionString
             {
                 Filename = fileName,
                 Connection = ConnectionType.Shared,
                 ReadOnly = effectiveReadOnly
             });
+
+            return _raw;
         }
     }
 

@@ -11,24 +11,24 @@ public class FamilySafeViewComponent(DbContext dbContext, IOptions<StartupOption
 {
     public IViewComponentResult Invoke(bool hasMobileMode = false)
     {
-        UserPreference userPreference = dbContext.UserPreferences.FindOne(p => true);
+        UserPreference userPreference = dbContext.UserPreferences.Query().FirstOrDefault();
         bool isFamilySafe = userPreference?.FamilySafeMode ?? startupOptions.Value.FamilyMode;
 
-        string familySafeModeText = isFamilySafe
+        string legend = isFamilySafe
             ? I18n.FamilySafeModeEnableMessage
             : I18n.FamilySafeModeDisableMessage;
 
         string buttonClass = isFamilySafe ? "btn btn-outline-success no-hover" : "btn btn-outline-secondary no-hover";
         string iconClass = isFamilySafe ? "bi-shield-check text-success" : "bi-shield-exclamation text-danger";
 
-        return View(new FamilySafeViewComponentModel(isFamilySafe, familySafeModeText, buttonClass, iconClass, hasMobileMode));
+        return View(new FamilySafeViewComponentModel(isFamilySafe, legend, buttonClass, iconClass, hasMobileMode));
     }
 }
 
 
 public record FamilySafeViewComponentModel(
     bool IsFamilySafe,
-    string FamilySafeModeText,
+    string Legend,
     string ButtonClass,
     string IconClass,
     bool HasMobileMode);

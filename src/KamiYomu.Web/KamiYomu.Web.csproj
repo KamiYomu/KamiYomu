@@ -62,5 +62,9 @@
 		</EmbeddedResource>
 	</ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="KamiYomu.Web.Tests" />
+    </ItemGroup>
+    
 	<Import Project="KamiYomu.Web.props" />
 </Project>

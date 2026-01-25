@@ -5,10 +5,16 @@ namespace KamiYomu.Web.Infrastructure.Contexts;
 public class ImageDbContext(string fileName, bool isReadOnly = false) : IDisposable
 {
     private bool _disposed = false;
-    public LiteDatabase Raw
+    private ILiteDatabase _raw;
+    public ILiteDatabase Raw
     {
         get
         {
+            if (_raw != null)
+            {
+                return _raw;
+            }
+
             // 1. Ensure the directory exists (LiteDB won't create folders)
             string? directory = Path.GetDirectoryName(fileName);
             if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
@@ -26,12 +32,14 @@ public class ImageDbContext(string fileName, bool isReadOnly = false) : IDisposa
 
             // 3. Initialize LiteDB
             // If the file is missing and effectiveReadOnly is false, LiteDB creates it.
-            return new LiteDatabase(new ConnectionString
+            _raw = fileName.StartsWith(":") ? new LiteDatabase(fileName) : new LiteDatabase(new ConnectionString
             {
                 Filename = fileName,
                 Connection = ConnectionType.Shared,
                 ReadOnly = effectiveReadOnly
             });
+
+            return _raw;
         }
     }
 
