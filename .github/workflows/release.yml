@@ -71,16 +71,13 @@ jobs:
           dotnet-version: '8.0.x'
           
       - name: Restore dependencies
-        run: dotnet restore
-        working-directory: ./src
+        run: dotnet restore ./src/KamiYomu.sln
         
       - name: Build
-        run: dotnet build --configuration Release --no-restore
-        working-directory: ./src
+        run: dotnet build ./src/KamiYomu.sln --configuration Release --no-restore
         
       - name: Test
-        run: dotnet test --configuration Release --no-build --verbosity normal
-        working-directory: ./src
+        run: dotnet test ./src/KamiYomu.sln --configuration Release --no-build --verbosity normal
         
   publish_docker:
     name: Build and Push Docker Image
