@@ -1028,16 +1028,6 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   <data name="DateAndTime" xml:space="preserve">
     <value>Data e hora</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="EndOfChapter" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="YouHaveReachedTheEndOfTheChapter" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="About" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="EndOfChapter" xml:space="preserve">
     <value>Fim do capítulo</value>
   </data>
@@ -1046,5 +1036,15 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   </data>
   <data name="About" xml:space="preserve">
     <value>Sobre</value>
+  </data>
+  <data name="WeekChapters" xml:space="preserve">
+    <value>Capítulos da semana</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Refresh" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Atualizar</value>
   </data>
 </root>

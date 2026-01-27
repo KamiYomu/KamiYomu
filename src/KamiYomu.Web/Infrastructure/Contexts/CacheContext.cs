@@ -1,4 +1,4 @@
-﻿using MonkeyCache;
+using MonkeyCache;
 using MonkeyCache.LiteDB;
 
 using System.Reflection;
@@ -58,17 +58,38 @@ public class CacheContext
         return value;
     }
 
-    public string[] GetKeys(Guid crawlerAgentId) => [.. Barrel.Current.GetKeys(CacheState.Active).Where(x => x.StartsWith(crawlerAgentId.ToString(), StringComparison.OrdinalIgnoreCase))];
-    public void EmptyAgentKeys(Guid crawlerAgentId) => Barrel.Current.Empty(GetKeys(crawlerAgentId));
-    public void EmptyAll() => Barrel.Current.EmptyAll();
-    public void Empty(params string[] keys) => Barrel.Current.Empty(keys);
-    public void EmptyExpired() => Barrel.Current.EmptyExpired();
+    public string[] GetKeys(Guid crawlerAgentId)
+    {
+        return [.. Barrel.Current.GetKeys(CacheState.Active).Where(x => x.StartsWith(crawlerAgentId.ToString(), StringComparison.OrdinalIgnoreCase))];
+    }
+
+    public void EmptyAgentKeys(Guid crawlerAgentId)
+    {
+        Barrel.Current.Empty(GetKeys(crawlerAgentId));
+    }
+
+    public void EmptyAll()
+    {
+        Barrel.Current.EmptyAll();
+    }
+
+    public void Empty(params string[] keys)
+    {
+        Barrel.Current.Empty(keys);
+    }
+
+    public void EmptyExpired()
+    {
+        Barrel.Current.EmptyExpired();
+    }
+
     private JsonSerializerOptions GetCacheSerializationOptions()
     {
         JsonSerializerOptions options = new()
         {
             AllowOutOfOrderMetadataProperties = true,
             PropertyNameCaseInsensitive = true,
+            IncludeFields = true,
             TypeInfoResolver = new DefaultJsonTypeInfoResolver
             {
                 Modifiers =
@@ -93,7 +114,6 @@ public class CacheContext
                 }
             }
         };
-
 
         return options;
 

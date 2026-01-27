@@ -20,7 +20,7 @@ public class IndexModel(
     [FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext,
     ReadingDbContext readingDbContext) : PageModel
 {
-    public Guid ChapterId { get; set; }
+    public Guid ChapterDownloadId { get; set; }
     public ChapterDownloadRecord ChapterDownloaded { get; set; }
     public List<string> PageUrls { get; set; } = [];
     public Guid LibraryId { get; private set; }
@@ -30,10 +30,10 @@ public class IndexModel(
     public Guid? PreviousChapterId { get; private set; }
     public Guid? NextChapterId { get; private set; }
     public int TotalPages => PageUrls.Count;
-    public void OnGet(Guid libraryId, Guid chapterId)
+    public void OnGet(Guid libraryId, Guid chapterDownloadId)
     {
         LibraryId = libraryId;
-        ChapterId = chapterId;
+        ChapterDownloadId = chapterDownloadId;
 
         Library library = dbContext.Libraries
                                    .Query()
@@ -42,7 +42,7 @@ public class IndexModel(
 
         using LibraryDbContext libDb = library.GetReadOnlyDbContext();
 
-        ChapterDownloaded = libDb.ChapterDownloadRecords.Query().Where(p => p.Id == ChapterId).FirstOrDefault();
+        ChapterDownloaded = libDb.ChapterDownloadRecords.Query().Where(p => p.Id == ChapterDownloadId).FirstOrDefault();
 
         string cbzFilePath = library.GetCbzFilePath(ChapterDownloaded.Chapter);
 
@@ -67,7 +67,7 @@ public class IndexModel(
         ChapterProgress progress = readingDbContext.ChapterProgress
                                                    .Query()
                                                    .Where(p => p.LibraryId == libraryId &&
-                                                               p.ChapterId == chapterId)
+                                                               p.ChapterDownloadId == chapterDownloadId)
                                                    .FirstOrDefault();
 
         bool isFinished = progress?.IsCompleted == true;
@@ -83,7 +83,7 @@ public class IndexModel(
         NextChapterId = next?.DownloadStatus == DownloadStatus.Completed ? next.Id : null;
     }
 
-    public IActionResult OnGetImage(Guid chapterId, Guid libraryId, string fileName)
+    public IActionResult OnGetImage(Guid chapterDownloadId, Guid libraryId, string fileName)
     {
         Library library = dbContext.Libraries.Query()
             .Where(x => x.Id == libraryId)
@@ -91,9 +91,9 @@ public class IndexModel(
 
         using LibraryDbContext libDb = library.GetReadOnlyDbContext();
 
-        ChapterId = chapterId;
+        ChapterDownloadId = chapterDownloadId;
 
-        ChapterDownloadRecord chapterDownloaded = libDb.ChapterDownloadRecords.FindOne(p => p.Id == ChapterId);
+        ChapterDownloadRecord chapterDownloaded = libDb.ChapterDownloadRecords.FindOne(p => p.Id == ChapterDownloadId);
 
         string cbzFilePath = library.GetCbzFilePath(chapterDownloaded.Chapter);
 
@@ -116,12 +116,12 @@ public class IndexModel(
         return File(ms, contentType);
     }
 
-    public IActionResult OnPostPageViewed(Guid libraryId, Guid chapterId, decimal chapterNumber, int pageNumber, bool isLastPage, int totalPages)
+    public IActionResult OnPostPageViewed(Guid libraryId, Guid chapterDownloadId, decimal chapterNumber, int pageNumber, bool isLastPage, int totalPages)
     {
         ChapterProgress chapterProgres = readingDbContext.ChapterProgress
                                                          .Query()
-                                                         .Where(p => p.ChapterId == chapterId && p.LibraryId == libraryId)
-                                                         .FirstOrDefault() ?? new(libraryId, chapterId, chapterNumber);
+                                                         .Where(p => p.ChapterDownloadId == chapterDownloadId && p.LibraryId == libraryId)
+                                                         .FirstOrDefault() ?? new(libraryId, chapterDownloadId, chapterNumber);
 
         if (isLastPage)
         {

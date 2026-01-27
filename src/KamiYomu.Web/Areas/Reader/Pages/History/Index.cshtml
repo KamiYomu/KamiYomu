@@ -2,21 +2,17 @@
 @using KamiYomu.Web.Extensions
 @using KamiYomu.Web.Areas.Reader.Pages.History;
 @model IndexModel
-@{
-}
 
-<vc:reader-header return-url="@Url.Page("/MangaGallery/Index", new { area = "Reader"} )"></vc:reader-header>
+<vc:reader-header return-url="@Url.Page("/MangaGallery/Index", new { area = "Reader"} )" />
 
 <div class="container py-5">
-
-
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="bi bi-clock-history me-2"></i>Reading History</h2>
+        <h2><i class="bi bi-clock-history me-2"></i>@I18n.ReadingHistory</h2>
         <button class="btn btn-outline-primary btn-sm"
                 hx-get="/History"
                 hx-target="#history-container"
                 hx-select="#history-container">
-            <i class="bi bi-arrow-clockwise"></i> Refresh
+            <i class="bi bi-arrow-clockwise"></i> @I18n.Refresh
         </button>
     </div>
 

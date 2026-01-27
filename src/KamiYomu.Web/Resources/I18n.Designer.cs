@@ -1988,6 +1988,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Refresh.
+        /// </summary>
+        public static string Refresh {
+            get {
+                return ResourceManager.GetString("Refresh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Release Status.
         /// </summary>
         public static string ReleaseStatus {
@@ -2686,6 +2695,15 @@ namespace KamiYomu.Web.Resources {
         public static string WaitProcessing5 {
             get {
                 return ResourceManager.GetString("WaitProcessing5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Week Chapters.
+        /// </summary>
+        public static string WeekChapters {
+            get {
+                return ResourceManager.GetString("WeekChapters", resourceCulture);
             }
         }
         

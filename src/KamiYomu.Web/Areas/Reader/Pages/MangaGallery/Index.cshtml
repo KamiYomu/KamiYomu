@@ -57,7 +57,7 @@
                             <a class="dropdown-item py-2"
                                asp-area="Reader"
                                asp-page="/MangaReader/Index"
-                               asp-route-chapterId="@entry.ChapterProgress.ChapterId"
+                               asp-route-chapterDownloadId="@entry.ChapterProgress.ChapterDownloadId"
                                asp-route-libraryId="@entry.Library.Id"
                                asp-route-returnUrl="@($"{Request.Path}{Request.QueryString}")">
 
@@ -78,6 +78,16 @@
     </div>
 </div>
 
-<div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-4" id="manga-grid">
-    <partial name="_MangaGrid" model="Model.Libraries" />
+<div class="row g-4">
+    <div class="col-12 col-lg-9">
+        <h5 class="mb-3 border-bottom pb-2">@I18n.Manga</h5>
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-4 row-cols-xl-5 g-3" id="manga-grid">
+            <partial name="_MangaGrid" model="Model.Libraries" />
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-3">
+        <h5 class="mb-3 border-bottom pb-2">@I18n.WeekChapters</h5>
+        <vc:weekly-chapter />
+    </div>
 </div>

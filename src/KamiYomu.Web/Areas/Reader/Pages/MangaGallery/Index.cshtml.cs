@@ -1,3 +1,4 @@
+using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Areas.Reader.Repositories.Interfaces;
 using KamiYomu.Web.Areas.Reader.ViewModels;
 using KamiYomu.Web.Entities;
@@ -15,7 +16,7 @@ public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] Db
 {
 
     public List<Library> Libraries { get; set; } = [];
-    public IEnumerable<IGrouping<DateTime, ChapterViewModels>> GroupedHistory { get; private set; }
+    public IEnumerable<IGrouping<DateTime, ChapterViewModel>> GroupedHistory { get; private set; }
 
     public void OnGet()
     {
@@ -34,5 +35,6 @@ public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] Db
                                        && (p.Manga.IsFamilySafe || !userPreference.FamilySafeMode)).ToList();
 
         return Partial("_MangaGrid", filtered);
+
     }
 }

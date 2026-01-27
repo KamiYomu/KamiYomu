@@ -49,7 +49,7 @@
                     </div>
 
                     <a asp-area="Reader" asp-page="/MangaReader/Index"
-                       asp-route-chapterId="@entry.ChapterProgress.ChapterId"
+                       asp-route-chapterDownloadId="@entry.ChapterProgress.ChapterDownloadId"
                        asp-route-libraryId="@entry.Library.Id"
                        asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")"
                        class="btn btn-sm btn-success rounded-circle">

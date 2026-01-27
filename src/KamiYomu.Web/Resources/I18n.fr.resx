@@ -1028,16 +1028,6 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="DateAndTime" xml:space="preserve">
     <value>Date et heure</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="EndOfChapter" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="YouHaveReachedTheEndOfTheChapter" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="About" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="EndOfChapter" xml:space="preserve">
     <value>Fin du chapitre</value>
   </data>
@@ -1046,5 +1036,15 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   </data>
   <data name="About" xml:space="preserve">
     <value>À propos</value>
+  </data>
+  <data name="WeekChapters" xml:space="preserve">
+    <value>Chapitres de la semaine</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Refresh" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Rafraîchir</value>
   </data>
 </root>

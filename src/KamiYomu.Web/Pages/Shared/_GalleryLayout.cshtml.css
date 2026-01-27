@@ -1,0 +1,11 @@
+:root {
+    --brand-color: #7253ed;
+}
+
+[data-bs-theme="dark"] .navbar-brand {
+    color: #fff !important;
+}
+
+[data-bs-theme="light"] .navbar-brand {
+    color: #000 !important;
+}
