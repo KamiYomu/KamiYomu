@@ -1,4 +1,6 @@
 
+using System.Reflection;
+
 using KamiYomu.Web.Areas.Reader.Data;
 using KamiYomu.Web.Areas.Reader.Models;
 using KamiYomu.Web.Areas.Reader.Repositories.Interfaces;
@@ -6,6 +8,7 @@ using KamiYomu.Web.Areas.Reader.ViewModels;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Entities.Definitions;
 using KamiYomu.Web.Infrastructure.Contexts;
+using KamiYomu.Web.Infrastructure.Services.Interfaces;
 
 using static KamiYomu.Web.AppOptions.Defaults;
 
@@ -13,7 +16,8 @@ namespace KamiYomu.Web.Areas.Reader.Repositories;
 
 public class ChapterProgressRepository([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext,
                                        [FromKeyedServices(ServiceLocator.ReadOnlyReadingDbContext)] ReadingDbContext readingDbContext,
-                                       CacheContext cacheContext) : IChapterProgressRepository
+                                       CacheContext cacheContext,
+                                       IUserClockManager userClockService) : IChapterProgressRepository
 {
     public IEnumerable<IGrouping<DateTime, ChapterViewModel>> FetchHistory(int offset, int limit)
     {
@@ -74,22 +78,25 @@ public class ChapterProgressRepository([FromKeyedServices(ServiceLocator.ReadOnl
                     IEnumerable<ChapterDownloadRecord> chapterDownloads = chapterRecords.Where(p => 
                                                                                         readingDbContext.ChapterProgress
                                                                                                         .Query()
-                                                                                                        .Where(q => 
-                                                                                                               q.ChapterDownloadId == p.Id && 
-                                                                                                               q.IsCompleted == true).Count() == 0);
+                                                                                                        .Where(q =>
+                                                                                                               q.ChapterDownloadId == p.Id &&
+                                                                                                               q.IsCompleted).Count() == 0);
+
+                    List<WeeklyChapterItemViewModel> items = [.. chapterDownloads.Select(p => new WeeklyChapterItemViewModel
+                    {
+                        ChapterDownloadId = p.Id,
+                        ChapterNumber = p.Chapter.Number,
+                        DownloadStatus = p.DownloadStatus,
+                        StatusUpdateAt = userClockService.ConvertToUserTime(p.StatusUpdateAt.GetValueOrDefault()).DateTime
+                    })];
+
                     result.Add(new WeeklyChapterViewModel
                     {
                         MangaCoverUrl = library.Manga.CoverUrl,
                         LibraryId = library.Id,
                         MangaId = library.Manga.Id,
                         MangaTitle = library.Manga.Title,
-                        Items = chapterDownloads.Select(p => new WeeklyChapterItemViewModel
-                        {
-                            ChapterDownloadId = p.Id,
-                            ChapterNumber = p.Chapter.Number,
-                            DownloadStatus = p.DownloadStatus,
-                            StatusUpdateAt = p.StatusUpdateAt
-                        })
+                        Items = items.OrderByDescending(p => p.StatusUpdateAt)
                     });
                 }
             }
