@@ -26,6 +26,7 @@ public class Library
         FilePathTemplate = filePathTemplate;
         ComicInfoTitleTemplateFormat = comicInfoTitleTemplateFormat;
         ComicInfoSeriesTemplate = comicInfoSeriesTemplate;
+        CreatedDate = DateTimeOffset.UtcNow;
     }
 
     private LibraryDbContext CreateReadWriteDbContext()
@@ -247,4 +248,5 @@ public class Library
     public string? FilePathTemplate { get; private set; }
     public string? ComicInfoTitleTemplateFormat { get; private set; }
     public string? ComicInfoSeriesTemplate { get; private set; }
+    public DateTimeOffset CreatedDate { get; private set; } = DateTimeOffset.UtcNow;
 }

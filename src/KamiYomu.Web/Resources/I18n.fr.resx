@@ -1040,11 +1040,14 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="WeekChapters" xml:space="preserve">
     <value>Chapitres de la semaine</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Refresh" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="Refresh" xml:space="preserve">
     <value>Rafraîchir</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="RecentlyAdded" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="RecentlyAdded" xml:space="preserve">
+    <value>Récemment ajouté</value>
   </data>
 </root>

@@ -1,8 +1,7 @@
 @using KamiYomu.Web.Extensions
 @using KamiYomu.Web.Areas.Reader.Pages.History;
 @model IndexModel
-@{
-}
+
 
 @if (Model?.GroupedHistory == null || !Model.GroupedHistory.Any())
 {
@@ -17,47 +16,7 @@
 
     @foreach (var entry in dateGroup)
     {
-        var progressPercent = (entry.ChapterProgress.TotalPages > 0)
-        ? (entry.ChapterProgress.LastPageRead * 100 / entry.ChapterProgress.TotalPages)
-        : 0;
-
-        <div class="history-item shadow-sm border">
-            <div class="history-progress-fill" style="width: @progressPercent%;"></div>
-
-            <div class="history-cover-container">
-                <img src="@entry.Library.Manga.CoverUrl.ToInternalImageUrl()" alt="">
-            </div>
-
-            <div class="history-content">
-                <div>
-                    <h6 class="mb-0 fw-bold text-success">@entry.Library.Manga.Title</h6>
-                    <small class="text-muted">
-                        @I18n.Chapter @entry.ChapterProgress.ChapterNumber
-                        <span class="mx-1">•</span>
-                        @I18n.Page @entry.ChapterProgress.LastPageRead/@entry.ChapterProgress.TotalPages
-                    </small>
-                </div>
-
-                <div class="d-flex align-items-center gap-3">
-                    <div class="text-end">
-                        <div class="badge bg-success-subtle text-success border border-success-subtle mb-1">
-                            @progressPercent%
-                        </div>
-                        <div class="text-muted" style="font-size: 0.7rem;">
-                            @entry.ChapterProgress.LastReadAt.ToLocalTime().ToString("t")
-                        </div>
-                    </div>
-
-                    <a asp-area="Reader" asp-page="/MangaReader/Index"
-                       asp-route-chapterDownloadId="@entry.ChapterProgress.ChapterDownloadId"
-                       asp-route-libraryId="@entry.Library.Id"
-                       asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")"
-                       class="btn btn-sm btn-success rounded-circle">
-                        <i class="bi bi-play-fill"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
+       <vc:history-item view-model="entry" />
     }
 }
 

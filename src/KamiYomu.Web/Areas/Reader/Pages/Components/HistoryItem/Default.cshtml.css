@@ -4,7 +4,7 @@
     display: flex;
     align-items: center;
     min-height: 80px; /* Force a standard height */
-    height: 80px;
+    height: 100px;
     border-radius: 8px;
     overflow: hidden;
     margin-bottom: 0.75rem;
@@ -23,7 +23,7 @@
 
 .history-cover-container {
     position: relative; /* Change from absolute to relative to sit in the flex flow */
-    width: 160px;
+    width: 130px;
     min-width: 60px;
     height: 100%;
     z-index: 3;

@@ -1,0 +1,43 @@
+@using KamiYomu.Web.Entities
+@model Library
+
+<div class="col">
+    <a asp-area="Reader"
+       asp-page="/MangaInfo/Index"
+       asp-route-libraryId="@Model.Id"
+       asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")"
+       class="card h-100 manga-card text-decoration-none shadow-sm">
+        <img src="@Model.Manga.CoverUrl.ToInternalImageUrl()" class="card-img-top" alt="@Model.Manga.Title">
+
+        <div class="card-body d-flex flex-column">
+            <h6 class="card-title text-truncate mb-1">@Model.Manga.Title</h6>
+
+            <p class="card-text small text-muted mb-2 text-truncate">
+                @if (Model.Manga.Authors != null && Model.Manga.Authors.Any())
+                {
+                    <span>@I18n.By @string.Join(", ", Model.Manga.Authors)</span>
+                }
+                else
+                {
+                    <span>@I18n.UnknownAuthor</span>
+                }
+            </p>
+
+            <p class="card-text small text-muted mb-2 text-truncate">
+                <span>@Model.Manga.Year</span>
+            </p>
+
+            <div class="mt-auto card-tags">
+                @if (Model.Manga.Tags != null)
+                {
+                    @foreach (var tag in Model.Manga.Tags.Take(3))
+                    {
+                        <span class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle small-badge">
+                            @tag
+                        </span>
+                    }
+                }
+            </div>
+        </div>
+    </a>
+</div>

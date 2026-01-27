@@ -15,14 +15,14 @@
         width: 100%;
         aspect-ratio: 2 / 3;
         object-fit: cover;
-        background-color: #f8f9fa; 
+        background-color: #f8f9fa;
     }
 
 .card-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
-    height: 22px; 
+    height: 22px;
     overflow: hidden;
 }
 

@@ -1988,6 +1988,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Recently Added.
+        /// </summary>
+        public static string RecentlyAdded {
+            get {
+                return ResourceManager.GetString("RecentlyAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Refresh.
         /// </summary>
         public static string Refresh {
