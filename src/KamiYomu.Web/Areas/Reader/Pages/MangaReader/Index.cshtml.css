@@ -6,21 +6,20 @@
 
 #readerContainer.grabbing {
     cursor: grabbing !important;
-    scroll-behavior: auto !important; /* Disables smooth scroll for instant drag response */
+    scroll-behavior: auto !important; 
 }
-/* Prevent images from being dragged by the browser default behavior */
+
 .reader-img {
     pointer-events: none;
 }
 
-/* Ensure the shell is a flex container for the whole screen */
+
 .reader-shell {
     display: flex;
     flex-direction: column;
     height: 100vh;
 }
 
-/* Force the main viewer to take full height and be a flex container */
 #mainViewer {
     display: flex !important;
     flex-direction: column !important;
@@ -29,7 +28,6 @@
     overflow: hidden; /* This keeps the footer pinned */
 }
 
-/* This is the most important part: the middle scrolls, the rest stays */
 #readerContainer {
     cursor: grab; /* Shows the hand icon */
     user-select: none; /* Prevents accidental text highlighting */
@@ -42,7 +40,6 @@
         align-items: center !important; /* Forces images to horizontal center */
         padding: 20px 0;
     }
-/* Specifically for Paged mode, we allow horizontal scrolling */
 .paged-mode {
     display: flex !important;
     overflow-x: auto !important;

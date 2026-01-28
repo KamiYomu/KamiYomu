@@ -177,10 +177,25 @@ using (IServiceScope appScoped = app.Services.CreateScope())
     StartupOptions startupOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<StartupOptions>>().Value;
     IOptions<RequestLocalizationOptions> localizationOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<RequestLocalizationOptions>>();
 
-    _ = Directory.CreateDirectory(specialFolderOptions.LogDir);
-    _ = Directory.CreateDirectory(specialFolderOptions.DbDir);
-    _ = Directory.CreateDirectory(specialFolderOptions.AgentsDir);
-    _ = Directory.CreateDirectory(specialFolderOptions.MangaDir);
+    if (!Directory.Exists(specialFolderOptions.LogDir))
+    {
+        _ = Directory.CreateDirectory(specialFolderOptions.LogDir);
+    }
+
+    if (!Directory.Exists(specialFolderOptions.DbDir))
+    {
+        _ = Directory.CreateDirectory(specialFolderOptions.DbDir);
+    }
+
+    if (!Directory.Exists(specialFolderOptions.AgentsDir))
+    {
+        _ = Directory.CreateDirectory(specialFolderOptions.AgentsDir);
+    }
+
+    if (!Directory.Exists(specialFolderOptions.MangaDir))
+    {
+        _ = Directory.CreateDirectory(specialFolderOptions.MangaDir);
+    }
 
     Barrel.ApplicationId = nameof(KamiYomu);
     BarrelUtils.SetBaseCachePath(specialFolderOptions.DbDir);
