@@ -21,7 +21,7 @@ public class DeleteConfirmModel(DbContext dbContext, INotificationService notifi
         return NugetSource == null ? NotFound() : Page();
     }
 
-    public IActionResult OnPostAsync(CancellationToken cancellationToken)
+    public IActionResult OnPost(CancellationToken cancellationToken)
     {
         _ = dbContext.NugetSources.Delete(Id);
 

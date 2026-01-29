@@ -24,13 +24,13 @@ public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] Db
     {
         UserPreference userPreference = dbContext.UserPreferences.Query().FirstOrDefault();
         RecentlyAddedLibraries = dbContext.Libraries.Query()
-                                       .Where(p => p.Manga.IsFamilySafe || !userPreference.FamilySafeMode)
+                                       .Where(p => p.Manga.IsFamilySafe || p.Manga.IsFamilySafe == userPreference.FamilySafeMode)
                                        .OrderByDescending(p => p.CreatedDate)
                                        .Limit(5)
                                        .ToList();
 
 
-        Libraries = dbContext.Libraries.Query().Where(p => p.Manga.IsFamilySafe || !userPreference.FamilySafeMode).ToList();
+        Libraries = dbContext.Libraries.Query().Where(p => p.Manga.IsFamilySafe || p.Manga.IsFamilySafe == userPreference.FamilySafeMode).ToList();
         GroupedHistory = chapterProgressRepository.FetchHistory(0, 5);
     }
 

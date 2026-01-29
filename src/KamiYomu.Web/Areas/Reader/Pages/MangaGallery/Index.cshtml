@@ -35,13 +35,13 @@
     <div class="col-12 col-lg-8">
 
         <h5 class="mb-3 border-bottom pb-2">@I18n.Manga</h5>
-        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-4 row-cols-xl-5 g-3 mb-3" id="manga-grid">
+        <div class="row row-cols-1 row-cols-xl-2 g-3 mb-3" id="manga-grid">
             <partial name="_MangaGrid" model="Model.Libraries" />
         </div>
 
 
         <h5 class="mb-3 border-bottom pb-2">@I18n.RecentlyAdded</h5>
-        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-4 row-cols-xl-5 g-3 mb-3" id="recently-manga-grid">
+        <div class="row row-cols-1 row-cols-xl-2 g-3 mb-3" id="recently-manga-grid">
             <partial name="_MangaGrid" model="Model.RecentlyAddedLibraries" />
         </div>
     </div>
