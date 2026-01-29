@@ -11,6 +11,8 @@
 
 .reader-img {
     pointer-events: none;
+    height: auto;
+    display: block;
 }
 
 
@@ -29,31 +31,35 @@
 }
 
 #readerContainer {
-    cursor: grab; 
-    user-select: none; 
-    -webkit-user-drag: none; 
+    cursor: grab;
+    user-select: none;
+    -webkit-user-drag: none;
+    overflow: auto !important;
+    display: flex !important;
 }
 
     #readerContainer.webtoon-mode {
         display: flex !important;
         flex-direction: column !important;
-        align-items: center !important; 
+        align-items: center !important;
         padding: 20px 0;
     }
 
     #readerContainer.paged-mode {
         display: flex !important;
         flex-wrap: nowrap !important;
+        flex-direction: row !important;
+        align-items: center;
         overflow-x: auto !important;
         overflow-y: hidden !important;
         gap: 30px;
-        padding: 20px; 
-        align-items: center;
-        height: 100vh; 
+        padding: 20px;
+        height: 100vh;
     }
 
         #readerContainer.paged-mode .manga-page-wrapper {
             flex: 0 0 auto;
+            width: auto; 
             height: 100%;
             display: flex;
             align-items: center;
@@ -61,7 +67,6 @@
         }
 
         #readerContainer.paged-mode img.reader-img {
-            height: 100%;
             width: auto;
             max-width: none; 
             display: block;

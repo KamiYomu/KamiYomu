@@ -5,8 +5,12 @@ let currentZoom = 1.0;
 let currentPageIndex = 0;
 let isDown = false;
 let startX, startY, scrollLeft, scrollTop;
+const baseWidth = 800; 
 
-// add "page-passed" event
+
+window.addEventListener('load', setInitialFit);
+window.addEventListener('resize', setInitialFit);
+
 (function () {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry, index) => {
@@ -57,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function initGrabToScroll(container) {
     container.addEventListener('mousedown', (e) => {
-        if (e.button !== 0) return; // Only left click
+        if (e.button !== 0) return; 
         isDown = true;
         container.classList.add('grabbing');
         startX = e.pageX - container.offsetLeft;
@@ -198,7 +202,6 @@ function changeMode(mode) {
         initScrollObserver();
         updatePageDisplay(1);
         container.scrollTo(0, 0);
-
     }, 50);
 }
 
@@ -213,16 +216,16 @@ function adjustZoom(delta) {
 
     const container = document.getElementById('readerContainer');
     const imgs = container.querySelectorAll('.reader-img');
-    const baseWidth = 800;
 
     imgs.forEach(img => {
-        img.style.maxWidth = (baseWidth * currentZoom) + "px";
+
+        const baseWidth = 800;
+        img.style.width = (baseWidth * currentZoom) + "px";
+        img.style.height = "auto";
+        img.style.maxWidth = "none";
     });
 }
 
-/**
- * Fullscreen API
- */
 function toggleFullscreen() {
     const elem = document.getElementById('mainViewer');
     if (!document.fullscreenElement) {
@@ -235,10 +238,19 @@ function toggleFullscreen() {
 }
 
 function handleFullscreenUI() {
-    const fsBtn = document.querySelector('.bi-fullscreen') || document.querySelector('.bi-fullscreen-exit');
-    if (!fsBtn) return;
-    if (document.fullscreenElement) fsBtn.classList.replace('bi-fullscreen', 'bi-fullscreen-exit');
-    else fsBtn.classList.replace('bi-fullscreen-exit', 'bi-fullscreen');
+    const fsBtns = document.querySelectorAll('.bi-fullscreen, .bi-fullscreen-exit');
+
+    if (fsBtns.length === 0) return;
+
+    fsBtns.forEach(btn => {
+        if (document.fullscreenElement) {
+            btn.classList.remove('bi-fullscreen');
+            btn.classList.add('bi-fullscreen-exit');
+        } else {
+            btn.classList.remove('bi-fullscreen-exit');
+            btn.classList.add('bi-fullscreen');
+        }
+    });
 }
 
 /**
@@ -274,15 +286,27 @@ function prevPage() {
 }
 
 function scrollToPage(index) {
+    const container = document.getElementById('readerContainer');
     const pages = document.querySelectorAll('.manga-page-wrapper');
     const targetPage = pages[index];
 
-    if (targetPage) {
-        targetPage.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-            inline: 'center'
-        });
+    if (targetPage && container) {
+        const isPaged = container.classList.contains('paged-mode');
+
+        if (isPaged) {
+            const targetLeft = targetPage.offsetLeft - container.offsetLeft;
+            container.scrollTo({
+                left: targetLeft,
+                behavior: 'smooth'
+            });
+        } else {
+            const targetTop = targetPage.offsetTop - container.offsetTop;
+            container.scrollTo({
+                top: targetTop,
+                behavior: 'smooth'
+            });
+        }
+
         updatePageDisplay(index + 1);
     }
 }
@@ -291,5 +315,52 @@ function scrollToTop() {
     document.getElementById("readerContainer").scrollTo(0, 0);
     document.querySelectorAll("#readerContainer .manga-page-wrapper").forEach(el => {
         el.dataset.fired = "false";
+    });
+}
+
+
+
+function setInitialFit() {
+    const container = document.getElementById('readerContainer');
+    if (!container) return;
+
+    const isPaged = container.classList.contains('paged-mode');
+
+    if (isPaged) {
+        // For Paged: Fit to Height
+        // We use 0.95 to leave a tiny bit of breathing room
+        const containerHeight = container.clientHeight;
+        const targetHeight = containerHeight * 0.95;
+
+        // Assuming your images are roughly 1130px tall (A4/Manga ratio)
+        // Or you can grab the naturalHeight of the first loaded image
+        const sampleImg = container.querySelector('.reader-img');
+        const referenceHeight = (sampleImg && sampleImg.naturalHeight > 0)
+            ? sampleImg.naturalHeight
+            : 1130;
+
+        currentZoom = targetHeight / referenceHeight;
+    } else {
+        // For Webtoon: Fit to Width
+        const containerWidth = container.clientWidth;
+        // We want the image to match the container width
+        currentZoom = containerWidth / baseWidth;
+    }
+
+    // Apply the calculated zoom
+    applyZoom();
+}
+
+function applyZoom() {
+    const container = document.getElementById('readerContainer');
+    const imgs = container.querySelectorAll('.reader-img');
+    const zoomInput = document.getElementById('zoomVal');
+
+    if (zoomInput) zoomInput.value = Math.round(currentZoom * 100) + "%";
+
+    imgs.forEach(img => {
+        img.style.width = (baseWidth * currentZoom) + "px";
+        img.style.height = "auto";
+        img.style.maxWidth = "none";
     });
 }
