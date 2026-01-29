@@ -184,7 +184,7 @@ public class IndexModel(ILogger<IndexModel> logger,
 
             notificationService.EnqueueSuccessForNextPage(I18n.NuGetPackageInstalledSuccessfully);
 
-            return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit/Index", new { crawlerAgent.Id });
+            return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit/Index", new { crawlerAgent.Id, crawlerAgent.DisplayName });
         }
         catch (Exception ex)
         {
