@@ -1,7 +1,7 @@
 using System.IO.Compression;
 
 using KamiYomu.Web.AppOptions;
-using KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels;
+using KamiYomu.Web.Areas.Settings.ViewComponents;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Entities.Addons;
 using KamiYomu.Web.Extensions;
@@ -41,7 +41,7 @@ public class IndexModel(ILogger<IndexModel> logger,
             Sources = dbContext.NugetSources.FindAll()
         };
 
-        IsNugetAdded = SearchBarViewModel.Sources.Any(p => p.Url.ToString().StartsWith(AppOptions.Defaults.NugetFeeds.NugetFeedUrl, StringComparison.OrdinalIgnoreCase));
+        IsNugetAdded = SearchBarViewModel.Sources.Any(p => p.Url.ToString().StartsWith(Defaults.NugetFeeds.NugetFeedUrl, StringComparison.OrdinalIgnoreCase));
     }
 
     public async Task<IActionResult> OnGetPackageItemAsync(Guid sourceId, string packageId, string version, CancellationToken cancellationToken)
@@ -50,7 +50,7 @@ public class IndexModel(ILogger<IndexModel> logger,
 
         IEnumerable<NugetPackageInfo> packageVersions = await nugetService.GetAllPackageVersionsAsync(sourceId, packageId, cancellationToken);
 
-        return Partial("_PackageItem", new NugetPackageGroupedViewModel
+        return ViewComponent("PackageItem", new NugetPackageGroupedViewModel
         {
             Authors = package.Authors ?? [],
             Description = package.Description,
@@ -72,14 +72,14 @@ public class IndexModel(ILogger<IndexModel> logger,
         });
     }
 
-    public async Task<IActionResult> OnPostSearchAsync(CancellationToken cancellationToken)
+    public async Task<IActionResult> OnGetSearchAsync(CancellationToken cancellationToken)
     {
         try
         {
             UserPreference preferences = dbContext.UserPreferences.Query().FirstOrDefault();
             bool familySafeMode = preferences?.FamilySafeMode ?? true;
-            string searchTerm = string.IsNullOrWhiteSpace(SearchBarViewModel.Search) ? startupOptions.Value.DefaultSearchTerm : SearchBarViewModel.Search;
-            IEnumerable<NugetPackageInfo> packages = await nugetService.SearchPackagesAsync(SearchBarViewModel.SourceId, searchTerm, SearchBarViewModel.IncludePrerelease, cancellationToken);
+            SearchBarViewModel.Search = string.IsNullOrWhiteSpace(SearchBarViewModel.Search) ? startupOptions.Value.DefaultSearchTerm : SearchBarViewModel.Search;
+            IEnumerable<NugetPackageInfo> packages = await nugetService.SearchPackagesAsync(SearchBarViewModel.SourceId, SearchBarViewModel.Search, SearchBarViewModel.IncludePrerelease, cancellationToken);
             packages = packages.Where(p => !familySafeMode || !p.IsNsfw()).OrderBy(p => p.Id).ThenByDescending(p => p.Version);
             PackageListViewModel = new PackageListViewModel
             {
@@ -97,7 +97,7 @@ public class IndexModel(ILogger<IndexModel> logger,
                                            LicenseUrl = g.FirstOrDefault()?.LicenseUrl,
                                            RepositoryUrl = g.FirstOrDefault()?.RepositoryUrl,
                                            VersionSelected = g.FirstOrDefault() ?? null,
-                                           Versions = g.Select(x => x.Version!).ToList(),
+                                           Versions = [.. g.Select(x => x.Version!)],
                                            DependenciesByVersion = g
                                                .Where(x => x.Version != null)
                                                .ToDictionary(
@@ -114,7 +114,18 @@ public class IndexModel(ILogger<IndexModel> logger,
             notificationService.EnqueueErrorForNextPage(I18n.FailedToSearch);
         }
 
-        return Partial("_PackageList", PackageListViewModel);
+        if (Request.Headers.ContainsKey("HX-Request"))
+        {
+            return ViewComponent("PackageList", PackageListViewModel);
+        }
+
+        SearchBarViewModel = new SearchBarViewModel
+        {
+            SourceId = SearchBarViewModel.SourceId,
+            Sources = dbContext.NugetSources.FindAll()
+        };
+
+        return Page();
     }
 
     public async Task<IActionResult> OnPostInstallAsync(Guid sourceId, string packageId, string packageVersion, CancellationToken cancellationToken)
@@ -197,10 +208,10 @@ public class IndexModel(ILogger<IndexModel> logger,
 
 
     public async Task<IActionResult> OnGetDownloadAsync(
-    Guid sourceId,
-    string packageId,
-    string packageVersion,
-    CancellationToken cancellationToken)
+            Guid sourceId,
+            string packageId,
+            string packageVersion,
+            CancellationToken cancellationToken)
     {
         if (sourceId == Guid.Empty ||
             string.IsNullOrWhiteSpace(packageId) ||

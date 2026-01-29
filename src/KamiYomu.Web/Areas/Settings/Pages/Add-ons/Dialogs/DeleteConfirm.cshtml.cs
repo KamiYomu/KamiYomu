@@ -1,4 +1,4 @@
-using KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels;
+using KamiYomu.Web.Areas.Settings.ViewComponents;
 using KamiYomu.Web.Entities.Addons;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
@@ -33,6 +33,6 @@ public class DeleteConfirmModel(DbContext dbContext, INotificationService notifi
             IncludePrerelease = false
         };
 
-        return Partial("_SearchBar", viewModel);
+        return ViewComponent("SearchBar", viewModel);
     }
 }

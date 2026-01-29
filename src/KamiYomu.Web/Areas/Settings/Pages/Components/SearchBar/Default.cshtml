@@ -1,20 +1,13 @@
-﻿@using KamiYomu.Web.AppOptions
-@using KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels
+@using KamiYomu.Web.AppOptions
+@using KamiYomu.Web.Areas.Settings.ViewComponents
 
 @model SearchBarViewModel
-<form hx-post="/Settings/Add-ons/Index?handler=Search"
-      hx-target="#result"
-      hx-swap="innerHTML"
-      class="mt-3">
 
-    @Html.AntiForgeryToken()
-
+<div class="mt-3 search-bar">
     <div class="mb-3">
         <label asp-for="Search" class="form-label">@I18n.Addons</label>
 
-        <!-- Responsive row -->
         <div class="row g-2">
-            <!-- Source select -->
             <div class="col-12 col-md-4">
                 <select asp-for="SourceId" id="nuget-source-select" class="form-select w-100">
                     @if (!Model.Sources.Any())
@@ -28,21 +21,24 @@
                 </select>
             </div>
 
-            <!-- Search input -->
             <div class="col-12 col-md-5">
                 <input type="text" asp-for="Search" class="form-control w-100" placeholder="@I18n.Search" />
             </div>
 
-            <!-- Submit button -->
             <div class="col-12 col-md-3">
-                <button type="submit" class="btn btn-primary w-100">
+                <button type="button"
+                        hx-get="@Url.Page("/Add-ons/Index", new { area = "Settings", handler = "Search" })"
+                        hx-target="#result"
+                        hx-swap="innerHTML"
+                        hx-include="closest .search-bar"
+                        hx-push-url="true"
+                        class="btn btn-primary w-100">
                     <i class="bi bi-search me-2"></i>
                     @I18n.Search
                 </button>
             </div>
         </div>
 
-        <!-- Checkbox section -->
         <div class="form-check mt-3">
             <input class="form-check-input" type="checkbox" asp-for="IncludePrerelease" id="IncludePrerelease">
             <div class="d-flex flex-column">
@@ -56,4 +52,4 @@
             </div>
         </div>
     </div>
-</form>
+</div>

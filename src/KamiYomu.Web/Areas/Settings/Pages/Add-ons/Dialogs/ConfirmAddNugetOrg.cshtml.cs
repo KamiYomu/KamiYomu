@@ -1,5 +1,5 @@
 using KamiYomu.Web.AppOptions;
-using KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels;
+using KamiYomu.Web.Areas.Settings.ViewComponents;
 using KamiYomu.Web.Entities.Addons;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
@@ -21,8 +21,6 @@ public class ConfirmAddNugetOrgModel(DbContext dbContext, INotificationService n
         NugetSource source = new("NuGet.org", new Uri(Defaults.NugetFeeds.NugetFeedUrl), null, null);
         _ = dbContext.NugetSources.Insert(source);
 
-        List<NugetSource> nugetSources = [.. dbContext.NugetSources.FindAll()];
-
         _ = notificationService.PushSuccessAsync("Source added successfully", cancellationToken);
 
         SearchBarViewModel viewModel = new()
@@ -32,6 +30,6 @@ public class ConfirmAddNugetOrgModel(DbContext dbContext, INotificationService n
             IncludePrerelease = false
         };
 
-        return Partial("_SearchBar", viewModel);
+        return ViewComponent("SearchBar", viewModel);
     }
 }
