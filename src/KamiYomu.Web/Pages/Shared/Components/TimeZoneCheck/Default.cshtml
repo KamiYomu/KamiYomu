@@ -1,25 +1,11 @@
-<form id="TimeZoneSetForm"
-      asp-area=""
-      asp-page="Index"
-      asp-page-handler="SetTimeZone"
-      hx-post
-      hx-trigger="load once"
-      hx-swap="none"
-      hx-vals="js:{ tz: Intl.DateTimeFormat().resolvedOptions().timeZone }">
-    @Html.AntiForgeryToken()
-</form>
+<div hx-post="/Index?handler=SetTimeZone"
+     hx-trigger="load[checkTimeZoneCookie()]"
+     hx-swap="none"
+     hx-vals="js:{ tz: Intl.DateTimeFormat().resolvedOptions().timeZone }">
+</div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const cookieName = "UserTimeZone";
-        const cookies = document.cookie.split(';').map(c => c.trim());
-        const hasCookie = cookies.some(c => c.startsWith(cookieName + "="));
-
-        if (hasCookie) {
-            const form = document.querySelector('#TimeZoneSetForm');
-            if (form) {
-                form.removeAttribute("hx-trigger");
-            }
-        }
-    });
+    function checkTimeZoneCookie() {
+        return !document.cookie.split(';').some(c => c.trim().startsWith('UserTimeZone='));
+    }
 </script>

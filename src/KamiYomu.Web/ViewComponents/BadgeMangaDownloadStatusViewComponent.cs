@@ -11,6 +11,11 @@ public class BadgeMangaDownloadStatusViewComponent(IUserClockManager userClockSe
 {
     public IViewComponentResult Invoke(MangaDownloadRecord mangaDownloadRecord)
     {
+        if (mangaDownloadRecord == null)
+        {
+            return Content(string.Empty);
+        }
+
         string badgeClass = mangaDownloadRecord.DownloadStatus switch
         {
             Entities.Definitions.DownloadStatus.ToBeRescheduled => "bg-warning",

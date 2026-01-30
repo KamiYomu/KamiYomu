@@ -1,10 +1,8 @@
-@using KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels
+@using KamiYomu.Web.Areas.Settings.ViewComponents
+
 @model NugetPackageGroupedViewModel
-@{
-    Layout = null;
-    var cardId = $"package-card-{Model.Id}".Replace(".", "-");
-}
-<div class="row mb-3" id="@cardId">
+
+<div class="row mb-3" id="@Model.GetCardId()">
     <div class="col-12">
         <div class="card h-100">
             <div class="card-body">
@@ -36,7 +34,7 @@
 
                             <select class="form-select form-select-sm ms-2"
                                     hx-get="/Settings/Add-ons/Index?handler=PackageItem&sourceId=@Model.SourceId&packageId=@Model.Id"
-                                    hx-target="#@cardId"
+                                    hx-target="#@Model.GetCardId()"
                                     hx-trigger="change"
                                     hx-swap="outerHTML"
                                     name="version">

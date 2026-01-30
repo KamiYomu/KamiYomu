@@ -40,7 +40,7 @@ public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] Db
                                                           .OrderByDescending(p => p.LastReadAt)
                                                           .FirstOrDefault();
 
-        CurrentReadingChapter = chapterProgress is null ? null : Chapters?.Where(p => p.Id == chapterProgress.ChapterId).FirstOrDefault();
+        CurrentReadingChapter = chapterProgress is null ? null : Chapters?.Where(p => p.Id == chapterProgress.ChapterDownloadId).FirstOrDefault();
 
         FirstChapterAvailable = Chapters?.Where(p => p.DownloadStatus == DownloadStatus.Completed)
                                         .OrderBy(p => p.Chapter.Number)

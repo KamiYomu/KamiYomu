@@ -1,20 +1,93 @@
+using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.Contexts;
+using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
+
+using LiteDB;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.StaticFiles;
 
+using static KamiYomu.Web.AppOptions.Defaults;
+
 namespace KamiYomu.Web.Areas.Libraries.Pages.Collection;
 
 public class IndexModel(
     ILogger<IndexModel> logger,
+    [FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext,
     IHttpClientFactory httpClientFactory,
-    ImageDbContext imageDbContext) : PageModel
+    ImageDbContext imageDbContext,
+    ICrawlerAgentRepository agentCrawlerRepository) : PageModel
 {
+
+    [BindProperty(SupportsGet = true)]
+    public string Query { get; set; } = string.Empty;
+
+    [BindProperty(SupportsGet = true)]
+    public Guid? SelectedAgent { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public int Offset { get; set; } = 0;
+
+    [BindProperty(SupportsGet = true)]
+    public int Limit { get; set; } = 30;
+
+    [BindProperty(SupportsGet = true)]
+    public string? ContinuationToken { get; set; } = string.Empty;
+
+    public IEnumerable<Library> Results { get; set; } = [];
+
     public void OnGet()
     {
+        UserPreference userPreference = dbContext.UserPreferences.Query().FirstOrDefault();
+        Results = [.. dbContext.Libraries.Include(p => p.CrawlerAgent)
+                                         .Find(p => (Query == string.Empty || p.Manga.Title.Contains(Query))
+                                           && (p.Manga.IsFamilySafe || p.Manga.IsFamilySafe == userPreference.FamilySafeMode))
+                                         .Skip(Offset)
+                                         .Take(Limit)];
+        ViewData["ShowAddToLibrary"] = false;
+        ViewData["Handler"] = "Search";
+        ViewData[nameof(Query)] = Query;
+        ViewData[nameof(PaginationOptions.OffSet)] = Offset + Limit;
+        ViewData[nameof(PaginationOptions.Limit)] = Limit;
+        ViewData[nameof(PaginationOptions.ContinuationToken)] = string.Empty;
+    }
 
+    public IActionResult OnGetSearch()
+    {
+        UserPreference userPreference = dbContext.UserPreferences.Query().FirstOrDefault();
+        Results = [.. dbContext.Libraries.Include(p => p.CrawlerAgent)
+                                         .Find(p => (Query == string.Empty || p.Manga.Title.Contains(Query))
+                                           && (p.Manga.IsFamilySafe || p.Manga.IsFamilySafe == userPreference.FamilySafeMode))
+                                         .Skip(Offset)
+                                         .Take(Limit)];
+        ViewData["ShowAddToLibrary"] = false;
+        ViewData["Handler"] = "Search";
+        ViewData[nameof(Query)] = Query;
+        ViewData[nameof(PaginationOptions.OffSet)] = Offset + Limit;
+        ViewData[nameof(PaginationOptions.Limit)] = Limit;
+        ViewData[nameof(PaginationOptions.ContinuationToken)] = string.Empty;
+
+        if (Request.Headers.ContainsKey("HX-Request"))
+        {
+            return ViewComponent("SearchMangaResult", new
+            {
+                libraries = Results,
+                searchUri = Url.Page("/Collection/Index", new
+                {
+                    Area = "Libraries",
+                    Handler = "Search",
+                    Query = ViewData[nameof(Query)],
+                    SelectedAgent = ViewData[nameof(SelectedAgent)],
+                    OffSet = ViewData[nameof(Offset)],
+                    Limit = ViewData[nameof(Limit)],
+                    ContinuationToken = ViewData[nameof(ContinuationToken)]
+                })
+            });
+        }
+        return Page();
     }
 
     public async Task<IActionResult> OnGetImageAsync(Uri uri, CancellationToken cancellationToken)
@@ -29,7 +102,7 @@ public class IndexModel(
             return BadRequest("Invalid image URI.");
         }
 
-        LiteDB.ILiteStorage<Uri> fs = imageDbContext.CoverImageFileStorage;
+        ILiteStorage<Uri> fs = imageDbContext.CoverImageFileStorage;
 
         if (!fs.Exists(uri))
         {
@@ -55,15 +128,15 @@ public class IndexModel(
             }
         }
 
-        LiteDB.LiteFileStream<Uri> fileStream = fs.OpenRead(uri);
+        LiteFileStream<Uri> fileStream = fs.OpenRead(uri);
         if (fileStream == null)
         {
             return NotFound("Image not found in cache.");
         }
 
         FileStreamResult result = File(fileStream, GetContentType(fileStream.FileInfo.Filename));
-        Response.Headers["Cache-Control"] = "public,max-age=2592000"; // 30 days
-        Response.Headers["Expires"] = DateTimeOffset.UtcNow.AddDays(30).ToString("R"); // RFC1123 format
+        Response.Headers.CacheControl = "public,max-age=2592000"; // 30 days
+        Response.Headers.Expires = DateTimeOffset.UtcNow.AddDays(30).ToString("R"); // RFC1123 format
         return result;
 
     }

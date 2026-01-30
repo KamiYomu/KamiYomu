@@ -1,4 +1,4 @@
-@page "{libraryId:guid}/chapter/{chapterId:guid}"
+@page "{libraryId:guid}/chapter/{chapterDownloadId:guid}"
 @using KamiYomu.Web.Areas.Reader.Pages.MangaReader
 @model IndexModel
 
@@ -33,7 +33,7 @@
                      hx-post="@Url.Page("/MangaReader/Index", "PageViewed", 
                      new { 
                             Area = "Reader",
-                            ChapterId = Model.ChapterId,
+                            Model.ChapterDownloadId,
                             LibraryId = Model.LibraryId,
                             IsLastPage = isLastPage,
                             PageNumber = pageNumber,
@@ -42,7 +42,7 @@
                      })"
                      hx-trigger="page-passed"
                      hx-swap="none">
-                    <img src="@Url.Page("/MangaReader/Index", "Image", new { area = "Reader", id = Model.ChapterId, fileName = Model.PageUrls[i] })"
+                    <img src="@Url.Page("/MangaReader/Index", "Image", new { area = "Reader", Model.ChapterDownloadId, fileName = Model.PageUrls[i] })"
                          class="reader-img"
                          loading="lazy"
                          alt="Page @(i + 1)" />
@@ -53,7 +53,7 @@
             <div id="end-of-chapter-card" 
                  class="manga-page-wrapper d-flex align-items-center justify-content-center"
                  style="min-height: 100vh; background-color: #1a1a1a;"
-                 hx-post="@Url.Page("/MangaReader/Index", "PageViewed", new { Area = "Reader", ChapterId = Model.ChapterId, IsLastPage = true, PageNumber = Model.TotalPages })"
+                 hx-post="@Url.Page("/MangaReader/Index", "PageViewed", new { Area = "Reader", Model.ChapterDownloadId, IsLastPage = true, PageNumber = Model.TotalPages })"
                  hx-trigger="page-passed"
                  hx-swap="none">
         
@@ -67,7 +67,7 @@
                         {
                             <a asp-area="Reader"
                                asp-page="/MangaReader/Index"
-                               asp-route-chapterId="@Model.NextChapterId"
+                               asp-route-chapterDownloadId="@Model.NextChapterId"
                                asp-route-libraryId="@Model.LibraryId" 
                                class="btn btn-outline-light">
                                  @I18n.NextChapter 

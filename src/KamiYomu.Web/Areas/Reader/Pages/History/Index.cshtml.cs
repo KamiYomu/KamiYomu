@@ -8,7 +8,7 @@ namespace KamiYomu.Web.Areas.Reader.Pages.History;
 
 public class IndexModel(IChapterProgressRepository chapterProgressRepository) : PageModel
 {
-    public IEnumerable<IGrouping<DateTime, ChapterViewModels>> GroupedHistory { get; set; } = [];
+    public IEnumerable<IGrouping<DateTime, ChapterViewModel>> GroupedHistory { get; set; } = [];
     public int NextOffset { get; set; }
 
     public void OnGet(int offset = 0, int length = 20)

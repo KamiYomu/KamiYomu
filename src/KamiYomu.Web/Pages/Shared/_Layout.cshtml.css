@@ -1,4 +1,19 @@
-﻿
+:root {
+    --brand-color: #7253ed;
+}
+
+.gloria-hallelujah-regular {
+    font-family: "Gloria Hallelujah", cursive;
+}
+
+[data-bs-theme="dark"] .navbar-brand {
+    color: #fff !important;
+}
+
+[data-bs-theme="light"] .navbar-brand {
+    color: #000 !important;
+}
+
 
 .bi {
     vertical-align: -0.125em;

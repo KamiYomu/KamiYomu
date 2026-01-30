@@ -24,6 +24,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Monikers.imagemanifest" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.22" />
 		<PackageReference Include="Hangfire.Storage.SQLite" Version="0.4.2" />
 		<PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.2" />

@@ -43,9 +43,9 @@ public class DownloadChapterTableRowViewComponent(IUserClockManager userClockSer
             ? Url.Page("/MangaReader/Index", new
             {
                 area = "Reader",
-                libraryId = chapterDownloadRecord.MangaDownload.Library.Id,
-                chapterId = chapterDownloadRecord.Id,
-                returnUrl = Url.Page("/Collection/Index", new { area = "Libraries" })
+                LibraryId = chapterDownloadRecord.MangaDownload.Library.Id,
+                ChapterDownloadId = chapterDownloadRecord.Id,
+                ReturnUrl = Url.Page("/Collection/Index", new { area = "Libraries" })
             }) ?? "#"
             : "#";
 

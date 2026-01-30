@@ -33,7 +33,11 @@
                                     <button class="dropdown-item"
                                             title="@I18n.Details"
                                             aria-label="View details"
-                                            hx-get="/Settings/CrawlerAgents/Dialogs/CrawlerAgentDetails?id=@item.Id"
+                                            hx-get="@Url.Page("/CrawlerAgents/Dialogs/CrawlerAgentDetails", 
+                                                    new {
+                                                        area = "Settings",
+                                                        item.Id
+                                                    })"
                                             hx-target="#modal-body"
                                             hx-swap="innerHTML"
                                             data-bs-toggle="modal"

@@ -1,13 +1,17 @@
 using KamiYomu.Web.Entities.Addons;
 
+using Microsoft.AspNetCore.Mvc;
+
 using static KamiYomu.Web.AppOptions.Defaults;
 
-namespace KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels;
+namespace KamiYomu.Web.Areas.Settings.ViewComponents;
 
-public class PackageListViewModel
+public class PackageItemViewComponent : ViewComponent
 {
-    public Guid SourceId { get; set; }
-    public IEnumerable<NugetPackageGroupedViewModel> PackageItems { get; set; } = [];
+    public IViewComponentResult Invoke(NugetPackageGroupedViewModel viewModel)
+    {
+        return View(viewModel);
+    }
 }
 
 public class NugetPackageGroupedViewModel
@@ -25,6 +29,10 @@ public class NugetPackageGroupedViewModel
     public Uri? RepositoryUrl { get; set; }
     public Dictionary<string, List<NugetDependencyInfo>> DependenciesByVersion { get; set; } = [];
 
+    public string GetCardId()
+    {
+        return $"package-card-{Id}".Replace(".", "-");
+    }
     public bool IsNsfw()
     {
         return Tags.Any(p => string.Equals(p, Package.NotSafeForWorkTag, StringComparison.OrdinalIgnoreCase));

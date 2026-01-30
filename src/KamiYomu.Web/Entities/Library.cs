@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Xml.Linq;
 
 using KamiYomu.CrawlerAgents.Core.Catalog;
@@ -26,6 +27,7 @@ public class Library
         FilePathTemplate = filePathTemplate;
         ComicInfoTitleTemplateFormat = comicInfoTitleTemplateFormat;
         ComicInfoSeriesTemplate = comicInfoSeriesTemplate;
+        CreatedDate = DateTimeOffset.UtcNow;
     }
 
     private LibraryDbContext CreateReadWriteDbContext()
@@ -221,6 +223,7 @@ public class Library
 
     public string ToComicInfo(Chapter chapter)
     {
+        string chapterJson = JsonSerializer.Serialize(chapter);
         XElement comicInfo = new("ComicInfo",
             new XElement("Title", $"{GetComicInfoTitleTemplateResolved(chapter)}"),
             new XElement("Series", $"{GetComicInfoSeriesTemplateResolved(chapter)}"),
@@ -233,8 +236,8 @@ public class Library
             new XElement("Genre", string.Join(", ", chapter?.ParentManga?.Tags ?? [])),
             new XElement("ScanInformation", "KamiYomu"),
             new XElement("Web", chapter?.Uri?.ToString() ?? chapter?.ParentManga.WebSiteUrl ?? string.Empty),
-            new XElement("AgeRating", (chapter?.ParentManga?.IsFamilySafe ?? true) ? "12+" : "Mature"),
-            new XElement("Notes", $"libraryId:{Id};")
+            new XElement("AgeRating", (chapter?.ParentManga?.IsFamilySafe ?? true) ? "Everyone" : "Adult"),
+            new XElement("Notes", chapterJson)
         );
 
         return comicInfo.ToString();
@@ -247,4 +250,5 @@ public class Library
     public string? FilePathTemplate { get; private set; }
     public string? ComicInfoTitleTemplateFormat { get; private set; }
     public string? ComicInfoSeriesTemplate { get; private set; }
+    public DateTimeOffset CreatedDate { get; private set; } = DateTimeOffset.UtcNow;
 }

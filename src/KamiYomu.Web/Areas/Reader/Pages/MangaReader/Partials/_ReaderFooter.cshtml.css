@@ -1,0 +1,14 @@
+.reader-footer {
+    flex-shrink: 0; /* Prevents the footer from squishing */
+    user-select: none;
+}
+
+.page-indicator-badge {
+    min-width: 100px;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.flex-1 {
+    flex: 1;
+}

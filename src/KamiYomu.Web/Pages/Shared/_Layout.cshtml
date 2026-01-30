@@ -1,6 +1,8 @@
 @using System.Globalization
 @using Microsoft.AspNetCore.Localization
 @using KamiYomu.Web.Infrastructure.Services.Interfaces
+@using System.Text.Json
+@using System.Reflection
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 
@@ -22,44 +24,56 @@
     <title>KamiYomu - @(string.IsNullOrEmpty(ViewData["Title"]?.ToString()) ? "Manga Crawler Platform" : ViewData["Title"])</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap">
     <link rel="icon" href="~/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/lib/flag-icons/css/flag-icons.min.css">
     <link rel="stylesheet" href="~/KamiYomu.Web.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     @await RenderSectionAsync("Styles", false)
+
+    <script>
+        window.I18n = {
+            Dark: "@Html.Raw(Resources.I18n.Dark)",
+            Light: "@Html.Raw(Resources.I18n.Light)",
+            ToggleTheme: "@Html.Raw(Resources.I18n.ToggleTheme)"
+        };
+    </script>
 </head>
 <body>
     <partial name="_Sprites" />
-    
 
-    <header class="navbar sticky-top bg-dark p-0 shadow d-flex justify-content-between align-items-center"
-            data-bs-theme="dark">
-        <a class="col-lg-2 col-sm-10 navbar-brand d-flex align-items-center px-3 fs-6 text-white"
-           href="/">
-            <svg viewBox="0 0 647 232" class="me-2" style="width:50px; height:auto;">
-                <use href="#logo-owl"></use>
-            </svg>
-            <span class="gloria-hallelujah-regular fw-bold">KamiYomu</span>
-        </a>
 
-        <ul class="navbar-nav flex-row mb-0 d-lg-none  d-md-none  d-flex">
-            <li class="nav-item">
-                <button class="nav-link px-3 text-white"
-                        type="button"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#sidebarMenu"
-                        aria-controls="sidebarMenu"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation">
-                    <i class="bi bi-list" aria-hidden="true"></i>
-                </button>
-            </li>
-        </ul>
+    <header class="navbar p-3 border-bottom shadow d-flex justify-content-between align-items-center">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <a class="navbar-brand d-flex align-items-center fs-5"
+               href="/">
+                <svg viewBox="0 0 647 232" class="me-2" style="width:60px; height:auto;">
+                    <use href="#logo-owl"></use>
+                </svg>
+                <span class="gloria-hallelujah-regular fw-bold">KamiYomu</span>
+            </a>
+
+            <ul class="navbar-nav flex-row mb-0 d-flex">
+                <li class="nav-item px-md-3 px-1 py-1 py-md-0">
+                    <vc:family-safe />
+                </li>
+                <li class="nav-item d-lg-none d-md-none ">
+                    <button class="nav-link px-3 text-white"
+                            type="button"
+                            data-bs-toggle="offcanvas"
+                            data-bs-target="#sidebarMenu"
+                            aria-controls="sidebarMenu"
+                            aria-expanded="false"
+                            aria-label="Toggle navigation">
+                        <i class="bi bi-list" aria-hidden="true"></i>
+                    </button>
+                </li>
+            </ul>
+        </div>
     </header>
+
     <div class="container-fluid min-vh-md-100 min-vh-lg-100">
         <div class="row vh-100">
             <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
@@ -93,13 +107,13 @@
                 <vc:dialogs />
                 <vc:loading />
             </main>
-
         </div>
 
     </div>
 
+    <vc:theme-selector />
+
     <partial name="_NotificationToast" />
-    <script src="~/js/color-modes.js" asp-append-version="true"></script>
     <script src="~/lib/htmx/htmx.min.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -117,6 +131,7 @@
             }
         });
     </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

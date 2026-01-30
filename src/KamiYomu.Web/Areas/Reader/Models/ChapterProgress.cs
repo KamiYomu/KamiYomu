@@ -9,7 +9,7 @@ public class ChapterProgress
     public ChapterProgress(Guid libraryId, Guid chapterId, decimal chapterNumber)
     {
         LibraryId = libraryId;
-        ChapterId = chapterId;
+        ChapterDownloadId = chapterId;
         ChapterNumber = chapterNumber;
     }
 
@@ -31,7 +31,7 @@ public class ChapterProgress
 
     public Guid Id { get; private set; }
     public Guid LibraryId { get; private set; }
-    public Guid ChapterId { get; private set; }
+    public Guid ChapterDownloadId { get; private set; }
     public decimal ChapterNumber { get; private set; }
     public int LastPageRead { get; private set; }
     public DateTimeOffset LastReadAt { get; set; }

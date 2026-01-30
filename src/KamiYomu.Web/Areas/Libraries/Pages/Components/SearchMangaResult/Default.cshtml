@@ -1,0 +1,17 @@
+@using KamiYomu.Web.Areas.Libraries.ViewComponents
+@model SearchMangaResultViewComponentModel
+
+@foreach(var item in Model.Libraries)
+{
+    <vc:library-card library="item"/>
+}
+
+@if(Model.Libraries.Any())
+{
+    <div hx-get="@Model.SearchUri"
+         hx-trigger="revealed"
+         hx-swap="afterend"
+         hx-push-url="true"
+         class="htmx-trigger d-block w-100">
+    </div>
+} 

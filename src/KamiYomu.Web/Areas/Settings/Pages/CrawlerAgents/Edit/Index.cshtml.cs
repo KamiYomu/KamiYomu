@@ -1,4 +1,9 @@
+using System.ComponentModel.DataAnnotations;
+
+using KamiYomu.CrawlerAgents.Core;
+using KamiYomu.CrawlerAgents.Core.Inputs;
 using KamiYomu.Web.Areas.Settings.Pages.Shared;
+using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
@@ -6,28 +11,31 @@ using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using System.ComponentModel.DataAnnotations;
-
 namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.Edit;
 
 public class IndexModel(DbContext dbContext,
                        CacheContext cacheContext,
                        INotificationService notificationService) : PageModel
 {
-    [BindProperty]
-    public InputModel Input { get; set; } = new InputModel();
-    public IActionResult OnGet(Guid id)
-    {
-        Entities.CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(id);
+    [BindProperty(SupportsGet = true)]
+    public Guid? Id { get; set; }
 
-        if (crawlerAgent == null)
-        {
-            return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Index");
-        }
+    [BindProperty]
+    public InputModel Input { get; set; }
+    public IActionResult OnGet()
+    {
+        FetchData();
+
+        return Input == null ? PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Index") : Page();
+    }
+
+    private void FetchData()
+    {
+        CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(Id);
 
         Input = new InputModel()
         {
-            Id = id,
+            Id = crawlerAgent.Id,
             DisplayName = crawlerAgent.DisplayName,
             ReadOnlyMetadata = crawlerAgent.GetAssemblyMetadata(),
             CrawlerInputsViewModel = new CrawlerInputsViewModel
@@ -36,22 +44,20 @@ public class IndexModel(DbContext dbContext,
                 AgentMetadata = CrawlerInputsViewModel.GetAgentMetadataValues(crawlerAgent.AgentMetadata)
             }
         };
-
-        return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync(CancellationToken cancellationToken)
+    public IActionResult OnPost()
     {
-        Entities.CrawlerAgent agentCrawler = dbContext.CrawlerAgents.FindById(Input.Id);
+        CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(Input.Id);
         Dictionary<string, object> metadata = Input.CrawlerInputsViewModel.GetAgentMetadataValues();
-        IEnumerable<KamiYomu.CrawlerAgents.Core.Inputs.AbstractInputAttribute> crawlerInputs = agentCrawler.GetCrawlerInputs();
+        IEnumerable<AbstractInputAttribute> crawlerInputs = crawlerAgent.GetCrawlerInputs();
 
-        foreach (KamiYomu.CrawlerAgents.Core.Inputs.AbstractInputAttribute crawlerInput in crawlerInputs)
+        foreach (AbstractInputAttribute crawlerInput in crawlerInputs)
         {
             if (crawlerInput.Required)
             {
-                if (metadata.TryGetValue(crawlerInput.Name, out object? valueObj)
-                   && valueObj is null
+                if ((metadata.TryGetValue(crawlerInput.Name, out object? valueObj)
+                   && valueObj is null)
                    || (valueObj is string valueStr && string.IsNullOrWhiteSpace(valueStr)))
                 {
                     ModelState.AddModelError($"AgentMetadata[{crawlerInput.Name}]", I18n.ThisValueIsRequired);
@@ -62,18 +68,33 @@ public class IndexModel(DbContext dbContext,
         if (!ModelState.IsValid)
         {
             notificationService.EnqueueErrorForNextPage(I18n.PleaseCorrectHighlightedField);
-            return OnGet(Input.Id.GetValueOrDefault());
+            Id = Input.Id;
+            FetchData();
+            return Page();
         }
 
-        agentCrawler.Update(Input.DisplayName, metadata, Input.ReadOnlyMetadata);
+        crawlerAgent.Update(Input.DisplayName, metadata, Input.ReadOnlyMetadata);
 
-        _ = dbContext.CrawlerAgents.Update(agentCrawler);
+        _ = dbContext.CrawlerAgents.Update(crawlerAgent);
 
-        cacheContext.EmptyAgentKeys(agentCrawler.Id);
+        cacheContext.EmptyAgentKeys(crawlerAgent.Id);
 
         notificationService.EnqueueSuccessForNextPage(I18n.CrawlerAgentSavedSuccessfully);
 
-        return PageExtensions.RedirectToAreaPage("Settings", "/CrawlerAgents/Edit/Index", new { agentCrawler.Id });
+        Id = Input.Id;
+        Input = new InputModel()
+        {
+            Id = Input.Id,
+            DisplayName = crawlerAgent.DisplayName,
+            ReadOnlyMetadata = crawlerAgent.GetAssemblyMetadata(),
+            CrawlerInputsViewModel = new CrawlerInputsViewModel
+            {
+                CrawlerInputs = crawlerAgent.GetCrawlerInputs(),
+                AgentMetadata = CrawlerInputsViewModel.GetAgentMetadataValues(crawlerAgent.AgentMetadata)
+            }
+        };
+
+        return Page();
     }
 }
 

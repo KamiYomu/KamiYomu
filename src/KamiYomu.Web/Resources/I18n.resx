@@ -1037,4 +1037,13 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="About" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="WeekChapters" xml:space="preserve">
+    <value>Week Chapters</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="RecentlyAdded" xml:space="preserve">
+    <value>Recently Added</value>
+  </data>
 </root>

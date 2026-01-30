@@ -11,7 +11,7 @@
 <form method="post" asp-page="/Index" asp-page-handler="FamilySafe" asp-route-returnUrl="@Context.Request.Path" novalidate>
     @Html.AntiForgeryToken()
     <button type="submit"
-            class="btn @Model.ButtonClass btn-sm d-flex align-items-center shadow-sm rounded-pill px-3 @(Model.HasMobileMode ? "justify-content-center" : "w-100")"
+            class="btn @Model.ButtonClass btn-sm d-flex align-items-center shadow-sm rounded-pill px-3 justify-content-center"
             style="border-width: 1px;"
             data-bs-toggle="popover"
             data-bs-trigger="hover focus"
@@ -19,9 +19,9 @@
             data-bs-content="@Model.Legend"
             title="@I18n.FamilySafeMode">
 
-        <i class="@Model.IconClass fs-6 @(Model.HasMobileMode ? "me-sm-2" : "me-2")"></i>
+        <i class="@Model.IconClass fs-6 me-sm-2"></i>
 
-        <span class="fw-normal flex-grow-1 text-center small pe-4 @(Model.HasMobileMode ? "d-none d-sm-inline" : string.Empty)">
+        <span class="fw-normal flex-grow-1 text-center small pe-4 d-none d-sm-inline">
             @I18n.FamilySafeMode
         </span>
     </button>

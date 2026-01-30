@@ -1,68 +1,68 @@
-﻿@using System.Text.RegularExpressions
+@using System.Text.RegularExpressions
 @using KamiYomu.Web.AppOptions
 @using KamiYomu.Web.Entities
 @model KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.Edit.InputModel
 
 
-    @Html.AntiForgeryToken()
+@Html.AntiForgeryToken()
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <div class="btn-toolbar">
-            <div class="btn-group">
-                <a asp-area="Settings" asp-page="/CrawlerAgents/Index" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left-circle"></i> @I18n.Back
-                </a>
-                <button type="submit" class="btn btn-outline-primary">
-                    <i class="bi bi-save me-2"></i> @I18n.Save
-                </button>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            <a asp-area="Settings" asp-page="/CrawlerAgents/Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left-circle"></i> @I18n.Back
+            </a>
+            <button type="submit" class="btn btn-outline-primary">
+                <i class="bi bi-save me-2"></i> @I18n.Save
+            </button>
+        </div>
+    </div>
+</div>
+
+<input asp-for="Id" name="Input.Id" type="hidden" />
+
+<div class="mb-3">
+    <label asp-for="DisplayName" class="form-label"></label>
+    <input asp-for="DisplayName" name="Input.DisplayName" class="form-control" />
+</div>
+
+<fieldset class="border rounded p-3 mb-4">
+    <legend class="float-none w-auto px-2 fs-5 fw-semibold text-primary">@I18n.CrawlerSettings</legend>
+
+    <partial name="_CrawlerInputs" model="Model.CrawlerInputsViewModel" />
+
+</fieldset>
+
+<div class="accordion mb-3" id="assemblyAccordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="assemblyHeading">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#assemblyCollapse" aria-expanded="false" aria-controls="assemblyCollapse">
+                @I18n.AssemblyProperties
+            </button>
+        </h2>
+        <div id="assemblyCollapse" class="accordion-collapse collapse" aria-labelledby="assemblyHeading" data-bs-parent="#assemblyAccordion">
+            <div class="accordion-body">
+                @foreach (var item in Model.ReadOnlyMetadata)
+                {
+                    <div class="mb-3">
+                        <label class="form-label">@item.Key</label>
+                        <input name="Input.ReadOnlyMetadata[@item.Key]" class="form-control" readonly value="@item.Value" />
+                    </div>
+                }
             </div>
         </div>
     </div>
+</div>
 
-    <input asp-for="Id" name="Input.Id" type="hidden" />
-
-    <div class="mb-3">
-        <label asp-for="DisplayName" class="form-label"></label>
-        <input asp-for="DisplayName" name="Input.DisplayName" class="form-control" />
-    </div>
-
-    <fieldset class="border rounded p-3 mb-4">
-        <legend class="float-none w-auto px-2 fs-5 fw-semibold text-primary">@I18n.CrawlerSettings</legend>
-
-        <partial name="_CrawlerInputs" model="Model.CrawlerInputsViewModel" />
-
-    </fieldset>
-
-    <div class="accordion mb-3" id="assemblyAccordion">
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="assemblyHeading">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#assemblyCollapse" aria-expanded="false" aria-controls="assemblyCollapse">
-                    @I18n.AssemblyProperties
-                </button>
-            </h2>
-            <div id="assemblyCollapse" class="accordion-collapse collapse" aria-labelledby="assemblyHeading" data-bs-parent="#assemblyAccordion">
-                <div class="accordion-body">
-                    @foreach (var item in Model.ReadOnlyMetadata)
-                    {
-                        <div class="mb-3">
-                            <label class="form-label">@item.Key</label>
-                            <input name="Input.ReadOnlyMetadata[@item.Key]" class="form-control" readonly value="@item.Value" />
-                        </div>
-                    }
-                </div>
-            </div>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            <a asp-area="Settings" asp-page="/CrawlerAgents/Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left-circle"></i> @I18n.Back
+            </a>
+            <button type="submit" class="btn btn-outline-primary">
+                <i class="bi bi-save me-2"></i> @I18n.Save
+            </button>
         </div>
     </div>
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <div class="btn-toolbar">
-            <div class="btn-group">
-                <a asp-area="Settings" asp-page="/CrawlerAgents/Index" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left-circle"></i> @I18n.Back
-                </a>
-                <button type="submit" class="btn btn-outline-primary">
-                    <i class="bi bi-save me-2"></i> @I18n.Save
-                </button>
-            </div>
-        </div>
-    </div>
+</div>

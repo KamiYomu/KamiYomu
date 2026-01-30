@@ -15,7 +15,7 @@ public class EditModel(ILogger<EditModel> logger, DbContext dbContext) : PageMod
 
     public bool IsEditMode => Input.Id != Guid.Empty;
 
-    public async Task<IActionResult> OnGetAsync(Guid? id)
+    public IActionResult OnGet(Guid? id)
     {
         if (id.HasValue)
         {
@@ -38,7 +38,7 @@ public class EditModel(ILogger<EditModel> logger, DbContext dbContext) : PageMod
         return Page();
     }
 
-    public IActionResult OnPostAsync()
+    public IActionResult OnPost()
     {
         if (!ModelState.IsValid)
         {

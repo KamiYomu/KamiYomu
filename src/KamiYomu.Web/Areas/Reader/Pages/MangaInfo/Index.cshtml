@@ -83,7 +83,7 @@
                 {
                     <a asp-area="Reader"
                        asp-page="/MangaReader/Index"
-                       asp-route-chapterId="@Model.CurrentReadingChapter.Id"
+                       asp-route-chapterDownloadId="@Model.CurrentReadingChapter.Id"
                        asp-route-libraryId="@Model.Library.Id"
                        asp-route-returnUrl="@($"{Request.Path}{Request.QueryString}")"
                        class="btn btn-primary btn-sm d-inline-flex align-items-center gap-2"
@@ -104,7 +104,7 @@
                 {
                     <a asp-area="Reader"
                        asp-page="/MangaReader/Index"
-                       asp-route-chapterId="@Model.FirstChapterAvailable.Id"
+                       asp-route-chapterDownloadId="@Model.FirstChapterAvailable.Id"
                        asp-route-libraryId="@Model.Library.Id"
                        asp-route-returnUrl="@($"{Request.Path}{Request.QueryString}")"
                        class="btn btn-primary btn-sm d-inline-flex align-items-center gap-2"
@@ -134,7 +134,7 @@
                 {
                     <a asp-area="Reader"
                        asp-page="/MangaReader/Index"
-                       asp-route-chapterId="@ch.Id"
+                       asp-route-chapterDownloadId="@ch.Id"
                        asp-route-libraryId="@Model.Library.Id"
                        asp-route-returnUrl="@($"{Request.Path}{Request.QueryString}")"
                        class="list-group-item list-group-item-action py-3 d-flex justify-content-between align-items-center">

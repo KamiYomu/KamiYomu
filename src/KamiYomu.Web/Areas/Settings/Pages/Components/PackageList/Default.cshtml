@@ -1,12 +1,12 @@
-﻿@using KamiYomu.Web.AppOptions
-@using KamiYomu.Web.Areas.Settings.Pages.Add_ons.ViewModels
+@using KamiYomu.Web.AppOptions
+@using KamiYomu.Web.Areas.Settings.ViewComponents
 @model PackageListViewModel
 
 @if (Model.PackageItems.Any())
 {
     foreach (var packageItem in Model.PackageItems)
     {
-        <partial name="_PackageItem" model="packageItem" />
+       <vc:package-item view-model="packageItem"/>
     }
 }
 else

@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model KamiYomu.Web.Areas.Settings.Pages.Add_ons.Dialogs.DeleteConfirmModel
 @{
     Layout = null;
@@ -12,16 +12,19 @@
     <p>Confirm delete source</p>
 </div>
 <div class="modal-footer">
-    <form method="post"
-          hx-post="/Settings/Add-ons/Dialogs/DeleteConfirm"
-          hx-target="#search-bar"
-          hx-on::after-request="handleNugetSourceUpdate()"
-          hx-swap="innerHTML">
-        @Html.AntiForgeryToken()
+
         <input type="hidden" name="Id" value="@Model.NugetSource.Id" />
-        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">@I18n.Delete</button>
+        <button type="submit"
+            hx-post="@Url.Page("/Add-ons/Dialogs/DeleteConfirm", new { area = "Settings" })"
+                hx-target=".search-bar"
+                hx-on::after-request="handleNugetSourceUpdate()"
+                hx-swap="innerHTML"
+                hx-include="closest .modal-footer"
+                class="btn btn-danger" 
+                data-bs-dismiss="modal">
+            @I18n.Delete
+        </button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@I18n.Cancel</button>
-    </form>
 </div>
 
 

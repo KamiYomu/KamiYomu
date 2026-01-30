@@ -1,6 +1,6 @@
-﻿#toast-container {
+#toast-container {
     position: fixed;
-    top: 1rem; 
+    top: 5rem; 
     right: 1rem;
     z-index: 1080;
     display: flex;

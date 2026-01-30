@@ -1,5 +1,3 @@
-using System.Reflection;
-
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Entities.Definitions;
 
@@ -62,7 +60,13 @@ public class ChapterDownloadRecord
 
     public bool IsInProgress()
     {
-        return DownloadStatus is DownloadStatus.Scheduled or DownloadStatus.InProgress;
+        return DownloadStatus == DownloadStatus.InProgress ? !IsStale() : DownloadStatus == DownloadStatus.Scheduled;
+    }
+
+    public bool IsStale()
+    {
+        return DownloadStatus == DownloadStatus.InProgress
+               && StatusUpdateAt < DateTimeOffset.UtcNow.AddDays(-1);
     }
 
     public bool IsCancelled()

@@ -5,16 +5,21 @@
       data-bs-toggle="popover"
       data-bs-trigger="hover focus"
       data-bs-placement="top"
-      data-bs-content="@Model.Legend">
+      data-bs-content="@Model.Legend"
+      data-bs-title="@I18n.DownloadStatus">
     @(I18n.ResourceManager.GetString(Model.ChapterDownloadRecord.DownloadStatus.ToString())
         ?? Model.ChapterDownloadRecord.DownloadStatus.ToString())
 </span>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-        popoverTriggerList.forEach(function (el) {
-            new bootstrap.Popover(el);
-        });
-    });
+     function initPopovers() {
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+        [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initPopovers);
+    } else {
+        initPopovers();
+    }
 </script>

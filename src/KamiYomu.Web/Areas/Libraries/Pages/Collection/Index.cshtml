@@ -1,8 +1,6 @@
 @page
 @using KamiYomu.Web.Areas.Libraries.Pages.Collection
 @model IndexModel
-@{
-}
 
 
 @section Scripts {
@@ -24,41 +22,50 @@
 </div>
 
 <div class="container py-4">
-    <div class="d-flex align-items-start gap-3 mb-4">
-        <div class="flex-grow-1">
-            <!-- Wrap input group in a form -->
-            <form class="input-group input-group-lg"
-                  hx-get="/Libraries/Collection/SearchResults?handler=search"
-                  hx-target="#search-results"
-                  hx-include="#selectedAgent">
 
-                @Html.AntiForgeryToken()
-                <!-- Search input -->
-                <input type="text"
-                       class="form-control flex-grow-1"
-                       placeholder="@I18n.SearchManga"
-                       name="query"
-                       id="searchInput"
-                       oninput="if (!document.getElementById('selectedAgent').value) this.form.removeAttribute('hx-get'); else this.form.setAttribute('hx-get', '/Library/SearchResults');" />
+    <div class="mt-3 search-bar">
+        <div class="mb-3">
+            <div class="row g-2">
+                <div class="col-12 col-md-5">
+                    <input type="text"
+                           asp-for="Query"
+                           class="form-control w-100"
+                           placeholder="@I18n.SearchManga"
+                           hx-trigger="keyup[key=='Enter']"
+                           hx-on:keyup="if(event.key === 'Enter') document.getElementById('search-btn').click()" />
+                </div>
 
-                <!-- Search button -->
-                <button class="btn btn-outline-primary" type="submit">
-                    <i class="bi bi-search"></i>
-                </button>
-
-                <!-- Hidden agent input -->
-                <input type="hidden" name="selectedAgent" id="selectedAgent" />
-            </form>
+                <div class="col-12 col-md-3">
+                    <button type="button"
+                            hx-get="@Url.Page("/Collection/Index", new { area = "Libraries", handler = "Search" })"
+                            hx-target="#search-results"
+                            hx-swap="innerHTML"
+                            hx-include="closest .search-bar"
+                            hx-push-url="true"
+                            id="search-btn"
+                            class="btn btn-primary w-100">
+                        <i class="bi bi-search me-2"></i>
+                        @I18n.Search
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Results container -->
-    <div id="search-results" class="row row-cols-1 row-cols-md-3 g-4 mb-5" hx-swap="innerHTML"></div>
+    <div id="search-results" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+        <vc:search-manga-result 
+            libraries="@Model.Results" 
+            search-uri="@Url.Page("/Collection/Index", new {
+            Area= "Libraries",
+            Handler = "Search",
+            Query = ViewData[nameof(Model.Query)],
+            SelectedAgent = ViewData[nameof(Model.SelectedAgent)],
+            OffSet = ViewData[nameof(Model.Offset)],
+            Limit = ViewData[nameof(Model.Limit)],
+            ContinuationToken = ViewData[nameof(Model.ContinuationToken)]
+       })"/>
+    </div>
 
-    <!-- Initial load -->
-    <div hx-get="/Libraries/Collection/SearchResults?handler=search"
-         hx-target="#search-results"
-         hx-trigger="load"
-         style="display:none"></div>
 </div>
 

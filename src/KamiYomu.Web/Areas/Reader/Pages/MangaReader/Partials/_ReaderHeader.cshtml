@@ -26,7 +26,7 @@
         {
             <a asp-area="Reader"
                asp-page="/MangaReader/Index"
-               asp-route-chapterId="@Model.PreviousChapterId"
+               asp-route-chapterDownloadId="@Model.PreviousChapterId"
                asp-route-libraryId="@Model.LibraryId"
                class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-2"
                aria-label="@I18n.PreviousChapter">
@@ -58,7 +58,7 @@
         {
             <a asp-area="Reader"
                asp-page="/MangaReader/Index"
-               asp-route-chapterId="@Model.NextChapterId"
+               asp-route-chapterDownloadId="@Model.NextChapterId"
                asp-route-libraryId="@Model.LibraryId"
                class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-2"
                aria-label="@I18n.NextChapter">

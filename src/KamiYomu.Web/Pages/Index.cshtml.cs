@@ -1,17 +1,14 @@
-using Hangfire;
+using System.Globalization;
 
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
-using KamiYomu.Web.Worker.Interfaces;
 
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
-
-using System.Globalization;
 
 namespace KamiYomu.Web.Pages;
 
@@ -42,7 +39,7 @@ public class IndexModel(ILogger<IndexModel> logger,
         return new EmptyResult();
     }
 
-    public IActionResult OnPostSetLanguageAsync(string? returnUrl = null, CancellationToken cancellationToken = default)
+    public IActionResult OnPostSetLanguage(string? returnUrl = null)
     {
         CultureInfo culture = CultureInfo.GetCultureInfo(Culture);
 
@@ -74,7 +71,7 @@ public class IndexModel(ILogger<IndexModel> logger,
         return Redirect(returnUrl ?? Url.Page("/Index", new { area = "" }));
     }
 
-    public IActionResult OnPostFamilySafeAsync(string? returnUrl = null, CancellationToken cancellationToken = default)
+    public IActionResult OnPostFamilySafe(string? returnUrl = null)
     {
         UserPreference userPreference = dbContext.UserPreferences.FindOne(x => true);
         userPreference.SetFamilySafeMode(!userPreference.FamilySafeMode);

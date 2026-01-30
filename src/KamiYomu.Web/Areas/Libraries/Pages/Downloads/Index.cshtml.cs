@@ -1,3 +1,5 @@
+using System.Reflection;
+
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
@@ -5,9 +7,13 @@ using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 
+using LiteDB;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
+
+using PuppeteerSharp;
 
 namespace KamiYomu.Web.Areas.Libraries.Pages.Downloads;
 
@@ -20,6 +26,8 @@ public class IndexModel(
     INotificationService notificationService) : PageModel
 {
     public IEnumerable<CrawlerAgent> CrawlerAgents { get; set; } = [];
+
+    public IEnumerable<Library> Results { get; set; } = [];
 
     [BindProperty]
     public required string MangaId { get; set; }
@@ -37,10 +45,75 @@ public class IndexModel(
     public required string ComicInfoSeriesTemplate { get; set; }
     [BindProperty]
     public required bool MakeThisConfigurationDefault { get; set; } = false;
+
+    [BindProperty(SupportsGet = true)]
+    public string? Query { get; set; } = string.Empty;
+
+    [BindProperty(SupportsGet = true)]
+    public Guid? SelectedAgent { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public int? Offset { get; set; } = 0;
+
+    [BindProperty(SupportsGet = true)]
+    public int? Limit { get; set; } = 30;
+
+    [BindProperty(SupportsGet = true)]
+    public string? ContinuationToken { get; set; } = string.Empty;
+
     public void OnGet()
     {
         CrawlerAgents = dbContext.CrawlerAgents.FindAll();
     }
+
+    public async Task<IActionResult> OnGetSearchAsync(CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(Query))
+        {
+            return new EmptyResult();
+        }
+
+        CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(SelectedAgent);
+        if (crawlerAgent == null)
+        {
+            return new EmptyResult();
+        }
+
+        UserPreference userPreference = dbContext.UserPreferences.Query().FirstOrDefault();
+        PaginationOptions paginationOptions = !string.IsNullOrWhiteSpace(ContinuationToken) ? new PaginationOptions(ContinuationToken) : new PaginationOptions(Offset, 30);
+        PagedResult<Manga> queryResult = await agentCrawlerRepository.SearchAsync(crawlerAgent.Id, Query, paginationOptions, cancellationToken);
+        Results = queryResult.Data.Where(p => p.IsFamilySafe || p.IsFamilySafe == userPreference.FamilySafeMode).Select(p => new Library(crawlerAgent, p, null, null, null));
+        ViewData["ShowAddToLibrary"] = true;
+        ViewData["Handler"] = "Crawler";
+        ViewData[nameof(Query)] = Query;
+        ViewData[nameof(SelectedAgent)] = SelectedAgent;
+        ViewData[nameof(PaginationOptions.OffSet)] = queryResult.PaginationOptions.OffSet + queryResult.PaginationOptions.Limit;
+        ViewData[nameof(PaginationOptions.Limit)] = queryResult.PaginationOptions.Limit;
+        ViewData[nameof(PaginationOptions.ContinuationToken)] = queryResult.PaginationOptions.ContinuationToken;
+
+        if (Request.Headers.ContainsKey("HX-Request"))
+        {
+            return ViewComponent("SearchMangaResult", new
+            {
+                libraries = Results,
+                searchUri = Url.Page("/Downloads/Index", new
+                {
+                    Area = "Libraries",
+                    Handler = "Search",
+                    Query = ViewData[nameof(Query)],
+                    SelectedAgent = ViewData[nameof(SelectedAgent)],
+                    OffSet = ViewData[nameof(Offset)],
+                    Limit = ViewData[nameof(Limit)],
+                    ContinuationToken = ViewData[nameof(ContinuationToken)]
+                })
+            });
+        }
+
+        CrawlerAgents = dbContext.CrawlerAgents.FindAll();
+
+        return Page();
+    }
+
 
     public async Task<IActionResult> OnPostAddToCollectionAsync(CancellationToken cancellationToken)
     {

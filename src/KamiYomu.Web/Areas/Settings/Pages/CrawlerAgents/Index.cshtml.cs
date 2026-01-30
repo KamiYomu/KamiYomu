@@ -1,8 +1,6 @@
-using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Infrastructure.Contexts;
 
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents;
 
@@ -12,6 +10,6 @@ public class IndexModel(DbContext dbContext) : PageModel
 
     public void OnGet()
     {
-        CrawlerAgents = dbContext.CrawlerAgents.FindAll().ToList();
+        CrawlerAgents = [.. dbContext.CrawlerAgents.FindAll()];
     }
 }
