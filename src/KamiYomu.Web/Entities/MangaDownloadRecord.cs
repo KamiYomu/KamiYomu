@@ -1,4 +1,4 @@
-﻿using KamiYomu.Web.Entities.Definitions;
+using KamiYomu.Web.Entities.Definitions;
 
 namespace KamiYomu.Web.Entities;
 
@@ -51,7 +51,13 @@ public class MangaDownloadRecord
 
     public bool ShouldRun()
     {
-        return DownloadStatus is DownloadStatus.ToBeRescheduled or DownloadStatus.Scheduled;
+        return DownloadStatus is DownloadStatus.ToBeRescheduled or DownloadStatus.Scheduled || IsStale();
+    }
+
+    public bool IsStale()
+    {
+        return DownloadStatus == DownloadStatus.InProgress
+               && StatusUpdateAt < DateTimeOffset.UtcNow.AddDays(-1);
     }
 
     public Guid Id { get; private set; }
