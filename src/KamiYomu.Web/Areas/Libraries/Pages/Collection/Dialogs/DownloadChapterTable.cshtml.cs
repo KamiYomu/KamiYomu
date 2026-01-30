@@ -1,7 +1,8 @@
+using System.IO.Compression;
+
 using Hangfire;
 
 using KamiYomu.Web.Entities;
-using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Reports;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
@@ -13,8 +14,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using QuestPDF.Fluent;
 
-using System.IO.Compression;
-
 namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs;
 
 public class DownloadChapterTableModel(DbContext dbContext,
@@ -23,13 +22,22 @@ public class DownloadChapterTableModel(DbContext dbContext,
                                        IWebHostEnvironment webHostEnvironment) : PageModel
 {
     public IEnumerable<ChapterDownloadRecord> Records { get; set; } = [];
-    public int CurrentPage { get; set; } = 0;
-    public int TotalPages { get; set; } = 0;
     public Guid LibraryId { get; set; } = Guid.Empty;
+    public int TotalItems { get; set; } = 0;
+
+    [BindProperty(SupportsGet = true)]
+    public int CurrentPage { get; set; } = 1;
+
+    [BindProperty(SupportsGet = true)]
     public string SortColumn { get; set; } = nameof(ChapterDownloadRecord.Chapter);
+
+    [BindProperty(SupportsGet = true)]
     public bool SortAsc { get; set; } = true;
 
-    public void OnGet(Guid libraryId, string sort = nameof(ChapterDownloadRecord.Chapter), bool asc = true, int pageIndex = 1, int pageSize = 10)
+    [BindProperty(SupportsGet = true)]
+    public int PageSize { get; set; } = 10;
+
+    public void OnGet(Guid libraryId)
     {
         if (libraryId == Guid.Empty)
         {
@@ -37,9 +45,6 @@ public class DownloadChapterTableModel(DbContext dbContext,
         }
 
         LibraryId = libraryId;
-        SortColumn = sort;
-        SortAsc = asc;
-        CurrentPage = pageIndex;
 
         Library downloadChapterRecords = dbContext.Libraries.FindById(LibraryId);
         using LibraryDbContext db = downloadChapterRecords.GetReadOnlyDbContext();
@@ -48,19 +53,18 @@ public class DownloadChapterTableModel(DbContext dbContext,
         List<ChapterDownloadRecord> allRecords = [.. db.ChapterDownloadRecords.Find(p => true)];
 
         // Sorting
-        IEnumerable<ChapterDownloadRecord> query = sort switch
+        IEnumerable<ChapterDownloadRecord> query = SortColumn switch
         {
-            nameof(ChapterDownloadRecord.StatusUpdateAt) => asc ? allRecords.OrderBy(r => r.StatusUpdateAt) : allRecords.OrderByDescending(r => r.CreateAt),
-            nameof(ChapterDownloadRecord.DownloadStatus) => asc ? allRecords.OrderBy(r => r.DownloadStatus) : allRecords.OrderByDescending(r => r.DownloadStatus),
-            nameof(ChapterDownloadRecord.Chapter) => asc ? allRecords.OrderBy(r => r.Chapter.Number) : allRecords.OrderByDescending(r => r.Chapter.Number),
+            nameof(ChapterDownloadRecord.StatusUpdateAt) => SortAsc ? allRecords.OrderBy(r => r.StatusUpdateAt) : allRecords.OrderByDescending(r => r.CreateAt),
+            nameof(ChapterDownloadRecord.DownloadStatus) => SortAsc ? allRecords.OrderBy(r => r.DownloadStatus) : allRecords.OrderByDescending(r => r.DownloadStatus),
+            nameof(ChapterDownloadRecord.Chapter) => SortAsc ? allRecords.OrderBy(r => r.Chapter.Number) : allRecords.OrderByDescending(r => r.Chapter.Number),
             _ => allRecords.OrderByDescending(r => r.Chapter.Number).ThenBy(r => r.StatusUpdateAt)
         };
 
         // Pagination
-        int totalCount = query.Count();
-        TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+        TotalItems = query.Count();
 
-        Records = [.. query.Skip((pageIndex - 1) * pageSize).Take(pageSize)];
+        Records = [.. query.Skip((CurrentPage - 1) * PageSize).Take(PageSize)];
     }
 
     public IActionResult OnGetDownloadCbz(Guid libraryId, Guid recordId)

@@ -1,0 +1,26 @@
+@using KamiYomu.Web.ViewComponents
+@model TablePaginationViewModel
+
+<nav>
+    <ul class="pagination justify-content-center">
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            if (Model.ShouldShow(i))
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link"
+                       hx-get='@Model.GetPageUrl(i)'
+                       hx-target="@Model.Target"
+                       hx-swap="@Model.Swap"
+                       hx-push-url="@Model.PushUrl.ToString().ToLowerInvariant()">
+                        @i
+                    </a>
+                </li>
+            }
+            else if (i == Model.EdgeCount + 1 || i == Model.TotalPages - Model.EdgeCount)
+            {
+                <li class="page-item disabled"><span class="page-link">…</span></li>
+            }
+        }
+    </ul>
+</nav>

@@ -1,0 +1,21 @@
+@using KamiYomu.Web.Areas.Reader.Pages.MangaGallery
+@model IndexModel
+
+<div class="row row-cols-1 row-cols-xl-2 g-3 mb-3">
+    @foreach (var library in Model.Libraries)
+    {
+        <vc:manga-grid-item library="library" />
+    }
+</div>
+
+@if (Model.TotalItems > Model.PageSize)
+{
+    <vc:table-pagination current-page="@Model.CurrentPage"
+                         total-items="@Model.TotalItems"
+                         page-size="@Model.PageSize"
+                         target="#manga-grid"
+                         swap="innerHTML"
+                         push-url="true"
+                         page-url-template="@Url.Page("/MangaGallery/Index", "Search", new { area = "Reader", Search = Model.Search, Model.PageSize, Model.CurrentPage })" />
+
+}
