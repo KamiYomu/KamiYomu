@@ -38,8 +38,8 @@
         @foreach (var item in Model.Libraries)
         {
             <li data-file-path="@item.GetFilePathTemplateResolved(keepUnsolvedVariables: true)"
-                data-series="@item.GetComicInfoSeriesTemplate()"
-                data-title="@item.GetComicInfoTitleTemplate()">
+                data-series="@item.GetComicInfoSeriesTemplateResolved(keepUnsolvedVariables: true)"
+                data-title="@item.GetComicInfoTitleTemplateResolved(keepUnsolvedVariables: true)">
 
                 <button class="dropdown-item d-flex align-items-center py-2"
                         hx-get="?handler=Details&mangaId=@item.Id"

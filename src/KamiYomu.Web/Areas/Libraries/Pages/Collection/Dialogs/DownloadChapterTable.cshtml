@@ -12,7 +12,7 @@
             <tr>
                 <th scope="col">
                     <a href="#"
-                       hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = nameof(ChapterDownloadRecord.Chapter), asc = !Model.SortAsc, page = Model.CurrentPage })"
+                       hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, SortColumn = nameof(ChapterDownloadRecord.Chapter), SortAsc = !Model.SortAsc, Model.CurrentPage })"
                        hx-target="#downloads-table" hx-swap="outerHTML" class="text-decoration-none">
                         @I18n.Chapter
                         @if (Model.SortColumn == "Chapter")
@@ -28,7 +28,7 @@
 
                 <th scope="col">
                     <a href="#"
-                       hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = nameof(ChapterDownloadRecord.DownloadStatus), asc = !Model.SortAsc, page = Model.CurrentPage })"
+                       hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, SortColumn = nameof(ChapterDownloadRecord.DownloadStatus), SortAsc = !Model.SortAsc, Model.CurrentPage })"
                        hx-target="#downloads-table" hx-swap="outerHTML" class="text-decoration-none">
                         @I18n.Status
                         @if (Model.SortColumn == nameof(ChapterDownloadRecord.DownloadStatus))
@@ -40,7 +40,7 @@
 
                 <th scope="col">
                     <a href="#"
-                       hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, sort = nameof(ChapterDownloadRecord.StatusUpdateAt), asc = !Model.SortAsc, page = Model.CurrentPage })"
+                       hx-get="@Url.Page("DownloadChapterTable", new { libraryId = Model.LibraryId, SortColumn = nameof(ChapterDownloadRecord.StatusUpdateAt), SortAsc = !Model.SortAsc, Model.CurrentPage })"
                        hx-target="#downloads-table" hx-swap="outerHTML" class="text-decoration-none">
                         @I18n.LastUpdate
                         @if (Model.SortColumn == nameof(ChapterDownloadRecord.StatusUpdateAt))
