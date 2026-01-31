@@ -1,0 +1,60 @@
+@using KamiYomu.Web.Areas.Libraries.ViewComponents
+@using KamiYomu.Web.Entities
+@using KamiYomu.Web.Extensions
+@model MangaTemplateSelectorViewModel
+
+<input type="hidden" id="selector-series" disabled value="@Model.ComicInfoSeriesTemplateSelector" />
+<input type="hidden" id="selector-title" disabled value="@Model.ComicInfoTitleTemplateSelector" />
+<input type="hidden" id="selector-filepath" disabled value="@Model.FilePathTemplateSelector" />
+
+<div class="dropdown">
+    <button class="btn btn-outline-primary w-100 text-start d-flex align-items-center manga-selector-btn"
+            type="button"
+            id="mangaDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+        <span id="selected-manga-container" class="d-flex align-items-center w-100 overflow-hidden">
+            <i class="bi bi-book me-2 me-md-3"></i>
+            <span class="text-truncate">@I18n.SelectMangaUnifySettings</span>
+        </span>
+    </button>
+
+    <ul class="dropdown-menu w-100 shadow-lg mt-1 custom-dropdown-scroll"
+        aria-labelledby="mangaDropdown"
+        style="max-height: 350px; overflow-y: auto;">
+
+        <li data-file-path="@Model.DefaultFilePathTemplate" 
+            data-series="@Model.DefaultComicInfoSeriesTemplate"
+            data-title="@Model.DefaultComicInfoTitleTemplate">
+            <button class="dropdown-item d-flex align-items-center py-2 py-md-3"
+                    hx-get="?handler=Details&mangaId=0"
+                    hx-target="#manga-display"
+                    onclick="applyMangaSelection(this, 'None', 'bi-x-circle', true)">
+                <i class="bi bi-x-circle me-3 fs-5"></i> <span>@I18n.None (@I18n.DefaultSettings)</span>
+            </button>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+
+        @foreach (var item in Model.Libraries)
+        {
+            <li data-file-path="@item.GetFilePathTemplateResolved(keepUnsolvedVariables: true)"
+                data-series="@item.GetComicInfoSeriesTemplate()"
+                data-title="@item.GetComicInfoTitleTemplate()">
+
+                <button class="dropdown-item d-flex align-items-center py-2"
+                        hx-get="?handler=Details&mangaId=@item.Id"
+                        hx-target="#manga-display"
+                        onclick="applyMangaSelection(this, '@item.Manga.Title', '@item.Manga.CoverUrl.ToInternalImageUrl()', false)">
+
+                    <img src="@item.Manga.CoverUrl.ToInternalImageUrl()"
+                         alt=""
+                         class="me-3 rounded shadow-sm manga-thumb-list"
+                         style="width: 35px; height: 48px; object-fit: cover;">
+                    <span class="text-truncate">@item.Manga.Title</span>
+                </button>
+            </li>
+        }
+    </ul>
+</div>
+
+<script src="~/js/libraries/manga-template-selector.js" asp-append-version="true"></script>

@@ -1043,11 +1043,35 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="Refresh" xml:space="preserve">
     <value>Rafraîchir</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="RecentlyAdded" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="RecentlyAdded" xml:space="preserve">
     <value>Récemment ajouté</value>
+  </data>
+  <data name="MatchDestinationFolder" xml:space="preserve">
+    <value>Faire correspondre le dossier de destination</value>
+  </data>
+  <data name="MergeFolders" xml:space="preserve">
+    <value>Fusionner des dossiers</value>
+  </data>
+  <data name="MergeFoldersDetails" xml:space="preserve">
+    <value>Traitez ces deux mangas distincts comme faisant partie de la même unité de stockage.</value>
+  </data>
+  <data name="SelectMangaUnifySettings" xml:space="preserve">
+    <value>Sélectionnez un manga pour unifier les paramètres</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Aucun</value>
+  </data>
+  <data name="CustomSettings" xml:space="preserve">
+    <value>Paramètres personnalisés</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Défaut</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="DefaultSettings" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="DefaultSettings" xml:space="preserve">
+    <value>Paramètres par défaut</value>
   </data>
 </root>

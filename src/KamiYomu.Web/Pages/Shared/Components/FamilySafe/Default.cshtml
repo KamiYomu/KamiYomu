@@ -8,8 +8,11 @@
 @model FamilySafeViewComponentModel
 
 
-<form method="post" asp-page="/Index" asp-page-handler="FamilySafe" asp-route-returnUrl="@Context.Request.Path" novalidate>
+<form method="post" 
+      asp-page="/Index" 
+      asp-page-handler="FamilySafe" novalidate>
     @Html.AntiForgeryToken()
+    <input type="hidden" id="family-safe-return-url" name="returnUrl" value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
     <button type="submit"
             class="btn @Model.ButtonClass btn-sm d-flex align-items-center shadow-sm rounded-pill px-3 justify-content-center"
             style="border-width: 1px;"
@@ -28,11 +31,4 @@
 </form>
 
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-        popoverTriggerList.forEach(function (el) {
-            new bootstrap.Popover(el);
-        });
-    });
-</script>
+<script src="~/js/family-safe-mode.js" asp-append-version="true"></script>

@@ -1046,4 +1046,28 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="RecentlyAdded" xml:space="preserve">
     <value>Recently Added</value>
   </data>
+  <data name="MatchDestinationFolder" xml:space="preserve">
+    <value>Match Destination Folder</value>
+  </data>
+  <data name="MergeFolders" xml:space="preserve">
+    <value>Merge Folders</value>
+  </data>
+  <data name="MergeFoldersDetails" xml:space="preserve">
+    <value>Treat these two separate manga as part of the same storage unit.</value>
+  </data>
+  <data name="SelectMangaUnifySettings" xml:space="preserve">
+    <value>Select a Manga to Unify Settings</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="CustomSettings" xml:space="preserve">
+    <value>Custom Settings</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="DefaultSettings" xml:space="preserve">
+    <value>Default Settings</value>
+  </data>
 </root>

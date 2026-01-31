@@ -682,6 +682,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Custom Settings.
+        /// </summary>
+        public static string CustomSettings {
+            get {
+                return ResourceManager.GetString("CustomSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dark.
         /// </summary>
         public static string Dark {
@@ -696,6 +705,24 @@ namespace KamiYomu.Web.Resources {
         public static string DateAndTime {
             get {
                 return ResourceManager.GetString("DateAndTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default.
+        /// </summary>
+        public static string Default {
+            get {
+                return ResourceManager.GetString("Default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default Settings.
+        /// </summary>
+        public static string DefaultSettings {
+            get {
+                return ResourceManager.GetString("DefaultSettings", resourceCulture);
             }
         }
         
@@ -1447,6 +1474,33 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Match Destination Folder.
+        /// </summary>
+        public static string MatchDestinationFolder {
+            get {
+                return ResourceManager.GetString("MatchDestinationFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Merge Folders.
+        /// </summary>
+        public static string MergeFolders {
+            get {
+                return ResourceManager.GetString("MergeFolders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Treat these two separate manga as part of the same storage unit..
+        /// </summary>
+        public static string MergeFoldersDetails {
+            get {
+                return ResourceManager.GetString("MergeFoldersDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Access unofficial or third-party sources to retrieve manga content.
         /// </summary>
         public static string ModalAccessUnofficialThirdPartySourcesManga {
@@ -1578,6 +1632,15 @@ namespace KamiYomu.Web.Resources {
         public static string NoFileWasFound {
             get {
                 return ResourceManager.GetString("NoFileWasFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        public static string None {
+            get {
+                return ResourceManager.GetString("None", resourceCulture);
             }
         }
         
@@ -2146,6 +2209,15 @@ namespace KamiYomu.Web.Resources {
         public static string SelectCrawlerAgent {
             get {
                 return ResourceManager.GetString("SelectCrawlerAgent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a Manga to Unify Settings.
+        /// </summary>
+        public static string SelectMangaUnifySettings {
+            get {
+                return ResourceManager.GetString("SelectMangaUnifySettings", resourceCulture);
             }
         }
         

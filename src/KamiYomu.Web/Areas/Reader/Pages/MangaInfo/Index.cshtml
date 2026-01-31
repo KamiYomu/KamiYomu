@@ -13,8 +13,18 @@
             <div class="card-body">
                 <div class="row text-center mt-3">
                     <div>
-                        <small class="text-muted d-block">Year</small>
+                        <small class="text-muted d-block">@I18n.Year</small>
                         <strong>@(Model.Manga.Year?.ToString() ?? "N/A")</strong>
+                    </div>
+                </div>
+                <hr class="table-group-divider">
+                <div class="row text-center mt-3">
+                    <div>
+                        <small class="text-muted d-block">@I18n.CrawlerAgent</small>
+                        <strong class="text-wrap">
+                            <img src="@Model.CrawlerAgentFaviconUrl.ToInternalImageUrl()" width="20" class="me-1" />
+                            @Model.Library.CrawlerAgent.DisplayName
+                        </strong>
                     </div>
                 </div>
             </div>
@@ -46,7 +56,7 @@
                 </p>
             </div>
             <div class="d-inline-block">
-                <vc:badge-manga-download-status manga-download-record="Model.MangaDownloadRecord"/>
+                <vc:badge-manga-download-status manga-download-record="Model.MangaDownloadRecord" />
                 @if (!Model.Manga.IsFamilySafe)
                 {
                     <span class="badge bg-danger">@I18n.Content: 18+ </span>

@@ -141,9 +141,9 @@ public class ChapterDownloaderJob(
 
             logger.LogInformation("Dispatch '{Title}' using crawler {crawler} Completed download of chapter {ChapterDownloadId} to {ChapterFolder}", title, library.CrawlerAgent.DisplayName, chapterDownloadId, tempMangaFolder);
 
-            long bytes = CreateCbzFile(chapterDownload, library);
-
-            if (bytes < 600)
+            int numberOfFiles = CreateCbzFile(chapterDownload, library);
+            const int minFilesThreshold = 2;
+            if (numberOfFiles <= minFilesThreshold)
             {
                 await notificationService.PushWarningAsync($"{I18n.CbzIsTooSmall}: {library.GetCbzFileName(chapterDownload.Chapter)}", cancellationToken);
                 chapterDownload.DeleteDownloadedFileIfExists(library);
@@ -244,7 +244,7 @@ public class ChapterDownloaderJob(
             return false;
         }
     }
-    private long CreateCbzFile(ChapterDownloadRecord chapterDownload, Library library)
+    private int CreateCbzFile(ChapterDownloadRecord chapterDownload, Library library)
     {
         string cbzFilePath = library.GetCbzFilePath(chapterDownload.Chapter);
         string tempChapterFolder = library.GetTempChapterDirectory(chapterDownload.Chapter);
@@ -253,6 +253,8 @@ public class ChapterDownloaderJob(
         {
             File.Delete(cbzFilePath);
         }
+
+        int numberOfFiles = Directory.EnumerateFiles(tempChapterFolder).Count();
 
         ZipFile.CreateFromDirectory(tempChapterFolder, cbzFilePath);
 
@@ -268,8 +270,7 @@ public class ChapterDownloaderJob(
 
         logger.LogInformation("Created CBZ archive: '{CbzFilePath}'", cbzFilePath);
 
-        long size = new FileInfo(cbzFilePath).Length;
-        return size;
+        return numberOfFiles;
     }
 
     public void ScheduleKavitaNotify(Guid libraryId)

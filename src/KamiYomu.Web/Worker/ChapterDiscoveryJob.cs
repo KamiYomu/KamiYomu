@@ -6,6 +6,7 @@ using Hangfire.Server;
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.Definitions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
@@ -107,6 +108,11 @@ public class ChapterDiscoveryJob(
             await Task.Delay(_workerOptions.GetWaitPeriod(), cancellationToken);
         } while (offset < total);
 
+        if (mangaDownload.DownloadStatus != DownloadStatus.Completed)
+        {
+            mangaDownload.Complete();
+            _ = libDbContext.MangaDownloadRecords.Update(mangaDownload);
+        }
 
         context.SetJobParameter(nameof(library.CrawlerAgent), library.CrawlerAgent.DisplayName);
         context.SetJobParameter(nameof(library.Manga), library.Manga.Title);

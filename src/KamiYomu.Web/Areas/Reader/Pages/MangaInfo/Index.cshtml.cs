@@ -20,7 +20,9 @@ public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] Db
     public MangaDownloadRecord MangaDownloadRecord { get; set; }
     public ChapterDownloadRecord? FirstChapterAvailable { get; private set; }
     public ChapterDownloadRecord? CurrentReadingChapter { get; set; }
-    public void OnGet(Guid libraryId)
+    public Uri CrawlerAgentFaviconUrl { get; private set; }
+
+    public async Task OnGetAsync(Guid libraryId)
     {
         Library = dbContext.Libraries.Query()
                                    .Where(p => p.Id == libraryId)
@@ -45,5 +47,8 @@ public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] Db
         FirstChapterAvailable = Chapters?.Where(p => p.DownloadStatus == DownloadStatus.Completed)
                                         .OrderBy(p => p.Chapter.Number)
                                         .FirstOrDefault();
+
+        using ICrawlerAgent crawlerInstance = Library.CrawlerAgent.GetCrawlerInstance();
+        CrawlerAgentFaviconUrl = await crawlerInstance.GetFaviconAsync(CancellationToken.None);
     }
 }

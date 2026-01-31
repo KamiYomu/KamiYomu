@@ -7,7 +7,11 @@ namespace KamiYomu.Web.Infrastructure.Services;
 
 public static class TemplateResolver
 {
-    public static string Resolve(string template, Manga? manga, Chapter? chapter, DateTime? date = null)
+    public static string Resolve(string template,
+                                 Manga? manga,
+                                 Chapter? chapter,
+                                 DateTime? date = null,
+                                 bool keepUnsolvedVariables = false)
     {
         if (string.IsNullOrWhiteSpace(template))
         {
@@ -22,6 +26,10 @@ public static class TemplateResolver
 
         foreach (KeyValuePair<string, string> kv in map)
         {
+            if (string.IsNullOrWhiteSpace(kv.Value) && keepUnsolvedVariables)
+            {
+                continue;
+            }
             template = template.Replace("{" + kv.Key + "}", kv.Value ?? string.Empty);
         }
 

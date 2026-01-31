@@ -26,7 +26,7 @@
     <vc:manga-info manga="@Model.Manga" />
 
     <form method="post"
-          hx-post="/Libraries/Downloads/Index?handler=AddToCollection"
+          hx-post="@Url.Page("/Downloads/Index", "AddToCollection", new { area = "Libraries"})"
           hx-target="#@Model.RefreshElementId"
           hx-swap="innerHTML">
 
@@ -52,12 +52,28 @@
 
                         <div class="card mb-4 border-light shadow-sm">
                             <div class="card-header bg-transparent border-0 pb-0">
+                                <h6 class="fw-bold mb-0">@I18n.MergeFolders</h6>
+                            </div>
+                            <div class="card-body">
+                                <span class="text-muted">
+                                    @I18n.MergeFoldersDetails
+                                </span>
+
+                                <vc:manga-template-selector file-path-template-selector="input[name='@Html.NameFor(m => m.FilePathTemplate)']"
+                                                            comic-info-series-template-selector="input[name='@Html.NameFor(m => m.ComicInfoSeriesTemplate)']"
+                                                            comic-info-title-template-selector="input[name='@Html.NameFor(m => m.ComicInfoTitleTemplate)']" />
+                            </div>
+                        </div>
+
+                        <div class="card mb-4 border-light shadow-sm">
+                            <div class="card-header bg-transparent border-0 pb-0">
                                 <h6 class="fw-bold mb-0">@I18n.FilePathFormat</h6>
                             </div>
                             <div class="card-body">
                                 <div class="input-group">
                                     <span class="input-group-text d-none d-sm-block"><i class="bi bi-folder"></i></span>
                                     <input class="form-control"
+                                           data-default="@Model.FilePathTemplate"
                                            id="file-path-template-input"
                                            name="FilePathTemplate"
                                            value="@Model.FilePathTemplate"
@@ -67,14 +83,16 @@
                                            hx-target="#template-preview"
                                            hx-swap="innerHTML"
                                            hx-include="closest form" />
-                                    <button type="button" class="btn btn-outline-secondary" hx-on:click="resetfilePathTemplate()">
+                                    <button type="button" 
+                                            class="btn btn-outline-secondary" 
+                                            hx-on:click="resetfilePathTemplate()">
                                         <i class="bi bi-arrow-counterclockwise"></i>
                                     </button>
                                 </div>
                                 <div class="form-text mt-2 small">@I18n.FilePathFormatDetails</div>
 
                                 <div id="template-preview" class="mt-2 p-2 rounded border-start border-primary border-4 small">
-                                    @await Html.PartialAsync("_PathTemplatePreview", Model.TemplateResults)
+                                    <partial name="_PathTemplatePreview" model="@Model.TemplateResults" />
                                 </div>
                             </div>
                         </div>
@@ -88,6 +106,7 @@
                                 <div class="input-group mb-3">
                                     <input class="form-control"
                                            id="comic-info-title-template-input"
+                                           data-default="@Model.ComicInfoTitleTemplate"
                                            name="ComicInfoTitleTemplate"
                                            value="@Model.ComicInfoTitleTemplate"
                                            hx-post="@comicInfoPreviewUrl"
@@ -103,25 +122,28 @@
                                 <div class="input-group mb-2">
                                     <input class="form-control"
                                            id="comic-info-series-template-input"
+                                           data-default="@Model.ComicInfoSeriesTemplate"
                                            name="ComicInfoSeriesTemplate"
                                            value="@Model.ComicInfoSeriesTemplate"
                                            hx-post="@comicInfoPreviewUrl"
                                            hx-trigger="keyup changed delay:300ms"
                                            hx-target="#comicinfo-template-preview"
                                            hx-include="closest form" />
-                                    <button type="button" class="btn btn-outline-secondary" hx-on:click="resetComicInfoSeriesTemplate()">
+                                    <button type="button"
+                                            class="btn btn-outline-secondary"
+                                            hx-on:click="resetComicInfoSeriesTemplate()">
                                         <i class="bi bi-arrow-counterclockwise"></i>
                                     </button>
                                 </div>
 
                                 <div id="comicinfo-template-preview" class="mt-3 p-2 rounded border-start border-info border-4 small">
-                                    @await Html.PartialAsync("_ComicInfoTemplatePreview", Model.ComicInfoTemplateViewModel)
+                                    <partial name="_ComicInfoTemplatePreview" model="@Model.ComicInfoTemplateViewModel" />
                                 </div>
                             </div>
                         </div>
 
                         <div class="mb-4">
-                            @await Html.PartialAsync("_PathTemplateVariables", Model.Variables)
+                            <partial name="_PathTemplateVariables" model="@Model.Variables" />
                         </div>
 
                         <div class="form-check form-switch p-3 bg-primary-subtle rounded border border-primary-subtle d-flex align-items-center">
@@ -151,35 +173,4 @@
     </form>
 </div>
 
-
-<script>
-    function resetfilePathTemplate() {
-        const input = document.getElementById('file-path-template-input');
-        const def = document.getElementById('default-file-path-format');
-
-        if (!input || !def) return;
-
-        input.value = def.value;
-        htmx.trigger(input, 'change');
-    }
-
-    function resetComicInfoTitleTemplate () {
-        const input = document.getElementById('comic-info-title-template-input');
-        const def = document.getElementById('default-comic-info-title-format');
-
-        if (!input || !def) return;
-
-        input.value = def.value;
-        htmx.trigger(input, 'change');
-    }
-
-    function resetComicInfoSeriesTemplate() {
-        const input = document.getElementById('comic-info-series-template-input');
-        const def = document.getElementById('default-comic-info-series-format');
-
-        if (!input || !def) return;
-
-        input.value = def.value;
-        htmx.trigger(input, 'change');
-    }
-</script>
+<script src="~/js/libraries/add-to-collection.js" asp-append-version="true"></script>
