@@ -1043,11 +1043,35 @@ para que la configuración &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire cont
   <data name="Refresh" xml:space="preserve">
     <value>Refrescar</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="RecentlyAdded" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="RecentlyAdded" xml:space="preserve">
     <value>Agregado recientemente</value>
+  </data>
+  <data name="MatchDestinationFolder" xml:space="preserve">
+    <value>Carpeta de destino de coincidencia</value>
+  </data>
+  <data name="MergeFolders" xml:space="preserve">
+    <value>Fusionar carpetas</value>
+  </data>
+  <data name="MergeFoldersDetails" xml:space="preserve">
+    <value>Trate estos dos manga separados como parte de la misma unidad de almacenamiento.</value>
+  </data>
+  <data name="SelectMangaUnifySettings" xml:space="preserve">
+    <value>Selecciona un manga para unificar la configuración</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Ninguno</value>
+  </data>
+  <data name="CustomSettings" xml:space="preserve">
+    <value>Configuraciones personalizadas</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Por defecto</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="DefaultSettings" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="DefaultSettings" xml:space="preserve">
+    <value>Configuración predeterminada</value>
   </data>
 </root>

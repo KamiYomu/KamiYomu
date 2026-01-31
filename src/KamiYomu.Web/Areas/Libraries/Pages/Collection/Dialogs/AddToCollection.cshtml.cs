@@ -1,6 +1,7 @@
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.CrawlerAgents.Core.Catalog.Builders;
 using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services;
@@ -48,7 +49,7 @@ public class AddToCollectionModel(
         {
             return;
         }
-        Entities.UserPreference preferences = dbContext.UserPreferences.FindOne(p => true);
+        UserPreference preferences = dbContext.UserPreferences.Query().FirstOrDefault();
 
         RefreshElementId = refreshElementId;
         CrawlerAgentId = crawlerAgentId;

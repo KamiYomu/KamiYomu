@@ -8,7 +8,7 @@
 @model FamilySafeViewComponentModel
 
 
-<form method="post" asp-page="/Index" asp-page-handler="FamilySafe" asp-route-returnUrl="@Context.Request.Path" novalidate>
+<form method="post" asp-page="/Index" asp-page-handler="FamilySafe" asp-route-returnUrl="@Context.Request.GetEncodedPathAndQuery()" novalidate>
     @Html.AntiForgeryToken()
     <button type="submit"
             class="btn @Model.ButtonClass btn-sm d-flex align-items-center shadow-sm rounded-pill px-3 justify-content-center"

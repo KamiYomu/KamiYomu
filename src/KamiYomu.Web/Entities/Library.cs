@@ -116,22 +116,22 @@ public class Library
         return comicInfoSeriesTemplate;
     }
 
-    public string GetComicInfoSeriesTemplateResolved(Chapter? chapter = null)
+    public string GetComicInfoSeriesTemplateResolved(Chapter? chapter = null, bool keepUnsolvedVariables = false)
     {
         string template = GetComicInfoSeriesTemplate();
-        return TemplateResolver.Resolve(template, Manga, chapter);
+        return TemplateResolver.Resolve(template, Manga, chapter, keepUnsolvedVariables: keepUnsolvedVariables);
     }
 
-    public string GetComicInfoTitleTemplateResolved(Chapter? chapter = null)
+    public string GetComicInfoTitleTemplateResolved(Chapter? chapter = null, bool keepUnsolvedVariables = false)
     {
         string template = GetComicInfoTitleTemplate();
-        return TemplateResolver.Resolve(template, Manga, chapter);
+        return TemplateResolver.Resolve(template, Manga, chapter, keepUnsolvedVariables: keepUnsolvedVariables);
     }
 
-    public string GetFilePathTemplateResolved(Chapter? chapter = null)
+    public string GetFilePathTemplateResolved(Chapter? chapter = null, bool keepUnsolvedVariables = false)
     {
         string filePathTemplate = GetFilePathTemplate();
-        return TemplateResolver.Resolve(filePathTemplate, Manga, chapter);
+        return TemplateResolver.Resolve(filePathTemplate, Manga, chapter, keepUnsolvedVariables: keepUnsolvedVariables);
     }
 
     public string GetCbzFilePath(Chapter chapter)

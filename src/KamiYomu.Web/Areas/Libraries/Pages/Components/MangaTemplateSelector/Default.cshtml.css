@@ -1,0 +1,30 @@
+/* "Smaller but not small" - comfortable sizing for thumb taps */
+.manga-selector-btn {
+    padding: 0.6rem 1rem;
+    font-size: 1.1rem;
+    min-height: 60px; /* Ensures a consistent height regardless of content */
+}
+
+/* List thumb size */
+.manga-thumb-list {
+    width: 35px;
+    height: 48px;
+    object-fit: cover;
+}
+
+/* Smooth scroll for the dropdown list */
+.custom-dropdown-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-dropdown-scroll::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+@@media (max-width: 576px) {
+    .manga-selector-btn {
+        font-size: 1rem;
+        padding: 0.5rem 0.75rem;
+    }
+}
