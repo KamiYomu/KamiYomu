@@ -57,6 +57,14 @@
         height: 100vh;
     }
 
+        #readerContainer.paged-mode.ltr-mode {
+            flex-direction: row !important; 
+        }
+
+        #readerContainer.paged-mode.rtl-mode {
+            flex-direction: row-reverse !important; 
+        }
+
         #readerContainer.paged-mode .manga-page-wrapper {
             flex: 0 0 auto;
             width: auto; 

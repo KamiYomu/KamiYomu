@@ -1070,4 +1070,13 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="DefaultSettings" xml:space="preserve">
     <value>Default Settings</value>
   </data>
+  <data name="PreviousPage" xml:space="preserve">
+    <value>Previous Page</value>
+  </data>
+  <data name="NextPage" xml:space="preserve">
+    <value>Next Page</value>
+  </data>
+  <data name="ScrollToStart" xml:space="preserve">
+    <value>Scroll To Start</value>
+  </data>
 </root>

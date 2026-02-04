@@ -1,366 +1,305 @@
 /**
- * Global State
+ * KamiYomu Reader Engine
+ * Focus: High-performance, private, self-hosted manga curation.
  */
-let currentZoom = 1.0;
-let currentPageIndex = 0;
-let isDown = false;
-let startX, startY, scrollLeft, scrollTop;
-const baseWidth = 800; 
 
+const getInitialState = () => ({
+    mode: 'webtoon', // 'webtoon', 'rtl', 'ltr'
+    currentZoom: 1.0,
+    currentPageIndex: 0,
+    isDown: false,
+    startX: 0,
+    startY: 0,
+    scrollLeft: 0,
+    scrollTop: 0,
+    baseWidth: 800,
+    currentObserver: null,
+    isUserScrolling: false // Guard flag to prevent observer firing on load
+});
 
-window.addEventListener('load', setInitialFit);
-window.addEventListener('resize', setInitialFit);
+const readerState = {
+    ...getInitialState(),
 
-(function () {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry, index) => {
-            const el = entry.target;
+    // --- Helpers & Logic ---
+    isWebtoonMode() { return this.mode === 'webtoon'; },
+    isPagedRtlMode() { return this.mode === 'rtl'; },
+    isPagedLtrMode() { return this.mode === 'ltr'; },
 
-            // Fire only once
-            if (el.dataset.fired === "true") return;
+    reset() {
+        if (this.currentObserver) this.currentObserver.disconnect();
+        Object.assign(this, getInitialState());
 
-            // Element is ABOVE viewport (user scrolled past it)
-            if ((!entry.isIntersecting && entry.boundingClientRect.top < 0)) {
-                el.dataset.fired = "true";
-                htmx.trigger(el, "page-passed");
-            }
+        setTimeout(() => {
+            this.changeMode(this.mode);
+        }, 50);
+    },
+
+    // --- Core UI Management ---
+    changeMode(mode) {
+        const container = document.getElementById('readerContainer');
+        if (!container) return;
+        this.mode = mode;
+
+        container.classList.remove('webtoon-mode', 'paged-mode', 'rtl-mode', 'ltr-mode');
+        this.currentPageIndex = 0;
+        this.isUserScrolling = false; // Reset interaction flag on mode change
+
+        if (this.isWebtoonMode()) {
+            container.classList.add('webtoon-mode');
+        } else {
+            container.classList.add('paged-mode');
+            if (this.isPagedRtlMode()) container.classList.add('rtl-mode');
+            else if (this.isPagedLtrMode()) container.classList.add('ltr-mode');
+        }
+
+        setTimeout(() => {
+            this.initScrollObserver();
+            this.updatePageDisplay(1);
+            container.scrollTo(0, 0);
+        }, 50);
+    },
+
+    // --- Zoom Engine ---
+    adjustZoom(delta) {
+        this.currentZoom = Math.min(Math.max(0.3, this.currentZoom + delta), 2.0);
+        this.applyZoom();
+    },
+
+    applyZoom() {
+        const container = document.getElementById('readerContainer');
+        const imgs = container?.querySelectorAll('.reader-img');
+        const zoomInput = document.getElementById('zoomVal');
+
+        if (zoomInput) zoomInput.value = Math.round(this.currentZoom * 100) + "%";
+
+        imgs?.forEach(img => {
+            img.style.width = (this.baseWidth * this.currentZoom) + "px";
+            img.style.height = "auto";
+            img.style.maxWidth = "none";
         });
-    }, {
-        threshold: 0
-    });
+    },
 
-    document.querySelectorAll(".manga-page-wrapper")
-        .forEach(el => observer.observe(el));
-})();
+    setInitialFit() {
+        const container = document.getElementById('readerContainer');
+        if (!container) return;
 
+        if (container.classList.contains('paged-mode')) {
+            const targetHeight = container.clientHeight * 0.95;
+            const sampleImg = container.querySelector('.reader-img');
+            const referenceHeight = (sampleImg && sampleImg.naturalHeight > 0) ? sampleImg.naturalHeight : 1130;
+            this.currentZoom = targetHeight / referenceHeight;
+        } else {
+            this.currentZoom = container.clientWidth / this.baseWidth;
+        }
+        this.applyZoom();
+    },
 
-document.addEventListener("DOMContentLoaded", function () {
+    // --- Navigation ---
+    nextPage() {
+        const pages = document.querySelectorAll('.manga-page-wrapper');
+        if (this.currentPageIndex < pages.length - 1) {
+            this.isUserScrolling = true; // Allow update
+            this.currentPageIndex++;
+            this.scrollToPage(this.currentPageIndex);
+        }
+    },
+
+    prevPage() {
+        if (this.currentPageIndex > 0) {
+            this.isUserScrolling = true; // Allow update
+            this.currentPageIndex--;
+            this.scrollToPage(this.currentPageIndex);
+        }
+    },
+
+    scrollToPage(index) {
+        const container = document.getElementById('readerContainer');
+        const pages = document.querySelectorAll('.manga-page-wrapper');
+        const targetPage = pages[index];
+
+        if (targetPage && container) {
+            const isPaged = container.classList.contains('paged-mode');
+            const scrollConfig = { behavior: 'smooth' };
+
+            if (isPaged) {
+                scrollConfig.left = targetPage.offsetLeft - container.offsetLeft;
+            } else {
+                scrollConfig.top = targetPage.offsetTop - container.offsetTop;
+            }
+
+            container.scrollTo(scrollConfig);
+            this.updatePageDisplay(index + 1);
+        }
+    },
+
+    scrollToStart() {
+        const container = document.getElementById("readerContainer");
+        if (container) {
+            this.isUserScrolling = true;
+            container.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+            container.querySelectorAll(".manga-page-wrapper").forEach(el => el.dataset.fired = "false");
+        }
+    },
+
+    // --- Observers & Feedback ---
+    async initScrollObserver() {
+        const container = document.getElementById('readerContainer');
+        if (!container) return;
+
+        if (this.currentObserver) this.currentObserver.disconnect();
+
+        // 1. Wait for images to stabilize layout
+        const images = container.querySelectorAll('.reader-img');
+        await this.waitForImages(images);
+
+        // 2. Enable updates only after user interacts
+        const enableUpdates = () => { this.isUserScrolling = true; };
+        container.addEventListener('scroll', enableUpdates, { once: true });
+        container.addEventListener('wheel', enableUpdates, { once: true });
+        container.addEventListener('touchstart', enableUpdates, { once: true });
+
+        const isPaged = container.classList.contains('paged-mode');
+
+        this.currentObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (this.isUserScrolling) {
+                    if (entry.isIntersecting) {
+                        const indexAttr = entry.target.getAttribute('data-page-index');
+                        if (indexAttr) {
+                            const index = parseInt(indexAttr);
+                            this.currentPageIndex = index - 1;
+                            this.updatePageDisplay(index);
+                        }
+                    }
+                    else if (entry.boundingClientRect.top < 0) {
+
+                        if (entry.target.dataset.fired === "true") return;
+
+                        entry.target.dataset.fired = "true";
+                        htmx.trigger(entry.target, "page-passed");
+                    }
+                }
+                
+            });
+        }, {
+            root: container,
+            threshold: isPaged ? 0.5 : 0.1,
+            rootMargin: '0px'
+        });
+
+        const targets = document.querySelectorAll('.manga-page-wrapper');
+        targets.forEach(wrapper => this.currentObserver.observe(wrapper));
+    },
+
+    waitForImages(images) {
+        const promises = Array.from(images).map(img => {
+            if (img.complete) return Promise.resolve();
+            return new Promise(resolve => {
+                img.onload = resolve;
+                img.onerror = resolve;
+            });
+        });
+        return Promise.all(promises);
+    },
+
+    updatePageDisplay(index) {
+        const display = document.getElementById('currentPageDisplay');
+        if (display) display.innerText = index;
+
+        const totalPages = document.querySelectorAll('.manga-page-wrapper').length;
+        const progressBar = document.getElementById('readerProgressBar');
+        if (progressBar) {
+            progressBar.style.width = ((index / (totalPages || 1)) * 100) + "%";
+        }
+    },
+
+    // --- Input & Initialization ---
+    initGrabToScroll(container) {
+        container.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return;
+            this.isDown = true;
+            container.classList.add('grabbing');
+            this.startX = e.pageX - container.offsetLeft;
+            this.startY = e.pageY - container.offsetTop;
+            this.scrollLeft = container.scrollLeft;
+            this.scrollTop = container.scrollTop;
+        });
+
+        const endGrab = () => { this.isDown = false; container.classList.remove('grabbing'); };
+        container.addEventListener('mouseleave', endGrab);
+        container.addEventListener('mouseup', endGrab);
+
+        container.addEventListener('mousemove', (e) => {
+            if (!this.isDown) return;
+            this.isUserScrolling = true; // Trigger guard on grab
+            e.preventDefault();
+            const walkX = ((e.pageX - container.offsetLeft) - this.startX) * 2;
+            const walkY = ((e.pageY - container.offsetTop) - this.startY) * 2;
+            container.scrollLeft = this.scrollLeft - walkX;
+            container.scrollTop = this.scrollTop - walkY;
+        });
+    },
+
+    initAtScrollPosition() {
+        const container = document.getElementById("readerContainer");
+        if (!container) return;
+
+        const page = container.dataset.lastPage;
+        const target = document.getElementById(`manga-page-${page}`);
+        if (!target) return;
+
+        const images = container.querySelectorAll("img");
+        let loaded = 0;
+
+        const scrollToTarget = () => {
+            const top = target.offsetTop - container.offsetTop + container.scrollTop;
+            container.scrollTo({ top: top, behavior: "auto" });
+        };
+
+        if (images.length === 0) return scrollToTarget();
+
+        images.forEach(img => {
+            if (img.complete) { loaded++; if (loaded === images.length) scrollToTarget(); }
+            else { img.addEventListener("load", () => { loaded++; if (loaded === images.length) scrollToTarget(); }, { once: true }); }
+        });
+    },
+
+    toggleFullscreen() {
+        const elem = document.getElementById('mainViewer');
+        if (!document.fullscreenElement) {
+            if (elem.requestFullscreen) elem.requestFullscreen();
+        } else {
+            if (document.exitFullscreen) document.exitFullscreen();
+        }
+    }
+};
+
+// --- Global Event Links ---
+window.addEventListener('load', () => readerState.setInitialFit());
+window.addEventListener('resize', () => readerState.setInitialFit());
+
+document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById('readerContainer');
     const readerShell = document.getElementById('readerShell');
 
-    // 1. Initial Scroll to Reader Shell
     if (readerShell) {
-        setTimeout(() => {
-            readerShell.scrollIntoView({
-                behavior: 'smooth',
-                block: 'end'
-            });
-        }, 150);
+        setTimeout(() => readerShell.scrollIntoView({ behavior: 'smooth', block: 'end' }), 150);
     }
 
     if (container) {
-        initGrabToScroll(container);
+        readerState.initGrabToScroll(container);
     }
 
-    initScrollObserver();
+    // Initialize logic
+    readerState.initScrollObserver();
+    readerState.initAtScrollPosition();
 
-    initAtScrollPosition();
-
-    document.addEventListener('fullscreenchange', handleFullscreenUI);
+    // Fullscreen UI handler
+    document.addEventListener('fullscreenchange', () => {
+        const fsBtns = document.querySelectorAll('.bi-fullscreen, .bi-fullscreen-exit');
+        fsBtns.forEach(btn => {
+            btn.classList.toggle('bi-fullscreen', !document.fullscreenElement);
+            btn.classList.toggle('bi-fullscreen-exit', !!document.fullscreenElement);
+        });
+    });
 });
-
-function initGrabToScroll(container) {
-    container.addEventListener('mousedown', (e) => {
-        if (e.button !== 0) return; 
-        isDown = true;
-        container.classList.add('grabbing');
-        startX = e.pageX - container.offsetLeft;
-        startY = e.pageY - container.offsetTop;
-        scrollLeft = container.scrollLeft;
-        scrollTop = container.scrollTop;
-    });
-
-    container.addEventListener('mouseleave', () => {
-        isDown = false;
-        container.classList.remove('grabbing');
-    });
-
-    container.addEventListener('mouseup', () => {
-        isDown = false;
-        container.classList.remove('grabbing');
-    });
-
-    container.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - container.offsetLeft;
-        const y = e.pageY - container.offsetTop;
-        const walkX = (x - startX) * 2;
-        const walkY = (y - startY) * 2;
-        container.scrollLeft = scrollLeft - walkX;
-        container.scrollTop = scrollTop - walkY;
-    });
-}
-
-
-function initAtScrollPosition() {
-    const readerShell = document.getElementById("readerContainer");
-    if (!readerShell) return;
-
-    const page = readerShell.dataset.lastPage;
-    if (!page) return;
-
-    const target = document.getElementById(`manga-page-${page}`);
-    if (!target) return;
-
-    const images = readerShell.querySelectorAll("img");
-
-    // No images? Scroll immediately
-    if (images.length === 0) {
-        scrollToTarget();
-        return;
-    }
-
-    let loaded = 0;
-
-    function onImageDone() {
-        loaded++;
-        if (loaded === images.length) {
-            scrollToTarget();
-        }
-    }
-
-    images.forEach(img => {
-        if (img.complete) {
-            onImageDone();
-        } else {
-            img.addEventListener("load", onImageDone, { once: true });
-            img.addEventListener("error", onImageDone, { once: true });
-        }
-    });
-
-    function scrollToTarget() {
-        const top =
-            target.offsetTop -
-            readerShell.offsetTop +
-            readerShell.scrollTop;
-
-        readerShell.scrollTo({
-            top: top,
-            behavior: "auto" // change to "smooth" if desired
-        });
-    }
-}
-/**
- * Intersection Observer: Updates the Page Number based on scroll position
- */
-function initScrollObserver() {
-    const container = document.getElementById('readerContainer');
-    if (!container) return;
-
-    // Use a lower threshold (0.2) so the index updates as soon as a page is partly visible
-    const observerOptions = {
-        root: container,
-        threshold: 0.2,
-        rootMargin: '0px 0px -10% 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const indexAttr = entry.target.getAttribute('data-page-index');
-                if (indexAttr) {
-                    const index = parseInt(indexAttr);
-                    currentPageIndex = index - 1;
-                    updatePageDisplay(index);
-                }
-            }
-        });
-    }, observerOptions);
-
-    // Observe all wrappers
-    document.querySelectorAll('.manga-page-wrapper').forEach(wrapper => {
-        observer.unobserve(wrapper); // Clear previous observation to prevent duplicates
-        observer.observe(wrapper);
-    });
-}
-
-/**
- * Layout & View Modes
- */
-function changeMode(mode) {
-    const container = document.getElementById('readerContainer');
-    if (!container) return;
-
-    // Remove only mode classes, preserve structural classes like flex-grow-1
-    container.classList.remove('webtoon-mode', 'paged-mode', 'rtl-mode');
-    currentPageIndex = 0;
-
-    if (mode === 'webtoon') {
-        container.classList.add('webtoon-mode');
-        container.style.display = 'flex'; // Centering requires flex
-    } else {
-        container.classList.add('paged-mode');
-        container.style.display = 'flex';
-        if (mode === 'rtl') {
-            container.classList.add('rtl-mode');
-        };
-    }
-
-    // Re-sync UI and Observer for the new layout
-    setTimeout(() => {
-        initScrollObserver();
-        updatePageDisplay(1);
-        container.scrollTo(0, 0);
-    }, 50);
-}
-
-/**
- * Zoom Logic (Webtoon = MaxWidth, Paged = CSS Zoom)
- */
-function adjustZoom(delta) {
-    currentZoom = Math.min(Math.max(0.3, currentZoom + delta), 2.0);
-
-    const zoomInput = document.getElementById('zoomVal');
-    if (zoomInput) zoomInput.value = Math.round(currentZoom * 100) + "%";
-
-    const container = document.getElementById('readerContainer');
-    const imgs = container.querySelectorAll('.reader-img');
-
-    imgs.forEach(img => {
-
-        const baseWidth = 800;
-        img.style.width = (baseWidth * currentZoom) + "px";
-        img.style.height = "auto";
-        img.style.maxWidth = "none";
-    });
-}
-
-function toggleFullscreen() {
-    const elem = document.getElementById('mainViewer');
-    if (!document.fullscreenElement) {
-        if (elem.requestFullscreen) elem.requestFullscreen();
-        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-        else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
-    } else {
-        if (document.exitFullscreen) document.exitFullscreen();
-    }
-}
-
-function handleFullscreenUI() {
-    const fsBtns = document.querySelectorAll('.bi-fullscreen, .bi-fullscreen-exit');
-
-    if (fsBtns.length === 0) return;
-
-    fsBtns.forEach(btn => {
-        if (document.fullscreenElement) {
-            btn.classList.remove('bi-fullscreen');
-            btn.classList.add('bi-fullscreen-exit');
-        } else {
-            btn.classList.remove('bi-fullscreen-exit');
-            btn.classList.add('bi-fullscreen');
-        }
-    });
-}
-
-/**
- * Footer & Page Indicators
- */
-function updatePageDisplay(index) {
-    const display = document.getElementById('currentPageDisplay');
-    if (display) display.innerText = index;
-
-    const totalPages = document.querySelectorAll('.manga-page-wrapper').length;
-    const percentage = (index / (totalPages || 1)) * 100;
-
-    const progressBar = document.getElementById('readerProgressBar');
-    if (progressBar) progressBar.style.width = percentage + "%";
-}
-
-/**
- * Navigation Actions
- */
-function nextPage() {
-    const pages = document.querySelectorAll('.manga-page-wrapper');
-    if (currentPageIndex < pages.length - 1) {
-        currentPageIndex++;
-        scrollToPage(currentPageIndex);
-    }
-}
-
-function prevPage() {
-    if (currentPageIndex > 0) {
-        currentPageIndex--;
-        scrollToPage(currentPageIndex);
-    }
-}
-
-function scrollToPage(index) {
-    const container = document.getElementById('readerContainer');
-    const pages = document.querySelectorAll('.manga-page-wrapper');
-    const targetPage = pages[index];
-
-    if (targetPage && container) {
-        const isPaged = container.classList.contains('paged-mode');
-
-        if (isPaged) {
-            const targetLeft = targetPage.offsetLeft - container.offsetLeft;
-            container.scrollTo({
-                left: targetLeft,
-                behavior: 'smooth'
-            });
-        } else {
-            const targetTop = targetPage.offsetTop - container.offsetTop;
-            container.scrollTo({
-                top: targetTop,
-                behavior: 'smooth'
-            });
-        }
-
-        updatePageDisplay(index + 1);
-    }
-}
-
-function scrollToTop() {
-    document.getElementById("readerContainer").scrollTo(0, 0);
-    document.querySelectorAll("#readerContainer .manga-page-wrapper").forEach(el => {
-        el.dataset.fired = "false";
-    });
-}
-
-
-
-function setInitialFit() {
-    const container = document.getElementById('readerContainer');
-    if (!container) return;
-
-    const isPaged = container.classList.contains('paged-mode');
-
-    if (isPaged) {
-        // For Paged: Fit to Height
-        // We use 0.95 to leave a tiny bit of breathing room
-        const containerHeight = container.clientHeight;
-        const targetHeight = containerHeight * 0.95;
-
-        // Assuming your images are roughly 1130px tall (A4/Manga ratio)
-        // Or you can grab the naturalHeight of the first loaded image
-        const sampleImg = container.querySelector('.reader-img');
-        const referenceHeight = (sampleImg && sampleImg.naturalHeight > 0)
-            ? sampleImg.naturalHeight
-            : 1130;
-
-        currentZoom = targetHeight / referenceHeight;
-    } else {
-        // For Webtoon: Fit to Width
-        const containerWidth = container.clientWidth;
-        // We want the image to match the container width
-        currentZoom = containerWidth / baseWidth;
-    }
-
-    // Apply the calculated zoom
-    applyZoom();
-}
-
-function applyZoom() {
-    const container = document.getElementById('readerContainer');
-    const imgs = container.querySelectorAll('.reader-img');
-    const zoomInput = document.getElementById('zoomVal');
-
-    if (zoomInput) zoomInput.value = Math.round(currentZoom * 100) + "%";
-
-    imgs.forEach(img => {
-        img.style.width = (baseWidth * currentZoom) + "px";
-        img.style.height = "auto";
-        img.style.maxWidth = "none";
-    });
-}
