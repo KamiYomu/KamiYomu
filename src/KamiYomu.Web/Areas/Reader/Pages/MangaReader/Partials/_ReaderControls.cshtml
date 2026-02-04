@@ -2,13 +2,13 @@
     <div>
         <label class="form-label small text-uppercase fw-bold">@I18n.ReadingMode</label>
         <div class="btn-group w-100" role="group">
-            <input type="radio" class="btn-check" name="vmode" id="m1" value="webtoon" checked onchange="changeMode(this.value)">
+            <input type="radio" class="btn-check" name="vmode" id="m1" value="webtoon" checked onchange="readerState.changeMode(this.value)">
             <label class="btn btn-outline-primary" for="m1"><i class="bi bi-distribute-vertical"></i></label>
 
-            <input type="radio" class="btn-check" name="vmode" id="m2" value="ltr" onchange="changeMode(this.value)">
+            <input type="radio" class="btn-check" name="vmode" id="m2" value="ltr" onchange="readerState.changeMode(this.value)">
             <label class="btn btn-outline-primary" for="m2">LTR</label>
 
-            <input type="radio" class="btn-check" name="vmode" id="m3" value="rtl" onchange="changeMode(this.value)">
+            <input type="radio" class="btn-check" name="vmode" id="m3" value="rtl" onchange="readerState.changeMode(this.value)">
             <label class="btn btn-outline-primary" for="m3">RTL</label>
         </div>
     </div>
@@ -16,18 +16,18 @@
     <div>
         <label class="form-label small text-muted text-uppercase fw-bold">@I18n.Zoom / @I18n.Width</label>
         <div class="input-group">
-            <button class="btn btn-secondary" onclick="adjustZoom(-0.1)"><i class="bi bi-dash"></i></button>
+            <button class="btn btn-secondary" onclick="readerState.adjustZoom(-0.1)"><i class="bi bi-dash"></i></button>
             <input type="text" id="zoomVal" class="form-control bg-dark text-white text-center" value="100%" readonly>
-            <button class="btn btn-secondary" onclick="adjustZoom(0.1)"><i class="bi bi-plus"></i></button>
+            <button class="btn btn-secondary" onclick="readerState.adjustZoom(0.1)"><i class="bi bi-plus"></i></button>
         </div>
     </div>
 
     <div class="d-grid gap-2">
-        <button class="btn btn-outline-info" onclick="toggleFullscreen()">
+        <button class="btn btn-outline-info" onclick="readerState.toggleFullscreen()">
             <i class="bi bi-fullscreen"></i> @I18n.Fullscreen
         </button>
-        <button class="btn btn-outline-warning" onclick="scrollToTop()">
-            <i class="bi bi-arrow-up-circle"></i> @I18n.ScrollToTop
+        <button class="btn btn-outline-warning" onclick="readerState.scrollToStart()">
+            <i class="bi bi-arrow-up-circle"></i> @I18n.ScrollToStart
         </button>
     </div>
 </div>

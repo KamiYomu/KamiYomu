@@ -12,8 +12,8 @@
     <div class="container-fluid py-2 d-flex justify-content-between align-items-center">
         <div class="flex-1">
             <button class="btn btn-sm btn-outline-primary d-flex align-items-center gap-2 px-3"
-                    onclick="prevPage()" 
-                    title="Previous Page (Left Arrow)">
+                    onclick="readerState.prevPage()"
+                    title="@I18n.PreviousPage (Left Arrow)">
                 <i class="bi bi-arrow-left"></i>
                 <span class="d-none d-md-inline">@I18n.Previous</span>
             </button>
@@ -21,7 +21,7 @@
 
         <div class="flex-grow-1 d-flex justify-content-center align-items-center">
             <div class="page-indicator-badge d-flex align-items-center bg-secondary bg-opacity-25 rounded-pill px-3 py-1">
-                <span class="small text-muted me-2">PAGE</span>
+                <span class="small text-muted me-2">@I18n.Page.ToUpper()</span>
                 <span id="currentPageDisplay" class="fw-bold text-primary">1</span>
                 <span class="mx-1 text-muted">/</span>
                 <span class="small text-muted">@Model.PageUrls.Count</span>
@@ -30,8 +30,8 @@
 
         <div class="flex-1 text-end">
             <button class="btn btn-sm btn-outline-primary d-flex align-items-center gap-2 px-3 ms-auto" 
-                    onclick="nextPage()" 
-                    title="Next Page (Right Arrow)">
+                    onclick="readerState.nextPage()" 
+                    title="@I18n.NextPage (Right Arrow)">
                 <span class="d-none d-md-inline">@I18n.Next</span>
                 <i class="bi bi-arrow-right"></i>
             </button>

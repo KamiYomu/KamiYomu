@@ -1600,6 +1600,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Next Page.
+        /// </summary>
+        public static string NextPage {
+            get {
+                return ResourceManager.GetString("NextPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Add-ons Available.
         /// </summary>
         public static string NoAddonsAvailable {
@@ -1969,6 +1978,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Previous Page.
+        /// </summary>
+        public static string PreviousPage {
+            get {
+                return ResourceManager.GetString("PreviousPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Processing.
         /// </summary>
         public static string Processing {
@@ -2119,6 +2137,15 @@ namespace KamiYomu.Web.Resources {
         public static string Scheduled {
             get {
                 return ResourceManager.GetString("Scheduled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scroll To Start.
+        /// </summary>
+        public static string ScrollToStart {
+            get {
+                return ResourceManager.GetString("ScrollToStart", resourceCulture);
             }
         }
         
