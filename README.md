@@ -26,27 +26,6 @@ By leveraging a modular **Crawler Agent** architecture, KamiYomu empowers you to
 
 ---
 
-# 📖 The Mission
-**KamiYomu** (神読み) was built to replace volatile online platforms with a private, self-hosted ecosystem. Our goal is to ensure your manga library remains **yours** private and free from tracking.
-
----
-
-## 🚀 Help KamiYomu Grow
-
-| Action | How You Can Help |
-| :--- | :--- |
-| **📢 Tell Everyone** | Share the project on social media or star the [GitHub repository](https://github.com/KamiYomu/KamiYomu). |
-| **💖 Support** | Help us stay independent and fuel development through our sponsor link below. |
-| **🛠️ Contribute** | [Join the community](https://github.com/KamiYomu/KamiYomu/discussions), [report bugs](https://github.com/KamiYomu/KamiYomu/issues), [build Crawler Agents](https://kamiyomu.com/docs/crawler-agents/create/), or [help develop KamiYomu](https://kamiyomu.github.io/docs/development/development/). |
-
-<div style="background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 12px; padding: 24px; text-align: center; margin: 2rem 0; font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
-  <h3 style="margin-top: 0; color: #db61a2;">💖 Sponsor the Mission</h3>
-  <p style="color: #57606a; margin-bottom: 20px;">
-    Help me keep <strong>KamiYomu</strong> free, open-source, and independent.
-  </p>
-  <iframe src="https://github.com/sponsors/MarcosCostaDev/button" title="Sponsor MarcosCostaDev" height="32" width="114" style="border: 0; border-radius: 6px;"></iframe>
-</div>
-
 ## 💬 Community
 
 Join the conversation and be part of the KamiYomu community:
