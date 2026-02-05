@@ -1,25 +1,36 @@
-@model IEnumerable<ViewModels.WeeklyChapterViewModel>
+@using KamiYomu.Web.Areas.Reader.ViewComponents
+@model WeeklyChapterViewComponentModel
 
 <div class="weekly-chapters-wrapper d-flex flex-column gap-2">
     @{
         int itemNumber = 0;
-        const int limit = 5;
     }
-    @foreach (var weeklyChapter in Model)
+    @foreach (var weeklyChapter in Model.WeeklyChapters)
     {
-        if (itemNumber == limit)
+        if (Model.Limit == itemNumber)
         {
             break;
         }
 
+        var date = weeklyChapter.Items.FirstOrDefault()?.StatusUpdateAt.ToLongDateString();
+
+        if (!string.IsNullOrWhiteSpace(date))
+        {
+            <div class="date-label small fw-bold text-muted mb-2 mt-4 text-uppercase">
+                @date
+            </div>
+        }
+
+
         @foreach (var chapter in weeklyChapter.Items)
         {
-            if (itemNumber == limit)
+
+            if (Model.Limit == itemNumber)
             {
                 break;
             }
-            itemNumber++;
 
+            itemNumber++;
 
             <a asp-area="Reader" asp-page="/MangaReader/Index"
                asp-route-chapterDownloadId="@chapter.ChapterDownloadId"

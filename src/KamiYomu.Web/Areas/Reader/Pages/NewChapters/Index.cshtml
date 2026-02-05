@@ -1,0 +1,6 @@
+@page
+@model KamiYomu.Web.Areas.Reader.Pages.NewChapters.IndexModel
+
+<vc:reader-header return-url="@Url.Page("/MangaGallery/Index", new { area = "Reader" })" />
+
+<vc:weekly-chapter show-past-days="30" />

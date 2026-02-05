@@ -1080,4 +1080,19 @@ voor de &lt;code&gt;WorkerCount&lt;/code&gt;-instelling van Hangfire om te bepal
   <data name="ScrollToStart" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="ViewNewChapters" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="PreviousPage" xml:space="preserve">
+    <value>Vorige pagina</value>
+  </data>
+  <data name="NextPage" xml:space="preserve">
+    <value>Volgende pagina</value>
+  </data>
+  <data name="ScrollToStart" xml:space="preserve">
+    <value>Scroll naar start</value>
+  </data>
+  <data name="ViewNewChapters" xml:space="preserve">
+    <value>Bekijk nieuwe hoofdstukken</value>
+  </data>
 </root>

@@ -2744,6 +2744,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to View New Chapters.
+        /// </summary>
+        public static string ViewNewChapters {
+            get {
+                return ResourceManager.GetString("ViewNewChapters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Volume.
         /// </summary>
         public static string Volume {

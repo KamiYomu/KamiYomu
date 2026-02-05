@@ -7,10 +7,21 @@ namespace KamiYomu.Web.Areas.Reader.ViewComponents;
 
 public class WeeklyChapterViewComponent(IChapterProgressRepository chapterProgressRepository) : ViewComponent
 {
-    public IViewComponentResult Invoke()
+    public IViewComponentResult Invoke(int showPastDays)
     {
-        IEnumerable<WeeklyChapterViewModel> weeklyChapters = chapterProgressRepository.FetchWeeklyChapters();
+        IEnumerable<WeeklyChapterViewModel> weeklyChapters = chapterProgressRepository.FetchWeeklyChapters(showPastDays);
 
-        return View(weeklyChapters);
+        return View(new WeeklyChapterViewComponentModel
+        {
+            Limit = showPastDays,
+            WeeklyChapters = weeklyChapters
+        });
     }
+}
+
+
+public record WeeklyChapterViewComponentModel
+{
+    public int Limit { get; init; }
+    public IEnumerable<WeeklyChapterViewModel> WeeklyChapters { get; init; }
 }

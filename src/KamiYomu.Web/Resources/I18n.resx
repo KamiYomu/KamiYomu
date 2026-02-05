@@ -1079,4 +1079,7 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="ScrollToStart" xml:space="preserve">
     <value>Scroll To Start</value>
   </data>
+  <data name="ViewNewChapters" xml:space="preserve">
+    <value>View New Chapters</value>
+  </data>
 </root>

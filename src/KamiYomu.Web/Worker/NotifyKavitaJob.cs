@@ -1,4 +1,3 @@
-
 using Hangfire.Server;
 
 using KamiYomu.Web.Entities;
