@@ -6,10 +6,8 @@ using Hangfire.Server;
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
-using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
-using KamiYomu.Web.Infrastructure.Services;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Worker.Interfaces;
 

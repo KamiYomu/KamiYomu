@@ -44,13 +44,13 @@ public class ChapterProgressRepository([FromKeyedServices(ServiceLocator.ReadOnl
     }
 
 
-    public IEnumerable<WeeklyChapterViewModel> FetchWeeklyChapters()
+    public IEnumerable<WeeklyChapterViewModel> FetchWeeklyChapters(int showPastDays)
     {
         UserPreference userPreference = dbContext.UserPreferences.Query().FirstOrDefault();
 
-        return cacheContext.GetOrSet($"weekly-chapters-{userPreference.FamilySafeMode}", () =>
+        return cacheContext.GetOrSet($"weekly-chapters-{userPreference.FamilySafeMode}-{showPastDays}", () =>
         {
-            DateTimeOffset startDate = DateTimeOffset.UtcNow.Date.AddDays(-7);
+            DateTimeOffset startDate = DateTimeOffset.UtcNow.Date.AddDays(showPastDays * -1);
 
             List<WeeklyChapterViewModel> result = [];
 

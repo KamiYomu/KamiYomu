@@ -7,7 +7,6 @@ using Hangfire.Server;
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
-using KamiYomu.Web.Entities.Integrations;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
@@ -25,7 +24,6 @@ public class ChapterDownloaderJob(
     ICrawlerAgentRepository agentCrawlerRepository,
     IHttpClientFactory httpClientFactory,
     IHangfireRepository hangfireRepository,
-    IBackgroundJobClient backgroundJobClient,
     INotificationService notificationService,
     IGotifyService gotifyService) : IChapterDownloaderJob, IDisposable
 {
@@ -40,7 +38,9 @@ public class ChapterDownloaderJob(
         UserPreference? userPreference = dbContext.UserPreferences
                                                   .Include(p => p.KavitaSettings)
                                                   .Include(p => p.GotifySettings)
-                                                  .Query().FirstOrDefault();
+                                                  .Query()
+                                                  .FirstOrDefault();
+
         CultureInfo culture = userPreference?.GetCulture() ?? CultureInfo.GetCultureInfo("en-US");
 
         Thread.CurrentThread.CurrentCulture = culture;
@@ -88,7 +88,6 @@ public class ChapterDownloaderJob(
             }
 
             logger.LogInformation("Dispatch '{title}' process started: Chapter assigned to Agent Crawler '{AgentCrawler}'", title, library.CrawlerAgent.DisplayName);
-
 
             chapterDownload.Processing();
 

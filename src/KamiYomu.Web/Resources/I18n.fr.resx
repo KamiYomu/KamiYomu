@@ -1080,4 +1080,19 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="ScrollToStart" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="ViewNewChapters" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="PreviousPage" xml:space="preserve">
+    <value>Page précédente</value>
+  </data>
+  <data name="NextPage" xml:space="preserve">
+    <value>Page suivante</value>
+  </data>
+  <data name="ScrollToStart" xml:space="preserve">
+    <value>Faites défiler pour commencer</value>
+  </data>
+  <data name="ViewNewChapters" xml:space="preserve">
+    <value>Voir les nouveaux chapitres</value>
+  </data>
 </root>

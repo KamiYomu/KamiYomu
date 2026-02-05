@@ -82,13 +82,21 @@
             {
                 <p class="text-muted small py-3">No recent history found.</p>
             }
+        
         </section>
 
         <section>
             <h5 class="mb-3 border-bottom pb-2">
                 <i class="bi bi-calendar-week me-2 text-primary"></i> @I18n.WeekChapters
             </h5>
-            <vc:weekly-chapter />
+
+            <vc:weekly-chapter show-past-days="5" />
+
+            <div class="mt-3">
+                <a class="text-decoration-none fw-bold" asp-area="Reader" asp-page="/NewChapters/Index">
+                    @I18n.ViewNewChapters <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
         </section>
     </div>
 </div>
