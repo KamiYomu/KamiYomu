@@ -1,4 +1,4 @@
-using KamiYomu.Web.Entities.Stats;
+using KamiYomu.Web.Areas.Public.Models;
 
 namespace KamiYomu.Web.Infrastructure.Services.Interfaces;
 

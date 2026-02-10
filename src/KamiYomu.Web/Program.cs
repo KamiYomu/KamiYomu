@@ -1,6 +1,8 @@
 using System.Globalization;
 using System.Text.Json.Serialization;
 
+using Asp.Versioning;
+
 using Hangfire;
 using Hangfire.Storage.SQLite;
 
@@ -149,8 +151,16 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.FallBackToParentUICultures = true;
 });
 
-
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        _ = policy.AllowAnyOrigin()   // Allow requests from any domain
+              .AllowAnyHeader()   // Allow any headers
+              .AllowAnyMethod();  // Allow GET, POST, PUT, DELETE, etc.
+    });
+});
+builder.Services.AddControllers();
 builder.Services.AddRazorPages()
                 .AddJsonOptions(options =>
                 {
@@ -158,6 +168,13 @@ builder.Services.AddRazorPages()
                 })
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization();
+
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+});
 
 AddHttpClients(builder);
 
@@ -217,8 +234,6 @@ app.UseResponseCompression();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseMiddleware<BasicAuthMiddleware>();
-app.MapStatsEndpoints()
-   .MapLibraryEndpoints();
 app.UseHangfireDashboard("/worker", new DashboardOptions
 {
     DisplayStorageConnectionString = false,
@@ -233,6 +248,7 @@ RecurringJob.AddOrUpdate<IDeferredExecutionCoordinator>(Worker.DeferredExecution
                                                         (job) => job.DispatchAsync(Worker.DeferredExecutionQueue, null!, CancellationToken.None),
                                                         Cron.MinuteInterval(Worker.DeferredExecutionInMinutes));
 
+app.MapControllers();
 app.MapRazorPages();
 app.UseMiddleware<ExceptionNotificationMiddleware>();
 app.MapHub<NotificationHub>("/notificationHub");
