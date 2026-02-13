@@ -11,6 +11,8 @@ using KamiYomu.Web.Models;
 
 using Microsoft.AspNetCore.Mvc;
 
+using Swashbuckle.AspNetCore.Annotations;
+
 using static KamiYomu.Web.AppOptions.Defaults;
 
 namespace KamiYomu.Web.Areas.Public.Controllers;
@@ -18,10 +20,21 @@ namespace KamiYomu.Web.Areas.Public.Controllers;
 [Area(nameof(Public))]
 [Route("[area]/api/v{version:apiVersion}/[controller]")]
 [ApiController]
+[SwaggerTag(description: "Provides OPDS feeds and download endpoints for the public catalog, including " +
+                  "manga libraries, chapters, and acquisition links. Routes are versioned and " +
+                  "exposed under the Public area."
+)]
 public class OpdsController(
     [FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext) : ControllerBase
 {
     [HttpGet]
+    [Produces(MediaTypeNames.Text.Xml)]
+    [ProducesResponseType(typeof(AtomXmlResult<OpdsFeed>), StatusCodes.Status200OK)]
+    [SwaggerOperation(
+    Summary = "List manga libraries (OPDS)",
+    Description = "Returns an OPDS feed containing a paginated list of available manga libraries. "
+                + "Supports page and pageSize parameters for navigation."
+    )]
     public async Task<IActionResult> GetMangaList(
      [FromQuery, Range(1, int.MaxValue, ErrorMessage = "Page must be at least 1")] int page = 1,
      [FromQuery, Range(1, 100, ErrorMessage = "Page size must be between 1 and 100")] int pageSize = 20)
@@ -83,6 +96,13 @@ public class OpdsController(
     }
 
     [HttpGet("{libraryId:guid}")]
+    [Produces(MediaTypeNames.Text.Xml)]
+    [ProducesResponseType(typeof(AtomXmlResult<OpdsFeed>), StatusCodes.Status200OK)]
+    [SwaggerOperation(
+    Summary = "Get manga library (OPDS)",
+    Description = "Returns an OPDS feed representing the specified manga library, including "
+                + "its metadata and available manga entries."
+    )]
     public async Task<IActionResult> GetManga(Guid libraryId)
     {
         Library library = dbContext.Libraries
@@ -133,6 +153,13 @@ public class OpdsController(
 
 
     [HttpGet("{libraryId:guid}/chapters/{chapterDownloadId:guid}")]
+    [Produces(MediaTypeNames.Text.Xml)]
+    [ProducesResponseType(typeof(AtomXmlResult<OpdsFeed>), StatusCodes.Status200OK)]
+    [SwaggerOperation(
+    Summary = "Get chapter details (OPDS)",
+    Description = "Returns an OPDS feed describing the specified chapter, including metadata "
+                + "and available acquisition links for downloading the chapter in various formats."
+    )]
     public IActionResult GetChapter(Guid libraryId, Guid chapterDownloadId)
     {
         Library library = dbContext.Libraries
@@ -173,6 +200,10 @@ public class OpdsController(
 
     [HttpGet("{libraryId:guid}/chapters/{chapterDownloadId:guid}/download/epub")]
     [Produces("application/epub+zip", "application/epub")]
+    [SwaggerOperation(
+    Summary = "Download chapter as EPUB",
+    Description = "Generates and returns the specified chapter in EPUB format using the EPUB service."
+    )]
     public IActionResult DownloadChapterEpub(Guid libraryId, Guid chapterDownloadId, [FromServices] IEpubService epubService)
     {
         return epubService.GetDownloadResponse(libraryId, chapterDownloadId) is not DownloadResponse downloadResponse
@@ -182,6 +213,10 @@ public class OpdsController(
 
     [HttpGet("{libraryId:guid}/chapters/{chapterDownloadId:guid}/download/cbz")]
     [Produces("application/vnd.comicbook+zip", "application/x-cbz")]
+    [SwaggerOperation(
+    Summary = "Download chapter as CBZ",
+    Description = "Generates and returns the specified chapter in CBZ format (ComicBook ZIP)."
+    )]
     public IActionResult DownloadChapterCbz(Guid libraryId, Guid chapterDownloadId, [FromServices] IZipService zipService)
     {
         return zipService.GetDownloadCbzResponse(libraryId, chapterDownloadId) is not DownloadResponse downloadResponse
@@ -190,7 +225,11 @@ public class OpdsController(
     }
 
     [HttpGet("{libraryId:guid}/chapters/{chapterDownloadId:guid}/download/zip")]
-    [Produces("application/zip")]
+    [Produces(MediaTypeNames.Application.Zip)]
+    [SwaggerOperation(
+    Summary = "Download chapter as ZIP",
+    Description = "Returns the specified chapter packaged as a standard ZIP archive."
+    )]
     public IActionResult DownloadChapterZip(Guid libraryId, Guid chapterDownloadId, [FromServices] IZipService zipService)
     {
         return zipService.GetDownloadZipResponse(libraryId, chapterDownloadId) is not DownloadResponse downloadResponse
@@ -199,7 +238,11 @@ public class OpdsController(
     }
 
     [HttpGet("{libraryId:guid}/chapters/{chapterDownloadId:guid}/download/pdf")]
-    [Produces("application/pdf")]
+    [Produces(MediaTypeNames.Application.Pdf)]
+    [SwaggerOperation(
+    Summary = "Download chapter as PDF",
+    Description = "Generates and returns the specified chapter in PDF format using the PDF service."
+    )]
     public IActionResult DownloadChapterZip(Guid libraryId, Guid chapterDownloadId, [FromServices] IPdfService pdfService)
     {
         return pdfService.GetDownloadResponse(libraryId, chapterDownloadId) is not DownloadResponse downloadResponse

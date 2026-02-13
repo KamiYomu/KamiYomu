@@ -28,13 +28,13 @@ public class OpdsEntry
                 {
                     Href = library.Manga.CoverUrl.ToInternalImageUrl().ToString(), // URL to the cover image
                     Rel = "http://opds-spec.org/image",
-                    Type = "image/jpeg"
+                    Type = MediaTypeNames.Image.Jpeg
                 },
                 new OpdsLink
                 {
                     Href = library.Manga.CoverUrl.ToInternalImageUrl().ToString(),
                     Rel = "http://opds-spec.org/image/thumbnail",
-                    Type = "image/jpeg"
+                    Type =  MediaTypeNames.Image.Jpeg
                 }
             ],
             Publisher = library.Manga.Authors.FirstOrDefault(),
@@ -110,7 +110,7 @@ public class OpdsEntry
         {
             Href = $"/public/api/v1/opds/{libraryId}/chapters/{chapterDownloadRecordId}/download/zip",
             Rel = "http://opds-spec.org/acquisition",
-            Type = "application/zip"
+            Type = MediaTypeNames.Application.Zip
         };
         yield return new OpdsLink
         {
@@ -122,7 +122,7 @@ public class OpdsEntry
         {
             Href = $"/public/api/v1/opds/{libraryId}/chapters/{chapterDownloadRecordId}/download/pdf",
             Rel = "http://opds-spec.org/acquisition",
-            Type = "application/pdf"
+            Type = MediaTypeNames.Application.Pdf
         };
         yield break;
     }

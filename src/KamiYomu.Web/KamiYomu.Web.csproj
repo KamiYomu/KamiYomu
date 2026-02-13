@@ -17,9 +17,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Areas\Public\Views\**" />
 	  <Compile Remove="Areas\Reader\Controllers\**" />
+	  <Content Remove="Areas\Public\Views\**" />
 	  <Content Remove="Areas\Reader\Controllers\**" />
+	  <EmbeddedResource Remove="Areas\Public\Views\**" />
 	  <EmbeddedResource Remove="Areas\Reader\Controllers\**" />
+	  <None Remove="Areas\Public\Views\**" />
 	  <None Remove="Areas\Reader\Controllers\**" />
 	</ItemGroup>
 
@@ -29,6 +33,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Asp.Versioning.Mvc" Version="8.1.1" />
+		<PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
 		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.22" />
 		<PackageReference Include="Hangfire.Storage.SQLite" Version="0.4.2" />
 		<PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.2" />
@@ -51,6 +56,8 @@
 		<PackageReference Include="SkiaSharp" Version="3.119.1" />
 		<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
 		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.1.2" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -74,7 +81,6 @@
 
     <ItemGroup>
       <Folder Include="Areas\Public\Data\" />
-      <Folder Include="Areas\Public\Views\" />
     </ItemGroup>
     
 	<Import Project="KamiYomu.Web.props" />

@@ -1,12 +1,11 @@
 using System.Globalization;
 using System.Text.Json.Serialization;
 
-using Asp.Versioning;
-
 using Hangfire;
 using Hangfire.Storage.SQLite;
 
 using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Areas.Public;
 using KamiYomu.Web.Areas.Reader.Data;
 using KamiYomu.Web.Areas.Reader.Repositories;
 using KamiYomu.Web.Areas.Reader.Repositories.Interfaces;
@@ -153,16 +152,6 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.FallBackToParentUICultures = true;
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        _ = policy.AllowAnyOrigin()   // Allow requests from any domain
-              .AllowAnyHeader()   // Allow any headers
-              .AllowAnyMethod();  // Allow GET, POST, PUT, DELETE, etc.
-    });
-});
-builder.Services.AddControllers();
 builder.Services.AddRazorPages()
                 .AddJsonOptions(options =>
                 {
@@ -171,12 +160,7 @@ builder.Services.AddRazorPages()
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization();
 
-builder.Services.AddApiVersioning(options =>
-{
-    options.DefaultApiVersion = new ApiVersion(1, 0);
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.ReportApiVersions = true;
-});
+builder.Services.AddPublicApi();
 
 AddHttpClients(builder);
 
@@ -250,6 +234,7 @@ RecurringJob.AddOrUpdate<IDeferredExecutionCoordinator>(Worker.DeferredExecution
                                                         (job) => job.DispatchAsync(Worker.DeferredExecutionQueue, null!, CancellationToken.None),
                                                         Cron.MinuteInterval(Worker.DeferredExecutionInMinutes));
 
+app.UsePublicApi();
 app.MapControllers();
 app.MapRazorPages();
 app.UseMiddleware<ExceptionNotificationMiddleware>();
