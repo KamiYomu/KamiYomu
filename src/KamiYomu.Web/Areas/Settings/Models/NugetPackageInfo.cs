@@ -2,7 +2,7 @@ using NuGet.Versioning;
 
 using static KamiYomu.Web.AppOptions.Defaults;
 
-namespace KamiYomu.Web.Entities.Addons;
+namespace KamiYomu.Web.Areas.Settings.Models;
 
 public class NugetPackageInfo
 {

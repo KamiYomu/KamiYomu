@@ -3,6 +3,9 @@
 @using KamiYomu.Web.Areas.Reader.Pages.History;
 @model IndexModel
 
+@{
+    ViewData["Title"] = I18n.ReadingHistory;
+}
 <vc:reader-header return-url="@Url.Page("/MangaGallery/Index", new { area = "Reader"} )" />
 
 <div class="container py-5">

@@ -2,6 +2,10 @@
 @using KamiYomu.Web.Areas.Reader.Pages.MangaReader
 @model IndexModel
 
+@{
+    ViewData["Title"] = $"{I18n.Chapter}: {Model.ChapterDownloaded.Chapter.Number} - {Model.ChapterDownloaded.MangaDownload.Library.Manga.Title}";
+}
+
 <div id="readerShell" class="reader-shell d-flex flex-column vh-100 overflow-hidden" >
 
     <div class="main-viewer d-flex flex-column flex-grow-1 overflow-hidden" id="mainViewer">

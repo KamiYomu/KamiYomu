@@ -1,9 +1,9 @@
-﻿using Hangfire;
+using Hangfire;
 using Hangfire.States;
 using Hangfire.Storage;
 
 using KamiYomu.Web.AppOptions;
-using KamiYomu.Web.Entities.Worker;
+using KamiYomu.Web.Areas.Settings.Models;
 
 namespace KamiYomu.Web.Extensions;
 

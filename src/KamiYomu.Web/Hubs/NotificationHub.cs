@@ -1,5 +1,5 @@
-﻿using KamiYomu.Web.AppOptions;
-using KamiYomu.Web.Entities.Notifications;
+using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Models;
 
 using Microsoft.AspNetCore.SignalR;
 

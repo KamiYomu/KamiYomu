@@ -17,9 +17,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Areas\Public\Views\**" />
 	  <Compile Remove="Areas\Reader\Controllers\**" />
+	  <Content Remove="Areas\Public\Views\**" />
 	  <Content Remove="Areas\Reader\Controllers\**" />
+	  <EmbeddedResource Remove="Areas\Public\Views\**" />
 	  <EmbeddedResource Remove="Areas\Reader\Controllers\**" />
+	  <None Remove="Areas\Public\Views\**" />
 	  <None Remove="Areas\Reader\Controllers\**" />
 	</ItemGroup>
 
@@ -28,6 +32,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Asp.Versioning.Mvc" Version="8.1.1" />
+		<PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
 		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.22" />
 		<PackageReference Include="Hangfire.Storage.SQLite" Version="0.4.2" />
 		<PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.2" />
@@ -38,6 +44,7 @@
 		<PackageReference Include="Microsoft.Extensions.Http.Polly" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Localization" Version="10.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.23" />
 		<PackageReference Include="MonkeyCache.LiteDB" Version="2.1.1" />
 		<PackageReference Include="NuGet.Versioning" Version="7.0.1" />
 		<PackageReference Include="Polly" Version="8.6.5" />
@@ -49,6 +56,8 @@
 		<PackageReference Include="SkiaSharp" Version="3.119.1" />
 		<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
 		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.1.2" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -68,6 +77,10 @@
 
     <ItemGroup>
         <InternalsVisibleTo Include="KamiYomu.Web.Tests" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Areas\Public\Data\" />
     </ItemGroup>
     
 	<Import Project="KamiYomu.Web.props" />

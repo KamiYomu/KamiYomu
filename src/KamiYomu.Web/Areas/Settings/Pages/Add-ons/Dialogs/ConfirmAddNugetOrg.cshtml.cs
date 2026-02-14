@@ -1,6 +1,6 @@
 using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Areas.Settings.Models;
 using KamiYomu.Web.Areas.Settings.ViewComponents;
-using KamiYomu.Web.Entities.Addons;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 

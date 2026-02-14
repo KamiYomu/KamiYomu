@@ -1,5 +1,4 @@
-﻿using QuestPDF.Fluent;
-using QuestPDF.Helpers;
+using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 
 using SkiaSharp;
@@ -8,15 +7,18 @@ namespace KamiYomu.Web.Infrastructure.Reports;
 
 public class MangaChaptersPdfReport(List<string> images, string fileName, string logoPath) : IDocument
 {
-    public DocumentMetadata GetMetadata() => new()
+    public DocumentMetadata GetMetadata()
     {
-        Title = $"{fileName} — KamiYomu",
-        Author = "KamiYomu",
-        Subject = fileName,
-        Keywords = string.Join(";", ["Manga", "CBZ", "Comic", "PDF", "KamiYomu"]),
-        Creator = "KamiYomu",
-        Producer = "KamiYomu"
-    };
+        return new()
+        {
+            Title = $"{fileName} — KamiYomu",
+            Author = "KamiYomu",
+            Subject = fileName,
+            Keywords = string.Join(";", ["Manga", "CBZ", "Comic", "PDF", "KamiYomu"]),
+            Creator = "KamiYomu",
+            Producer = "KamiYomu"
+        };
+    }
 
     public void Compose(IDocumentContainer container)
     {

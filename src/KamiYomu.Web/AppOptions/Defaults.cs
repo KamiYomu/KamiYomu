@@ -1,6 +1,6 @@
 using KamiYomu.CrawlerAgents.Core.Catalog.Definitions;
 using KamiYomu.Web.Entities.Definitions;
-using KamiYomu.Web.Entities.Notifications.Definitions;
+using KamiYomu.Web.Models.Definitions;
 
 using LiteDB;
 

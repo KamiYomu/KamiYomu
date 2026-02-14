@@ -1,5 +1,5 @@
+using KamiYomu.Web.Areas.Settings.Models;
 using KamiYomu.Web.Entities;
-using KamiYomu.Web.Entities.Addons;
 
 using LiteDB;
 

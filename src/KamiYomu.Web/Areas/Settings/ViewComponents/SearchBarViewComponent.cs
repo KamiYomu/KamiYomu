@@ -1,4 +1,4 @@
-using KamiYomu.Web.Entities.Addons;
+using KamiYomu.Web.Areas.Settings.Models;
 
 using Microsoft.AspNetCore.Mvc;
 

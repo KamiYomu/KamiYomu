@@ -1,4 +1,4 @@
-using KamiYomu.Web.Entities.Addons;
+using KamiYomu.Web.Areas.Settings.Models;
 using KamiYomu.Web.Infrastructure.Contexts;
 
 using Microsoft.AspNetCore.Mvc.RazorPages;

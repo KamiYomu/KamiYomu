@@ -3,8 +3,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json.Nodes;
 
-using KamiYomu.Web.AppOptions;
-using KamiYomu.Web.Entities.Addons;
+using KamiYomu.Web.Areas.Settings.Models;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 

@@ -1070,19 +1070,6 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="DefaultSettings" xml:space="preserve">
     <value>Paramètres par défaut</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="PreviousPage" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="NextPage" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="ScrollToStart" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="ViewNewChapters" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="PreviousPage" xml:space="preserve">
     <value>Page précédente</value>
   </data>
@@ -1094,5 +1081,24 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   </data>
   <data name="ViewNewChapters" xml:space="preserve">
     <value>Voir les nouveaux chapitres</value>
+  </data>
+  <data name="MangaGallery" xml:space="preserve">
+    <value>Galerie de mangas</value>
+  </data>
+  <data name="KamiYomuCatalog" xml:space="preserve">
+    <value>Catalogue de KamiYomu</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="OpdsCatalog" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="PublicApi" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="OpdsCatalog" xml:space="preserve">
+    <value>Catalogue OPDS</value>
+  </data>
+  <data name="PublicApi" xml:space="preserve">
+    <value>API publique (Swagger)</value>
   </data>
 </root>

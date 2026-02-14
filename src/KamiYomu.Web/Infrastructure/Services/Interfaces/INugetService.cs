@@ -1,4 +1,4 @@
-﻿using KamiYomu.Web.Entities.Addons;
+using KamiYomu.Web.Areas.Settings.Models;
 
 namespace KamiYomu.Web.Infrastructure.Services.Interfaces;
 

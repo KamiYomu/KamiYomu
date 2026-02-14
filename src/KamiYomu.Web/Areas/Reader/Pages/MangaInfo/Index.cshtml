@@ -3,6 +3,10 @@
 @using KamiYomu.Web.Extensions
 @model IndexModel
 
+@{
+    ViewData["Title"] = Model.Manga.Title;
+}
+
 <vc:reader-header return-url="@Url.Page("/MangaGallery/Index", new { area = "Reader" })" />
 
 <div class="row mt-4">

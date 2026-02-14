@@ -39,6 +39,13 @@ public class DownloadChapterTableRowViewComponent(IUserClockManager userClockSer
             recordId = chapterDownloadRecord.Id
         }) : "#";
 
+        string? downloadEpubUrl = chapterDownloadRecord.IsCompleted() ? Url.Page("DownloadChapterTable", values: new
+        {
+            handler = "DownloadEpub",
+            libraryId = chapterDownloadRecord.MangaDownload.Library.Id,
+            recordId = chapterDownloadRecord.Id
+        }) : "#";
+
         string builtInReaderUrl = chapterDownloadRecord.IsCompleted()
             ? Url.Page("/MangaReader/Index", new
             {
@@ -64,6 +71,7 @@ public class DownloadChapterTableRowViewComponent(IUserClockManager userClockSer
             downloadCbzUrl,
             downloadZipUrl,
             downloadPdfUrl,
+            downloadEpubUrl,
             builtInReaderUrl,
             cancelUrl));
     }
@@ -77,5 +85,6 @@ public record DownloadChapterTableRowViewComponentModel(
     string? DownloadCbzUrl,
     string? DownloadZipUrl,
     string? DownloadPdfUrl,
+    string? DownloadEpubUrl,
     string? BuiltInReaderUrl,
     string? CancelUrl);

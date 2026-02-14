@@ -1,8 +1,8 @@
-﻿using KamiYomu.Web.AppOptions;
-using KamiYomu.Web.Entities.Notifications;
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Hubs;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
+using KamiYomu.Web.Models;
 
 using Microsoft.AspNetCore.SignalR;
 

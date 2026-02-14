@@ -1,4 +1,4 @@
-﻿using KamiYomu.Web.Entities.Notifications;
+using KamiYomu.Web.Models;
 
 namespace KamiYomu.Web.Infrastructure.Services.Interfaces;
 

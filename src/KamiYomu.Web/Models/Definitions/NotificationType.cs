@@ -1,6 +1,6 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
-namespace KamiYomu.Web.Entities.Notifications.Definitions;
+namespace KamiYomu.Web.Models.Definitions;
 
 
 [JsonConverter(typeof(JsonStringEnumConverter))]

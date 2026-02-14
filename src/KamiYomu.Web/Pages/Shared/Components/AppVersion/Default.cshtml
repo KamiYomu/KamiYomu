@@ -4,41 +4,60 @@
 @using KamiYomu.Web.ViewComponents
 @model AppVersionViewComponentModel
 
-<footer class="mt-4 text-secondary small">
-    <!-- Version & Update -->
-    <div class="d-flex flex-wrap align-items-center justify-content-between p-2 rounded shadow-sm mb-2">
-        <div class="d-flex align-items-center flex-wrap">
-            <span class="me-2">
-                @I18n.Version: <span class="badge bg-primary">@Model.Version</span>
-            </span>
+<footer class="mt-4 text-secondary small border-top p-0 m-0">
+    <div class="d-flex flex-column flex-md-row flex-wrap align-items-center justify-content-md-between p-3 mb-2">
+
+        <div class="d-flex flex-column flex-sm-row align-items-center gap-2 mb-3 mb-md-0 text-center text-sm-start">
+            <div>
+                <span class="me-1">@I18n.Version:</span>
+                <span class="badge bg-primary">@Model.Version</span>
+            </div>
 
             @if (Model.UpdateAvailable)
             {
-                <a class="btn btn-outline-success btn-sm d-flex align-items-center"
-                   href="https://kamiyomu.com/docs/changelogs/" target="_blank" role="button">
+                <a class="btn btn-success btn-sm d-flex align-items-center"
+                   href="https://kamiyomu.com/docs/changelogs/"
+                   target="_blank" rel="noopener noreferrer" role="button">
                     <i class="bi bi-arrow-up-circle me-1"></i>
-                    @I18n.UpdateAvailable @Model.UpdateVersionAvailable
+                    <span>@I18n.UpdateAvailable @Model.UpdateVersionAvailable</span>
                 </a>
             }
         </div>
 
-        <div class="d-flex flex-wrap gap-2">
-            <span>@Model.Copyright</span>
+        <div class="d-flex flex-wrap justify-content-center gap-3 mb-3 mb-md-0">
+            <span class="w-100 w-sm-auto text-center">@Model.Copyright</span>
+
             <a href="https://raw.githubusercontent.com/KamiYomu/KamiYomu.Web/refs/heads/main/LICENSE.txt"
-               class="text-decoration-none link-secondary" target="_blank" rel="noopener noreferrer">
+               class="text-decoration-none link-secondary py-1"
+               target="_blank" rel="noopener noreferrer">
                 @I18n.License
             </a>
+
             <a href="https://github.com/KamiYomu/KamiYomu"
-               class="text-decoration-none link-secondary" target="_blank" rel="noopener noreferrer">
+               class="text-decoration-none link-secondary py-1"
+               target="_blank" rel="noopener noreferrer">
                 @I18n.SourceCode
+            </a>
+
+            <a href="/public/api/swagger"
+               class="text-decoration-none link-secondary py-1"
+               target="_blank" rel="noopener noreferrer">
+                @I18n.PublicApi
+            </a>
+
+            <a href="/public/api/v1/opds"
+               class="text-decoration-none link-secondary py-1"
+               target="_blank" rel="noopener noreferrer">
+                @I18n.OpdsCatalog
             </a>
         </div>
 
-        <div class="d-flex align-items-center flex-wrap mt-1 mt-md-0">
-            <span class="me-2">
-                Core @I18n.Version: <span class="badge bg-primary">@Model.CoreInformationalVersion</span>
+        <div class="text-center text-md-end">
+            <span class="opacity-75">
+                Core @I18n.Version:
+                <span class="badge bg-secondary">@Model.CoreInformationalVersion</span>
             </span>
         </div>
+
     </div>
-    
 </footer>

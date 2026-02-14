@@ -74,6 +74,16 @@
                     </a>
                 </li>
 
+                <!-- Download .epub -->
+                <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2 @(Model.ChapterDownloadRecord.IsCompleted() ? "" : "disabled")"
+                       href="@Model.DownloadEpubUrl"
+                       target="_blank"
+                       aria-disabled="@(Model.ChapterDownloadRecord.IsCompleted() ? "false" : "true")">
+                        <i class="bi bi-download"></i> @I18n.Download .epub <i class="bi bi-book-fill"></i>
+                    </a>
+                </li>
+
                 @if (Model.ChapterDownloadRecord.IsCompleted())
                 {
                     <li>

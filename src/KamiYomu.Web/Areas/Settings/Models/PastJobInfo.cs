@@ -1,4 +1,4 @@
-﻿namespace KamiYomu.Web.Entities.Worker;
+namespace KamiYomu.Web.Areas.Settings.Models;
 
 public record PastJobInfo(string JobId,
                           DateTime? Time,

@@ -1,4 +1,4 @@
-﻿namespace KamiYomu.Web.Entities.Addons;
+namespace KamiYomu.Web.Areas.Settings.Models;
 
 public class NugetSource
 {
