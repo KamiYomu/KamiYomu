@@ -1088,4 +1088,10 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="KamiYomuCatalog" xml:space="preserve">
     <value>KamiYomu's Catalog</value>
   </data>
+  <data name="OpdsCatalog" xml:space="preserve">
+    <value> OPDS Catalog</value>
+  </data>
+  <data name="PublicApi" xml:space="preserve">
+    <value> Public API (Swagger)</value>
+  </data>
 </root>

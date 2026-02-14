@@ -101,7 +101,6 @@ builder.Services.AddKeyedScoped(ServiceLocator.ReadOnlyImageDbContext, (sp, _) =
 // Repositories
 builder.Services.AddTransient<ICrawlerAgentRepository, CrawlerAgentRepository>();
 builder.Services.AddTransient<IHangfireRepository, HangfireRepository>();
-builder.Services.AddTransient<IDownloadAppService, DownloadAppService>();
 
 // Worker jobs
 builder.Services.AddTransient<IChapterDiscoveryJob, ChapterDiscoveryJob>();
@@ -121,6 +120,11 @@ builder.Services.AddTransient<IGotifyService, GotifyService>();
 builder.Services.AddTransient<IEpubService, EpubService>();
 builder.Services.AddTransient<IPdfService, PdfService>();
 builder.Services.AddTransient<IZipService, ZipService>();
+
+
+// App Services
+builder.Services.AddTransient<IDownloadAppService, DownloadAppService>();
+
 
 // HeathCheckers
 builder.Services.AddHealthChecks()

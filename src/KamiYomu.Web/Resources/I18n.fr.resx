@@ -1085,11 +1085,20 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="MangaGallery" xml:space="preserve">
     <value>Galerie de mangas</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="KamiYomuCatalog" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="KamiYomuCatalog" xml:space="preserve">
     <value>Catalogue de KamiYomu</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="OpdsCatalog" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="PublicApi" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="OpdsCatalog" xml:space="preserve">
+    <value>Catalogue OPDS</value>
+  </data>
+  <data name="PublicApi" xml:space="preserve">
+    <value>API publique (Swagger)</value>
   </data>
 </root>
