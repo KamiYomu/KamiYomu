@@ -30,6 +30,8 @@ public class OpdsController(
     [HttpGet]
     [Produces(MediaTypeNames.Text.Xml)]
     [ProducesResponseType(typeof(AtomXmlResult<OpdsFeed>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
     Summary = "List manga libraries (OPDS)",
     Description = "Returns an OPDS feed containing a paginated list of available manga libraries. "
@@ -98,6 +100,8 @@ public class OpdsController(
     [HttpGet("{libraryId:guid}")]
     [Produces(MediaTypeNames.Text.Xml)]
     [ProducesResponseType(typeof(AtomXmlResult<OpdsFeed>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
     Summary = "Get manga library (OPDS)",
     Description = "Returns an OPDS feed representing the specified manga library, including "
@@ -155,6 +159,8 @@ public class OpdsController(
     [HttpGet("{libraryId:guid}/chapters/{chapterDownloadId:guid}")]
     [Produces(MediaTypeNames.Text.Xml)]
     [ProducesResponseType(typeof(AtomXmlResult<OpdsFeed>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
     Summary = "Get chapter details (OPDS)",
     Description = "Returns an OPDS feed describing the specified chapter, including metadata "
@@ -202,6 +208,8 @@ public class OpdsController(
 
     [HttpGet("{libraryId:guid}/chapters/{chapterDownloadId:guid}/download/epub")]
     [Produces("application/epub+zip", "application/epub")]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
     Summary = "Download chapter as EPUB",
     Description = "Generates and returns the specified chapter in EPUB format using the EPUB service."
@@ -218,6 +226,8 @@ public class OpdsController(
 
     [HttpGet("{libraryId:guid}/chapters/{chapterDownloadId:guid}/download/cbz")]
     [Produces("application/vnd.comicbook+zip", "application/x-cbz")]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
     Summary = "Download chapter as CBZ",
     Description = "Generates and returns the specified chapter in CBZ format (ComicBook ZIP)."
@@ -234,6 +244,8 @@ public class OpdsController(
 
     [HttpGet("{libraryId:guid}/chapters/{chapterDownloadId:guid}/download/zip")]
     [Produces(MediaTypeNames.Application.Zip)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
     Summary = "Download chapter as ZIP",
     Description = "Returns the specified chapter packaged as a standard ZIP archive."
@@ -250,6 +262,8 @@ public class OpdsController(
 
     [HttpGet("{libraryId:guid}/chapters/{chapterDownloadId:guid}/download/pdf")]
     [Produces(MediaTypeNames.Application.Pdf)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
     Summary = "Download chapter as PDF",
     Description = "Generates and returns the specified chapter in PDF format using the PDF service."

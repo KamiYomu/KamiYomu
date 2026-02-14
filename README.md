@@ -110,7 +110,7 @@ To access these services from outside the host machine:
 * **Security:** It is highly recommended to use a VPN or a reverse proxy with SSL (HTTPS) if exposing these endpoints publicly.
 
 > [!NOTE]
-> Map volumes to local paths as needed. Check [releases](https://github.com/KamiYomu/releases) for available versions.
+> Map volumes to local paths as needed. Check [releases](https://github.com/KamiYomu/KamiYomu/releases) for available versions.
 
 
 ## 🧠 Tech Stack
