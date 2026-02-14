@@ -10,6 +10,7 @@ using KamiYomu.Web.Models;
 
 using LiteDB;
 
+using Microsoft.AspNetCore.Http.Timeouts;
 using Microsoft.AspNetCore.Mvc;
 
 using Swashbuckle.AspNetCore.Annotations;
@@ -31,6 +32,8 @@ public class CrawlerAgentController(ICrawlerAgentRepository crawlerAgentReposito
     [HttpGet]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(IEnumerable<CrawlerAgentItem>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
         Summary = "List crawler agents",
         Description = "Returns a paginated list of crawler agents filtered by search text."
@@ -65,8 +68,12 @@ public class CrawlerAgentController(ICrawlerAgentRepository crawlerAgentReposito
 
     [HttpGet]
     [Route("{crawlerAgentId:guid}/list-downloadable-content")]
+    [RequestTimeout("CrawlerAgentSearchPolicy")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(PagedResult<Manga>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status408RequestTimeout)]
     [SwaggerOperation(
     Summary = "List downloadable content for a crawler agent",
     Description = @"Retrieves downloadable content associated with the specified crawler agent.  
@@ -76,8 +83,8 @@ public class CrawlerAgentController(ICrawlerAgentRepository crawlerAgentReposito
     public async Task<IActionResult> ListDownloadableContentAsync(
         [FromRoute] Guid crawlerAgentId,
         [FromQuery] string search,
-        [FromQuery] int? offSet = null,
-        [FromQuery] int? limit = null,
+        [FromQuery] int? offSet = 0,
+        [FromQuery] int? limit = 30,
         [FromQuery] string? continuationToken = null,
         CancellationToken cancellationToken = default)
     {
@@ -86,7 +93,7 @@ public class CrawlerAgentController(ICrawlerAgentRepository crawlerAgentReposito
             return NotFound();
         }
 
-        PaginationOptions paginationOptions = new();
+        PaginationOptions paginationOptions = new(0, 30);
 
         if (!string.IsNullOrWhiteSpace(continuationToken))
         {
@@ -107,6 +114,8 @@ public class CrawlerAgentController(ICrawlerAgentRepository crawlerAgentReposito
     [Route("{crawlerAgentId:guid}/download-content")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(CollectionItem), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
     Summary = "Add downloadable content to your collection",
     Description = "Adds one or more items to the specified crawler agent’s downloadable content "

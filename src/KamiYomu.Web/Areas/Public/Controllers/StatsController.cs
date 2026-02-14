@@ -23,7 +23,8 @@ public class StatsController(IStatsService statsService) : ControllerBase
     [Route("")]
     [Route("~/api/stats")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StatsResponse))]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [Produces(MediaTypeNames.Application.Json)]
     [SwaggerOperation(
     Summary = "Get application statistics",

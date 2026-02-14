@@ -65,6 +65,8 @@ public class CollectionController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(CollectionItem), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
     Summary = "Get a collection item",
     Description = "Retrieves a single collection item by its library identifier. Returns detailed "
@@ -93,6 +95,8 @@ public class CollectionController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(CollectionItem), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
     Summary = "Remove a collection item",
     Description = "Removes the specified item from the user's collection. Returns 200 when the item "
@@ -125,6 +129,8 @@ public class CollectionController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(IEnumerable<ChapterItem>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
     Summary = "List chapters for a collection item",
     Description = "Returns a paginated list of chapter download records associated with the specified "
@@ -162,6 +168,8 @@ public class CollectionController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(ChapterItem), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
     Summary = "List chapters for a collection item",
     Description = "Returns a paginated list of chapter download records associated with the specified "
@@ -195,6 +203,8 @@ public class CollectionController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(IEnumerable<ChapterItem>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
     Summary = "List available chapters for a collection item",
     Description = "Returns a paginated list of chapters that have completed downloading for the "
@@ -233,6 +243,8 @@ public class CollectionController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(ChapterItem), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
     Summary = "Reschedule a chapter download",
     Description = "Reschedules the download job for the specified chapter within the given library. "
@@ -255,6 +267,8 @@ public class CollectionController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(ChapterItem), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
     Summary = "Cancel a chapter download",
     Description = "Cancels the download job for the specified chapter within the given library. "
