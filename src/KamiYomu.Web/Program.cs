@@ -6,13 +6,13 @@ using Hangfire.Storage.SQLite;
 
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Areas.Public;
-using KamiYomu.Web.Areas.Reader.Data;
-using KamiYomu.Web.Areas.Reader.Repositories;
-using KamiYomu.Web.Areas.Reader.Repositories.Interfaces;
+using KamiYomu.Web.Areas.Reader;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Filters;
 using KamiYomu.Web.HealthCheckers;
 using KamiYomu.Web.Hubs;
+using KamiYomu.Web.Infrastructure.AppServices;
+using KamiYomu.Web.Infrastructure.AppServices.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
@@ -91,21 +91,17 @@ builder.Services.AddResponseCompression(options =>
 builder.Services.AddSingleton<IUserClockManager, UserClockManager>();
 builder.Services.AddSingleton<ILockManager, LockManager>();
 
-builder.Services.AddScoped<CacheContext>();
+builder.Services.AddSingleton<CacheContext>();
 builder.Services.AddScoped(_ => new DbContext(builder.Configuration.GetConnectionString("AgentDb"), false));
 builder.Services.AddScoped(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb"), false));
-builder.Services.AddScoped(_ => new ReadingDbContext(builder.Configuration.GetConnectionString("ReadingDb"), false));
 builder.Services.AddKeyedScoped(ServiceLocator.ReadOnlyDbContext, (sp, _) => new DbContext(builder.Configuration.GetConnectionString("AgentDb"), true));
 builder.Services.AddKeyedScoped(ServiceLocator.ReadOnlyImageDbContext, (sp, _) => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb"), true));
-builder.Services.AddKeyedScoped(ServiceLocator.ReadOnlyReadingDbContext, (sp, _) => new ReadingDbContext(builder.Configuration.GetConnectionString("ReadingDb"), true));
 
 
 // Repositories
 builder.Services.AddTransient<ICrawlerAgentRepository, CrawlerAgentRepository>();
 builder.Services.AddTransient<IHangfireRepository, HangfireRepository>();
-
-builder.Services.AddTransient<IChapterProgressRepository, ChapterProgressRepository>();
-
+builder.Services.AddTransient<IDownloadAppService, DownloadAppService>();
 
 // Worker jobs
 builder.Services.AddTransient<IChapterDiscoveryJob, ChapterDiscoveryJob>();
@@ -160,7 +156,8 @@ builder.Services.AddRazorPages()
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization();
 
-builder.Services.AddPublicApi();
+builder.Services.AddReaderArea(builder.Configuration)
+                .AddPublicArea();
 
 AddHttpClients(builder);
 
@@ -234,7 +231,7 @@ RecurringJob.AddOrUpdate<IDeferredExecutionCoordinator>(Worker.DeferredExecution
                                                         (job) => job.DispatchAsync(Worker.DeferredExecutionQueue, null!, CancellationToken.None),
                                                         Cron.MinuteInterval(Worker.DeferredExecutionInMinutes));
 
-app.UsePublicApi();
+app.UsePublicArea();
 app.MapControllers();
 app.MapRazorPages();
 app.UseMiddleware<ExceptionNotificationMiddleware>();

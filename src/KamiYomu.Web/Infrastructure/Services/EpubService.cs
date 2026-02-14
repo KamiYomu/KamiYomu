@@ -6,8 +6,6 @@ using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Models;
 
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-
 using static KamiYomu.Web.AppOptions.Defaults;
 
 namespace KamiYomu.Web.Infrastructure.Services;
@@ -138,7 +136,15 @@ public class EpubService([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] D
             }
         }
 
+        string filePath = library.GetCbzFilePath(chapterDownloadRecord.Chapter);
+        if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+        {
+            return null;
+        }
+
+        string fileName = Path.GetFileNameWithoutExtension(filePath) + ".epub";
+
         outputStream.Position = 0;
-        return new DownloadResponse(outputStream, $"{chapterDownloadRecord.Id}.epub", "application/epub+zip");
+        return new DownloadResponse(outputStream, fileName, "application/epub+zip");
     }
 }

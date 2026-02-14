@@ -3,8 +3,10 @@ using System.Net.Mime;
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Areas.Public.Models;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Infrastructure.AppServices.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
+using KamiYomu.Web.Models;
 
 using LiteDB;
 
@@ -34,9 +36,9 @@ public class CrawlerAgentController(ICrawlerAgentRepository crawlerAgentReposito
         Description = "Returns a paginated list of crawler agents filtered by search text."
     )]
     public IActionResult List(
-        [FromQuery(Name = "search")] string? search,
-        [FromQuery(Name = "offset")] int offSet = 0,
-        [FromQuery(Name = "limit")] int limit = 20,
+        [FromQuery] string? search,
+        [FromQuery] int offSet = 0,
+        [FromQuery] int limit = 20,
         [FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext = default!)
     {
         ILiteQueryable<CrawlerAgent> query = dbContext.CrawlerAgents.Query();
@@ -72,11 +74,11 @@ public class CrawlerAgentController(ICrawlerAgentRepository crawlerAgentReposito
                     for incremental retrieval."
 )]
     public async Task<IActionResult> ListDownloadableContentAsync(
-        [FromRoute(Name = "crawlerAgentId")] Guid crawlerAgentId,
-        [FromQuery(Name = "search")] string search,
-        [FromQuery(Name = "offset")] int? offSet = null,
-        [FromQuery(Name = "limit")] int? limit = null,
-        [FromQuery(Name = "continuationToken")] string? continuationToken = null,
+        [FromRoute] Guid crawlerAgentId,
+        [FromQuery] string search,
+        [FromQuery] int? offSet = null,
+        [FromQuery] int? limit = null,
+        [FromQuery] string? continuationToken = null,
         CancellationToken cancellationToken = default)
     {
         if (crawlerAgentId == Guid.Empty)
@@ -98,6 +100,38 @@ public class CrawlerAgentController(ICrawlerAgentRepository crawlerAgentReposito
         PagedResult<Manga> pagedResult = await crawlerAgentRepository.SearchAsync(crawlerAgentId, search, paginationOptions, cancellationToken);
 
         return Ok(pagedResult);
+    }
+
+
+    [HttpPost]
+    [Route("{crawlerAgentId:guid}/download-content")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(typeof(CollectionItem), StatusCodes.Status201Created)]
+    [SwaggerOperation(
+    Summary = "Add downloadable content to your collection",
+    Description = "Adds one or more items to the specified crawler agent’s downloadable content "
+                + "collection and returns the created collection entry. This endpoint is used to "
+                + "register new downloadable content for later retrieval."
+    )]
+    public async Task<IActionResult> AddDownloadContentAsync(
+        [FromRoute] Guid crawlerAgentId,
+        [FromBody] AddItemCollection addItemCollection,
+        [FromServices] IDownloadAppService downloadAppService,
+        CancellationToken cancellationToken = default)
+    {
+        if (crawlerAgentId == Guid.Empty)
+        {
+            return NotFound();
+        }
+
+        Library library = await downloadAppService.AddToCollectionAsync(addItemCollection, cancellationToken);
+
+        return Created(new Uri($"/public/api/v1/collection/{library.Id}", UriKind.Relative), new CollectionItem
+        {
+            LibraryId = library.Id,
+            Manga = library.Manga,
+            CrawlerAgentId = library.CrawlerAgent.Id,
+        });
     }
 
 }

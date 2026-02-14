@@ -103,7 +103,7 @@ public class OpdsController(
     Description = "Returns an OPDS feed representing the specified manga library, including "
                 + "its metadata and available manga entries."
     )]
-    public async Task<IActionResult> GetManga(Guid libraryId)
+    public async Task<IActionResult> GetManga([FromRoute] Guid libraryId)
     {
         Library library = dbContext.Libraries
             .Query()
@@ -160,7 +160,9 @@ public class OpdsController(
     Description = "Returns an OPDS feed describing the specified chapter, including metadata "
                 + "and available acquisition links for downloading the chapter in various formats."
     )]
-    public IActionResult GetChapter(Guid libraryId, Guid chapterDownloadId)
+    public IActionResult GetChapter(
+        [FromRoute] Guid libraryId,
+        [FromRoute] Guid chapterDownloadId)
     {
         Library library = dbContext.Libraries
             .Query()
@@ -204,7 +206,10 @@ public class OpdsController(
     Summary = "Download chapter as EPUB",
     Description = "Generates and returns the specified chapter in EPUB format using the EPUB service."
     )]
-    public IActionResult DownloadChapterEpub(Guid libraryId, Guid chapterDownloadId, [FromServices] IEpubService epubService)
+    public IActionResult DownloadChapterEpub(
+        [FromRoute] Guid libraryId,
+        [FromRoute] Guid chapterDownloadId,
+        [FromServices] IEpubService epubService)
     {
         return epubService.GetDownloadResponse(libraryId, chapterDownloadId) is not DownloadResponse downloadResponse
              ? NotFound()
@@ -217,7 +222,10 @@ public class OpdsController(
     Summary = "Download chapter as CBZ",
     Description = "Generates and returns the specified chapter in CBZ format (ComicBook ZIP)."
     )]
-    public IActionResult DownloadChapterCbz(Guid libraryId, Guid chapterDownloadId, [FromServices] IZipService zipService)
+    public IActionResult DownloadChapterCbz(
+        [FromRoute] Guid libraryId,
+        [FromRoute] Guid chapterDownloadId,
+        [FromServices] IZipService zipService)
     {
         return zipService.GetDownloadCbzResponse(libraryId, chapterDownloadId) is not DownloadResponse downloadResponse
              ? NotFound()
@@ -230,7 +238,10 @@ public class OpdsController(
     Summary = "Download chapter as ZIP",
     Description = "Returns the specified chapter packaged as a standard ZIP archive."
     )]
-    public IActionResult DownloadChapterZip(Guid libraryId, Guid chapterDownloadId, [FromServices] IZipService zipService)
+    public IActionResult DownloadChapterZip(
+        [FromRoute] Guid libraryId,
+        [FromRoute] Guid chapterDownloadId,
+        [FromServices] IZipService zipService)
     {
         return zipService.GetDownloadZipResponse(libraryId, chapterDownloadId) is not DownloadResponse downloadResponse
              ? NotFound()
@@ -243,7 +254,10 @@ public class OpdsController(
     Summary = "Download chapter as PDF",
     Description = "Generates and returns the specified chapter in PDF format using the PDF service."
     )]
-    public IActionResult DownloadChapterZip(Guid libraryId, Guid chapterDownloadId, [FromServices] IPdfService pdfService)
+    public IActionResult DownloadChapterZip(
+        [FromRoute] Guid libraryId,
+        [FromRoute] Guid chapterDownloadId,
+        [FromServices] IPdfService pdfService)
     {
         return pdfService.GetDownloadResponse(libraryId, chapterDownloadId) is not DownloadResponse downloadResponse
              ? NotFound()

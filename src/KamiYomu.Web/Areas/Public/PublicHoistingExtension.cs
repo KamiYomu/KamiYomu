@@ -7,7 +7,7 @@ namespace KamiYomu.Web.Areas.Public;
 
 public static class PublicHoistingExtension
 {
-    public static IServiceCollection AddPublicApi(this IServiceCollection services)
+    public static IServiceCollection AddPublicArea(this IServiceCollection services)
     {
         _ = services.AddControllers();
 
@@ -31,7 +31,7 @@ public static class PublicHoistingExtension
     }
 
 
-    public static IApplicationBuilder UsePublicApi(this IApplicationBuilder app)
+    public static IApplicationBuilder UsePublicArea(this IApplicationBuilder app)
     {
 
         _ = app.UseSwagger();

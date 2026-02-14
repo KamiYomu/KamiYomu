@@ -1,5 +1,4 @@
-﻿using KamiYomu.CrawlerAgents.Core.Catalog;
-using KamiYomu.Web.Entities;
+using KamiYomu.CrawlerAgents.Core.Catalog;
 
 namespace KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 
