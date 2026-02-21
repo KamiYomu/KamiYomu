@@ -26,11 +26,16 @@ By leveraging a modular **Crawler Agent** architecture, KamiYomu empowers you to
 
 ---
 
-## 💬 Community
+## 🤝 Join the KamiYomu Community
 
-Join the conversation and be part of the KamiYomu community:
+KamiYomu is built by people who care about great tooling for managing manga. Get involved — your feedback, bug reports, and contributions help shape the project.
 
-[![Join the discussion on Github](https://img.shields.io/github/discussions/kamiyomu/kamiyomu?logo=github&label=Join%20the%20community)](https://github.com/KamiYomu/KamiYomu/discussions)
+| Action | Link |
+| :--- | :--- |
+| **Discord** | [![Join the discord](https://img.shields.io/discord/1468597233032101942)](https://discord.gg/b9zwEEejsJ) |
+| **Discuss** | [![Join the community](https://img.shields.io/github/discussions/kamiyomu/kamiyomu?logo=github&label=Discussions)](https://github.com/KamiYomu/KamiYomu/discussions) |
+| **Report** | [![GitHub issues](https://img.shields.io/github/issues/kamiyomu/kamiyomu?logo=github&label=Issues)](https://github.com/kamiyomu/kamiyomu/issues) |
+| **Contribute** | [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?logo=github)](https://github.com/KamiYomu/KamiYomu/pulls) |
 
 ---
 
