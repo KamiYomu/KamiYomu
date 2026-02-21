@@ -1007,6 +1007,9 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="BackToPlatform" xml:space="preserve">
     <value>Back to platform</value>
   </data>
+  <data name="BackToLibrary" xml:space="preserve">
+    <value>Back to Library</value>
+  </data>
   <data name="ReadingHistory" xml:space="preserve">
     <value>Reading History</value>
   </data>
