@@ -171,10 +171,9 @@ public class CollectionController : ControllerBase
     [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status403Forbidden)]
     [SwaggerOperation(
-    Summary = "List chapters for a collection item",
-    Description = "Returns a paginated list of chapter download records associated with the specified "
-                + "library. Includes chapter metadata, download status, timestamps, and related "
-                + "information. Returns 404 if the library does not exist."
+        Summary = "Get a single chapter",
+        Description = "Returns information for a single chapter download record identified by chapterDownloadId " +
+                      "within the specified library. Returns 404 if the library or chapter does not exist."
     )]
     public IActionResult GetChapter(
         [FromRoute] Guid libraryId,
