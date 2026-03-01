@@ -1,0 +1,23 @@
+@using KamiYomu.Web.Areas.Settings.ViewComponents
+@model CrawlerSelectViewModel
+
+<div class="mb-3">
+    <label for="@Model.FieldId" class="form-label fw-semibold">@Model.CrawlerSelectAttribute.Name</label>
+    @if (!string.IsNullOrWhiteSpace(Model.CrawlerSelectAttribute.Legend))
+    {
+        <small class="form-text text-muted d-block mb-1">@Model.CrawlerSelectAttribute.Legend</small>
+    }
+
+    <select id="@Model.FieldId"
+            class="form-select"
+            name="@Model.FieldName">
+        @foreach (var item in Model.CrawlerSelectAttribute.Options)
+        {
+            <option value="@item" selected="@(item == Model.FieldValue ? "selected" : null)">@item</option>
+        }
+    </select>
+    @if (Model.ModelStateEntry?.Errors.Count > 0)
+    {
+        <span class="text-danger">@Model.ModelStateEntry.Errors[0].ErrorMessage</span>
+    }
+</div>

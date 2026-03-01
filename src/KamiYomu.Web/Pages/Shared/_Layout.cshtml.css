@@ -2,10 +2,6 @@
     --brand-color: #7253ed;
 }
 
-.gloria-hallelujah-regular {
-    font-family: "Gloria Hallelujah", cursive;
-}
-
 [data-bs-theme="dark"] .navbar-brand {
     color: #fff !important;
 }

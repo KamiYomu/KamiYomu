@@ -1,0 +1,29 @@
+@using KamiYomu.Web.Areas.Settings.ViewComponents
+@model CrawlerCheckBoxViewModel
+
+<fieldset class="mb-3">
+    <legend class="fs-6 fw-semibold">@Model.CrawlerCheckBoxAttribute.Name</legend>
+    <span class="text-sm-start">@Model.CrawlerCheckBoxAttribute.Legend</span>
+
+    @foreach (var key in Model.CrawlerCheckBoxAttribute.Options)
+    {
+        <div class="form-check mb-1">
+            <input type="checkbox"
+                   class="form-check-input"
+                   id="@Model.GetFieldId(key)"
+                   name="@Model.GetFieldName(key)"
+                   value="true"
+                   @(Model.IsChecked(key) ? "checked" : null) />
+
+            <input type="hidden"
+                   name="@Model.GetFieldName(key)"
+                   value="false" />
+
+            <label class="form-check-label" for="@Model.GetFieldId(key)">@key</label>
+        </div>
+        @if (Model.ModelStateEntry?.Errors.Count > 0)
+        {
+            <span class="text-danger">@Model.ModelStateEntry.Errors[0].ErrorMessage</span>
+        }
+    }
+</fieldset>

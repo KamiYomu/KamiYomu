@@ -1,0 +1,28 @@
+@using KamiYomu.CrawlerAgents.Core.Inputs
+@using KamiYomu.Web.Areas.Settings.ViewComponents
+@model CrawlerPasswordViewModel
+
+
+<div class="mb-3">
+    <label class="form-label fw-semibold" for="input-@Model.CrawlerPasswordAttribute.Name">@Model.CrawlerPasswordAttribute.Name</label>
+
+    @if (!string.IsNullOrWhiteSpace(Model.CrawlerPasswordAttribute.Legend))
+    {
+        <small class="form-text text-muted d-block mb-1">@Model.CrawlerPasswordAttribute.Legend</small>
+    }
+
+    <div class="input-group">
+        <span class="input-group-text">
+            <i class="bi bi-card-text"></i>
+        </span>
+        <input type="password"
+               class="form-control"
+               id="input-@Model.CrawlerPasswordAttribute.Name"
+               name="@Model.FieldName"
+               value="@Model.FieldValue" />
+    </div>
+    @if (Model.ModelStateEntry?.Errors.Count > 0)
+    {
+        <span class="text-danger">@Model.ModelStateEntry.Errors[0].ErrorMessage</span>
+    }
+</div>
