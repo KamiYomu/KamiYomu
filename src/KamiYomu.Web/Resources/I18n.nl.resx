@@ -1007,6 +1007,9 @@ voor de &lt;code&gt;WorkerCount&lt;/code&gt;-instelling van Hangfire om te bepal
   <data name="BackToPlatform" xml:space="preserve">
     <value>Terug naar perron</value>
   </data>
+  <data name="BackToLibrary" xml:space="preserve">
+    <value>Terug naar bibliotheek</value>
+  </data>
   <data name="ReadingHistory" xml:space="preserve">
     <value>Geschiedenis lezen</value>
   </data>

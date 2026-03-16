@@ -1007,6 +1007,9 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   <data name="BackToPlatform" xml:space="preserve">
     <value>De volta à plataforma</value>
   </data>
+  <data name="BackToLibrary" xml:space="preserve">
+    <value>De volta à biblioteca</value>
+  </data>
   <data name="ReadingHistory" xml:space="preserve">
     <value>História de leitura</value>
   </data>
