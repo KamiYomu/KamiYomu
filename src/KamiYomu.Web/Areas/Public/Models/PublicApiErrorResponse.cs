@@ -8,5 +8,5 @@ public sealed class PublicApiErrorResponse
 
     public string? TraceId { get; init; }
 
-    public DateTime Timestamp { get; init; }
+    public DateTime Timestamp { get; init; } = DateTime.Now;
 }
