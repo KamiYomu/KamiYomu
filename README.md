@@ -33,7 +33,6 @@ KamiYomu is built by people who care about great tooling for managing manga. Get
 | Action | Link |
 | :--- | :--- |
 | **Discord** | [![Join the discord](https://img.shields.io/discord/1468597233032101942)](https://discord.gg/b9zwEEejsJ) |
-| **Discuss** | [![Join the community](https://img.shields.io/github/discussions/kamiyomu/kamiyomu?logo=github&label=Discussions)](https://github.com/KamiYomu/KamiYomu/discussions) |
 | **Report** | [![GitHub issues](https://img.shields.io/github/issues/kamiyomu/kamiyomu?logo=github&label=Issues)](https://github.com/kamiyomu/kamiyomu/issues) |
 | **Contribute** | [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?logo=github)](https://github.com/KamiYomu/KamiYomu/pulls) |
 
@@ -189,4 +188,4 @@ Create your own crawler agents by following the [Crawler Agent development guide
 
 ## 💬 Contact
 
-Questions, feedback, or bug reports? [Open an issue](https://github.com/KamiYomu/issues) or start a [discussion](https://github.com/KamiYomu/KamiYomu/discussions).
+Questions, feedback, or bug reports? [Open an issue](https://github.com/KamiYomu/issues) or Join the discord [![Join the discord](https://img.shields.io/discord/1468597233032101942)](https://discord.gg/b9zwEEejsJ).

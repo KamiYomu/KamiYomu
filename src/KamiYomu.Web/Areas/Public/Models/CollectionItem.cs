@@ -5,8 +5,8 @@ namespace KamiYomu.Web.Areas.Public.Models;
 
 public class CollectionItem
 {
-    public Guid LibraryId { get; internal set; }
-    public Guid CrawlerAgentId { get; internal set; }
-    public Manga Manga { get; internal set; }
+    public Guid LibraryId { get; set; }
+    public Guid CrawlerAgentId { get; set; }
+    public Manga Manga { get; set; }
 
 }
