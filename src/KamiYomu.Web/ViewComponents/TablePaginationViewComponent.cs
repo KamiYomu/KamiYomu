@@ -35,13 +35,13 @@ public record TablePaginationViewModel
     public required int CurrentPage { get; init; }
     public required int TotalItems { get; init; }
     public required string PageUrlTemplate { get; init; }
-    public int Window { get; internal set; }
-    public int EdgeCount { get; internal set; }
-    public string Target { get; internal set; }
-    public string Swap { get; internal set; }
-    public int PageSize { get; internal set; }
+    public int Window { get; set; }
+    public int EdgeCount { get; set; }
+    public string Target { get; set; }
+    public string Swap { get; set; }
+    public int PageSize { get; set; }
     public int TotalPages => (int)Math.Ceiling((double)TotalItems / PageSize);
-    public bool PushUrl { get; internal set; }
+    public bool PushUrl { get; set; }
 
     public bool ShouldShow(int page)
     {

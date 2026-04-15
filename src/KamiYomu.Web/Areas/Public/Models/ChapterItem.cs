@@ -27,15 +27,15 @@ public class ChapterItem
                 CbzDownloadUri = new Uri($"/public/api/v1/opds/{libraryId}/chapters/{chapterDownloadRecord.Id}/download/cbz", UriKind.Relative),
             };
     }
-    public Guid ChapterDownloadId { get; internal set; }
-    public decimal Volume { get; internal set; }
-    public decimal Number { get; internal set; }
-    public Uri OnlineSource { get; internal set; }
-    public string BackgroundJobId { get; internal set; }
-    public DateTimeOffset CreateAt { get; internal set; }
-    public DateTimeOffset? StatusUpdateAt { get; internal set; }
-    public DownloadStatus DownloadStatus { get; internal set; }
-    public Guid LibraryId { get; internal set; }
+    public Guid ChapterDownloadId { get; set; }
+    public decimal Volume { get; set; }
+    public decimal Number { get; set; }
+    public Uri OnlineSource { get; set; }
+    public string BackgroundJobId { get; set; }
+    public DateTimeOffset CreateAt { get; set; }
+    public DateTimeOffset? StatusUpdateAt { get; set; }
+    public DownloadStatus DownloadStatus { get; set; }
+    public Guid LibraryId { get; set; }
     public Uri EpubDownloadUri { get; private set; }
     public Uri CbzDownloadUri { get; private set; }
     public Uri PdfDownloadUri { get; private set; }

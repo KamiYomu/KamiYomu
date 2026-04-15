@@ -111,7 +111,7 @@ public class CrawlerAgentController(ICrawlerAgentRepository crawlerAgentReposito
 
 
     [HttpPost]
-    [Route("{crawlerAgentId:guid}/download-content")]
+    [Route("download-content")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(CollectionItem), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(PublicApiErrorResponse), StatusCodes.Status500InternalServerError)]
@@ -123,14 +123,17 @@ public class CrawlerAgentController(ICrawlerAgentRepository crawlerAgentReposito
                 + "register new downloadable content for later retrieval."
     )]
     public async Task<IActionResult> AddDownloadContentAsync(
-        [FromRoute] Guid crawlerAgentId,
         [FromBody] AddItemCollection addItemCollection,
         [FromServices] IDownloadAppService downloadAppService,
         CancellationToken cancellationToken = default)
     {
-        if (crawlerAgentId == Guid.Empty)
+        if (addItemCollection.CrawlerAgentId == Guid.Empty)
         {
-            return NotFound();
+            return BadRequest(new PublicApiErrorResponse
+            {
+                Error = "InvalidCrawlerAgentId",
+                Message = "The provided crawler agent ID is invalid."
+            });
         }
 
         Library library = await downloadAppService.AddToCollectionAsync(addItemCollection, cancellationToken);

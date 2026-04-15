@@ -21,5 +21,5 @@ public class WeeklyChapterItemViewModel
     public Guid ChapterDownloadId { get; set; }
     public DownloadStatus DownloadStatus { get; set; }
     public decimal ChapterNumber { get; set; }
-    public DateTime StatusUpdateAt { get; internal set; }
+    public DateTime StatusUpdateAt { get; set; }
 }

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Reflection;
 using System.Text.Json;
 
 using Asp.Versioning;
@@ -31,7 +32,13 @@ public static class PublicHoistingExtension
             options.SubstituteApiVersionInUrl = true;
         });
 
-        _ = services.AddSwaggerGen(c => c.EnableAnnotations());
+        _ = services.AddSwaggerGen(c =>
+        {
+            string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            c.EnableAnnotations();
+            c.IncludeXmlComments(xmlPath);
+        });
         _ = services.ConfigureOptions<ConfigureSwaggerOptions>();
 
 
