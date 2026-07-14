@@ -6,8 +6,6 @@ namespace KamiYomu.Web.Infrastructure.Storage;
 
 public static class FileNameHelper
 {
-
-
     /// <summary>
     /// Sanitizes a file name by removing invalid characters and replacing them with a specified replacement string.
     /// </summary>
@@ -54,9 +52,11 @@ public static class FileNameHelper
 
         return noAccents;
     }
-
-
-
+    /// <summary>
+    /// Normalizes a system path based on the operating system.
+    /// </summary>
+    /// <param name="raw">The raw path to normalize.</param>
+    /// <returns>The normalized system path.</returns>
     public static string NormalizeSystemPath(string raw)
     {
         bool isWindows = OperatingSystem.IsWindows();
@@ -84,6 +84,16 @@ public static class FileNameHelper
 
         return Path.Combine(baseDir, raw);
     }
+
+    /// <summary>
+    /// Determines whether the application is running inside a Docker container.
+    /// </summary>
+    /// <returns><c>true</c> if running in Docker; otherwise, <c>false</c>.</returns>
+    public static bool IsRunningInDocker()
+    {
+        return File.Exists("/.dockerenv");
+    }
+
 
 }
 

@@ -13,6 +13,7 @@ using KamiYomu.Web.HealthCheckers;
 using KamiYomu.Web.Hubs;
 using KamiYomu.Web.Infrastructure.AppServices;
 using KamiYomu.Web.Infrastructure.AppServices.Interfaces;
+using KamiYomu.Web.Infrastructure.Browser;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
@@ -50,7 +51,9 @@ if (OperatingSystem.IsWindows())
 
 builder.Services.Configure<StartupOptions>(builder.Configuration.GetSection("StartupOptions"));
 builder.Services.Configure<BasicAuthOptions>(builder.Configuration.GetSection("BasicAuth"));
+builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection("Worker"));
 builder.Services.Configure<SpecialFolderOptions>(builder.Configuration.GetSection("SpecialFolders"));
+builder.Services.Configure<ChromiumOptions>(builder.Configuration.GetSection("Chromium"));
 builder.Services.PostConfigure<SpecialFolderOptions>(opts =>
 {
     opts.MangaDir = FileNameHelper.NormalizeSystemPath(opts.MangaDir);
@@ -63,9 +66,9 @@ builder.Services.PostConfigure<SpecialFolderOptions>(opts =>
     _ = Directory.CreateDirectory(opts.MangaDir);
     _ = Directory.CreateDirectory(opts.AgentsDir);
 });
-builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection("Worker"));
 
-if (!IsRunningInDocker())
+
+if (!FileNameHelper.IsRunningInDocker())
 {
     if (OperatingSystem.IsWindows())
     {
@@ -108,7 +111,6 @@ builder.Services.Configure<GzipCompressionProviderOptions>(options =>
     options.Level = System.IO.Compression.CompressionLevel.Fastest;
 });
 
-
 builder.Services.AddResponseCompression(options =>
 {
     options.EnableForHttps = true;
@@ -117,6 +119,7 @@ builder.Services.AddResponseCompression(options =>
 
 builder.Services.AddSingleton<IUserClockManager, UserClockManager>();
 builder.Services.AddSingleton<ILockManager, LockManager>();
+builder.Services.AddSingleton<ChromiumBootstrapper>();
 
 builder.Services.AddSingleton<CacheContext>();
 builder.Services.AddScoped(_ => new DbContext(FileNameHelper.NormalizeSystemPath(builder.Configuration.GetConnectionString("AgentDb")), false));
@@ -148,10 +151,8 @@ builder.Services.AddTransient<IEpubService, EpubService>();
 builder.Services.AddTransient<IPdfService, PdfService>();
 builder.Services.AddTransient<IZipService, ZipService>();
 
-
 // App Services
 builder.Services.AddTransient<IDownloadAppService, DownloadAppService>();
-
 
 // HeathCheckers
 builder.Services.AddHealthChecks()
@@ -248,7 +249,12 @@ app.MapRazorPages();
 app.UseMiddleware<ExceptionNotificationMiddleware>();
 app.MapHub<NotificationHub>("/notificationHub");
 app.MapHealthChecks("/healthz");
+ChromiumBootstrapper chromium = app.Services.GetRequiredService<ChromiumBootstrapper>();
+await chromium.InitializeAsync(CancellationToken.None);
 app.Run();
+
+
+
 
 static void AddHangfireConfig(WebApplicationBuilder builder)
 {
@@ -308,10 +314,6 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
     });
 }
 
-static bool IsRunningInDocker()
-{
-    return File.Exists("/.dockerenv");
-}
 
 static void AddHttpClients(WebApplicationBuilder builder)
 {
