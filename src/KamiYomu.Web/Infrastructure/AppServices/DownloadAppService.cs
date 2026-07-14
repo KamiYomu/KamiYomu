@@ -106,7 +106,7 @@ public class DownloadAppService(
 
         ChapterDownloadRecord chapterDownloadRecord = db.ChapterDownloadRecords.FindById(chapterDownloadId);
 
-        if (chapterDownloadRecord == null || !chapterDownloadRecord.IsInProgress())
+        if (chapterDownloadRecord == null || !chapterDownloadRecord.IsCancellable())
         {
             return null;
         }

@@ -113,7 +113,7 @@
                             hx-post='@Model.CancelUrl'
                             hx-target="#@Model.RowId"
                             hx-swap="outerHTML"
-                            @(Model.ChapterDownloadRecord.IsInProgress() ? "" : "disabled")>
+                            @(Model.ChapterDownloadRecord.IsCancellable() ? "" : "disabled")>
                         <i class="bi bi-x-circle"></i>
                         @I18n.Cancel
                     </button>

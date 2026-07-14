@@ -207,13 +207,13 @@ jobs:
         shell: bash
         run: |
           cd publish
-          tar -czf aspnet-${{ needs.extract_version.outputs.tag }}-${{ matrix.rid }}.tar.gz ${{ matrix.rid }}
+          tar -czf kamiyomu-${{ needs.extract_version.outputs.tag }}-${{ matrix.rid }}.tar.gz ${{ matrix.rid }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: aspnet-${{ needs.extract_version.outputs.tag }}-${{ matrix.rid }}
-          path: publish/aspnet-${{ needs.extract_version.outputs.tag }}-${{ matrix.rid }}.tar.gz
+          name: kamiyomu-${{ needs.extract_version.outputs.tag }}-${{ matrix.rid }}
+          path: publish/kamiyomu-${{ needs.extract_version.outputs.tag }}-${{ matrix.rid }}.tar.gz
 
   release:
     name: Create GitHub Release
