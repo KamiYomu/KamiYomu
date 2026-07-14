@@ -54,5 +54,36 @@ public static class FileNameHelper
 
         return noAccents;
     }
+
+
+
+    public static string NormalizeSystemPath(string raw)
+    {
+        bool isWindows = OperatingSystem.IsWindows();
+
+        string baseDir = isWindows
+            ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KamiYomu")
+            : "/"; // Linux keeps absolute paths
+
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return raw;
+        }
+
+        // Linux: keep absolute paths exactly as they are
+        if (!isWindows)
+        {
+            return raw;
+        }
+
+        // Windows: convert "/db" → "C:\Users\<User>\AppData\Local\KamiYomu\db"
+        if (raw.StartsWith("/"))
+        {
+            raw = raw.TrimStart('/');
+        }
+
+        return Path.Combine(baseDir, raw);
+    }
+
 }
 

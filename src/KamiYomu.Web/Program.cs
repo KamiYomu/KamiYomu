@@ -18,6 +18,7 @@ using KamiYomu.Web.Infrastructure.Repositories;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
+using KamiYomu.Web.Infrastructure.Storage;
 using KamiYomu.Web.Middlewares;
 using KamiYomu.Web.Worker;
 using KamiYomu.Web.Worker.Interfaces;
@@ -42,6 +43,28 @@ using static KamiYomu.Web.AppOptions.Defaults;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+if (OperatingSystem.IsWindows())
+{
+    _ = builder.Configuration.AddJsonFile("appsettings.windows.json", optional: true, reloadOnChange: true);
+}
+
+builder.Services.Configure<StartupOptions>(builder.Configuration.GetSection("StartupOptions"));
+builder.Services.Configure<BasicAuthOptions>(builder.Configuration.GetSection("BasicAuth"));
+builder.Services.Configure<SpecialFolderOptions>(builder.Configuration.GetSection("SpecialFolders"));
+builder.Services.PostConfigure<SpecialFolderOptions>(opts =>
+{
+    opts.MangaDir = FileNameHelper.NormalizeSystemPath(opts.MangaDir);
+    opts.AgentsDir = FileNameHelper.NormalizeSystemPath(opts.AgentsDir);
+    opts.DbDir = FileNameHelper.NormalizeSystemPath(opts.DbDir);
+    opts.LogDir = FileNameHelper.NormalizeSystemPath(opts.LogDir);
+
+    _ = Directory.CreateDirectory(opts.LogDir);
+    _ = Directory.CreateDirectory(opts.DbDir);
+    _ = Directory.CreateDirectory(opts.MangaDir);
+    _ = Directory.CreateDirectory(opts.AgentsDir);
+});
+builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection("Worker"));
+
 if (!IsRunningInDocker())
 {
     if (OperatingSystem.IsWindows())
@@ -59,6 +82,13 @@ QuestPDF.Infrastructure.TextStyle.Default.FontFamily("Lato");
 
 LiteDbConfig.Configure();
 
+if (OperatingSystem.IsWindows())
+{
+    SpecialFolderOptions special = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<SpecialFolderOptions>>().Value;
+    builder.Configuration["Serilog:WriteTo:0:Args:path"] =
+    Path.Combine(special.LogDir, "log-.txt");
+}
+
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
@@ -72,10 +102,7 @@ builder.Host.UseSerilog((context, services, configuration) =>
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSignalR();
-builder.Services.Configure<StartupOptions>(builder.Configuration.GetSection("StartupOptions"));
-builder.Services.Configure<BasicAuthOptions>(builder.Configuration.GetSection("BasicAuth"));
-builder.Services.Configure<SpecialFolderOptions>(builder.Configuration.GetSection("SpecialFolders"));
-builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection("Worker"));
+
 builder.Services.Configure<GzipCompressionProviderOptions>(options =>
 {
     options.Level = System.IO.Compression.CompressionLevel.Fastest;
@@ -92,10 +119,10 @@ builder.Services.AddSingleton<IUserClockManager, UserClockManager>();
 builder.Services.AddSingleton<ILockManager, LockManager>();
 
 builder.Services.AddSingleton<CacheContext>();
-builder.Services.AddScoped(_ => new DbContext(builder.Configuration.GetConnectionString("AgentDb"), false));
-builder.Services.AddScoped(_ => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb"), false));
-builder.Services.AddKeyedScoped(ServiceLocator.ReadOnlyDbContext, (sp, _) => new DbContext(builder.Configuration.GetConnectionString("AgentDb"), true));
-builder.Services.AddKeyedScoped(ServiceLocator.ReadOnlyImageDbContext, (sp, _) => new ImageDbContext(builder.Configuration.GetConnectionString("ImageDb"), true));
+builder.Services.AddScoped(_ => new DbContext(FileNameHelper.NormalizeSystemPath(builder.Configuration.GetConnectionString("AgentDb")), false));
+builder.Services.AddScoped(_ => new ImageDbContext(FileNameHelper.NormalizeSystemPath(builder.Configuration.GetConnectionString("ImageDb")), false));
+builder.Services.AddKeyedScoped(ServiceLocator.ReadOnlyDbContext, (sp, _) => new DbContext(FileNameHelper.NormalizeSystemPath(builder.Configuration.GetConnectionString("AgentDb")), true));
+builder.Services.AddKeyedScoped(ServiceLocator.ReadOnlyImageDbContext, (sp, _) => new ImageDbContext(FileNameHelper.NormalizeSystemPath(builder.Configuration.GetConnectionString("ImageDb")), true));
 
 
 // Repositories
@@ -181,26 +208,6 @@ using (IServiceScope appScoped = app.Services.CreateScope())
     StartupOptions startupOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<StartupOptions>>().Value;
     IOptions<RequestLocalizationOptions> localizationOptions = appScoped.ServiceProvider.GetRequiredService<IOptions<RequestLocalizationOptions>>();
 
-    if (!Directory.Exists(specialFolderOptions.LogDir))
-    {
-        _ = Directory.CreateDirectory(specialFolderOptions.LogDir);
-    }
-
-    if (!Directory.Exists(specialFolderOptions.DbDir))
-    {
-        _ = Directory.CreateDirectory(specialFolderOptions.DbDir);
-    }
-
-    if (!Directory.Exists(specialFolderOptions.AgentsDir))
-    {
-        _ = Directory.CreateDirectory(specialFolderOptions.AgentsDir);
-    }
-
-    if (!Directory.Exists(specialFolderOptions.MangaDir))
-    {
-        _ = Directory.CreateDirectory(specialFolderOptions.MangaDir);
-    }
-
     Barrel.ApplicationId = nameof(KamiYomu);
     BarrelUtils.SetBaseCachePath(specialFolderOptions.DbDir);
 
@@ -253,7 +260,7 @@ static void AddHangfireConfig(WebApplicationBuilder builder)
                                                            .UseRecommendedSerializerSettings()
                                                            .UseSQLiteStorage(new SQLiteDbConnectionFactory(() =>
                                                            {
-                                                               SQLiteConnectionString connectionString = new(builder.Configuration.GetConnectionString("WorkerDb"),
+                                                               SQLiteConnectionString connectionString = new(FileNameHelper.NormalizeSystemPath(builder.Configuration.GetConnectionString("WorkerDb")),
                                                                    SQLiteOpenFlags.Create
                                                                    | SQLiteOpenFlags.ReadWrite
                                                                    | SQLiteOpenFlags.PrivateCache
