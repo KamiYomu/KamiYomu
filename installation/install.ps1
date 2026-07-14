@@ -1,6 +1,37 @@
-# -------------------------------
-# KamiYomu ASP.NET Windows Service Installer
-# -------------------------------
+﻿# ---------------------------------------------------------------
+# KamiYomu Windows Service Installer
+#
+# IMPORTANT — READ BEFORE RUNNING:
+#
+# 1. This script must be executed from the SAME folder where you
+#    downloaded the application package:
+#
+#        kamiyomu-x.x.x-win-x64.tar.gz
+#
+#    The installer expects the .tar.gz file to be present in the
+#    current working directory so it can extract and install the
+#    application into:
+#
+#        C:\Program Files\KamiYomu
+#
+# 2. After installation, the Windows Service will automatically
+#    start and the KamiYomu application will be available at:
+#
+#        http://localhost:8080
+#
+#    This is the fixed port configured for the service.
+#
+# 3. To install:
+#       - Place install.ps1 and kamiyomu-x.x.x-win-x64.tar.gz together
+#       - Right‑click install.ps1 → "Run with PowerShell" (as Admin)
+#
+# The installer will:
+#    • Extract the application files
+#    • Register the Windows Service
+#    • Configure automatic restart on failure
+#    • Start the service immediately
+# ---------------------------------------------------------------
+
 
 $ErrorActionPreference = "Stop"
 
@@ -8,7 +39,7 @@ $serviceName = "KamiYomuService"
 $displayName = "KamiYomu Service"
 $description = "KamiYomu background service"
 $installDir = "C:\Program Files\KamiYomu"
-$package = "kamiyomu-1.2.1-win-x64.tar.gz"
+$package = "kamiyomu-x.x.x-win-x64.tar.gz" # Update this to match the actual package name you downloaded
 
 Write-Host "Installing $displayName ..." -ForegroundColor Cyan
 
