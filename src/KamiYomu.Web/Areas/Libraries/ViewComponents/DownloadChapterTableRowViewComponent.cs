@@ -56,7 +56,7 @@ public class DownloadChapterTableRowViewComponent(IUserClockManager userClockSer
             }) ?? "#"
             : "#";
 
-        string? cancelUrl = chapterDownloadRecord.IsInProgress() ? Url.Page("DownloadChapterTable", values: new
+        string? cancelUrl = chapterDownloadRecord.IsCancellable() ? Url.Page("DownloadChapterTable", values: new
         {
             handler = "Cancel",
             libraryId = chapterDownloadRecord.MangaDownload.Library.Id,
