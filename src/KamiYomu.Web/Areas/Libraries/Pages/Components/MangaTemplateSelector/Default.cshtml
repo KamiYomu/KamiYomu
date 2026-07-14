@@ -23,7 +23,7 @@
         aria-labelledby="mangaDropdown"
         style="max-height: 350px; overflow-y: auto;">
 
-        <li data-file-path="@Model.DefaultFilePathTemplate" 
+        <li data-file-path="@Model.DefaultFilePathTemplate"
             data-series="@Model.DefaultComicInfoSeriesTemplate"
             data-title="@Model.DefaultComicInfoTitleTemplate">
             <button class="dropdown-item d-flex align-items-center py-2 py-md-3"
@@ -44,13 +44,15 @@
                 <button class="dropdown-item d-flex align-items-center py-2"
                         hx-get="?handler=Details&mangaId=@item.Id"
                         hx-target="#manga-display"
-                        onclick="applyMangaSelection(this, '@item.Manga.Title', '@item.Manga.CoverUrl.ToInternalImageUrl()', false)">
+                        onclick="applyMangaSelection(this, '@JavaScriptEncoder.Default.Encode(item.Manga.Title)', '@item.Manga.CoverUrl.ToInternalImageUrl()', false)">
 
                     <img src="@item.Manga.CoverUrl.ToInternalImageUrl()"
                          alt=""
                          class="me-3 rounded shadow-sm manga-thumb-list"
                          style="width: 35px; height: 48px; object-fit: cover;">
-                    <span class="text-truncate">@item.Manga.Title</span>
+                    <span class="text-truncate">
+                        @Html.Raw(item.Manga.Title)
+                    </span>
                 </button>
             </li>
         }

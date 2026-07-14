@@ -6,7 +6,7 @@
     <div class="card h-100 bg-light-subtle">
         <img src="@Model.Library.Manga.CoverUrl.ToInternalImageUrl()" class="card-img-top" alt="@Model.Library.Manga.Title" style="object-fit: cover; height: 300px;">
         <div class="card-body d-flex flex-column">
-            <h5 class="card-title fw-bold">@Model.Library.Manga.Title</h5>
+            <h5 class="card-title fw-bold">@Html.Raw(Model.Library.Manga.Title)</h5>
 
             <div class="mb-3">
                 <span class="fw-semibold">@I18n.Status:</span>

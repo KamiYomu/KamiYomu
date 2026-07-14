@@ -112,6 +112,40 @@ public class TemplateResolverTest
 
 
     [Fact]
+    public void Resolve_MangaNameOrChapterWithDoubleQuoteValueCorrectly()
+    {
+        CrawlerAgents.Core.Catalog.Manga manga = MangaBuilder.Create()
+            .WithTitle("One Piece: \"The Beginning\"")
+            .WithIsFamilySafe(true)
+            .Build();
+        CrawlerAgents.Core.Catalog.Chapter chapter = ChapterBuilder.Create()
+            .WithNumber(1)
+            .WithTitle("Romance Dawn: \"The Start\"")
+            .WithVolume(1)
+            .Build();
+        string template = "{manga_title}/ch.{chapter_padded_4}/{chapter_title_slug}";
+        string result = TemplateResolver.Resolve(template, manga, chapter);
+        Assert.Equal("One Piece_ _The Beginning/ch.0001/romance-dawn---the-start", result);
+    }
+
+    [Fact]
+    public void Resolve_MangaNameOrChapterWithSingleQuoteValueCorrectly()
+    {
+        CrawlerAgents.Core.Catalog.Manga manga = MangaBuilder.Create()
+            .WithTitle("One Piece: 'The Beginning'")
+            .WithIsFamilySafe(true)
+            .Build();
+        CrawlerAgents.Core.Catalog.Chapter chapter = ChapterBuilder.Create()
+            .WithNumber(1)
+            .WithTitle("Romance Dawn: 'The Start'")
+            .WithVolume(1)
+            .Build();
+        string template = "{manga_title}/ch.{chapter_padded_4}/{chapter_title_slug}";
+        string result = TemplateResolver.Resolve(template, manga, chapter);
+        Assert.Equal("One Piece_ 'The Beginning'/ch.0001/romance-dawn--'the-start'", result);
+    }
+
+    [Fact]
     public void Slugify_IsAppliedCorrectly()
     {
         CrawlerAgents.Core.Catalog.Manga manga = MangaBuilder.Create()
