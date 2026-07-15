@@ -1,37 +1,15 @@
 ﻿# ---------------------------------------------------------------
-# KamiYomu Windows Service Installer
+# KamiYomu Windows Service Installer (Auto-Download)
 #
-# IMPORTANT — READ BEFORE RUNNING:
-#
-# 1. This script must be executed from the SAME folder where you
-#    downloaded the application package:
-#
-#        kamiyomu-x.x.x-win-x64.tar.gz
-#
-#    The installer expects the .tar.gz file to be present in the
-#    current working directory so it can extract and install the
-#    application into:
-#
-#        C:\Program Files\KamiYomu
-#
-# 2. After installation, the Windows Service will automatically
-#    start and the KamiYomu application will be available at:
-#
-#        http://localhost:8080
-#
-#    This is the fixed port configured for the service.
-#
-# 3. To install:
-#       - Place install.ps1 and kamiyomu-x.x.x-win-x64.tar.gz together
-#       - Right‑click install.ps1 → "Run with PowerShell" (as Admin)
-#
-# The installer will:
-#    • Extract the application files
-#    • Register the Windows Service
-#    • Configure automatic restart on failure
-#    • Start the service immediately
+# Features:
+#   • Fetch the 5 most recent releases from GitHub
+#   • Latest version is marked as "(recommended)"
+#   • If user presses ENTER → latest version is auto-selected
+#   • User selects Windows asset ("win")
+#   • Download to TEMP
+#   • Install Windows Service
+#   • Cleanup downloaded file
 # ---------------------------------------------------------------
-
 
 $ErrorActionPreference = "Stop"
 
@@ -39,9 +17,91 @@ $serviceName = "KamiYomuService"
 $displayName = "KamiYomu Service"
 $description = "KamiYomu background service"
 $installDir = "C:\Program Files\KamiYomu"
-$package = "kamiyomu-x.x.x-win-x64.tar.gz" # Update this to match the actual package name you downloaded
 
-Write-Host "Installing $displayName ..." -ForegroundColor Cyan
+Write-Host "Fetching KamiYomu releases from GitHub..." -ForegroundColor Cyan
+
+# Fetch all releases
+$releases = Invoke-RestMethod -Uri "https://api.github.com/repos/KamiYomu/KamiYomu/releases" -Headers @{ "User-Agent" = "PowerShell" }
+
+# Sort by published date (newest first) and take top 5
+$recent = $releases | Sort-Object published_at -Descending | Select-Object -First 5
+
+if ($recent.Count -eq 0) {
+    Write-Host "ERROR: No releases found." -ForegroundColor Red
+    exit 1
+}
+
+Write-Host "`nMost recent 5 versions:" -ForegroundColor Cyan
+
+# Show versions (mark the newest as recommended)
+for ($i = 0; $i -lt $recent.Count; $i++) {
+    $tag = $recent[$i].tag_name
+    if ($i -eq 0) {
+        Write-Host "[$i] $tag  (recommended)"
+    } else {
+        Write-Host "[$i] $tag"
+    }
+}
+
+# Ask user to choose version
+$versionSelection = Read-Host "`nEnter the number of the version you want to install (ENTER = recommended)"
+
+# If user presses ENTER → auto-select latest
+if ([string]::IsNullOrWhiteSpace($versionSelection)) {
+    $versionSelection = 0
+    Write-Host "Using recommended version..." -ForegroundColor Yellow
+}
+
+# Validate selection
+if ($versionSelection -notmatch '^\d+$' -or [int]$versionSelection -ge $recent.Count) {
+    Write-Host "Invalid selection." -ForegroundColor Red
+    exit 1
+}
+
+$chosenRelease = $recent[$versionSelection]
+$version = $chosenRelease.tag_name
+
+Write-Host "`nSelected version: ${version}" -ForegroundColor Green
+
+# Filter Windows assets
+$winAssets = $chosenRelease.assets | Where-Object { $_.name -match "win" }
+
+if ($winAssets.Count -eq 0) {
+    Write-Host "ERROR: No Windows-compatible assets found for version ${version}." -ForegroundColor Red
+    exit 1
+}
+
+Write-Host "`nAvailable Windows packages for version ${version}:" -ForegroundColor Cyan
+
+# Show Windows assets
+for ($i = 0; $i -lt $winAssets.Count; $i++) {
+    Write-Host "[$i] $($winAssets[$i].name)"
+}
+
+# Ask user to choose Windows asset
+$assetSelection = Read-Host "`nEnter the number of the Windows package you want to install"
+
+if ($assetSelection -notmatch '^\d+$' -or [int]$assetSelection -ge $winAssets.Count) {
+    Write-Host "Invalid selection." -ForegroundColor Red
+    exit 1
+}
+
+$chosenAsset = $winAssets[$assetSelection]
+$packageName = $chosenAsset.name
+$downloadUrl = $chosenAsset.browser_download_url
+
+Write-Host "`nSelected package: ${packageName}" -ForegroundColor Green
+
+# TEMP directory for download
+$tempDir = Join-Path $env:TEMP "KamiYomu"
+New-Item -ItemType Directory -Force -Path $tempDir | Out-Null
+
+$tempFile = Join-Path $tempDir $packageName
+
+Write-Host "Downloading package to ${tempFile} ..." -ForegroundColor Cyan
+Invoke-WebRequest -Uri $downloadUrl -OutFile $tempFile
+
+Write-Host "Download complete." -ForegroundColor Green
 
 # Stop and remove existing service if present
 if (Get-Service -Name $serviceName -ErrorAction SilentlyContinue) {
@@ -51,12 +111,12 @@ if (Get-Service -Name $serviceName -ErrorAction SilentlyContinue) {
 }
 
 # Create installation directory
-Write-Host "Creating installation directory at $installDir" -ForegroundColor Cyan
+Write-Host "Creating installation directory at ${installDir}" -ForegroundColor Cyan
 New-Item -ItemType Directory -Force -Path $installDir | Out-Null
 
 # Extract package
-Write-Host "Extracting package $package ..." -ForegroundColor Cyan
-tar -xzf $package -C $installDir
+Write-Host "Extracting package ${packageName} ..." -ForegroundColor Cyan
+tar -xzf $tempFile -C $installDir
 
 # Find the executable
 $exe = Get-ChildItem -Path $installDir -Filter "*.exe" -Recurse | Select-Object -First 1
@@ -86,5 +146,11 @@ sc.exe failure $serviceName reset= 86400 actions= restart/60000 | Out-Null
 Write-Host "Starting service..." -ForegroundColor Cyan
 Start-Service $serviceName
 
+# Cleanup
+Write-Host "Cleaning up downloaded package..." -ForegroundColor Cyan
+Remove-Item -Path $tempFile -Force
+
 Write-Host "`nInstallation complete!" -ForegroundColor Green
-Write-Host "Service '$serviceName' is now running." -ForegroundColor Green
+Write-Host "Service '${serviceName}' is now running." -ForegroundColor Green
+Write-Host "Downloaded package removed from TEMP." -ForegroundColor Green
+Write-Host "Visit: http://localhost:8080"
