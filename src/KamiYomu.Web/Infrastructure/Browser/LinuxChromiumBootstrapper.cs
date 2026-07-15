@@ -19,7 +19,7 @@ public class LinuxChromiumBootstrapper(
     {
         try
         {
-            if (!FileNameHelper.IsRunningInDocker() && !OperatingSystem.IsLinux())
+            if (FileNameHelper.IsRunningInDocker() || !OperatingSystem.IsLinux())
             {
                 return;
             }
