@@ -50,6 +50,7 @@ Whether you're cataloging rare series, powering a personal manga dashboard, or s
 
 ## 📦 Getting Started
 
+### Via Docker
 1. Save the following `docker-compose.yml` file in a directory:
 
 ```yml
@@ -84,6 +85,153 @@ docker-compose up -d
 ```
 
 3. Access the web interface at `http://localhost:8080`
+
+---
+
+
+### Windows Standalone Installation
+
+Follow the steps below to install **KamiYomu** on Windows.
+
+#### 1. Download the Installer Script
+
+Download the PowerShell installation script:
+
+https://raw.githubusercontent.com/KamiYomu/KamiYomu/refs/heads/main/installation/windows/install.ps1
+
+Alternatively, save the file from:
+
+`installation/windows/install.ps1`
+
+#### 2. Open PowerShell as Administrator
+
+Right-click **PowerShell** and select **Run as administrator**.
+
+#### 3. Navigate to the Script Location
+
+Change to the directory where you downloaded `install.ps1`.
+
+For example, if the file is in your **Downloads** folder:
+
+```powershell
+cd ~/Downloads
+```
+
+#### 4. Unblock the Script
+
+Windows may block scripts downloaded from the internet. Run:
+
+```powershell
+Unblock-File .\install.ps1
+```
+
+#### 5. Run the Installer
+
+Execute the installation script:
+
+```powershell
+.\install.ps1
+```
+
+#### 6. Select the Version
+
+When prompted, enter the version you want to install.
+
+- Press **Enter** to install the latest available version.
+
+#### 7. Select the Package
+
+Choose the package that matches your Windows system.
+
+For most modern 64-bit Windows installations, **win-x64** is the correct choice.
+
+#### 8. Wait for the Installation to Complete
+
+The installer will download the required files and configure KamiYomu automatically.
+
+#### 9. Open KamiYomu
+
+Once the installation finishes, open your browser and navigate to:
+
+`http://localhost:8080`
+
+If the installation completed successfully, the KamiYomu web interface should be available.
+
+---
+
+### Linux Standalone Installation
+
+Follow the steps below to install **KamiYomu** on Linux.
+
+#### 1. Download the Installer Script
+
+Download the Bash installation script:
+
+https://raw.githubusercontent.com/KamiYomu/KamiYomu/refs/heads/main/installation/linux/install.sh
+
+Alternatively, save the file from:
+
+`installation/linux/install.sh`
+
+#### 2. Open a Terminal
+
+Open your preferred terminal application.
+
+#### 3. Navigate to the Script Location
+
+Change to the directory where you downloaded `install.sh`.
+
+For example, if the file is in your **Downloads** folder:
+
+```bash
+cd ~/Downloads
+```
+
+#### 4. Make the Script Executable
+
+Grant execution permissions to the installer:
+
+```bash
+chmod +x ./install.sh
+```
+
+#### 5. Run the Installer
+
+Execute the installation script:
+
+```bash
+./install.sh
+```
+
+If elevated privileges are required on your system, run:
+
+```bash
+sudo ./install.sh
+```
+
+#### 6. Select the Version
+
+When prompted, enter the version you want to install.
+
+- Press **Enter** to install the latest available version.
+
+#### 7. Select the Package
+
+Choose the package that matches your Linux system.
+
+For most modern 64-bit Linux distributions, **linux-x64** is the correct choice.
+
+#### 8. Wait for the Installation to Complete
+
+The installer will download the required files and configure KamiYomu automatically.
+
+#### 9. Open KamiYomu
+
+Once the installation finishes, open your browser and navigate to:
+
+`http://localhost:8080`
+
+If the installation completed successfully, the KamiYomu web interface should be available.
 
 
 ## 🌐 Public API & OPDS Catalog

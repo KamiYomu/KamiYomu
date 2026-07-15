@@ -2,39 +2,25 @@
 set -e
 
 # ---------------------------------------------------------------
-# KamiYomu Linux Service Installer
+# KamiYomu Linux Service Installer (Top 5 Versions + Auto-Download)
 #
-# IMPORTANT — READ BEFORE RUNNING:
-#
-# 1. Run this script from the SAME folder where you downloaded:
-#
-#        kamiyomu-x.x.x-linux-x64.tar.gz
-#
-# 2. The installer extracts the application into:
-#
-#        /opt/KamiYomu
-#
-# 3. After installation, the systemd service will start and the
-#    application will be available at:
-#
-#        http://localhost:8080
-#
-# 4. To install:
-#       chmod +x install.sh
-#       sudo ./install.sh
-#
-# The installer will:
-#    • Extract the application files
-#    • Register a systemd service
-#    • Configure automatic restart on failure
-#    • Start the service immediately
+# Features:
+#   â€¢ Fetch the 5 most recent releases from GitHub
+#   â€¢ Latest version is marked as "(recommended)"
+#   â€¢ If user presses ENTER â†’ latest version is auto-selected
+#   â€¢ User selects Linux asset ("linux")
+#   â€¢ Download to /tmp/KamiYomu
+#   â€¢ Install systemd service
+#   â€¢ Cleanup downloaded file
 # ---------------------------------------------------------------
 
 SERVICE_NAME="kamiyomu"
 DISPLAY_NAME="KamiYomu Service"
 DESCRIPTION="KamiYomu background service"
 INSTALL_DIR="/opt/KamiYomu"
-PACKAGE="kamiyomu-x.x.x-linux-x64.tar.gz"   # Update this to match your actual file
+TMP_DIR="/tmp/KamiYomu"
+
+GITHUB_API="https://api.github.com/repos/KamiYomu/KamiYomu/releases"
 
 echo "Installing $DISPLAY_NAME ..."
 echo
@@ -44,6 +30,86 @@ if [[ $EUID -ne 0 ]]; then
     echo "ERROR: This installer must be run with sudo or as root."
     exit 1
 fi
+
+echo "Fetching releases from GitHub..."
+RELEASES=$(curl -s -H "User-Agent: LinuxInstaller" "$GITHUB_API")
+
+# Extract the 5 most recent releases
+TAGS=($(echo "$RELEASES" | jq -r '.[].tag_name' | head -n 5))
+
+if [[ ${#TAGS[@]} -eq 0 ]]; then
+    echo "ERROR: No releases found."
+    exit 1
+fi
+
+echo
+echo "Most recent 5 versions:"
+for i in "${!TAGS[@]}"; do
+    if [[ $i -eq 0 ]]; then
+        echo "[$i] ${TAGS[$i]}  (recommended)"
+    else
+        echo "[$i] ${TAGS[$i]}"
+    fi
+done
+
+echo
+read -p "Enter the number of the version you want to install (ENTER = recommended): " VERSION_INDEX
+
+# Auto-select latest if user presses ENTER
+if [[ -z "$VERSION_INDEX" ]]; then
+    VERSION_INDEX=0
+    echo "Using recommended version..."
+fi
+
+# Validate selection
+if ! [[ "$VERSION_INDEX" =~ ^[0-9]+$ ]] || [[ "$VERSION_INDEX" -ge ${#TAGS[@]} ]]; then
+    echo "ERROR: Invalid selection."
+    exit 1
+fi
+
+VERSION="${TAGS[$VERSION_INDEX]}"
+echo "Selected version: $VERSION"
+
+# Extract assets for selected version
+ASSETS=$(echo "$RELEASES" | jq -r ".[] | select(.tag_name==\"$VERSION\") | .assets[] | .name + \"|\" + .browser_download_url")
+
+# Filter Linux assets
+LINUX_ASSETS=($(echo "$ASSETS" | grep "linux"))
+
+if [[ ${#LINUX_ASSETS[@]} -eq 0 ]]; then
+    echo "ERROR: No Linux-compatible assets found for version $VERSION."
+    exit 1
+fi
+
+echo
+echo "Available Linux packages for version $VERSION:"
+for i in "${!LINUX_ASSETS[@]}"; do
+    NAME=$(echo "${LINUX_ASSETS[$i]}" | cut -d '|' -f 1)
+    echo "[$i] $NAME"
+done
+
+echo
+read -p "Enter the number of the Linux package you want to install: " ASSET_INDEX
+
+if ! [[ "$ASSET_INDEX" =~ ^[0-9]+$ ]] || [[ "$ASSET_INDEX" -ge ${#LINUX_ASSETS[@]} ]]; then
+    echo "ERROR: Invalid selection."
+    exit 1
+fi
+
+PACKAGE_NAME=$(echo "${LINUX_ASSETS[$ASSET_INDEX]}" | cut -d '|' -f 1)
+DOWNLOAD_URL=$(echo "${LINUX_ASSETS[$ASSET_INDEX]}" | cut -d '|' -f 2)
+
+echo
+echo "Selected package: $PACKAGE_NAME"
+
+# Prepare temp directory
+mkdir -p "$TMP_DIR"
+TMP_FILE="$TMP_DIR/$PACKAGE_NAME"
+
+echo "Downloading package to $TMP_FILE ..."
+curl -L "$DOWNLOAD_URL" -o "$TMP_FILE"
+
+echo "Download complete."
 
 # Stop and remove existing service if present
 if systemctl list-units --full -all | grep -q "$SERVICE_NAME.service"; then
@@ -57,13 +123,8 @@ echo "Creating installation directory at $INSTALL_DIR"
 mkdir -p "$INSTALL_DIR"
 
 # Extract package
-if [[ ! -f "$PACKAGE" ]]; then
-    echo "ERROR: Package '$PACKAGE' not found in current directory."
-    exit 1
-fi
-
-echo "Extracting package $PACKAGE ..."
-tar -xzf "$PACKAGE" -C "$INSTALL_DIR"
+echo "Extracting package..."
+tar -xzf "$TMP_FILE" -C "$INSTALL_DIR"
 
 # Find the executable
 EXECUTABLE=$(find "$INSTALL_DIR" -type f -executable -name "KamiYomu*" | head -n 1)
@@ -105,6 +166,10 @@ systemctl enable "$SERVICE_NAME.service"
 # Start service
 echo "Starting service..."
 systemctl start "$SERVICE_NAME.service"
+
+# Cleanup
+echo "Cleaning up downloaded package..."
+rm -f "$TMP_FILE"
 
 echo
 echo "Installation complete!"
