@@ -86,6 +86,9 @@ docker-compose up -d
 
 3. Access the web interface at `http://localhost:8080`
 
+---
+
+
 ### Windows Standalone Installation
 
 Follow the steps below to install **KamiYomu** on Windows.
@@ -153,6 +156,8 @@ Once the installation finishes, open your browser and navigate to:
 `http://localhost:8080`
 
 If the installation completed successfully, the KamiYomu web interface should be available.
+
+---
 
 ### Linux Standalone Installation
 
