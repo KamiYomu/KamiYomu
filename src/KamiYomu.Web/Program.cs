@@ -14,6 +14,7 @@ using KamiYomu.Web.Hubs;
 using KamiYomu.Web.Infrastructure.AppServices;
 using KamiYomu.Web.Infrastructure.AppServices.Interfaces;
 using KamiYomu.Web.Infrastructure.Browser;
+using KamiYomu.Web.Infrastructure.Browser.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
@@ -47,6 +48,12 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 if (OperatingSystem.IsWindows())
 {
     _ = builder.Configuration.AddJsonFile("appsettings.windows.json", optional: true, reloadOnChange: true);
+
+    _ = builder.Services.AddSingleton<IChromiumBootstrapper, WindowsChromiumBootstrapper>();
+}
+else
+{
+    _ = builder.Services.AddSingleton<IChromiumBootstrapper, LinuxChromiumBootstrapper>();
 }
 
 builder.Services.Configure<StartupOptions>(builder.Configuration.GetSection("StartupOptions"));
@@ -119,7 +126,7 @@ builder.Services.AddResponseCompression(options =>
 
 builder.Services.AddSingleton<IUserClockManager, UserClockManager>();
 builder.Services.AddSingleton<ILockManager, LockManager>();
-builder.Services.AddSingleton<ChromiumBootstrapper>();
+
 
 builder.Services.AddSingleton<CacheContext>();
 builder.Services.AddScoped(_ => new DbContext(FileNameHelper.NormalizeSystemPath(builder.Configuration.GetConnectionString("AgentDb")), false));
@@ -249,7 +256,7 @@ app.MapRazorPages();
 app.UseMiddleware<ExceptionNotificationMiddleware>();
 app.MapHub<NotificationHub>("/notificationHub");
 app.MapHealthChecks("/healthz");
-ChromiumBootstrapper chromium = app.Services.GetRequiredService<ChromiumBootstrapper>();
+IChromiumBootstrapper chromium = app.Services.GetRequiredService<IChromiumBootstrapper>();
 await chromium.InitializeAsync(CancellationToken.None);
 app.Run();
 
