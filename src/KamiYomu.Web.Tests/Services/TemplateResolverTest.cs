@@ -125,7 +125,12 @@ public class TemplateResolverTest
             .Build();
         string template = "{manga_title}/ch.{chapter_padded_4}/{chapter_title_slug}";
         string result = TemplateResolver.Resolve(template, manga, chapter);
-        Assert.Equal("One Piece_ _The Beginning/ch.0001/romance-dawn---the-start", result);
+        string expected = OperatingSystem.IsWindows()
+        ? "One Piece_ _The Beginning/ch.0001/romance-dawn---the-start"
+        : "One Piece: \"The Beginning\"/ch.0001/romance-dawn:-\"the-start\"";
+
+
+        Assert.Equal(expected, result);
     }
 
     [Fact]
@@ -142,7 +147,12 @@ public class TemplateResolverTest
             .Build();
         string template = "{manga_title}/ch.{chapter_padded_4}/{chapter_title_slug}";
         string result = TemplateResolver.Resolve(template, manga, chapter);
-        Assert.Equal("One Piece_ 'The Beginning'/ch.0001/romance-dawn--'the-start'", result);
+        string expected = OperatingSystem.IsWindows()
+          ? "One Piece_ 'The Beginning'/ch.0001/romance-dawn--'the-start'"
+          : "One Piece: 'The Beginning'/ch.0001/romance-dawn:-'the-start'";
+
+        Assert.Equal(expected, result);
+
     }
 
     [Fact]

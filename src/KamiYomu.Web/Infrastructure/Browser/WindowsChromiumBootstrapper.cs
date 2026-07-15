@@ -1,28 +1,24 @@
 using System.IO.Compression;
 
 using KamiYomu.Web.AppOptions;
-using KamiYomu.Web.Infrastructure.Storage;
+using KamiYomu.Web.Infrastructure.Browser.Interfaces;
 
 using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Infrastructure.Browser;
 
-public class ChromiumBootstrapper(
+public class WindowsChromiumBootstrapper(
     IOptions<ChromiumOptions> options,
-    ILogger<ChromiumBootstrapper> logger)
+    ILogger<WindowsChromiumBootstrapper> logger) : IChromiumBootstrapper
 {
     private readonly ChromiumOptions _options = options.Value;
-    /// <summary>
-    /// Downloads and installs the Chromium browser if it is not already present, and sets required environment
-    /// variables for its usage.
-    /// </summary>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous initialization operation.</returns>
+
+    /// <inheritdoc/>
     public async Task InitializeAsync(CancellationToken cancellationToken)
     {
         try
         {
-            if (FileNameHelper.IsRunningInDocker())
+            if (!OperatingSystem.IsWindows())
             {
                 return;
             }
@@ -35,15 +31,9 @@ public class ChromiumBootstrapper(
 
             _ = Directory.CreateDirectory(baseDir);
 
-            baseDir = OperatingSystem.IsWindows()
-                ? Path.Combine(baseDir, "chrome-win")
-                : Path.Combine(baseDir, "chrome-linux");
-
-            string executablePath = Path.Combine(baseDir, _options.ExecutableName);
-            string configPath = Path.Combine(baseDir, ".config");
-            string cachePath = Path.Combine(baseDir, ".cache");
-
             // ✔ If Chromium already exists, skip download
+            string executablePath = Path.Combine(baseDir, "chrome-win", _options.ExecutableName);
+
             if (File.Exists(executablePath))
             {
                 logger.LogInformation("Chromium already installed at {Path}", executablePath);
@@ -64,6 +54,11 @@ public class ChromiumBootstrapper(
             ZipFile.ExtractToDirectory(zipPath, baseDir, true);
 
             File.Delete(zipPath);
+
+            baseDir = Path.Combine(baseDir, "chrome-win");
+
+            string configPath = Path.Combine(baseDir, ".config");
+            string cachePath = Path.Combine(baseDir, ".cache");
 
             Environment.SetEnvironmentVariable("PUPPETEER_SKIP_CHROMIUM_DOWNLOAD", "true");
             Environment.SetEnvironmentVariable("PUPPETEER_EXECUTABLE_PATH", executablePath);
