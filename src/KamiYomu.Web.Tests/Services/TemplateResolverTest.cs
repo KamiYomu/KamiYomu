@@ -127,7 +127,8 @@ public class TemplateResolverTest
         string result = TemplateResolver.Resolve(template, manga, chapter);
         string expected = OperatingSystem.IsWindows()
         ? "One Piece_ _The Beginning/ch.0001/romance-dawn---the-start"
-        : "One Piece: \"The Beginning\"/ch.0001/romance-dawn---the-start";
+        : "One Piece: \"The Beginning\"/ch.0001/romance-dawn:-\"the-start\"";
+
 
         Assert.Equal(expected, result);
     }
