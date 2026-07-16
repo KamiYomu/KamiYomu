@@ -38,6 +38,11 @@ public static class WindowsHostings
         _ = builder.Services.AddTransient<IChromiumBootstrapper, WindowsChromiumBootstrapper>();
     }
 
+    /// <summary>
+    /// use Windows-specific hosting configurations in the WebApplication. This method checks if the application is running on a Windows operating system and not in a Docker container. If both conditions are met, it retrieves the IChromiumBootstrapper service from the dependency injection container and initializes it asynchronously.
+    /// </summary>
+    /// <param name="app"></param>
+    /// <returns></returns>
     public static async Task UseWindowsHostingsAsync(this WebApplication app)
     {
         if (!OperatingSystem.IsWindows())

@@ -30,6 +30,11 @@ public static class LinuxHostings
         _ = builder.Services.AddTransient<IChromiumBootstrapper, LinuxChromiumBootstrapper>();
     }
 
+    /// <summary>
+    /// uses Linux-specific hosting configurations in the WebApplication. This method checks if the application is running on a Linux operating system and, if so, initializes the LinuxChromiumBootstrapper service (unless running in Docker).
+    /// </summary>
+    /// <param name="app"></param>
+    /// <returns></returns>
     public static async Task UseLinuxHostingsAsync(this WebApplication app)
     {
         if (!OperatingSystem.IsLinux())
