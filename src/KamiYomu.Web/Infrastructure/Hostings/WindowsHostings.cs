@@ -18,12 +18,7 @@ public static class WindowsHostings
     /// <param name="builder"></param>
     public static void AddWindowsHostings(this WebApplicationBuilder builder)
     {
-        if (FileNameHelper.IsRunningInDocker())
-        {
-            return;
-        }
-
-        if (!OperatingSystem.IsWindows())
+        if (FileNameHelper.IsRunningInDocker() || !OperatingSystem.IsWindows())
         {
             return;
         }
@@ -45,14 +40,11 @@ public static class WindowsHostings
     /// <returns></returns>
     public static async Task UseWindowsHostingsAsync(this WebApplication app)
     {
-        if (!OperatingSystem.IsWindows())
+        if (!OperatingSystem.IsWindows() || FileNameHelper.IsRunningInDocker())
         {
             return;
         }
-        if (FileNameHelper.IsRunningInDocker())
-        {
-            return;
-        }
+
         IChromiumBootstrapper chromium = app.Services.GetRequiredService<IChromiumBootstrapper>();
         await chromium.InitializeAsync(CancellationToken.None);
     }

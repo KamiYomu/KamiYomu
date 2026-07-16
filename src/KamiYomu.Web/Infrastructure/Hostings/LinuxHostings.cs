@@ -37,14 +37,13 @@ public static class LinuxHostings
     /// <returns></returns>
     public static async Task UseLinuxHostingsAsync(this WebApplication app)
     {
-        if (!OperatingSystem.IsLinux())
+        if (!OperatingSystem.IsLinux() || FileNameHelper.IsRunningInDocker())
         {
             return;
         }
-        if (!FileNameHelper.IsRunningInDocker())
-        {
-            IChromiumBootstrapper chromium = app.Services.GetRequiredService<IChromiumBootstrapper>();
-            await chromium.InitializeAsync(CancellationToken.None);
-        }
+
+        IChromiumBootstrapper chromium = app.Services.GetRequiredService<IChromiumBootstrapper>();
+        await chromium.InitializeAsync(CancellationToken.None);
+
     }
 }
