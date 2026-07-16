@@ -59,23 +59,19 @@ public static class FileNameHelper
     /// <returns>The normalized system path.</returns>
     public static string NormalizeSystemPath(string raw)
     {
-        bool isWindows = OperatingSystem.IsWindows();
+        bool isDocker = IsRunningInDocker();
 
-        string baseDir = isWindows
+        string baseDir = !isDocker
             ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KamiYomu")
-            : "/"; // Linux keeps absolute paths
+            : "/"; // Docker keeps absolute paths
 
         if (string.IsNullOrWhiteSpace(raw))
         {
             return raw;
         }
 
-        // Linux: keep absolute paths exactly as they are
-        if (!isWindows)
-        {
-            return raw;
-        }
-
+        // Docker: convert "/db" → "/db"
+        // Linux: convert "/db" → "/home/<User>/.local/share/KamiYomu/db"
         // Windows: convert "/db" → "C:\Users\<User>\AppData\Local\KamiYomu\db"
         if (raw.StartsWith("/"))
         {
