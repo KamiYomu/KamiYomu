@@ -71,7 +71,7 @@ public static class FileNameHelper
         }
 
         // Docker: convert "/db" → "/db"
-        // Linux: convert "/db" → "/home/<User>/.local/share/db"
+        // Linux: convert "/db" → "/home/<User>/.local/share/KamiYomu/db"
         // Windows: convert "/db" → "C:\Users\<User>\AppData\Local\KamiYomu\db"
         if (raw.StartsWith("/"))
         {
