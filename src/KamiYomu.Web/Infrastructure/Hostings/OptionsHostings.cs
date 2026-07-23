@@ -7,7 +7,10 @@ namespace KamiYomu.Web.Infrastructure.Hostings;
 /// </summary>
 public static class OptionsHostings
 {
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="builder"></param>
     public static void AddOptionsHostings(this WebApplicationBuilder builder)
     {
         _ = builder.Services.Configure<StartupOptions>(builder.Configuration.GetSection("StartupOptions"));
@@ -28,4 +31,5 @@ public static class OptionsHostings
             _ = Directory.CreateDirectory(opts.AgentsDir);
         });
     }
+
 }

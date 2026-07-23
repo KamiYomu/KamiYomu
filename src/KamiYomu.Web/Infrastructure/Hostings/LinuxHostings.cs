@@ -1,8 +1,11 @@
-using System.Runtime.CompilerServices;
-
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Infrastructure.Browser;
 using KamiYomu.Web.Infrastructure.Browser.Interfaces;
 using KamiYomu.Web.Infrastructure.Storage;
+
+using Microsoft.Extensions.Options;
+
+using Serilog;
 
 namespace KamiYomu.Web.Infrastructure.Hostings;
 
@@ -17,17 +20,36 @@ public static class LinuxHostings
     /// <param name="builder"></param>
     public static void AddLinuxHostings(this WebApplicationBuilder builder)
     {
-        if (!OperatingSystem.IsLinux())
+        if (FileNameHelper.IsRunningInDocker() || !OperatingSystem.IsLinux())
         {
             return;
         }
 
-        if (!FileNameHelper.IsRunningInDocker())
-        {
-            _ = builder.Host.UseSystemd();
-        }
+        _ = builder.Host.UseSystemd();
+
+        _ = builder.Configuration.AddJsonFile("appsettings.Linux.json", optional: true, reloadOnChange: true);
+
+        SpecialFolderOptions special = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<SpecialFolderOptions>>().Value;
+        builder.Configuration["Serilog:WriteTo:0:Args:path"] = Path.Combine(special.LogDir, "log-.txt");
+
+        Log.Logger = new LoggerConfiguration()
+                      .ReadFrom.Configuration(builder.Configuration)
+                      .CreateLogger();
+
+        _ = builder.Host.UseSerilog((context, services, configuration) =>
+               configuration
+                   .ReadFrom.Configuration(context.Configuration)
+                   .ReadFrom.Services(services)
+                   .Enrich.FromLogContext()
+           );
 
         _ = builder.Services.AddTransient<IChromiumBootstrapper, LinuxChromiumBootstrapper>();
+
+        Log.Logger.Information("Linux hostings configured successfully.");
+        Log.Logger.Information("LogDir: {LogDir}", special.LogDir);
+        Log.Logger.Information("MangaDir: {MangaDir}", special.MangaDir);
+        Log.Logger.Information("AgentsDir: {AgentsDir}", special.AgentsDir);
+        Log.Logger.Information("DbDir: {DbDir}", special.DbDir);
     }
 
     /// <summary>
@@ -37,7 +59,7 @@ public static class LinuxHostings
     /// <returns></returns>
     public static async Task UseLinuxHostingsAsync(this WebApplication app)
     {
-        if (!OperatingSystem.IsLinux() || FileNameHelper.IsRunningInDocker())
+        if (FileNameHelper.IsRunningInDocker() || !OperatingSystem.IsLinux())
         {
             return;
         }

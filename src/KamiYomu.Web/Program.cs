@@ -2,9 +2,26 @@ using KamiYomu.Web.Infrastructure.Hostings;
 
 using static KamiYomu.Web.AppOptions.Defaults;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder;
+
+if (Environment.ProcessPath?.Contains("dotnet") == false)
+{
+    string exeDir = Path.GetDirectoryName(Environment.ProcessPath)!;
+
+    builder = WebApplication.CreateBuilder(new WebApplicationOptions
+    {
+        Args = args,
+        ContentRootPath = exeDir
+    });
+}
+else
+{
+    builder = WebApplication.CreateBuilder(args);
+}
 
 builder.AddOptionsHostings();
+
+builder.AddDockerHostings();
 
 builder.AddWindowsHostings();
 

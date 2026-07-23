@@ -1,4 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 # Puppeteer environment setup
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
@@ -20,17 +20,7 @@ RUN mkdir -p /manga /db /logs /agents
 
 # Install Fonts
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl unzip fontconfig locales \
-    fonts-dejavu fonts-liberation fonts-noto fonts-noto-cjk \
-  && mkdir -p /usr/share/fonts/truetype/lato \
-  && cd /usr/share/fonts/truetype/lato \
-  && curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWw.ttf \
-  && curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWA.ttf \
-  && curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWy.ttf \
-  && curl -L -O https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWQ.ttf \
-  && curl -L -O https://fonts.gstatic.com/s/gloriahallelujah/v24/LYjYdHv3kUk9BMV96EIswT9DIbW-MLSy3TKEvkCF.ttf \
-  && fc-cache -f -v \
-  && rm -rf /var/lib/apt/lists/*
+    curl unzip fontconfig locales
 
 # Locale
 RUN locale-gen en_US.UTF-8
