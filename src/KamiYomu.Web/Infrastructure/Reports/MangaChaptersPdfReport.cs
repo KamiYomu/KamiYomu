@@ -4,9 +4,18 @@ using QuestPDF.Infrastructure;
 using SkiaSharp;
 
 namespace KamiYomu.Web.Infrastructure.Reports;
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="images"></param>
+/// <param name="fileName"></param>
+/// <param name="logoPath"></param>
 public class MangaChaptersPdfReport(List<string> images, string fileName, string logoPath) : IDocument
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public DocumentMetadata GetMetadata()
     {
         return new()
@@ -20,6 +29,10 @@ public class MangaChaptersPdfReport(List<string> images, string fileName, string
         };
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="container"></param>
     public void Compose(IDocumentContainer container)
     {
         string svgMarkup = File.ReadAllText(logoPath);

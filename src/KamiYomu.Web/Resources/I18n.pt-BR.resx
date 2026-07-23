@@ -1091,17 +1091,29 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   <data name="KamiYomuCatalog" xml:space="preserve">
     <value>Catálogo KamiYomu</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="OpdsCatalog" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="PublicApi" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="OpdsCatalog" xml:space="preserve">
     <value>Catálogo OPDS</value>
   </data>
   <data name="PublicApi" xml:space="preserve">
     <value>API pública (Swagger)</value>
+  </data>
+  <data name="MangaDirectory" xml:space="preserve">
+    <value>Diretório de mangá</value>
+  </data>
+  <data name="LogDirectory" xml:space="preserve">
+    <value>Diretório de Logs</value>
+  </data>
+  <data name="DatabaseDirectory" xml:space="preserve">
+    <value>Diretório de bancos de dados</value>
+  </data>
+  <data name="CrawlerAgentDirectory" xml:space="preserve">
+    <value>Diretório de Agentes Rastreadores</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ProcessDirectory" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ProcessDirectory" xml:space="preserve">
+    <value>Diretório de Processos</value>
   </data>
 </root>

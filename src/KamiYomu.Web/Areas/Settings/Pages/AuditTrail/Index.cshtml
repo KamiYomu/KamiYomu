@@ -1,7 +1,9 @@
 @page
 @using System.Collections
+@using Microsoft.Extensions.Options
 @model KamiYomu.Web.Areas.Settings.Pages.AuditTrail.IndexModel
 @inject IConfiguration Configuration
+@inject IOptions<SpecialFolderOptions> SpecialFolderOptions
 @section Styles {
     <link rel="stylesheet" href="~/lib/xterm/xterm.min.css" />
 }
@@ -87,6 +89,26 @@
                     <li class="list-group-item d-flex justify-content-between">
                         <span>@I18n.CurrentDirectory</span>
                         <span>@Environment.CurrentDirectory</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@I18n.ProcessDirectory</span>
+                        <span>@System.IO.Path.GetDirectoryName(Environment.ProcessPath)</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@I18n.MangaDirectory</span>
+                        <span>@SpecialFolderOptions.Value.MangaDir</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@I18n.CrawlerAgentDirectory</span>
+                        <span>@SpecialFolderOptions.Value.AgentsDir</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@I18n.DatabaseDirectory</span>
+                        <span>@SpecialFolderOptions.Value.DbDir</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@I18n.LogDirectory</span>
+                        <span>@SpecialFolderOptions.Value.LogDir</span>
                     </li>
                 </ul>
             </div>

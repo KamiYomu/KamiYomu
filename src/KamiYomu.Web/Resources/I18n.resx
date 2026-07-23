@@ -1097,4 +1097,19 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="PublicApi" xml:space="preserve">
     <value> Public API (Swagger)</value>
   </data>
+  <data name="MangaDirectory" xml:space="preserve">
+    <value>Manga's Directory</value>
+  </data>
+  <data name="LogDirectory" xml:space="preserve">
+    <value>Log's Directory</value>
+  </data>
+  <data name="DatabaseDirectory" xml:space="preserve">
+    <value>Databases' Directory</value>
+  </data>
+  <data name="CrawlerAgentDirectory" xml:space="preserve">
+    <value>Crawler Agents' Directory</value>
+  </data>
+  <data name="ProcessDirectory" xml:space="preserve">
+    <value>Process' Directory</value>
+  </data>
 </root>
