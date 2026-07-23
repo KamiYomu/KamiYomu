@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 using KamiYomu.Web.AppOptions;
@@ -19,9 +20,9 @@ using Microsoft.Extensions.Options;
 using MonkeyCache;
 using MonkeyCache.LiteDB;
 
+using QuestPDF.Drawing;
 using QuestPDF.Fluent;
-
-using Serilog;
+using QuestPDF.Infrastructure;
 
 using static KamiYomu.Web.AppOptions.Defaults;
 
@@ -38,23 +39,6 @@ public static class WebHostings
     /// <param name="builder">The WebApplicationBuilder to configure.</param>
     public static void AddWebHostings(this WebApplicationBuilder builder)
     {
-
-        QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
-        _ = QuestPDF.Infrastructure.TextStyle.Default.FontFamily("Lato");
-
-        LiteDbConfig.Configure();
-
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(builder.Configuration)
-            .CreateLogger();
-
-        _ = builder.Host.UseSerilog((context, services, configuration) =>
-               configuration
-                   .ReadFrom.Configuration(context.Configuration)
-                   .ReadFrom.Services(services)
-                   .Enrich.FromLogContext()
-           );
-
         _ = builder.Services.AddHttpContextAccessor();
         _ = builder.Services.AddSignalR();
 
@@ -98,6 +82,8 @@ public static class WebHostings
             options.FallBackToParentUICultures = true;
         });
 
+        LiteDbConfig.Configure();
+
         _ = builder.Services.AddRazorPages()
                         .AddJsonOptions(options =>
                         {
@@ -109,6 +95,39 @@ public static class WebHostings
         _ = builder.Services.AddReaderArea(builder.Configuration)
                             .AddPublicArea();
 
+        AddQuestPDF();
+
+
+    }
+
+    private static void AddQuestPDF()
+    {
+        QuestPDF.Settings.License = LicenseType.Community;
+
+        Assembly assembly = Assembly.GetExecutingAssembly();
+
+        RegisterFont("KamiYomu.Web.Resources.Fonts.Lato.Lato-Black.ttf");
+        RegisterFont("KamiYomu.Web.Resources.Fonts.Lato.Lato-BlackItalic.ttf");
+        RegisterFont("KamiYomu.Web.Resources.Fonts.Lato.Lato-Bold.ttf");
+        RegisterFont("KamiYomu.Web.Resources.Fonts.Lato.Lato-BoldItalic.ttf");
+        RegisterFont("KamiYomu.Web.Resources.Fonts.Lato.Lato-Italic.ttf");
+        RegisterFont("KamiYomu.Web.Resources.Fonts.Lato.Lato-Light.ttf");
+        RegisterFont("KamiYomu.Web.Resources.Fonts.Lato.Lato-LightItalic.ttf");
+        RegisterFont("KamiYomu.Web.Resources.Fonts.Lato.Lato-Regular.ttf");
+        RegisterFont("KamiYomu.Web.Resources.Fonts.Lato.Lato-Thin.ttf");
+        RegisterFont("KamiYomu.Web.Resources.Fonts.Lato.Lato-ThinItalic.ttf");
+
+        RegisterFont("KamiYomu.Web.Resources.Fonts.Gloria_Hallelujah.GloriaHallelujah-Regular.ttf");
+
+        _ = TextStyle.Default.FontFamily("Lato");
+
+        void RegisterFont(string resourceName)
+        {
+            Stream stream = assembly.GetManifestResourceStream(resourceName)
+                ?? throw new InvalidOperationException($"Embedded font '{resourceName}' not found.");
+
+            FontManager.RegisterFont(stream);
+        }
     }
 
     public static void UseWebHostings(this WebApplication app)

@@ -1,89 +1,91 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<UserSecretsId>8be99377-33c6-440e-93ba-b025bdeaea71</UserSecretsId>
-		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>8be99377-33c6-440e-93ba-b025bdeaea71</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<AssemblyTitle>KamiYomu</AssemblyTitle>
-		<Description>KamiYomu is a powerful, extensible manga crawler built for manga enthusiasts who want full control over their collection. It scans and downloads manga from supported websites, stores them locally, and lets you host your own private manga reader—no ads, no subscriptions, no limits.</Description>
-		<Company>KamiYomu</Company>
-		<Product>KamiYomu</Product>
-		<Copyright>© KamiYomu. Licensed under AGPL-3.0.</Copyright>
-	</PropertyGroup>
-
+    </PropertyGroup>
     
+    <PropertyGroup>
+        <AssemblyTitle>KamiYomu</AssemblyTitle>
+        <Description>KamiYomu is a powerful, extensible manga crawler built for manga enthusiasts who want full control over their collection. It scans and downloads manga from supported websites, stores them locally, and lets you host your own private manga reader—no ads, no subscriptions, no limits.</Description>
+        <Company>KamiYomu</Company>
+        <Product>KamiYomu</Product>
+        <Copyright>© KamiYomu. Licensed under AGPL-3.0.</Copyright>
+    </PropertyGroup>
+
+
     <ItemGroup>
-	  <Compile Remove="Areas\Public\Views\**" />
-	  <Compile Remove="Areas\Reader\Controllers\**" />
-	  <Content Remove="Areas\Public\Views\**" />
-	  <Content Remove="Areas\Reader\Controllers\**" />
-	  <EmbeddedResource Remove="Areas\Public\Views\**" />
-	  <EmbeddedResource Remove="Areas\Reader\Controllers\**" />
-	  <None Remove="Areas\Public\Views\**" />
-	  <None Remove="Areas\Reader\Controllers\**" />
-	</ItemGroup>
+        <Compile Remove="Areas\Public\Views\**" />
+        <Compile Remove="Areas\Reader\Controllers\**" />
+        <Content Remove="Areas\Public\Views\**" />
+        <Content Remove="Areas\Reader\Controllers\**" />
+        <EmbeddedResource Remove="Areas\Public\Views\**" />
+        <EmbeddedResource Remove="Areas\Reader\Controllers\**" />
+        <None Remove="Areas\Public\Views\**" />
+        <None Remove="Areas\Reader\Controllers\**" />
+    </ItemGroup>
 
-	<ItemGroup>
-	  <None Remove="Monikers.imagemanifest" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.1" />
+        <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
+        <PackageReference Include="Hangfire.AspNetCore" Version="1.8.22" />
+        <PackageReference Include="Hangfire.Storage.SQLite" Version="0.4.2" />
+        <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.2" />
+        <PackageReference Include="KamiYomu.CrawlerAgents.Core" Version="1.1.4" />
+        <PackageReference Include="LiteDB" Version="5.0.21" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="10.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="10.0.0" />
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.23" />
+        <PackageReference Include="MonkeyCache.LiteDB" Version="2.1.1" />
+        <PackageReference Include="NuGet.Versioning" Version="7.0.1" />
+        <PackageReference Include="Polly" Version="8.6.5" />
+        <PackageReference Include="QuestPDF" Version="2025.7.4" />
+        <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+        <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+        <PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0" />
+        <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.1" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
+        <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+        <PackageReference Include="SkiaSharp" Version="3.119.1" />
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.1.2" />
+    </ItemGroup>
+    
+    <PropertyGroup>
+        <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Asp.Versioning.Mvc" Version="8.1.1" />
-		<PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
-		<PackageReference Include="Hangfire.AspNetCore" Version="1.8.22" />
-		<PackageReference Include="Hangfire.Storage.SQLite" Version="0.4.2" />
-		<PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.2" />
-		<PackageReference Include="KamiYomu.CrawlerAgents.Core" Version="1.1.4" />
-		<PackageReference Include="LiteDB" Version="5.0.21" />
-		<PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Http.Polly" Version="10.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Localization" Version="10.0.0" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
-		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.23" />
-		<PackageReference Include="MonkeyCache.LiteDB" Version="2.1.1" />
-		<PackageReference Include="NuGet.Versioning" Version="7.0.1" />
-		<PackageReference Include="Polly" Version="8.6.5" />
-		<PackageReference Include="QuestPDF" Version="2025.7.4" />
-		<PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
-		<PackageReference Include="Serilog.Settings.Configuration" Version="10.0.0" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
-		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
-		<PackageReference Include="SkiaSharp" Version="3.119.1" />
-		<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
-		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.1" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.2" />
-		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.1.2" />
-	</ItemGroup>
-	
-	<ItemGroup>
-		<Compile Update="Resources\I18n.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>I18n.resx</DependentUpon>
-		</Compile>
-	</ItemGroup>
+    <ItemGroup>
+        <Compile Update="Resources\I18n.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>I18n.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
 
-	<ItemGroup>
-		<EmbeddedResource Update="Resources\I18n.resx">
-			<Generator>PublicResXFileCodeGenerator</Generator>
-			<LastGenOutput>I18n.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
-	</ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Update="Resources\I18n.resx">
+            <Generator>PublicResXFileCodeGenerator</Generator>
+            <LastGenOutput>I18n.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
 
     <ItemGroup>
         <InternalsVisibleTo Include="KamiYomu.Web.Tests" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Areas\Public\Data\" />
+        <EmbeddedResource Include="Resources\Fonts\**\*.ttf" />
     </ItemGroup>
-    
-	<Import Project="KamiYomu.Web.props" />
+
+    <Import Project="KamiYomu.Web.props" />
 </Project>

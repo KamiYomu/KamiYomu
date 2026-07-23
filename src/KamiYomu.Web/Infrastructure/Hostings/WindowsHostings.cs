@@ -5,6 +5,8 @@ using KamiYomu.Web.Infrastructure.Storage;
 
 using Microsoft.Extensions.Options;
 
+using Serilog;
+
 namespace KamiYomu.Web.Infrastructure.Hostings;
 
 /// <summary>
@@ -22,15 +24,32 @@ public static class WindowsHostings
         {
             return;
         }
+        _ = builder.Host.UseWindowsService();
 
-        _ = builder.Configuration.AddJsonFile("appsettings.windows.json", optional: true, reloadOnChange: true);
+        _ = builder.Configuration.AddJsonFile("appsettings.Windows.json", optional: true, reloadOnChange: true);
 
         SpecialFolderOptions special = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<SpecialFolderOptions>>().Value;
         builder.Configuration["Serilog:WriteTo:0:Args:path"] = Path.Combine(special.LogDir, "log-.txt");
 
-        _ = builder.Host.UseWindowsService();
+        Log.Logger = new LoggerConfiguration()
+                      .ReadFrom.Configuration(builder.Configuration)
+                      .CreateLogger();
+
+        _ = builder.Host.UseSerilog((context, services, configuration) =>
+               configuration
+                   .ReadFrom.Configuration(context.Configuration)
+                   .ReadFrom.Services(services)
+                   .Enrich.FromLogContext()
+           );
 
         _ = builder.Services.AddTransient<IChromiumBootstrapper, WindowsChromiumBootstrapper>();
+
+        Log.Logger.Information("Windows hostings configured successfully.");
+        Log.Logger.Information("LogDir: {LogDir}", special.LogDir);
+        Log.Logger.Information("MangaDir: {MangaDir}", special.MangaDir);
+        Log.Logger.Information("AgentsDir: {AgentsDir}", special.AgentsDir);
+        Log.Logger.Information("DbDir: {DbDir}", special.DbDir);
+
     }
 
     /// <summary>
