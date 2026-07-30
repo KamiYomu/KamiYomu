@@ -26,7 +26,7 @@ By leveraging a modular **Crawler Agent** architecture, KamiYomu empowers you to
 
 ---
 
-## 🤝 Join the KamiYomu Community
+# 🤝 Join the KamiYomu Community
 
 KamiYomu is built by people who care about great tooling for managing manga. Get involved — your feedback, bug reports, and contributions help shape the project.
 
@@ -35,210 +35,30 @@ KamiYomu is built by people who care about great tooling for managing manga. Get
 | **Discord** | [![Join the discord](https://img.shields.io/discord/1468597233032101942)](https://discord.gg/b9zwEEejsJ) |
 | **Report** | [![GitHub issues](https://img.shields.io/github/issues/kamiyomu/kamiyomu?logo=github&label=Issues)](https://github.com/kamiyomu/kamiyomu/issues) |
 | **Contribute** | [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?logo=github)](https://github.com/KamiYomu/KamiYomu/pulls) |
+| **Sponsor** | [![GitHub Sponsors](https://img.shields.io/github/sponsors/kamiyomu?logo=github&label=Sponsor)](https://github.com/sponsors/kamiyomu) |
 
 ---
 
-## 🚀 Why KamiYomu?
+# 🚀 Why KamiYomu?
 
 Whether you're cataloging rare series, powering a personal manga dashboard, or seeking a cleaner alternative to bloated online readers, KamiYomu puts you in control. It's a lightweight, developer-friendly crawler built for clarity, extensibility, and respectful use of publicly accessible sources.
 
 <img src="./screenshots/welcome-page.jpeg" alt="Welcome Page" width="600"/>
 
-## 📋 Requirements
 
-- [Docker](https://www.docker.com/get-started)
+# 📦 Getting Started
 
-## 📦 Getting Started
+KamiYomu supports Docker, Windows, and Linux installations. For detailed instructions, see theinstallation guides:.
 
-### Via Docker
-1. Save the following `docker-compose.yml` file in a directory:
+- [Docker](https://kamiyomu.com/docs/Installation/Install-via-docker/)
+- [Windows](https://kamiyomu.com/docs/Installation/install-via-windows/)
+- [Linux](https://kamiyomu.com/docs/Installation/install-via-linux/)
 
-```yml
-services:
-  kamiyomu:
-    image: marcoscostadev/kamiyomu:latest
-    ports:
-      - "8080:8080"
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    volumes:
-      - /etc/localtime:/etc/localtime:ro # Sync time with host
-      - kamiyomu_manga:/manga
-      - kamiyomu_database:/db
-      - kamiyomu_agents:/agents
-      - kamiyomu_logs:/logs
-volumes:
-  kamiyomu_manga:
-  kamiyomu_database:
-  kamiyomu_agents:
-  kamiyomu_logs:
-```
-
-2. Run the following command in the directory containing `docker-compose.yml`:
-
-```bash
-docker-compose up -d
-```
-
-3. Access the web interface at `http://localhost:8080`
-
----
-
-
-### Windows Standalone Installation
-
-Follow the steps below to install **KamiYomu** on Windows.
-
-#### 1. Download the Installer Script
-
-Download the PowerShell installation script:
-
-https://raw.githubusercontent.com/KamiYomu/KamiYomu/refs/heads/main/installation/windows/install.ps1
-
-Alternatively, save the file from:
-
-`installation/windows/install.ps1`
-
-#### 2. Open PowerShell as Administrator
-
-Right-click **PowerShell** and select **Run as administrator**.
-
-#### 3. Navigate to the Script Location
-
-Change to the directory where you downloaded `install.ps1`.
-
-For example, if the file is in your **Downloads** folder:
-
-```powershell
-cd ~/Downloads
-```
-
-#### 4. Unblock the Script
-
-Windows may block scripts downloaded from the internet. Run:
-
-```powershell
-Unblock-File .\install.ps1
-```
-
-#### 5. Run the Installer
-
-Execute the installation script:
-
-```powershell
-.\install.ps1
-```
-
-#### 6. Select the Version
-
-When prompted, enter the version you want to install.
-
-- Press **Enter** to install the latest available version.
-
-#### 7. Select the Package
-
-Choose the package that matches your Windows system.
-
-For most modern 64-bit Windows installations, **win-x64** is the correct choice.
-
-#### 8. Wait for the Installation to Complete
-
-The installer will download the required files and configure KamiYomu automatically.
-
-#### 9. Open KamiYomu
-
-Once the installation finishes, open your browser and navigate to:
-
-`http://localhost:8080`
-
-If the installation completed successfully, the KamiYomu web interface should be available.
-
----
-
-### Linux Standalone Installation
-
-Follow the steps below to install **KamiYomu** on Linux.
-
-#### 1. Download the Installer Script
-
-Download the Bash installation script:
-
-https://raw.githubusercontent.com/KamiYomu/KamiYomu/refs/heads/main/installation/linux/install.sh
-
-Alternatively, save the file from:
-
-`installation/linux/install.sh`
-
-#### 2. Open a Terminal
-
-Open your preferred terminal application.
-
-#### 3. Navigate to the Script Location
-
-Change to the directory where you downloaded `install.sh`.
-
-For example, if the file is in your **Downloads** folder:
-
-```bash
-cd ~/Downloads
-```
-
-#### 4. Make the Script Executable
-
-Grant execution permissions to the installer:
-
-```bash
-chmod +x ./install.sh
-```
-
-#### 5. Run the Installer
-
-Execute the installation script:
-
-```bash
-./install.sh
-```
-
-If elevated privileges are required on your system, run:
-
-```bash
-sudo ./install.sh
-```
-
-#### 6. Select the Version
-
-When prompted, enter the version you want to install.
-
-- Press **Enter** to install the latest available version.
-
-#### 7. Select the Package
-
-Choose the package that matches your Linux system.
-
-For most modern 64-bit Linux distributions, **linux-x64** is the correct choice.
-
-#### 8. Wait for the Installation to Complete
-
-The installer will download the required files and configure KamiYomu automatically.
-
-#### 9. Open KamiYomu
-
-Once the installation finishes, open your browser and navigate to:
-
-`http://localhost:8080`
-
-If the installation completed successfully, the KamiYomu web interface should be available.
-
-
-## 🌐 Public API & OPDS Catalog
+# 🌐 Public API & OPDS Catalog
 
 KamiYomu provides external access to your collection via a public API and the OPDS (Open Publication Distribution System) standard.
 
-### 📚 OPDS Catalog
+## 📚 OPDS Catalog
 To access your library on mobile devices, e-readers, or third-party apps (like Moon+ Reader or KyBook), use the following endpoint:
 
 `http://localhost:8080/public/api/v1/opds`
@@ -247,7 +67,7 @@ To access your library on mobile devices, e-readers, or third-party apps (like M
 
 ---
 
-### 🛠 Interactive API Documentation (Swagger)
+## 🛠 Interactive API Documentation (Swagger)
 
 For developers or users wishing to interact with the system programmatically, a full Swagger UI is available to explore all endpoints:
 
@@ -255,7 +75,7 @@ For developers or users wishing to interact with the system programmatically, a 
 
 ---
 
-### ⚠️ Network Configuration
+## ⚠️ Network Configuration
 To access these services from outside the host machine:
 * **Firewall:** Ensure that port `8080` (or your custom mapped port) is open in your system's firewall.
 * **Remote Access:** If accessing over the internet, ensure you have configured port forwarding or a reverse proxy. 
@@ -265,7 +85,7 @@ To access these services from outside the host machine:
 > Map volumes to local paths as needed. Check [releases](https://github.com/KamiYomu/KamiYomu/releases) for available versions.
 
 
-## 🧠 Tech Stack
+# 🧠 Tech Stack
 
 - .NET 8 Razor Pages
 - Hangfire for job scheduling
@@ -275,9 +95,9 @@ To access these services from outside the host machine:
 
 ----
 
-## ⚠️ Capabilities & Limitations
+# ⚠️ Capabilities & Limitations
 
-### ✅ What KamiYomu Does
+## ✅ What KamiYomu Does
 
 * **Complete Manga Reader:** Features a full suite of tools including advanced filtering, reading history, "Chapters of the Week," and dedicated views for new chapters and fresh manga releases.
 * **Browser-Based Crawling:** Operates crawler agents that act like a standard web browser to navigate sites, execute JavaScript, and interact with content naturally.
@@ -289,7 +109,7 @@ To access these services from outside the host machine:
 
 ---
 
-### ❌ What KamiYomu Does Not
+## ❌ What KamiYomu Does Not
 
 **Security & Data Integrity**
 * **Exploit or Invade:** Never bypasses security measures, exploits vulnerabilities, or circumvents paywalls/access controls.
@@ -308,7 +128,7 @@ To access these services from outside the host machine:
 
 ---
 
-### ⚖️ User Responsibility & Disclaimer
+## ⚖️ User Responsibility & Disclaimer
 
 **KamiYomu is provided "as-is" for local, personal use only.** By using this software, you acknowledge that you are solely responsible for the content you access and how you manage it. The developers and maintainers of KamiYomu assume **no liability** for:
 1. User compliance with copyright laws or licensing agreements.
@@ -317,23 +137,23 @@ To access these services from outside the host machine:
 
 Users are encouraged to use KamiYomu only with content they have the legal right to access.
 
-## 📃 License
+# 📃 License
 
 The KamiYomu project is licensed under the **AGPL-3.0 (Affero General Public License version 3.0)**. This license allows users to freely use, modify, and distribute the software, provided that any modified versions are also distributed under the same license. 
 
-### Key Points of AGPL-3.0:
+## Key Points of AGPL-3.0:
 - **Freedom to Use**: Users can run the software for any purpose.
 - **Freedom to Study and Modify**: Users can access the source code and modify it to suit their needs.
 - **Freedom to Distribute Copies**: Users can share the original software with others.
 - **Freedom to Distribute Modified Versions**: Users can distribute modified versions of the software, but they must also be licensed under AGPL-3.0, ensuring that the same freedoms are preserved for all users.
 ---
 
-## 🤝 Contributing
+# 🤝 Contributing
 
 Pull requests are welcome! See the [development guide](https://kamiyomu.github.io/docs/development/development/) to get started cloning the project and running it in Visual Studio or VS Code.
 
 Create your own crawler agents by following the [Crawler Agent development guide](https://kamiyomu.com/docs/crawler-agents/create/).
 
-## 💬 Contact
+# 💬 Contact
 
 Questions, feedback, or bug reports? [Open an issue](https://github.com/KamiYomu/issues) or Join the discord [![Join the discord](https://img.shields.io/discord/1468597233032101942)](https://discord.gg/b9zwEEejsJ).
