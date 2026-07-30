@@ -1,4 +1,4 @@
-﻿using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.AppOptions;
 
 using Microsoft.Extensions.Options;
 
@@ -7,17 +7,19 @@ using System.Runtime.Loader;
 
 namespace KamiYomu.Web.Entities;
 
-public class CrawlerAgentLoadContext : AssemblyLoadContext
+/// <summary>
+/// 
+/// </summary>
+/// <param name="assemblyPath"></param>
+public class CrawlerAgentLoadContext(string assemblyPath) : AssemblyLoadContext(isCollectible: true)
 {
-    private readonly string _baseDir;
-    private readonly AssemblyDependencyResolver _resolver;
-
-    public CrawlerAgentLoadContext(string assemblyPath) : base(isCollectible: true)
-    {
-        _baseDir = Path.GetDirectoryName(assemblyPath)!;
-        _resolver = new AssemblyDependencyResolver(assemblyPath);
-    }
-
+    private readonly string _baseDir = Path.GetDirectoryName(assemblyPath)!;
+    private readonly AssemblyDependencyResolver _resolver = new(assemblyPath);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="assemblyName"></param>
+    /// <returns></returns>
     protected override Assembly? Load(AssemblyName assemblyName)
     {
 

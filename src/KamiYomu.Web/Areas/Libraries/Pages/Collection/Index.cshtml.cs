@@ -18,8 +18,7 @@ public class IndexModel(
     ILogger<IndexModel> logger,
     [FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext,
     IHttpClientFactory httpClientFactory,
-    ImageDbContext imageDbContext,
-    ICrawlerAgentRepository agentCrawlerRepository) : PageModel
+    ImageDbContext imageDbContext) : PageModel
 {
 
     [BindProperty(SupportsGet = true)]
@@ -70,9 +69,8 @@ public class IndexModel(
         ViewData[nameof(PaginationOptions.Limit)] = Limit;
         ViewData[nameof(PaginationOptions.ContinuationToken)] = string.Empty;
 
-        if (Request.Headers.ContainsKey("HX-Request"))
-        {
-            return ViewComponent("SearchMangaResult", new
+        return Request.Headers.ContainsKey("HX-Request")
+            ? ViewComponent("SearchMangaResult", new
             {
                 libraries = Results,
                 searchUri = Url.Page("/Collection/Index", new
@@ -85,9 +83,8 @@ public class IndexModel(
                     Limit = ViewData[nameof(Limit)],
                     ContinuationToken = ViewData[nameof(ContinuationToken)]
                 })
-            });
-        }
-        return Page();
+            })
+            : Page();
     }
 
     public async Task<IActionResult> OnGetImageAsync(Uri uri, CancellationToken cancellationToken)

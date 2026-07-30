@@ -4,11 +4,21 @@ using KamiYomu.Web.Entities;
 using LiteDB;
 
 namespace KamiYomu.Web.Infrastructure.Contexts;
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="fileName"></param>
+/// <param name="isReadOnly"></param>
 public class DbContext(string fileName, bool isReadOnly = false) : IDisposable
 {
     private bool _disposed = false;
+    /// <summary>
+    /// 
+    /// </summary>
     private ILiteDatabase _raw;
+    /// <summary>
+    /// 
+    /// </summary>
     public ILiteDatabase Raw
     {
         get
@@ -45,19 +55,36 @@ public class DbContext(string fileName, bool isReadOnly = false) : IDisposable
             return _raw;
         }
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public ILiteCollection<CrawlerAgent> CrawlerAgents => Raw.GetCollection<CrawlerAgent>("agent_crawlers");
+    /// <summary>
+    /// 
+    /// </summary>
     public ILiteCollection<Library> Libraries => Raw.GetCollection<Library>("libraries");
+    /// <summary>
+    /// 
+    /// </summary>
     public ILiteCollection<UserPreference> UserPreferences => Raw.GetCollection<UserPreference>("user_preferences");
+    /// <summary>
+    /// 
+    /// </summary>
     public ILiteCollection<NugetSource> NugetSources => Raw.GetCollection<NugetSource>("nuget_sources");
+    /// <summary>
+    /// 
+    /// </summary>
     public ILiteStorage<Guid> CrawlerAgentFileStorage => Raw.GetStorage<Guid>("_agent_crawler_file_storage", "_packages");
-
+    /// <inheritdoc/>
     public void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="disposing"></param>
     protected virtual void Dispose(bool disposing)
     {
         if (_disposed)
@@ -71,7 +98,9 @@ public class DbContext(string fileName, bool isReadOnly = false) : IDisposable
         }
         _disposed = true;
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     ~DbContext()
     {
         Dispose(false);
