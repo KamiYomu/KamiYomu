@@ -9,7 +9,9 @@ using KamiYomu.Web.Infrastructure.Services;
 using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Entities;
-
+/// <summary>
+/// 
+/// </summary>
 public class Library
 {
     private readonly Lazy<LibraryDbContext> _libraryReadWriteDbContext;
@@ -20,6 +22,7 @@ public class Library
         _libraryReadOnlyDbContext = new Lazy<LibraryDbContext>(CreateReadOnlyDbContext);
         _libraryReadWriteDbContext = new Lazy<LibraryDbContext>(CreateReadWriteDbContext);
     }
+
     public Library(CrawlerAgent agentCrawler, Manga manga, string? filePathTemplate, string? comicInfoTitleTemplateFormat, string? comicInfoSeriesTemplate) : this()
     {
         CrawlerAgent = agentCrawler;
@@ -28,6 +31,15 @@ public class Library
         ComicInfoTitleTemplateFormat = comicInfoTitleTemplateFormat;
         ComicInfoSeriesTemplate = comicInfoSeriesTemplate;
         CreatedDate = DateTimeOffset.UtcNow;
+    }
+
+    public void UpdateMangaInformation(Manga manga)
+    {
+        if (Manga?.Id != manga.Id)
+        {
+            throw new InvalidOperationException($"Cannot update Manga with a different Id. Current Manga Id: {Manga?.Id}, New Manga Id: {manga.Id}");
+        }
+        Manga = string.IsNullOrEmpty(manga.Title) ? null : manga;
     }
 
     private LibraryDbContext CreateReadWriteDbContext()
