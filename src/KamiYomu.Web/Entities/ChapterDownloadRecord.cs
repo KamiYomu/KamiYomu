@@ -113,7 +113,16 @@ public class ChapterDownloadRecord
     /// <returns>True when not stale or when status is Scheduled.</returns>
     public bool IsInProgress()
     {
-        return !IsStale() || DownloadStatus == DownloadStatus.Scheduled;
+        switch (DownloadStatus)
+        {
+            case DownloadStatus.Scheduled:
+                return true;
+
+            case DownloadStatus.InProgress:
+                return !IsStale();
+            default:
+                return false;
+        }
     }
 
     /// <summary>
@@ -132,6 +141,24 @@ public class ChapterDownloadRecord
     public bool IsCancelled()
     {
         return DownloadStatus == DownloadStatus.Cancelled;
+    }
+
+    /// <summary>
+    /// Indicates whether the download is scheduled.
+    /// </summary>
+    /// <returns>True when the download status is Scheduled; otherwise false.</returns>
+    public bool IsScheduled()
+    {
+        return DownloadStatus == DownloadStatus.Scheduled;
+    }
+
+    /// <summary>
+    /// Indicates whether the download is to be rescheduled.
+    /// </summary>
+    /// <returns>True when the download status is ToBeRescheduled; otherwise false.</returns>
+    public bool IsToBeRescheduled()
+    {
+        return DownloadStatus == DownloadStatus.ToBeRescheduled;
     }
 
     /// <summary>

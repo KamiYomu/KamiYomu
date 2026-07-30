@@ -1,10 +1,20 @@
 using KamiYomu.Web.Entities.Definitions;
 
 namespace KamiYomu.Web.Entities;
-
+/// <summary>
+/// 
+/// </summary>
 public class MangaDownloadRecord
 {
+    /// <summary>
+    /// 
+    /// </summary>
     protected MangaDownloadRecord() { }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="library"></param>
+    /// <param name="jobId"></param>
     public MangaDownloadRecord(Library library, string jobId)
     {
         Library = library;
@@ -13,34 +23,61 @@ public class MangaDownloadRecord
         StatusUpdateAt = DateTimeOffset.UtcNow;
         CreateAt = DateTimeOffset.UtcNow;
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="library"></param>
+    public void UpdateLibraryInformation(Library library)
+    {
+        if (library.Id != Library?.Id)
+        {
+            throw new InvalidOperationException($"Cannot update Library with a different Id. Current Library Id: {Library.Id}, New Library Id: {library.Id}");
+        }
 
+        Library = library;
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="backgroundJobId"></param>
     public void Schedule(string backgroundJobId)
     {
         StatusReason = null;
         DownloadStatus = DownloadStatus.Scheduled;
         BackgroundJobId = backgroundJobId;
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="statusReason"></param>
     public void Pending(string statusReason = "")
     {
         StatusReason = statusReason;
         DownloadStatus = DownloadStatus.ToBeRescheduled;
         StatusUpdateAt = DateTimeOffset.UtcNow;
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public void Processing()
     {
         StatusReason = null;
         DownloadStatus = DownloadStatus.InProgress;
         StatusUpdateAt = DateTimeOffset.UtcNow;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public void Complete()
     {
         StatusReason = null;
         DownloadStatus = DownloadStatus.Completed;
         StatusUpdateAt = DateTimeOffset.UtcNow;
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="statusReason"></param>
     public void Cancelled(string statusReason)
     {
 
@@ -48,12 +85,18 @@ public class MangaDownloadRecord
         DownloadStatus = DownloadStatus.Cancelled;
         StatusUpdateAt = DateTimeOffset.UtcNow;
     }
-
+    /// <summary>
+    /// Determines whether the download record should be run.
+    /// </summary>
+    /// <returns>True if the download record should be run; otherwise, false.</returns>
     public bool ShouldRun()
     {
         return DownloadStatus is DownloadStatus.ToBeRescheduled or DownloadStatus.Scheduled || IsStale();
     }
-
+    /// <summary>
+    /// Determines whether the download record is stale.
+    /// </summary>
+    /// <returns>True if the download record is stale; otherwise, false.</returns>
     public bool IsStale()
     {
         return DownloadStatus == DownloadStatus.InProgress
