@@ -41,4 +41,10 @@ public interface IWorkerService
     /// <param name="library"></param>
     /// <returns></returns>
     bool IsDiscoverRecurringJobScheduled(Library library);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="library"></param>
+    /// <returns></returns>
+    bool IsDiscoverRecurringJobRunning(Library library);
 }

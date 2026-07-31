@@ -58,6 +58,7 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
         }
 
         Record = downloadManga;
+        ScanNowButtonViewModel.IsScanning = workerService.IsDiscoverRecurringJobRunning(Library);
         FollowButtonViewModel.IsFollowing = workerService.IsDiscoverRecurringJobScheduled(Library);
         List<ChapterDownloadRecord> downloadChapters = [.. libDbContext.ChapterDownloadRecords.Find(p => p.MangaDownload.Id == downloadManga.Id).OrderBy(p => p.Chapter.Number)];
     }

@@ -1,5 +1,6 @@
 using Hangfire;
 using Hangfire.Storage;
+using Hangfire.Storage.Monitoring;
 
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
@@ -83,6 +84,10 @@ public class WorkerService(IOptions<WorkerOptions> workerOptions,
 
         string jobId = BackgroundJob.Enqueue<IChapterDiscoveryJob>((job) => job.DispatchAsync(mangaDiscoveryQueue, library.CrawlerAgent.Id, library.Id, null!, CancellationToken.None));
 
+        using IStorageConnection connection = JobStorage.Current.GetConnection();
+
+        connection.SetJobParameter(jobId, "RecurringJobId", library.GetDiscovertyJobId());
+
         return jobId;
     }
 
@@ -94,6 +99,21 @@ public class WorkerService(IOptions<WorkerOptions> workerOptions,
         List<RecurringJobDto> recurringJobs = connection.GetRecurringJobs();
 
         return recurringJobs.Any(job => string.Equals(job.Id, library.GetDiscovertyJobId(), StringComparison.OrdinalIgnoreCase));
+    }
+
+    /// <inheritdoc/>
+    public bool IsDiscoverRecurringJobRunning(Library library)
+    {
+        using IStorageConnection connection = JobStorage.Current.GetConnection();
+
+        IMonitoringApi monitoring = JobStorage.Current.GetMonitoringApi();
+        bool exists =
+            monitoring.ProcessingJobs(0, 100)
+                .Any(j => string.Equals(connection.GetJobParameter(j.Key, "RecurringJobId"), library.GetDiscovertyJobId(), StringComparison.InvariantCulture))
+            ||
+            monitoring.ScheduledJobs(0, 100)
+                .Any(j => string.Equals(connection.GetJobParameter(j.Key, "RecurringJobId"), library.GetDiscovertyJobId(), StringComparison.InvariantCulture));
+        return exists;
     }
 
 }
