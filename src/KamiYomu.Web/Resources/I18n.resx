@@ -1112,4 +1112,16 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="ProcessDirectory" xml:space="preserve">
     <value>Process' Directory</value>
   </data>
+  <data name="Scanning" xml:space="preserve">
+    <value>Scanning</value>
+  </data>
+  <data name="Scan" xml:space="preserve">
+    <value>Scan</value>
+  </data>
+  <data name="StartSearchingForChapters" xml:space="preserve">
+    <value>Start searching for chapters.</value>
+  </data>
+  <data name="SearchingForChapters" xml:space="preserve">
+    <value>Searching for chapters...</value>
+  </data>
 </root>

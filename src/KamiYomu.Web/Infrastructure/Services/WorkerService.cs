@@ -1,4 +1,6 @@
-﻿using Hangfire;
+using Hangfire;
+using Hangfire.Storage;
+using Hangfire.Storage.Monitoring;
 
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
@@ -11,13 +13,17 @@ using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Infrastructure.Services;
 
+/// <summary>
+/// 
+/// </summary>
+/// <param name="workerOptions"></param>
+/// <param name="hangfireRepository"></param>
+/// <param name="jobClient"></param>
 public class WorkerService(IOptions<WorkerOptions> workerOptions,
                            IHangfireRepository hangfireRepository,
-                           IBackgroundJobClient jobClient,
-                           CacheContext cacheContext,
-                           DbContext dbContext) : IWorkerService
+                           IBackgroundJobClient jobClient) : IWorkerService
 {
-
+    /// <inheritdoc/>
     public string ScheduleMangaDownload(MangaDownloadRecord mangaDownloadRecord)
     {
 
@@ -25,13 +31,12 @@ public class WorkerService(IOptions<WorkerOptions> workerOptions,
 
         string backgroundJobId = BackgroundJob.Enqueue<IMangaDownloaderJob>(mangaDownloadQueueState.Queue, p => p.DispatchAsync(mangaDownloadQueueState.Queue, mangaDownloadRecord.Library.CrawlerAgent.Id, mangaDownloadRecord.Library.Id, mangaDownloadRecord.Id, mangaDownloadRecord.Library.Manga.Title, null!, CancellationToken.None));
 
-        string mangaDiscoveryQueue = workerOptions.Value.DiscoveryNewChapterQueues.First();
-
-        RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(mangaDownloadRecord.Library.GetDiscovertyJobId(), (job) => job.DispatchAsync(mangaDiscoveryQueue, mangaDownloadRecord.Library.CrawlerAgent.Id, mangaDownloadRecord.Library.Id, null!, CancellationToken.None), Cron.Daily());
+        ScheduleDiscoverRecurringJob(mangaDownloadRecord.Library);
 
         return backgroundJobId;
     }
 
+    /// <inheritdoc/>
     public void CancelMangaDownload(MangaDownloadRecord mangaDownloadRecord)
     {
         using LibraryDbContext libDbContext = mangaDownloadRecord.Library.GetReadWriteDbContext();
@@ -53,8 +58,62 @@ public class WorkerService(IOptions<WorkerOptions> workerOptions,
             }
         }
 
-        RecurringJob.RemoveIfExists(mangaDownloadRecord.Library.GetDiscovertyJobId());
+        RemoveDiscoverRecurringJob(mangaDownloadRecord.Library);
 
         _ = libDbContext.MangaDownloadRecords.Update(mangaDownloadRecord);
     }
+
+    /// <inheritdoc/>
+    public void RemoveDiscoverRecurringJob(Library library)
+    {
+        RecurringJob.RemoveIfExists(library.GetDiscovertyJobId());
+    }
+
+    /// <inheritdoc/>
+    public void ScheduleDiscoverRecurringJob(Library library)
+    {
+        string mangaDiscoveryQueue = workerOptions.Value.DiscoveryNewChapterQueues.First();
+
+        RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(library.GetDiscovertyJobId(), (job) => job.DispatchAsync(mangaDiscoveryQueue, library.CrawlerAgent.Id, library.Id, null!, CancellationToken.None), Cron.Daily());
+    }
+
+    /// <inheritdoc/>
+    public string TriggerDiscoverRecurringJob(Library library)
+    {
+        string mangaDiscoveryQueue = workerOptions.Value.DiscoveryNewChapterQueues.First();
+
+        string jobId = BackgroundJob.Enqueue<IChapterDiscoveryJob>((job) => job.DispatchAsync(mangaDiscoveryQueue, library.CrawlerAgent.Id, library.Id, null!, CancellationToken.None));
+
+        using IStorageConnection connection = JobStorage.Current.GetConnection();
+
+        connection.SetJobParameter(jobId, "RecurringJobId", library.GetDiscovertyJobId());
+
+        return jobId;
+    }
+
+    /// <inheritdoc/>
+    public bool IsDiscoverRecurringJobScheduled(Library library)
+    {
+        using IStorageConnection connection = JobStorage.Current.GetConnection();
+
+        List<RecurringJobDto> recurringJobs = connection.GetRecurringJobs();
+
+        return recurringJobs.Any(job => string.Equals(job.Id, library.GetDiscovertyJobId(), StringComparison.OrdinalIgnoreCase));
+    }
+
+    /// <inheritdoc/>
+    public bool IsDiscoverRecurringJobRunning(Library library)
+    {
+        using IStorageConnection connection = JobStorage.Current.GetConnection();
+
+        IMonitoringApi monitoring = JobStorage.Current.GetMonitoringApi();
+        bool exists =
+            monitoring.ProcessingJobs(0, 100)
+                .Any(j => string.Equals(connection.GetJobParameter(j.Key, "RecurringJobId"), library.GetDiscovertyJobId(), StringComparison.InvariantCulture))
+            ||
+            monitoring.ScheduledJobs(0, 100)
+                .Any(j => string.Equals(connection.GetJobParameter(j.Key, "RecurringJobId"), library.GetDiscovertyJobId(), StringComparison.InvariantCulture));
+        return exists;
+    }
+
 }

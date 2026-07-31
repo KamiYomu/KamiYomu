@@ -7,9 +7,15 @@
         hx-vals='{
             "FollowButtonViewModel.LibraryId": "@Model.LibraryId",
             "FollowButtonViewModel.IsFollowing": "@Model.IsFollowing.ToString().ToLower()"
-        }'
+        }' 
         hx-target="this"
-        hx-swap="outerHTML">
+        hx-swap="outerHTML"
+        title="@(Model.IsFollowing? I18n.Following: I18n.Follow)"
+        data-bs-toggle="popover"
+        data-bs-trigger="hover focus"
+        data-bs-placement="top"
+        data-bs-content="@(Model.IsFollowing? I18n.YouStartedFollowingThisTitle: I18n.YouAreNoLongerFollowingThisTitle)"
+        data-bs-title="@I18n.Follow">
 
     <i class="bi @(Model.IsFollowing ? "bi-eye-fill" : "bi-eye") me-2"></i>
     @(Model.IsFollowing? I18n.Following: I18n.Follow)
