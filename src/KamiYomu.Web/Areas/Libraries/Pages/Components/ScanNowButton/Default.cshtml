@@ -1,0 +1,25 @@
+@using KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
+@model ScanNowButtonViewModel
+
+<span id="scanNowSpan" tabindex="0"
+      data-bs-toggle="popover"
+      data-bs-trigger="hover focus"
+      data-bs-placement="top"
+      data-bs-title="@I18n.Scan"
+      data-bs-content="@(Model.IsScanning? I18n.SearchingForChapters: I18n.StartSearchingForChapters)">
+
+    <button id="scanNowBtn"
+            class="btn btn-sm @(Model.IsScanning ? "btn-primary" : "btn-outline-primary")"
+            @(Model.IsScanning ? "disabled" : "")
+            hx-post="/Libraries/Collection/Dialogs/DownloadStatus?handler=StartDiscoverChaptersJob"
+            hx-vals='{
+                "ScanNowButtonViewModel.LibraryId": "@Model.LibraryId",
+                "ScanNowButtonViewModel.IsScanning": "@Model.IsScanning.ToString().ToLower()"
+            }'
+            hx-target="#scanNowSpan"
+            hx-swap="outerHTML">
+        <i class="bi @(Model.IsScanning ? "bi-arrow-repeat spin" : "bi-arrow-repeat") me-2"></i>
+        @(Model.IsScanning? I18n.Scanning: I18n.Scan)
+    </button>
+
+</span>

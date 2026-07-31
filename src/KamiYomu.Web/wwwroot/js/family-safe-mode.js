@@ -1,3 +1,8 @@
+function initPopovers() {
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+    [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+}
+
 if (!window.familySafeModeInitialized) {
 
     document.addEventListener('htmx:configRequest', (event) => {
@@ -8,10 +13,11 @@ if (!window.familySafeModeInitialized) {
     });
 
     document.addEventListener('DOMContentLoaded', function () {
-        const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-        popoverTriggerList.forEach(function (el) {
-            new bootstrap.Popover(el);
-        });
+        initPopovers();
+    });
+
+    document.body.addEventListener('htmx:afterSwap', function (e) {
+        initPopovers();
     });
 
     window.familySafeModeInitialized = true;

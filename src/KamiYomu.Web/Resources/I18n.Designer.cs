@@ -2222,6 +2222,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Scan.
+        /// </summary>
+        public static string Scan {
+            get {
+                return ResourceManager.GetString("Scan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scanning.
+        /// </summary>
+        public static string Scanning {
+            get {
+                return ResourceManager.GetString("Scanning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Scheduled.
         /// </summary>
         public static string Scheduled {
@@ -2281,6 +2299,15 @@ namespace KamiYomu.Web.Resources {
         public static string SearchForChaptersCompleted {
             get {
                 return ResourceManager.GetString("SearchForChaptersCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Searching for chapters....
+        /// </summary>
+        public static string SearchingForChapters {
+            get {
+                return ResourceManager.GetString("SearchingForChapters", resourceCulture);
             }
         }
         
@@ -2551,6 +2578,15 @@ namespace KamiYomu.Web.Resources {
         public static string StartReading {
             get {
                 return ResourceManager.GetString("StartReading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start searching for chapters..
+        /// </summary>
+        public static string StartSearchingForChapters {
+            get {
+                return ResourceManager.GetString("StartSearchingForChapters", resourceCulture);
             }
         }
         

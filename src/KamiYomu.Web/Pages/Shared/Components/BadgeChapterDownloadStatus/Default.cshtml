@@ -10,16 +10,3 @@
     @(I18n.ResourceManager.GetString(Model.ChapterDownloadRecord.DownloadStatus.ToString())
         ?? Model.ChapterDownloadRecord.DownloadStatus.ToString())
 </span>
-
-<script>
-     function initPopovers() {
-        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
-        [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
-    }
-
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initPopovers);
-    } else {
-        initPopovers();
-    }
-</script>
