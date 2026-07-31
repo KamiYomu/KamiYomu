@@ -6,9 +6,16 @@ using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using System.Text.RegularExpressions;
 
 namespace KamiYomu.Web.Infrastructure.Repositories;
-
+/// <summary>
+/// CrawlerAgentRepository is responsible for interacting with crawler agents to retrieve manga, 
+/// chapters, and pages, as well as performing search operations. 
+/// It utilizes caching to improve performance and reduce redundant requests.
+/// </summary>
+/// <param name="dbContext"></param>
+/// <param name="cacheContext"></param>
 public class CrawlerAgentRepository(DbContext dbContext, CacheContext cacheContext) : ICrawlerAgentRepository
 {
+    ///<inheritdoc/>
     public Task<Manga> GetMangaAsync(Guid crawlerAgentId, string mangaId, CancellationToken cancellationToken)
     {
         return cacheContext.GetOrSetAsync($"{crawlerAgentId}-manga-{mangaId}", async () =>
@@ -20,6 +27,7 @@ public class CrawlerAgentRepository(DbContext dbContext, CacheContext cacheConte
         }, TimeSpan.FromMinutes(30));
     }
 
+    ///<inheritdoc/>
     public Task<PagedResult<Chapter>> GetMangaChaptersAsync(Guid crawlerAgentId, string mangaId, PaginationOptions paginationOptions, CancellationToken cancellationToken)
     {
         return cacheContext.GetOrSetAsync($"{crawlerAgentId}-manga-{mangaId}-{paginationOptions}", async () =>
@@ -31,6 +39,7 @@ public class CrawlerAgentRepository(DbContext dbContext, CacheContext cacheConte
         }, TimeSpan.FromMinutes(30));
     }
 
+    ///<inheritdoc/>
     public Task<IEnumerable<Page>> GetChapterPagesAsync(Guid crawlerAgentId, Chapter chapter, CancellationToken cancellationToken)
     {
         return cacheContext.GetOrSetAsync($"{crawlerAgentId}-chapter-{chapter.ParentManga.Id}-{chapter.Id}", async () =>
@@ -41,6 +50,7 @@ public class CrawlerAgentRepository(DbContext dbContext, CacheContext cacheConte
         }, TimeSpan.FromMinutes(30));
     }
 
+    ///<inheritdoc/>
     public Task<PagedResult<Manga>> SearchAsync(Guid crawlerAgentId, string query, PaginationOptions paginationOptions, CancellationToken cancellationToken)
     {
         return cacheContext.GetOrSetAsync($"{crawlerAgentId}-agent-{Regex.Replace(query, @"[^a-zA-Z0-9]", "")}-{paginationOptions}", async () =>

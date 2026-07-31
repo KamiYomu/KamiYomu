@@ -1,3 +1,9 @@
+using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Infrastructure.HttpHandlers;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+
 using Polly;
 using Polly.Extensions.Http;
 
@@ -34,6 +40,22 @@ public static class HttpClientHostings
         })
             .AddPolicyHandler(retryPolicy)
             .AddPolicyHandler(timeoutPolicy);
+
+
+        AddHttpHandlers(services);
+    }
+
+    private static void AddHttpHandlers(IServiceCollection services)
+    {
+        services.AddSingleton<CloudflareBypassHandler>(sp =>
+        {
+            IOptions<CloudflareSolverOptions> cloudFlareOptions = sp.GetRequiredService<IOptions<CloudflareSolverOptions>>();
+            HttpClientHandler innerHandler = new()
+            {
+                AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate
+            };
+            return new CloudflareBypassHandler(innerHandler, cloudFlareOptions);
+        });
     }
 
     private static void AddIntegrationHttpClient(IServiceCollection services)

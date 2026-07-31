@@ -1,5 +1,6 @@
-﻿using KamiYomu.CrawlerAgents.Core.Inputs;
+using KamiYomu.CrawlerAgents.Core.Inputs;
 using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Infrastructure.HttpHandlers;
 
 using Microsoft.Extensions.Options;
 
@@ -7,7 +8,10 @@ using System.ComponentModel;
 using System.Reflection;
 
 namespace KamiYomu.Web.Entities;
-
+/// <summary>
+/// CrawlerAgent represents a dynamically loaded crawler agent assembly that implements the ICrawlerAgent interface. 
+/// It provides metadata about the assembly, manages its lifecycle, and allows instantiation of the crawler agent.
+/// </summary>
 public class CrawlerAgent : IDisposable
 {
     public Guid Id { get; private set; }
@@ -68,9 +72,11 @@ public class CrawlerAgent : IDisposable
         }
 
         ILogger logger = Defaults.ServiceLocator.Instance.GetRequiredService<ILogger<CrawlerAgent>>();
+        HttpMessageHandler cloudflareBypassHandler = Defaults.ServiceLocator.Instance.GetRequiredService<CloudflareBypassHandler>();
         Dictionary<string, object> metadata = new(AgentMetadata)
         {
-            [CrawlerAgentSettings.DefaultInputs.KamiYomuILogger] = logger
+            [CrawlerAgentSettings.DefaultInputs.KamiYomuILogger] = logger,
+            [nameof(CloudflareBypassHandler)] = cloudflareBypassHandler
         };
 
         _crawler = GetCrawlerInstance(AssemblyPath, metadata);

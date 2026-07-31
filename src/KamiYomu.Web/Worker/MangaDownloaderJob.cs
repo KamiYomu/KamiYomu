@@ -14,7 +14,16 @@ using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Worker;
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="logger"></param>
+/// <param name="workerOptions"></param>
+/// <param name="dbContext"></param>
+/// <param name="agentCrawlerRepository"></param>
+/// <param name="hangfireRepository"></param>
+/// <param name="notificationService"></param>
+/// <param name="gotifyService"></param>
 public class MangaDownloaderJob(
     ILogger<MangaDownloaderJob> logger,
     IOptions<WorkerOptions> workerOptions,
@@ -25,7 +34,7 @@ public class MangaDownloaderJob(
     IGotifyService gotifyService) : IMangaDownloaderJob
 {
     private readonly WorkerOptions _workerOptions = workerOptions.Value;
-
+    /// <inheritdoc/>
     public async Task DispatchAsync(string queue, Guid crawlerId, Guid libraryId, Guid mangaDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
     {
         logger.LogInformation("Dispatch \"{title}\".", title);

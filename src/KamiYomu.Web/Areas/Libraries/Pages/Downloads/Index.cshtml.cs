@@ -2,6 +2,7 @@ using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.AppServices.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
+using KamiYomu.Web.Infrastructure.HttpHandlers;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Models;
 
@@ -13,7 +14,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Downloads;
 public class IndexModel(
     DbContext dbContext,
     IDownloadAppService downloadAppService,
-    ICrawlerAgentRepository agentCrawlerRepository) : PageModel
+    ICrawlerAgentRepository crawlerAgentRepository) : PageModel
 {
     public IEnumerable<CrawlerAgent> CrawlerAgents { get; set; } = [];
 
@@ -71,7 +72,7 @@ public class IndexModel(
 
         UserPreference userPreference = dbContext.UserPreferences.Query().FirstOrDefault();
         PaginationOptions paginationOptions = !string.IsNullOrWhiteSpace(ContinuationToken) ? new PaginationOptions(ContinuationToken) : new PaginationOptions(Offset, 30);
-        PagedResult<Manga> queryResult = await agentCrawlerRepository.SearchAsync(crawlerAgent.Id, Query, paginationOptions, cancellationToken);
+        PagedResult<Manga> queryResult = await crawlerAgentRepository.SearchAsync(crawlerAgent.Id, Query, paginationOptions, cancellationToken);
         Results = queryResult.Data.Where(p => p.IsFamilySafe || p.IsFamilySafe == userPreference.FamilySafeMode).Select(p => new Library(crawlerAgent, p, null, null, null));
         ViewData["ShowAddToLibrary"] = true;
         ViewData["Handler"] = "Crawler";
