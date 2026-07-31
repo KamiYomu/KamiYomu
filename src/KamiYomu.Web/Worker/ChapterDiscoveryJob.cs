@@ -56,6 +56,7 @@ public class ChapterDiscoveryJob(
         using LibraryDbContext libDbContext = library.GetReadWriteDbContext();
 
         MangaDownloadRecord mangaDownload = libDbContext.MangaDownloadRecords.FindOne(p => p.Library.Id == libraryId);
+
         mangaDownload.UpdateLibraryInformation(library);
 
         await DiscoverAndScheduleChaptersAsync(libDbContext, mangaDownload, library, cancellationToken);

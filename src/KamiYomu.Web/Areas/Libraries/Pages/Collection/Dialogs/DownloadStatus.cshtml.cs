@@ -13,13 +13,22 @@ using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs;
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="workerOptions"></param>
+/// <param name="dbContext"></param>
+/// <param name="notificationService"></param>
+/// <param name="workerService"></param>
 public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
                                  DbContext dbContext,
-                                 INotificationService notificationService) : PageModel
+                                 INotificationService notificationService,
+                                 IWorkerService workerService) : PageModel
 {
     [BindProperty]
     public required FollowButtonViewModel FollowButtonViewModel { get; set; }
+    [BindProperty]
+    public required ScanNowButtonViewModel ScanNowButtonViewModel { get; set; }
     public required Entities.Library Library { get; set; }
     public MangaDownloadRecord? Record { get; set; } = null;
 
@@ -29,6 +38,12 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
         FollowButtonViewModel = new FollowButtonViewModel
         {
             IsFollowing = false,
+            LibraryId = libraryId
+        };
+
+        ScanNowButtonViewModel = new ScanNowButtonViewModel
+        {
+            IsScanning = false,
             LibraryId = libraryId
         };
 
@@ -42,14 +57,16 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
             return;
         }
 
-        using IStorageConnection connection = JobStorage.Current.GetConnection();
-        List<RecurringJobDto> recurringJobs = connection.GetRecurringJobs();
-
         Record = downloadManga;
-        FollowButtonViewModel.IsFollowing = recurringJobs.Any(job => string.Equals(job.Id, Library.GetDiscovertyJobId(), StringComparison.OrdinalIgnoreCase));
+        FollowButtonViewModel.IsFollowing = workerService.IsDiscoverRecurringJobScheduled(Library);
         List<ChapterDownloadRecord> downloadChapters = [.. libDbContext.ChapterDownloadRecords.Find(p => p.MangaDownload.Id == downloadManga.Id).OrderBy(p => p.Chapter.Number)];
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<IActionResult> OnPostToggleFollowingAsync(CancellationToken cancellationToken)
     {
         Library = dbContext.Libraries.FindOne(p => p.Id == FollowButtonViewModel.LibraryId);
@@ -60,14 +77,7 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
         }
         else
         {
-            string? queue = workerOptions.Value.DiscoveryNewChapterQueues.FirstOrDefault();
-            RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(
-            Library.GetDiscovertyJobId(),
-            queue,
-            (job) => job.DispatchAsync(queue, Library.CrawlerAgent.Id, Library.Id, null!, CancellationToken.None),
-            Cron.Daily());
-
-            await notificationService.PushSuccessAsync(I18n.YouStartedFollowingThisTitle, cancellationToken);
+            await CreateRecurringJob(cancellationToken);
         }
 
         FollowButtonViewModel.IsFollowing = !FollowButtonViewModel.IsFollowing;
@@ -75,12 +85,55 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
         return ViewComponent("FollowButton", FollowButtonViewModel);
     }
 
-}
+    private async Task CreateRecurringJob(CancellationToken cancellationToken)
+    {
+        string? queue = workerOptions.Value.DiscoveryNewChapterQueues.FirstOrDefault();
+        RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(
+        Library.GetDiscovertyJobId(),
+        queue,
+        (job) => job.DispatchAsync(queue, Library.CrawlerAgent.Id, Library.Id, null!, CancellationToken.None),
+        Cron.Daily());
 
+        await notificationService.PushSuccessAsync(I18n.YouStartedFollowingThisTitle, cancellationToken);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public IActionResult OnPostStartDiscoverChaptersJob()
+    {
+        Library = dbContext.Libraries.FindOne(p => p.Id == ScanNowButtonViewModel.LibraryId);
+
+        string jobId = workerService.TriggerDiscoverRecurringJob(Library);
+
+        ScanNowButtonViewModel.IsScanning = !string.IsNullOrWhiteSpace(jobId);
+
+        if (ScanNowButtonViewModel.IsScanning)
+        {
+            _ = notificationService.PushSuccessAsync(I18n.StartSearchingForChapters, CancellationToken.None);
+        }
+
+        return ViewComponent("ScanNowButton", ScanNowButtonViewModel);
+    }
+
+}
+/// <summary>
+/// 
+/// </summary>
 public class FollowButtonViewModel
 {
     [BindProperty]
     public bool IsFollowing { get; set; }
+    [BindProperty]
+    public Guid LibraryId { get; set; }
+}
+
+
+public class ScanNowButtonViewModel
+{
+    [BindProperty]
+    public bool IsScanning { get; set; }
     [BindProperty]
     public Guid LibraryId { get; set; }
 }

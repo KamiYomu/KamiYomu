@@ -6,7 +6,6 @@ using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.AppServices.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
-using KamiYomu.Web.Infrastructure.Repositories;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Models;
@@ -15,7 +14,19 @@ using KamiYomu.Web.Worker.Interfaces;
 using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Infrastructure.AppServices;
-
+/// <summary>
+/// DownloadAppService is responsible for managing manga downloads, 
+/// including adding and removing items from the collection, 
+/// as well as handling chapter download records. It interacts with the database context, 
+/// crawler agent repository, worker service, Hangfire repository, and notification service to perform its operations.
+/// </summary>
+/// <param name="logger">The logger instance for logging information and errors.</param>
+/// <param name="specialFolderOptions">The options for special folder configurations.</param>
+/// <param name="dbContext">The database context for accessing the database.</param>
+/// <param name="crawlerAgentRepository">The repository for accessing crawler agents.</param>
+/// <param name="workerService">The service for managing background worker tasks.</param>
+/// <param name="hangfireRepository">The repository for managing Hangfire jobs.</param>
+/// <param name="notificationService">The service for sending notifications.</param>
 public class DownloadAppService(
     ILogger<DownloadAppService> logger,
     IOptions<SpecialFolderOptions> specialFolderOptions,
@@ -25,6 +36,7 @@ public class DownloadAppService(
     IHangfireRepository hangfireRepository,
     INotificationService notificationService) : IDownloadAppService
 {
+    /// <inheritdoc />
     public async Task<Library> AddToCollectionAsync(AddItemCollection addItemCollection, CancellationToken cancellationToken)
     {
         using CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(addItemCollection.CrawlerAgentId);
@@ -66,6 +78,7 @@ public class DownloadAppService(
         return library;
     }
 
+    /// <inheritdoc />
     public async Task<Library> RemoveFromCollectionAsync(RemoveItemCollection removeItemCollection, CancellationToken cancellationToken)
     {
         Library library = dbContext.Libraries.Include(p => p.Manga)
@@ -94,6 +107,7 @@ public class DownloadAppService(
         return library;
     }
 
+    /// <inheritdoc />
     public async Task<ChapterDownloadRecord?> CancelAsync(Guid libraryId, Guid chapterDownloadId, CancellationToken cancellationToken)
     {
         Library library = dbContext.Libraries.FindById(libraryId);
@@ -124,6 +138,7 @@ public class DownloadAppService(
         return chapterDownloadRecord;
     }
 
+    /// <inheritdoc />
     public async Task<ChapterDownloadRecord?> RescheduleAsync(Guid libraryId, Guid chapterDownloadId, CancellationToken cancellationToken)
     {
 
