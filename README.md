@@ -39,6 +39,47 @@ KamiYomu is built by people who care about great tooling for managing manga. Get
 
 ---
 
+## 🌐 Community Crawler Agents
+
+KamiYomu's extensibility shines through **community-driven Crawler Agents**. These are custom modules built by talented developers that extend KamiYomu's support to additional manga sources beyond the core implementation.
+
+### 📦 Available Agents
+
+The community has already created some fantastic crawler agents! Below is a curated list of verified agents available on NuGet:
+
+| Crawler Agent | Source | Maintainer | Tags |
+| :--- | :--- | :--- | :--- |
+| [Piman.CrawlerAgents.MangaFire](https://www.nuget.org/packages/Piman.CrawlerAgents.MangaFire) | [GitHub](https://github.com/piman13/Piman.CrawlerAgents.MangaFire) | [@Piman](https://github.com/piman13) | `manga-fire` |
+| [Piman.CrawlerAgents.MangaKatana](https://www.nuget.org/packages/Piman.CrawlerAgents.MangaKatana) | [GitHub](https://github.com/piman13/Piman.CrawlerAgents.MangaKatana) | [@Piman](https://github.com/piman13) | `manga-katana` |
+
+> **🔍 Discover More:** Browse the complete list of community agents on [NuGet](https://www.nuget.org/packages?q=Tags%3A%22kamiyomu-crawler-agents%22).
+
+--- 
+
+## 🚀 Build Your Own Agent
+
+Have a manga source you'd like to support? **You can build your own Crawler Agent in C#!**
+
+**Getting Started:**
+1. 📖 Read the [Crawler Agent Development Guide](https://kamiyomu.com/docs/crawler-agents/create/)
+2. 💻 Use the provided SDK and templates to jumpstart development
+3. 🧪 Leverage the Validator tools to test your implementation
+4. 📦 Publish to NuGet with the `kamiyomu-crawler-agents` tag
+5. 🎉 Share your agent with the community—we'll add it to this list!
+
+## ✨ Why Contribute?
+
+- **Zero Barriers:** Our SDK makes it simple to add support for any website
+- **Your Community:** Directly impact how manga enthusiasts access content
+- **Maintenance:** Your agent runs locally—no central server dependencies
+- **Recognition:** Get featured in our official documentation and README
+
+---
+
+**Questions?** Join our [Discord community](https://discord.gg/b9zwEEejsJ) or [open an issue](https://github.com/KamiYomu/KamiYomu/issues) on GitHub!
+
+---
+
 # 🚀 Why KamiYomu?
 
 Whether you're cataloging rare series, powering a personal manga dashboard, or seeking a cleaner alternative to bloated online readers, KamiYomu puts you in control. It's a lightweight, developer-friendly crawler built for clarity, extensibility, and respectful use of publicly accessible sources.
