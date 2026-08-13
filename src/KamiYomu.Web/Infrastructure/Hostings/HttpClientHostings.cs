@@ -34,7 +34,7 @@ public static class HttpClientHostings
 
         Polly.Timeout.AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(AppOptions.Defaults.Worker.HttpTimeOutInSeconds);
 
-        _ = services.AddHttpClient(AppOptions.Defaults.Worker.HttpClientApp, client =>
+        _ = services.AddHttpClient(Defaults.Worker.HttpClientApp, client =>
         {
             client.DefaultRequestHeaders.UserAgent.ParseAdd(CrawlerAgentSettings.HttpUserAgent);
         })
@@ -47,7 +47,7 @@ public static class HttpClientHostings
 
     private static void AddHttpHandlers(IServiceCollection services)
     {
-        services.AddSingleton<CloudflareBypassHandler>(sp =>
+        _ = services.AddSingleton(sp =>
         {
             IOptions<CloudflareSolverOptions> cloudFlareOptions = sp.GetRequiredService<IOptions<CloudflareSolverOptions>>();
             HttpClientHandler innerHandler = new()

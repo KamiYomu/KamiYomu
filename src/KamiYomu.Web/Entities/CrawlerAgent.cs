@@ -25,11 +25,20 @@ public class CrawlerAgent : IDisposable
     private ICrawlerAgent _crawler;
     private bool disposedValue;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CrawlerAgent"/> class with default values.
+    /// </summary>
     public CrawlerAgent()
     {
 
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CrawlerAgent"/> class with the specified assembly path, display name, and metadata.
+    /// </summary>
+    /// <param name="assemblyPath">The file path to the crawler agent assembly.</param>
+    /// <param name="displayName">The display name for the crawler agent. If null or whitespace, the assembly file name without extension is used.</param>
+    /// <param name="agentMetadata">A dictionary containing metadata to be passed to the crawler agent during instantiation.</param>
     public CrawlerAgent(string assemblyPath, string? displayName, Dictionary<string, object> agentMetadata)
     {
         AssemblyPath = assemblyPath;
@@ -41,6 +50,14 @@ public class CrawlerAgent : IDisposable
         _crawler = GetCrawlerInstance();
     }
 
+    /// <summary>
+    /// Loads an assembly from the specified path into an isolated <see cref="AssemblyLoadContext"/>.
+    /// Validates that the assembly contains at least one non-abstract class implementing <see cref="ICrawlerAgent"/>.
+    /// </summary>
+    /// <param name="assemblyPath">The file path to the assembly to load.</param>
+    /// <returns>The loaded assembly.</returns>
+    /// <exception cref="FileNotFoundException">Thrown when the assembly file does not exist at the specified path.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the assembly does not contain any non-abstract class implementing <see cref="ICrawlerAgent"/>.</exception>
     public static Assembly GetIsolatedAssembly(string assemblyPath)
     {
 
@@ -64,6 +81,11 @@ public class CrawlerAgent : IDisposable
             : assembly;
     }
 
+    /// <summary>
+    /// Gets or creates a cached instance of the crawler agent from the loaded assembly.
+    /// Injects required services such as logger and HTTP message handlers into the crawler instance.
+    /// </summary>
+    /// <returns>An instance of <see cref="ICrawlerAgent"/> decorated with <see cref="CrawlerAgentDecorator"/>.</returns>
     public ICrawlerAgent GetCrawlerInstance()
     {
         if (_crawler != null)
@@ -83,12 +105,26 @@ public class CrawlerAgent : IDisposable
         return _crawler;
     }
 
+    /// <summary>
+    /// Creates a new instance of the crawler agent from the assembly at the specified path.
+    /// </summary>
+    /// <param name="assemblyPath">The file path to the crawler agent assembly.</param>
+    /// <param name="options">A dictionary of options and dependencies to inject into the crawler instance constructor.</param>
+    /// <returns>An instance of <see cref="ICrawlerAgent"/>.</returns>
     public static ICrawlerAgent GetCrawlerInstance(string assemblyPath, IDictionary<string, object> options)
     {
         Assembly assembly = GetIsolatedAssembly(assemblyPath);
         return GetCrawlerInstance(assembly, options);
     }
 
+    /// <summary>
+    /// Creates a new instance of the crawler agent from the specified assembly.
+    /// </summary>
+    /// <param name="assembly">The assembly containing the crawler agent implementation.</param>
+    /// <param name="options">A dictionary of options and dependencies to inject into the crawler instance constructor.</param>
+    /// <returns>An instance of <see cref="ICrawlerAgent"/> wrapped in a <see cref="CrawlerAgentDecorator"/>.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when no valid crawler type is found in the assembly.</exception>
+    /// <exception cref="InvalidCastException">Thrown when the created instance cannot be cast to <see cref="ICrawlerAgent"/>, typically due to assembly load context issues.</exception>
     public static ICrawlerAgent GetCrawlerInstance(Assembly assembly, IDictionary<string, object> options)
     {
         string interfaceName = typeof(ICrawlerAgent).FullName!;
@@ -117,12 +153,23 @@ public class CrawlerAgent : IDisposable
             $"and that it is loaded only once in the default context.");
     }
 
+    /// <summary>
+    /// Retrieves assembly metadata for the cached assembly.
+    /// </summary>
+    /// <returns>A dictionary containing metadata key-value pairs such as Title, Description, Version, etc.</returns>
     public Dictionary<string, string> GetAssemblyMetadata()
     {
         _assembly ??= GetIsolatedAssembly(AssemblyPath);
         return GetAssemblyMetadata(_assembly);
     }
 
+    /// <summary>
+    /// Extracts the display name of the crawler agent from the specified assembly.
+    /// Uses the <see cref="DisplayNameAttribute"/> if available, otherwise falls back to the assembly full name or "Agent".
+    /// </summary>
+    /// <param name="assembly">The assembly containing the crawler agent implementation.</param>
+    /// <returns>The display name of the crawler agent.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when no valid crawler type is found in the assembly.</exception>
     public static string GetCrawlerDisplayName(Assembly assembly)
     {
         Type crawlerType = assembly.GetTypes()
@@ -137,12 +184,24 @@ public class CrawlerAgent : IDisposable
             ?? "Agent";
     }
 
+    /// <summary>
+    /// Retrieves all input attributes defined on the crawler agent type in the cached assembly.
+    /// Includes default system inputs for user agent and timeout configuration.
+    /// </summary>
+    /// <returns>An enumerable collection of <see cref="AbstractInputAttribute"/> objects.</returns>
     public IEnumerable<AbstractInputAttribute> GetCrawlerInputs()
     {
         _assembly ??= GetIsolatedAssembly(AssemblyPath);
         return GetCrawlerInputs(_assembly);
     }
 
+    /// <summary>
+    /// Retrieves all input attributes defined on the crawler agent type in the specified assembly.
+    /// Includes default system inputs for user agent and timeout configuration.
+    /// </summary>
+    /// <param name="assembly">The assembly containing the crawler agent implementation.</param>
+    /// <returns>An enumerable collection of <see cref="AbstractInputAttribute"/> objects including both custom and default inputs.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when no valid crawler type is found in the assembly.</exception>
     public static IEnumerable<AbstractInputAttribute> GetCrawlerInputs(Assembly assembly)
     {
         Type crawlerType = assembly.GetTypes()
@@ -160,7 +219,9 @@ public class CrawlerAgent : IDisposable
         return fields;
     }
 
-
+    /// <summary>
+    /// Deletes the directory containing the crawler agent assembly and all associated files.
+    /// </summary>
     public void DeleteAssembly()
     {
         string dir = GetAgentDir(AssemblyName);
@@ -170,6 +231,11 @@ public class CrawlerAgent : IDisposable
         }
     }
 
+    /// <summary>
+    /// Extracts metadata from the specified assembly, including title, description, company, product, and version information.
+    /// </summary>
+    /// <param name="assembly">The assembly to extract metadata from.</param>
+    /// <returns>A dictionary containing assembly metadata with keys such as FilePath, Title, Description, Company, Product, Version, FileVersion, and InformationalVersion.</returns>
     public static Dictionary<string, string> GetAssemblyMetadata(Assembly assembly)
     {
         Dictionary<string, string> metadata = [];
@@ -228,6 +294,12 @@ public class CrawlerAgent : IDisposable
 
         return metadata;
     }
+
+    /// <summary>
+    /// Gets or creates the directory path for the specified agent assembly file.
+    /// </summary>
+    /// <param name="fileName">The name of the agent assembly file.</param>
+    /// <returns>The full directory path where the agent files are stored.</returns>
     public static string GetAgentDir(string fileName)
     {
         IOptions<SpecialFolderOptions> specialFolderOptions = Defaults.ServiceLocator.Instance.GetRequiredService<IOptions<SpecialFolderOptions>>();
@@ -241,11 +313,22 @@ public class CrawlerAgent : IDisposable
         return directory;
     }
 
+    /// <summary>
+    /// Extracts the directory name from the given assembly file name by removing the file extension.
+    /// </summary>
+    /// <param name="fileName">The assembly file name.</param>
+    /// <returns>The directory name without file extension.</returns>
     public static string GetAgentDirName(string fileName)
     {
         return Path.GetFileNameWithoutExtension(fileName);
     }
 
+    /// <summary>
+    /// Extracts the DLL file name from an assembly file name by removing version suffixes.
+    /// Attempts to parse semantic versioning components and removes them from the end of the file name.
+    /// </summary>
+    /// <param name="fileName">The assembly file name, potentially containing version information.</param>
+    /// <returns>The DLL file name with version suffixes removed.</returns>
     public static string GetAgentDllFileName(string fileName)
     {
         string name = Path.GetFileNameWithoutExtension(fileName);
@@ -268,6 +351,12 @@ public class CrawlerAgent : IDisposable
         return name;
     }
 
+    /// <summary>
+    /// Updates the crawler agent's display name, metadata, and assembly properties.
+    /// </summary>
+    /// <param name="displayName">The new display name for the crawler agent.</param>
+    /// <param name="agentMetadata">The updated metadata dictionary for the agent.</param>
+    /// <param name="assemblyProperties">The updated assembly properties dictionary.</param>
     internal void Update(string? displayName, Dictionary<string, object> agentMetadata, Dictionary<string, string> assemblyProperties)
     {
         DisplayName = displayName;
@@ -275,6 +364,10 @@ public class CrawlerAgent : IDisposable
         AssemblyProperties = assemblyProperties;
     }
 
+    /// <summary>
+    /// Releases the unmanaged resources used by the <see cref="CrawlerAgent"/> and optionally releases managed resources.
+    /// </summary>
+    /// <param name="disposing">A value indicating whether to release both managed and unmanaged resources (true) or only unmanaged resources (false).</param>
     protected virtual void Dispose(bool disposing)
     {
         if (!disposedValue)
@@ -289,6 +382,9 @@ public class CrawlerAgent : IDisposable
         }
     }
 
+    /// <summary>
+    /// Releases all resources used by the <see cref="CrawlerAgent"/> instance.
+    /// </summary>
     public void Dispose()
     {
         Dispose(disposing: true);
