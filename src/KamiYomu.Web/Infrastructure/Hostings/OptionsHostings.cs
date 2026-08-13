@@ -17,6 +17,7 @@ public static class OptionsHostings
         _ = builder.Services.Configure<BasicAuthOptions>(builder.Configuration.GetSection("BasicAuth"));
         _ = builder.Services.Configure<WorkerOptions>(builder.Configuration.GetSection("Worker"));
         _ = builder.Services.Configure<SpecialFolderOptions>(builder.Configuration.GetSection("SpecialFolders"));
+        _ = builder.Services.Configure<CloudflareSolverOptions>(builder.Configuration.GetSection("CloudFlareSolver"));
         _ = builder.Services.Configure<ChromiumOptions>(builder.Configuration.GetSection("Chromium"));
         _ = builder.Services.PostConfigure<SpecialFolderOptions>(opts =>
         {

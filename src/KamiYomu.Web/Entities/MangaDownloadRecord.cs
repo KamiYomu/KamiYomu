@@ -6,9 +6,6 @@ namespace KamiYomu.Web.Entities;
 /// </summary>
 public class MangaDownloadRecord
 {
-    /// <summary>
-    /// 
-    /// </summary>
     protected MangaDownloadRecord() { }
     /// <summary>
     /// 
@@ -101,6 +98,24 @@ public class MangaDownloadRecord
     {
         return DownloadStatus == DownloadStatus.InProgress
                && StatusUpdateAt < DateTimeOffset.UtcNow.AddDays(-1);
+    }
+
+    /// <summary>
+    /// Indicates whether the download is actively in progress.
+    /// </summary>
+    /// <returns>True when not stale or when status is Scheduled.</returns>
+    public bool IsInProgress()
+    {
+        switch (DownloadStatus)
+        {
+            case DownloadStatus.Scheduled:
+                return true;
+
+            case DownloadStatus.InProgress:
+                return !IsStale();
+            default:
+                return false;
+        }
     }
 
     public Guid Id { get; private set; }
