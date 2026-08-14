@@ -2,6 +2,7 @@ using System.Globalization;
 
 using Hangfire;
 using Hangfire.Server;
+using Hangfire.Storage;
 
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
@@ -35,7 +36,7 @@ public class MangaDownloaderJob(
 {
     private readonly WorkerOptions _workerOptions = workerOptions.Value;
     /// <inheritdoc/>
-    public async Task DispatchAsync(string queue, Guid crawlerId, Guid libraryId, Guid mangaDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
+    public async Task DispatchAsync(string queue, Guid crawlerAgentId, Guid libraryId, Guid mangaDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
     {
         logger.LogInformation("Dispatch \"{title}\".", title);
 
@@ -91,6 +92,7 @@ public class MangaDownloaderJob(
 
                 foreach (Chapter chapter in page.Data)
                 {
+
                     ChapterDownloadRecord record = libDbContext.ChapterDownloadRecords.FindOne(p => p.CrawlerAgent.Id == crawlerAgent.Id
                                                                                   && p.Chapter.Id == chapter.Id
                                                                                   && p.MangaDownload.Id == mangaDownloadId)
@@ -106,7 +108,10 @@ public class MangaDownloaderJob(
 
                     _ = libDbContext.ChapterDownloadRecords.Upsert(record);
                     Hangfire.States.EnqueuedState queueState = hangfireRepository.GetLeastLoadedDownloadChapterQueue();
+
                     string backgroundJobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(queueState.Queue, p => p.DispatchAsync(queueState.Queue, library.CrawlerAgent.Id, library.Id, mangaDownload.Id, record.Id, library.GetCbzFileName(chapter), null!, CancellationToken.None));
+                    context.Connection.SetJobParameter(backgroundJobId, Defaults.Worker.LibraryId, libraryId.ToString());
+                    context.Connection.SetJobParameter(backgroundJobId, Defaults.Worker.CrawlerAgentId, crawlerAgent.Id.ToString());
 
                     record.Scheduled(backgroundJobId);
                     _ = libDbContext.ChapterDownloadRecords.Update(record);

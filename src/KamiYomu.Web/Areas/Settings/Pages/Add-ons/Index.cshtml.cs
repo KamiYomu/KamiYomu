@@ -139,7 +139,7 @@ public class IndexModel(ILogger<IndexModel> logger,
             _ = Directory.CreateDirectory(downloadDir);
 
             string packageFileName = $"{packageId}.{packageVersion}.nupkg";
-            string crawlerAgentDir = CrawlerAgent.GetAgentDir(packageFileName);
+            string crawlerAgentDir = CrawlerAgent.GetCrawlerAgentDir(packageFileName);
 
             List<string> savedPaths = [];
             string tempPackagePath = null;

@@ -33,9 +33,11 @@ public class ChapterDiscoveryJob(
     private readonly WorkerOptions _workerOptions = workerOptions.Value;
 
     /// <inheritdoc/>
-    public async Task DispatchAsync(string queue, Guid crawlerId, Guid libraryId, PerformContext context, CancellationToken cancellationToken)
+    public async Task DispatchAsync(string queue, Guid crawlerAgentId, Guid libraryId, PerformContext context, CancellationToken cancellationToken)
     {
         logger.LogInformation("Dispatch \"{title}\".", nameof(ChapterDiscoveryJob));
+        context.SetJobParameter(Defaults.Worker.CrawlerAgentId, crawlerAgentId);
+        context.SetJobParameter(Defaults.Worker.LibraryId, libraryId);
 
         SetupCultureInfo();
 
@@ -63,7 +65,9 @@ public class ChapterDiscoveryJob(
 
         CompleteDownloadRecord(libDbContext, mangaDownload);
 
-        SetJobContextParameters(context, library);
+        context.SetJobParameter(nameof(library.CrawlerAgent), library.CrawlerAgent.DisplayName);
+        context.SetJobParameter(nameof(library.Manga), library.Manga.Title);
+        context.SetJobParameter(nameof(library.Manga.WebSiteUrl), library.Manga.WebSiteUrl);
 
         logger.LogInformation("Dispatch \"{title}\" completed.", nameof(ChapterDiscoveryJob));
     }
@@ -210,7 +214,7 @@ public class ChapterDiscoveryJob(
     private void HandleCancellationDuringFetch(LibraryDbContext libDbContext, MangaDownloadRecord mangaDownload, string mangaId)
     {
         logger.LogWarning("Dispatch cancelled during chapter fetch for manga: '{MangaId}'", mangaId);
-        mangaDownload.Cancelled($"Cancelled during the running job: {mangaId}");
+        mangaDownload.Cancelled(string.Format(I18n.CancelledDuringTheRunningJob, mangaId));
         _ = libDbContext.MangaDownloadRecords.Update(mangaDownload);
     }
 
@@ -222,13 +226,6 @@ public class ChapterDiscoveryJob(
         }
 
         _ = libDbContext.MangaDownloadRecords.Update(mangaDownload);
-    }
-
-    private void SetJobContextParameters(PerformContext context, Library library)
-    {
-        context.SetJobParameter(nameof(library.CrawlerAgent), library.CrawlerAgent.DisplayName);
-        context.SetJobParameter(nameof(library.Manga), library.Manga.Title);
-        context.SetJobParameter(nameof(library.Manga.WebSiteUrl), library.Manga.WebSiteUrl);
     }
 
     private async Task UpdateMangaRecordAsync(Library library, CancellationToken cancellationToken)

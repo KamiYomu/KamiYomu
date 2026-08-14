@@ -1136,4 +1136,23 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="DailyExecutionTimeDetails" xml:space="preserve">
     <value>Sélectionnez l'heure quotidienne à laquelle le système doit rechercher automatiquement de nouveaux chapitres.</value>
   </data>
+  <data name="CurrentTimeZone" xml:space="preserve">
+    <value>Fuseau horaire actuel</value>
+  </data>
+  <data name="CurrentSystemTime" xml:space="preserve">
+    <value>Heure système actuelle</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="UserRemovedMangaTitleFromLibrary" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="CancelledDuringTheRunningJob" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="UserRemovedMangaTitleFromLibrary" xml:space="preserve">
+    <value>L'utilisateur a supprimé le titre du manga de sa bibliothèque.</value>
+  </data>
+  <data name="CancelledDuringTheRunningJob" xml:space="preserve">
+    <value>Annulé pendant la tâche en cours : {0}</value>
+  </data>
 </root>

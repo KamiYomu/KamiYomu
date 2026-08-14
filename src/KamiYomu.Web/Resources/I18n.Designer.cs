@@ -376,6 +376,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancelled during the running job: {0}.
+        /// </summary>
+        public static string CancelledDuringTheRunningJob {
+            get {
+                return ResourceManager.GetString("CancelledDuringTheRunningJob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CBZ file size is below the expected threshold, indicating a failed download. Retrying shortly..
         /// </summary>
         public static string CbzIsTooSmall {
@@ -696,6 +705,24 @@ namespace KamiYomu.Web.Resources {
         public static string CurrentDirectory {
             get {
                 return ResourceManager.GetString("CurrentDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current System Time.
+        /// </summary>
+        public static string CurrentSystemTime {
+            get {
+                return ResourceManager.GetString("CurrentSystemTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Time Zone.
+        /// </summary>
+        public static string CurrentTimeZone {
+            get {
+                return ResourceManager.GetString("CurrentTimeZone", resourceCulture);
             }
         }
         
@@ -2839,6 +2866,15 @@ namespace KamiYomu.Web.Resources {
         public static string UsernameRequired {
             get {
                 return ResourceManager.GetString("UsernameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The user has removed the manga title from their library..
+        /// </summary>
+        public static string UserRemovedMangaTitleFromLibrary {
+            get {
+                return ResourceManager.GetString("UserRemovedMangaTitleFromLibrary", resourceCulture);
             }
         }
         

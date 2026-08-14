@@ -17,13 +17,13 @@ public interface IChapterDiscoveryJob
     /// Scanning for new chapters for downloading
     /// </summary>
     /// <param name="queue">The name of the queue from which to dispatch the message.</param>
-    /// <param name="crawlerId">The unique identifier for the crawler instance.</param>
+    /// <param name="crawlerAgentId">The unique identifier for the crawler instance.</param>
     /// <param name="libraryId">The unique identifier for the library associated with the manga.</param>
     /// <param name="context">The context for performing the operation.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     [Queue("{0}")]
     [DisplayName("Discovery New Chapter")]
-    [PerKeyConcurrency("crawlerId")]
-    Task DispatchAsync(string queue, Guid crawlerId, Guid libraryId, PerformContext context, CancellationToken cancellationToken);
+    [PerKeyConcurrency("crawlerAgentId")]
+    Task DispatchAsync(string queue, Guid crawlerAgentId, Guid libraryId, PerformContext context, CancellationToken cancellationToken);
 }

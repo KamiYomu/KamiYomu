@@ -31,9 +31,12 @@ public class ChapterDownloaderJob(
     private readonly HttpClient _httpClient = httpClientFactory.CreateClient(Defaults.Worker.HttpClientApp);
     private bool disposedValue;
 
-    public async Task DispatchAsync(string queue, Guid crawlerId, Guid libraryId, Guid mangaDownloadId, Guid chapterDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
+    public async Task DispatchAsync(string queue, Guid crawlerAgentId, Guid libraryId, Guid mangaDownloadId, Guid chapterDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
     {
         logger.LogInformation("Dispatch \"{title}\".", title);
+        context.SetJobParameter(nameof(title), title);
+        context.SetJobParameter(Defaults.Worker.CrawlerAgentId, crawlerAgentId);
+        context.SetJobParameter(Defaults.Worker.LibraryId, libraryId);
 
         UserPreference? userPreference = dbContext.UserPreferences
                                                   .Include(p => p.KavitaSettings)
@@ -187,7 +190,6 @@ public class ChapterDownloaderJob(
         }
         finally
         {
-            context.SetJobParameter(nameof(title), title);
             context.SetJobParameter(nameof(library.CrawlerAgent), library.CrawlerAgent.DisplayName);
             context.SetJobParameter(nameof(library.Manga), library.Manga.Title);
             context.SetJobParameter(nameof(library.Manga.WebSiteUrl), library.Manga.WebSiteUrl);

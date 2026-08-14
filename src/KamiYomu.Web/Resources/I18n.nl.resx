@@ -1136,4 +1136,23 @@ voor de &lt;code&gt;WorkerCount&lt;/code&gt;-instelling van Hangfire om te bepal
   <data name="DailyExecutionTimeDetails" xml:space="preserve">
     <value>Selecteer de dagelijkse tijd waarop het systeem automatisch moet controleren op nieuwe hoofdstukken.</value>
   </data>
+  <data name="CurrentTimeZone" xml:space="preserve">
+    <value>Huidige tijdzone</value>
+  </data>
+  <data name="CurrentSystemTime" xml:space="preserve">
+    <value>Huidige systeemtijd</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="UserRemovedMangaTitleFromLibrary" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="CancelledDuringTheRunningJob" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="UserRemovedMangaTitleFromLibrary" xml:space="preserve">
+    <value>De gebruiker heeft de mangatitel uit zijn bibliotheek verwijderd.</value>
+  </data>
+  <data name="CancelledDuringTheRunningJob" xml:space="preserve">
+    <value>Geannuleerd tijdens de lopende taak: {0}</value>
+  </data>
 </root>

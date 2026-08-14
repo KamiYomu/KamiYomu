@@ -52,4 +52,10 @@ public interface IWorkerService
     /// <param name="library">The library to check.</param>
     /// <returns>True if a discovery job is currently running; otherwise, false.</returns>
     bool IsDiscoverRecurringJobRunning(Library library);
+    /// <summary>
+    /// Cancels all jobs associated with the specified crawler agent.
+    /// </summary>
+    /// <param name="crawlerAgent">The crawler agent whose jobs should be canceled.</param>
+    void CancelJobsForCrawlerAgent(CrawlerAgent crawlerAgent);
+
 }

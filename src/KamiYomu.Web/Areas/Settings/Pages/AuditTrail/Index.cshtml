@@ -65,10 +65,16 @@
             <div class="card-body">
                 <ul class="list-group list-group-flush small">
                     <li class="list-group-item d-flex justify-content-between">
+                        <span>@I18n.CurrentSystemTime</span>
+                        <span>@DateTime.Now.ToString("f")</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@I18n.CurrentTimeZone</span>
+                        <span>@TimeZoneInfo.Local.DisplayName</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
                         <span>@I18n.ProcessorCount</span>
-                        <span>
-                            @Environment.ProcessorCount
-                        </span>
+                        <span>@Environment.ProcessorCount</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
                         <span>@I18n.MachineName</span>
