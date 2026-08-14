@@ -7,7 +7,7 @@ public class MangaDownloadRecordTests
 {
     private Library CreateLibrary()
     {
-        return new Library(new CrawlerAgent(), new Manga(), "test", "test", "test");
+        return new Library(new CrawlerAgent(), new Manga(), "test", "test", "test", "0 19 * * *");
     }
     private MangaDownloadRecord CreateRecord()
     {

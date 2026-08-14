@@ -1,5 +1,3 @@
-using Microsoft.OpenApi;
-
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace KamiYomu.Web.Models;
@@ -39,4 +37,8 @@ public record AddItemCollection
     /// Gets or sets a value indicating whether this configuration should be set as the default for future operations.
     /// </summary>
     public bool MakeThisConfigurationDefault { get; set; } = false;
+    /// <summary>
+    /// Recurring daily execution time for the chapter discovery job. This property specifies the time of day at which the job should be executed. If not set, it defaults to 19:00 (7 PM).
+    /// </summary>
+    public TimeSpan? DailyExecutionTime { get; set; } = TimeSpan.FromHours(19);
 }

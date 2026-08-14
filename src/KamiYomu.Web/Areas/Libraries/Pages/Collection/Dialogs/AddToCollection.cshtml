@@ -50,6 +50,20 @@
                             <i class="bi bi-info-circle me-1"></i> @I18n.SetUpYourDownloadDetails
                         </p>
 
+
+                        <div class="card mb-4 border-light shadow-sm">
+                            <div class="card-header bg-transparent border-0 pb-0">
+                                <h6 class="fw-bold mb-0">@I18n.DailyExecutionTime</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="input-group">
+                                    <span class="input-group-text d-none d-sm-block"><i class="bi bi-stopwatch"></i></span>
+                                    <input class="form-control" asp-for="DailyExecutionTime" type="time" placeholder="@Model.DailyExecutionTime" />
+                                </div>
+                                <div class="form-text mt-2 small">@I18n.DailyExecutionTimeDetails</div>
+                            </div>
+                        </div>
+
                         <div class="card mb-4 border-light shadow-sm">
                             <div class="card-header bg-transparent border-0 pb-0">
                                 <h6 class="fw-bold mb-0">@I18n.MergeFolders</h6>
@@ -83,8 +97,8 @@
                                            hx-target="#template-preview"
                                            hx-swap="innerHTML"
                                            hx-include="closest form" />
-                                    <button type="button" 
-                                            class="btn btn-outline-secondary" 
+                                    <button type="button"
+                                            class="btn btn-outline-secondary"
                                             hx-on:click="resetfilePathTemplate()">
                                         <i class="bi bi-arrow-counterclockwise"></i>
                                     </button>

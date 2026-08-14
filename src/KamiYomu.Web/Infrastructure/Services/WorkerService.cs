@@ -1,9 +1,9 @@
 using Hangfire;
 using Hangfire.Storage;
-using Hangfire.Storage.Monitoring;
 
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
@@ -74,7 +74,12 @@ public class WorkerService(IOptions<WorkerOptions> workerOptions,
     {
         string mangaDiscoveryQueue = workerOptions.Value.DiscoveryNewChapterQueues.First();
 
-        RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(library.GetDiscovertyJobId(), (job) => job.DispatchAsync(mangaDiscoveryQueue, library.CrawlerAgent.Id, library.Id, null!, CancellationToken.None), Cron.Daily());
+        string cronExpression = string.IsNullOrWhiteSpace(library.DailyExecutionTime) ? workerOptions.Value.DailyExecutionTime.ToCronDailyExpression() : library.DailyExecutionTime;
+
+        RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(library.GetDiscovertyJobId(), (job) => job.DispatchAsync(mangaDiscoveryQueue, library.CrawlerAgent.Id, library.Id, null!, CancellationToken.None), cronExpression, new RecurringJobOptions()
+        {
+            TimeZone = TimeZoneInfo.Local,
+        });
     }
 
     /// <inheritdoc/>

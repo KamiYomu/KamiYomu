@@ -709,6 +709,42 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Daily at.
+        /// </summary>
+        public static string DailyAt {
+            get {
+                return ResourceManager.GetString("DailyAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Daily Execution Schedule.
+        /// </summary>
+        public static string DailyExecutionSchedule {
+            get {
+                return ResourceManager.GetString("DailyExecutionSchedule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Daily Execution Time.
+        /// </summary>
+        public static string DailyExecutionTime {
+            get {
+                return ResourceManager.GetString("DailyExecutionTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the daily time when the system should automatically check for new chapters..
+        /// </summary>
+        public static string DailyExecutionTimeDetails {
+            get {
+                return ResourceManager.GetString("DailyExecutionTimeDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dark.
         /// </summary>
         public static string Dark {
