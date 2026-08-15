@@ -1148,4 +1148,7 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="CancelledDuringTheRunningJob" xml:space="preserve">
     <value>Cancelled during the running job: {0}</value>
   </data>
+  <data name="CrawlerAgentHasBeenRemoved" xml:space="preserve">
+    <value>Crawler Agent has been removed.</value>
+  </data>
 </root>

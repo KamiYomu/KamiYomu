@@ -49,6 +49,8 @@ public class DeleteConfirmModel(
 
             _ = libDbContext.MangaDownloadRecords.DeleteMany(p => p.Library.CrawlerAgent.Id == crawlerAgent.Id);
             _ = libDbContext.ChapterDownloadRecords.DeleteMany(p => p.CrawlerAgent.Id == crawlerAgent.Id);
+
+            RecurringJob.RemoveIfExists(lib.GetDiscovertyJobId());
         }
 
         workerService.CancelJobsForCrawlerAgent(crawlerAgent);
@@ -64,6 +66,6 @@ public class DeleteConfirmModel(
 
         _ = notificationService.PushSuccessAsync(I18n.CrawlerAgentRemovedSuccessfully, cancellationToken);
 
-        return Partial("_CrawlerAgentList", crawlerAgent);
+        return Partial("_CrawlerAgentList", crawlerAgents);
     }
 }

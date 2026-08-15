@@ -1142,17 +1142,17 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   <data name="CurrentSystemTime" xml:space="preserve">
     <value>Hora atual do sistema</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="UserRemovedMangaTitleFromLibrary" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="CancelledDuringTheRunningJob" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="UserRemovedMangaTitleFromLibrary" xml:space="preserve">
     <value>O usuário removeu o título do mangá de sua biblioteca.</value>
   </data>
   <data name="CancelledDuringTheRunningJob" xml:space="preserve">
     <value>Cancelado durante o job em execução: {0}</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="CrawlerAgentHasBeenRemoved" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="CrawlerAgentHasBeenRemoved" xml:space="preserve">
+    <value>O Agente Rastreador foi removido.</value>
   </data>
 </root>

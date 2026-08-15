@@ -646,6 +646,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crawler Agent has been removed..
+        /// </summary>
+        public static string CrawlerAgentHasBeenRemoved {
+            get {
+                return ResourceManager.GetString("CrawlerAgentHasBeenRemoved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crawler Agent Removed Successfully.
         /// </summary>
         public static string CrawlerAgentRemovedSuccessfully {

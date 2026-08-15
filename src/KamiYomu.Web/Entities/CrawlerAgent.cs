@@ -232,6 +232,16 @@ public class CrawlerAgent : IDisposable
     }
 
     /// <summary>
+    /// Checks if the crawler agent directory exists.
+    /// </summary>
+    /// <returns>True if the directory exists; otherwise, false.</returns>
+    public bool IsCrawlerAgentExists()
+    {
+        string dir = GetCrawlerAgentDir(AssemblyName);
+        return Directory.Exists(dir);
+    }
+
+    /// <summary>
     /// Extracts metadata from the specified assembly, including title, description, company, product, and version information.
     /// </summary>
     /// <param name="assembly">The assembly to extract metadata from.</param>
