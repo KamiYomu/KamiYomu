@@ -1,11 +1,13 @@
+using System.ComponentModel;
+using System.Reflection;
+
 using KamiYomu.CrawlerAgents.Core.Inputs;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Infrastructure.HttpHandlers;
 
 using Microsoft.Extensions.Options;
 
-using System.ComponentModel;
-using System.Reflection;
+using static KamiYomu.Web.AppOptions.Defaults;
 
 namespace KamiYomu.Web.Entities;
 /// <summary>
@@ -93,12 +95,12 @@ public class CrawlerAgent : IDisposable
             return _crawler;
         }
 
-        ILogger logger = Defaults.ServiceLocator.Instance.GetRequiredService<ILogger<CrawlerAgent>>();
-        HttpMessageHandler cloudflareBypassHandler = Defaults.ServiceLocator.Instance.GetRequiredService<CloudflareBypassHandler>();
+        ILogger logger = ServiceLocator.Instance.GetRequiredService<ILogger<CrawlerAgent>>();
+        HttpMessageHandler cloudflareBypassHandler = ServiceLocator.Instance.GetRequiredService<CloudflareBypassHandler>();
         Dictionary<string, object> metadata = new(AgentMetadata)
         {
-            [CrawlerAgentSettings.DefaultInputs.KamiYomuILogger] = logger,
-            [nameof(CloudflareBypassHandler)] = cloudflareBypassHandler
+            [CrawlerAgentMetadataFields.KamiYomuILogger] = logger,
+            [CrawlerAgentMetadataFields.FlareSolverrHttpHandler] = cloudflareBypassHandler
         };
 
         _crawler = GetCrawlerInstance(AssemblyPath, metadata);
@@ -134,7 +136,7 @@ public class CrawlerAgent : IDisposable
                 t.IsClass &&
                 !t.IsAbstract &&
                 t.GetInterfaces().Any(i => i.FullName == interfaceName))
-            ?? throw new InvalidOperationException("No valid crawler type found.");
+            ?? throw new InvalidOperationException(I18n.NoValidCrawlerAgentTypeFound);
 
         object instance = Activator.CreateInstance(crawlerType, options)
             ?? throw new InvalidOperationException("Failed to create crawler instance.");
@@ -177,7 +179,7 @@ public class CrawlerAgent : IDisposable
                 t.IsClass &&
                 !t.IsAbstract &&
                 t.GetInterfaces().Any(i => i.FullName == typeof(ICrawlerAgent).FullName))
-            ?? throw new InvalidOperationException("No valid crawler type found.");
+            ?? throw new InvalidOperationException(I18n.NoValidCrawlerAgentTypeFound);
 
         return crawlerType.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName
             ?? assembly.FullName
@@ -206,14 +208,14 @@ public class CrawlerAgent : IDisposable
     {
         Type crawlerType = assembly.GetTypes()
             .FirstOrDefault(t => typeof(ICrawlerAgent).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
-            ?? throw new InvalidOperationException("No valid crawler type found.");
+            ?? throw new InvalidOperationException(I18n.NoValidCrawlerAgentTypeFound);
 
         List<AbstractInputAttribute> fields = [.. crawlerType.GetCustomAttributes<AbstractInputAttribute>(false)];
 
         fields.AddRange(
         [
-            new CrawlerTextAttribute(CrawlerAgentSettings.DefaultInputs.BrowserUserAgent, I18n.UserAgentExplanation, true, CrawlerAgentSettings.HttpUserAgent, 900),
-            new CrawlerTextAttribute(CrawlerAgentSettings.DefaultInputs.HttpClientTimeout, I18n.TimeoutExplanation, true, CrawlerAgentSettings.TimeoutMilliseconds.ToString(), 901),
+            new CrawlerTextAttribute(CrawlerAgentMetadataFields.BrowserUserAgent, I18n.UserAgentExplanation, true, CrawlerAgentSettings.HttpUserAgent, 900),
+            new CrawlerTextAttribute(CrawlerAgentMetadataFields.HttpClientTimeout, I18n.TimeoutExplanation, true, CrawlerAgentSettings.TimeoutMilliseconds.ToString(), 901),
         ]);
 
         return fields;
@@ -312,7 +314,7 @@ public class CrawlerAgent : IDisposable
     /// <returns>The full directory path where the agent files are stored.</returns>
     public static string GetCrawlerAgentDir(string fileName)
     {
-        IOptions<SpecialFolderOptions> specialFolderOptions = Defaults.ServiceLocator.Instance.GetRequiredService<IOptions<SpecialFolderOptions>>();
+        IOptions<SpecialFolderOptions> specialFolderOptions = ServiceLocator.Instance.GetRequiredService<IOptions<SpecialFolderOptions>>();
 
         string name = GetAgentDirName(fileName);
 

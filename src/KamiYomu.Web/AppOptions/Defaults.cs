@@ -178,11 +178,34 @@ public partial class Defaults
         /// <summary>
         /// Crawler Agent id used for identify what crawler agent is being executed
         /// </summary>
-        public const string CrawlerAgentId = "crawlerAgentId";
+        public const string CrawlerAgentId = nameof(CrawlerAgentId);
         /// <summary>
         /// Library id used for identify what Library is being executed
         /// </summary>
-        public const string LibraryId = "libraryId";
+        public const string LibraryId = nameof(LibraryId);
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    public class CrawlerAgentMetadataFields
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string BrowserUserAgent = nameof(BrowserUserAgent);
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string HttpClientTimeout = nameof(HttpClientTimeout);
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string KamiYomuILogger = nameof(KamiYomuILogger);
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string FlareSolverrUrl = nameof(FlareSolverrUrl);
+        public const string FlareSolverrHttpHandler = nameof(FlareSolverrHttpHandler);
     }
 
     /// <summary>

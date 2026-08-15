@@ -1148,11 +1148,20 @@ para que la configuración &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire cont
   <data name="CancelledDuringTheRunningJob" xml:space="preserve">
     <value>Cancelado durante el trabajo en ejecución: {0}</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="CrawlerAgentHasBeenRemoved" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="CrawlerAgentHasBeenRemoved" xml:space="preserve">
     <value>Se eliminó el agente rastreador.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="FlareSolverrUrl" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="NoValidCrawlerAgentTypeFound" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="FlareSolverrUrl" xml:space="preserve">
+    <value>URL de FlareSolverr</value>
+  </data>
+  <data name="NoValidCrawlerAgentTypeFound" xml:space="preserve">
+    <value>No se encontró ningún tipo de agente de rastreo válido.</value>
   </data>
 </root>

@@ -1151,4 +1151,10 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="CrawlerAgentHasBeenRemoved" xml:space="preserve">
     <value>Crawler Agent has been removed.</value>
   </data>
+  <data name="FlareSolverrUrl" xml:space="preserve">
+    <value>FlareSolverr Url</value>
+  </data>
+  <data name="NoValidCrawlerAgentTypeFound" xml:space="preserve">
+    <value>No valid crawler agent type found.</value>
+  </data>
 </root>

@@ -10,7 +10,7 @@ public class LibraryCardViewComponent(DbContext dbContext) : ViewComponent
     public async Task<IViewComponentResult> InvokeAsync(Library library, CancellationToken cancellationToken = default)
     {
         CrawlerAgent? crawlerAgent = dbContext.CrawlerAgents.FindById(library.CrawlerAgent.Id);
-        Uri faviconUrl = new("/images/favicon.png", UriKind.Relative);
+        Uri faviconUrl = new("/images/favicon.ico", UriKind.Relative);
         bool crawlerAgentDisabled = true;
         if (crawlerAgent != null)
         {

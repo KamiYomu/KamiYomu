@@ -1150,6 +1150,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FlareSolverr Url.
+        /// </summary>
+        public static string FlareSolverrUrl {
+            get {
+                return ResourceManager.GetString("FlareSolverrUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Folder Name.
         /// </summary>
         public static string FolderName {
@@ -1857,6 +1866,15 @@ namespace KamiYomu.Web.Resources {
         public static string NotStated {
             get {
                 return ResourceManager.GetString("NotStated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No valid crawler agent type found..
+        /// </summary>
+        public static string NoValidCrawlerAgentTypeFound {
+            get {
+                return ResourceManager.GetString("NoValidCrawlerAgentTypeFound", resourceCulture);
             }
         }
         
