@@ -376,6 +376,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancelled during the running job: {0}.
+        /// </summary>
+        public static string CancelledDuringTheRunningJob {
+            get {
+                return ResourceManager.GetString("CancelledDuringTheRunningJob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CBZ file size is below the expected threshold, indicating a failed download. Retrying shortly..
         /// </summary>
         public static string CbzIsTooSmall {
@@ -637,6 +646,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crawler Agent has been removed..
+        /// </summary>
+        public static string CrawlerAgentHasBeenRemoved {
+            get {
+                return ResourceManager.GetString("CrawlerAgentHasBeenRemoved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crawler agent has been upgraded..
+        /// </summary>
+        public static string CrawlerAgentHasBeenUpgraded {
+            get {
+                return ResourceManager.GetString("CrawlerAgentHasBeenUpgraded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crawler Agent Removed Successfully.
         /// </summary>
         public static string CrawlerAgentRemovedSuccessfully {
@@ -691,6 +718,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current.
+        /// </summary>
+        public static string Current {
+            get {
+                return ResourceManager.GetString("Current", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current Directory.
         /// </summary>
         public static string CurrentDirectory {
@@ -700,11 +736,74 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current System Time.
+        /// </summary>
+        public static string CurrentSystemTime {
+            get {
+                return ResourceManager.GetString("CurrentSystemTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Time Zone.
+        /// </summary>
+        public static string CurrentTimeZone {
+            get {
+                return ResourceManager.GetString("CurrentTimeZone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Version.
+        /// </summary>
+        public static string CurrentVersion {
+            get {
+                return ResourceManager.GetString("CurrentVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Custom Settings.
         /// </summary>
         public static string CustomSettings {
             get {
                 return ResourceManager.GetString("CustomSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Daily at.
+        /// </summary>
+        public static string DailyAt {
+            get {
+                return ResourceManager.GetString("DailyAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Daily Execution Schedule.
+        /// </summary>
+        public static string DailyExecutionSchedule {
+            get {
+                return ResourceManager.GetString("DailyExecutionSchedule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Daily Execution Time.
+        /// </summary>
+        public static string DailyExecutionTime {
+            get {
+                return ResourceManager.GetString("DailyExecutionTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the daily time when the system should automatically check for new chapters..
+        /// </summary>
+        public static string DailyExecutionTimeDetails {
+            get {
+                return ResourceManager.GetString("DailyExecutionTimeDetails", resourceCulture);
             }
         }
         
@@ -1074,6 +1173,15 @@ namespace KamiYomu.Web.Resources {
         public static string FileVersion {
             get {
                 return ResourceManager.GetString("FileVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FlareSolverr Url.
+        /// </summary>
+        public static string FlareSolverrUrl {
+            get {
+                return ResourceManager.GetString("FlareSolverrUrl", resourceCulture);
             }
         }
         
@@ -1789,6 +1897,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No valid crawler agent type found..
+        /// </summary>
+        public static string NoValidCrawlerAgentTypeFound {
+            get {
+                return ResourceManager.GetString("NoValidCrawlerAgentTypeFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nuget.org has been added as a NuGet Source.
         /// </summary>
         public static string NugetOrgHasBeenAddedAsANugetSource {
@@ -2375,6 +2492,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select Version.
+        /// </summary>
+        public static string SelectVersion {
+            get {
+                return ResourceManager.GetString("SelectVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Series.
         /// </summary>
         public static string Series {
@@ -2771,6 +2897,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Upgrade Crawler Agent.
+        /// </summary>
+        public static string UpgradeCrawlerAgent {
+            get {
+                return ResourceManager.GetString("UpgradeCrawlerAgent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can change the crawler agent version for any Manga record in your collection, including upgrading or downgrading..
+        /// </summary>
+        public static string UpgradeCrawlerAgentDetails {
+            get {
+                return ResourceManager.GetString("UpgradeCrawlerAgentDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A User-Agent is a text string that a web browser or HTTP client sends along with its requests to a server..
         /// </summary>
         public static string UserAgentExplanation {
@@ -2803,6 +2947,15 @@ namespace KamiYomu.Web.Resources {
         public static string UsernameRequired {
             get {
                 return ResourceManager.GetString("UsernameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The user has removed the manga title from their library..
+        /// </summary>
+        public static string UserRemovedMangaTitleFromLibrary {
+            get {
+                return ResourceManager.GetString("UserRemovedMangaTitleFromLibrary", resourceCulture);
             }
         }
         
@@ -2866,6 +3019,15 @@ namespace KamiYomu.Web.Resources {
         public static string ViewLibraryDescription {
             get {
                 return ResourceManager.GetString("ViewLibraryDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View Manga.
+        /// </summary>
+        public static string ViewManga {
+            get {
+                return ResourceManager.GetString("ViewManga", resourceCulture);
             }
         }
         

@@ -1112,17 +1112,71 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   <data name="ProcessDirectory" xml:space="preserve">
     <value>Diretório de Processos</value>
   </data>
+  <data name="Scanning" xml:space="preserve">
+    <value>Digitalizando</value>
+  </data>
+  <data name="Scan" xml:space="preserve">
+    <value>Digitalizar</value>
+  </data>
+  <data name="StartSearchingForChapters" xml:space="preserve">
+    <value>Comece a pesquisar capítulos.</value>
+  </data>
+  <data name="SearchingForChapters" xml:space="preserve">
+    <value>Procurando capítulos...</value>
+  </data>
+  <data name="DailyExecutionSchedule" xml:space="preserve">
+    <value>Cronograma de Execução Diária</value>
+  </data>
+  <data name="DailyAt" xml:space="preserve">
+    <value>Diariamente às</value>
+  </data>
+  <data name="DailyExecutionTime" xml:space="preserve">
+    <value>Tempo de execução diário</value>
+  </data>
+  <data name="DailyExecutionTimeDetails" xml:space="preserve">
+    <value>Selecione o horário diário em que o sistema deve verificar automaticamente novos capítulos.</value>
+  </data>
+  <data name="CurrentTimeZone" xml:space="preserve">
+    <value>Fuso horário atual</value>
+  </data>
+  <data name="CurrentSystemTime" xml:space="preserve">
+    <value>Hora atual do sistema</value>
+  </data>
+  <data name="UserRemovedMangaTitleFromLibrary" xml:space="preserve">
+    <value>O usuário removeu o título do mangá de sua biblioteca.</value>
+  </data>
+  <data name="CancelledDuringTheRunningJob" xml:space="preserve">
+    <value>Cancelado durante o job em execução: {0}</value>
+  </data>
+  <data name="CrawlerAgentHasBeenRemoved" xml:space="preserve">
+    <value>O Agente Rastreador foi removido.</value>
+  </data>
+  <data name="FlareSolverrUrl" xml:space="preserve">
+    <value>URL do FlareSolverr</value>
+  </data>
+  <data name="NoValidCrawlerAgentTypeFound" xml:space="preserve">
+    <value>Nenhum tipo de agente rastreador válido encontrado.</value>
+  </data>
+  <data name="UpgradeCrawlerAgent" xml:space="preserve">
+    <value>Atualizar agente rastreador</value>
+  </data>
+  <data name="UpgradeCrawlerAgentDetails" xml:space="preserve">
+    <value>Você pode alterar a versão do agente rastreador para qualquer registro de mangá em sua coleção, incluindo atualização ou downgrade.</value>
+  </data>
+  <data name="Current" xml:space="preserve">
+    <value>Atual</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Versão Atual</value>
+  </data>
+  <data name="SelectVersion" xml:space="preserve">
+    <value>Selecione a versão</value>
+  </data>
+  <data name="ViewManga" xml:space="preserve">
+    <value>Ver mangá</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Scanning" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="Scan" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="StartSearchingForChapters" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="SearchingForChapters" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="CrawlerAgentHasBeenUpgraded" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
 </root>

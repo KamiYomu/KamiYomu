@@ -1124,4 +1124,58 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="SearchingForChapters" xml:space="preserve">
     <value>Searching for chapters...</value>
   </data>
+  <data name="DailyExecutionSchedule" xml:space="preserve">
+    <value>Daily Execution Schedule</value>
+  </data>
+  <data name="DailyAt" xml:space="preserve">
+    <value>Daily at</value>
+  </data>
+  <data name="DailyExecutionTime" xml:space="preserve">
+    <value>Daily Execution Time</value>
+  </data>
+  <data name="DailyExecutionTimeDetails" xml:space="preserve">
+    <value>Select the daily time when the system should automatically check for new chapters.</value>
+  </data>
+  <data name="CurrentTimeZone" xml:space="preserve">
+    <value>Current Time Zone</value>
+  </data>
+  <data name="CurrentSystemTime" xml:space="preserve">
+    <value>Current System Time</value>
+  </data>
+  <data name="UserRemovedMangaTitleFromLibrary" xml:space="preserve">
+    <value>The user has removed the manga title from their library.</value>
+  </data>
+  <data name="CancelledDuringTheRunningJob" xml:space="preserve">
+    <value>Cancelled during the running job: {0}</value>
+  </data>
+  <data name="CrawlerAgentHasBeenRemoved" xml:space="preserve">
+    <value>Crawler Agent has been removed.</value>
+  </data>
+  <data name="FlareSolverrUrl" xml:space="preserve">
+    <value>FlareSolverr Url</value>
+  </data>
+  <data name="NoValidCrawlerAgentTypeFound" xml:space="preserve">
+    <value>No valid crawler agent type found.</value>
+  </data>
+  <data name="UpgradeCrawlerAgent" xml:space="preserve">
+    <value>Upgrade Crawler Agent</value>
+  </data>
+  <data name="UpgradeCrawlerAgentDetails" xml:space="preserve">
+    <value>You can change the crawler agent version for any Manga record in your collection, including upgrading or downgrading.</value>
+  </data>
+  <data name="Current" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Current Version</value>
+  </data>
+  <data name="SelectVersion" xml:space="preserve">
+    <value>Select Version</value>
+  </data>
+  <data name="ViewManga" xml:space="preserve">
+    <value>View Manga</value>
+  </data>
+  <data name="CrawlerAgentHasBeenUpgraded" xml:space="preserve">
+    <value>Crawler agent has been upgraded.</value>
+  </data>
 </root>

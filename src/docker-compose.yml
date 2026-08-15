@@ -15,10 +15,32 @@ services:
         interval: 30s
         timeout: 10s
         retries: 3
+      networks:
+        - kamiyomu_network
+
+    solver:
+      image: ghcr.io/flaresolverr/flaresolverr:latest
+      container_name: flaresolverr
+      restart: unless-stopped
+      networks:
+        - kamiyomu_network
+    
+      ports:
+        - "8191:8191"
+    
+      environment:
+        LOG_LEVEL: debug
+        LOG_HTML: "false"
+        CAPTCHA_SOLVER: none
+        TZ: UTC
 
 volumes:
   kamiyomu_agents:
   kamiyomu_database:
   kamiyomu_logs:
+
+networks:
+   kamiyomu_network:
+     driver: bridge 
 
 

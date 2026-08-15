@@ -1,0 +1,35 @@
+@using KamiYomu.Web.Areas.Libraries.ViewComponents
+@using KamiYomu.Web.Extensions
+@model MangaInfoViewVerticalComponentModel
+
+<a href="@Model.Manga.WebSiteUrl"
+   target="_blank"
+   class="position-relative d-block text-decoration-none overflow-hidden shadow"
+   style="border: 5px solid #fff; aspect-ratio: 2 / 3;">
+
+    <img src="@Model.Manga.CoverUrl.ToInternalImageUrl()"
+         alt="@Model.Manga.Title"
+         class="w-100 h-100"
+         style="object-fit: cover;" />
+
+    <div class="position-absolute bottom-0 start-0 end-0"
+         style="height: 55%; background: linear-gradient(transparent, rgba(0,0,0,.9));">
+    </div>
+
+    <div class="position-absolute bottom-0 start-0 end-0 p-3 text-white">
+        <div class="fw-bold fs-6 lh-sm">
+            @Model.Manga.Title
+        </div>
+
+        <div class="small opacity-75 mt-1">
+            @Model.Manga.ReleaseStatus
+
+            @if (Model.Manga.Year > 0)
+            {
+                <span> · @Model.Manga.Year</span>
+            }
+        </div>
+    </div>
+
+</a>
+

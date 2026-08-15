@@ -1,5 +1,7 @@
 namespace KamiYomu.Web.AppOptions;
-
+/// <summary>
+/// WorkerOptions defines configuration settings for background job processing using Hangfire.
+/// </summary>
 public class WorkerOptions
 {
     /// <summary>
@@ -8,6 +10,10 @@ public class WorkerOptions
     /// add more entries here if you want multiple servers to share or divide queues.
     /// </summary>
     public required IEnumerable<string> ServerAvailableNames { get; init; }
+    /// <summary>
+    /// Daily execution time for Hangfire jobs, specified as a TimeSpan. Recurring jobs will be scheduled to run at this time each day.
+    /// </summary>
+    public TimeSpan DailyExecutionTime { get; init; } = TimeSpan.FromHours(19); // Default to 7:00 PM
 
     /// <summary>
     /// Specifies the number of background processing threads Hangfire will spawn.
@@ -74,7 +80,10 @@ public class WorkerOptions
     /// Queue dedicated to discovering new chapters (polling or scraping for updates).
     /// </summary>
     public required IEnumerable<string> DiscoveryNewChapterQueues { get; init; }
-
+    /// <summary>
+    /// gets all queues used by the worker, including default and custom queues for chapter downloads, manga scheduling, and discovery.
+    /// </summary>
+    /// <returns></returns>
     public IEnumerable<string> GetAllQueues()
     {
         return [
@@ -88,6 +97,10 @@ public class WorkerOptions
     }
 
     private static readonly Random _random = new();
+    /// <summary>
+    /// gets a random wait period between MinWaitPeriodInMilliseconds and MaxWaitPeriodInMilliseconds.
+    /// </summary>
+    /// <returns></returns>
     public TimeSpan GetWaitPeriod()
     {
         int milliseconds = _random.Next(MinWaitPeriodInMilliseconds, MaxWaitPeriodInMilliseconds);

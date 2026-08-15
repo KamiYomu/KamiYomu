@@ -4,6 +4,7 @@ using Hangfire.States;
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.AppServices.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
@@ -22,6 +23,7 @@ namespace KamiYomu.Web.Infrastructure.AppServices;
 /// </summary>
 /// <param name="logger">The logger instance for logging information and errors.</param>
 /// <param name="specialFolderOptions">The options for special folder configurations.</param>
+/// <param name="workerOptions">The options for worker configurations.</param>
 /// <param name="dbContext">The database context for accessing the database.</param>
 /// <param name="crawlerAgentRepository">The repository for accessing crawler agents.</param>
 /// <param name="workerService">The service for managing background worker tasks.</param>
@@ -30,6 +32,7 @@ namespace KamiYomu.Web.Infrastructure.AppServices;
 public class DownloadAppService(
     ILogger<DownloadAppService> logger,
     IOptions<SpecialFolderOptions> specialFolderOptions,
+    IOptions<WorkerOptions> workerOptions,
     DbContext dbContext,
     ICrawlerAgentRepository crawlerAgentRepository,
     IWorkerService workerService,
@@ -46,8 +49,9 @@ public class DownloadAppService(
         string filePathTemplateFormat = string.IsNullOrWhiteSpace(addItemCollection.FilePathTemplate) ? specialFolderOptions.Value.FilePathFormat : addItemCollection.FilePathTemplate;
         string comicInfoTitleTemplateFormat = string.IsNullOrWhiteSpace(addItemCollection.ComicInfoTitleTemplate) ? specialFolderOptions.Value.ComicInfoTitleFormat : addItemCollection.ComicInfoTitleTemplate;
         string comicInfoSeriesTemplate = string.IsNullOrWhiteSpace(addItemCollection.ComicInfoSeriesTemplate) ? specialFolderOptions.Value.ComicInfoSeriesFormat : addItemCollection.ComicInfoSeriesTemplate;
+        string dailyExecutionTime = addItemCollection.DailyExecutionTime.HasValue ? addItemCollection.DailyExecutionTime.Value.ToCronDailyExpression() : workerOptions.Value.DailyExecutionTime.ToCronDailyExpression();
 
-        Library library = new(crawlerAgent, manga, filePathTemplateFormat, comicInfoTitleTemplateFormat, comicInfoSeriesTemplate);
+        Library library = new(crawlerAgent, manga, filePathTemplateFormat, comicInfoTitleTemplateFormat, comicInfoSeriesTemplate, dailyExecutionTime);
 
         _ = dbContext.Libraries.Insert(library);
 
@@ -66,10 +70,11 @@ public class DownloadAppService(
 
         if (addItemCollection.MakeThisConfigurationDefault)
         {
-            UserPreference preferences = dbContext.UserPreferences.FindOne(p => true);
+            UserPreference preferences = dbContext.UserPreferences.Query().FirstOrDefault();
             preferences.SetFilePathTemplate(filePathTemplateFormat);
             preferences.SetComicInfoTitleTemplate(comicInfoTitleTemplateFormat);
             preferences.SetComicInfoSeriesTemplate(comicInfoSeriesTemplate);
+            preferences.SetDailyExecutionTime(addItemCollection.DailyExecutionTime);
             _ = dbContext.UserPreferences.Upsert(preferences);
         }
 
@@ -77,6 +82,29 @@ public class DownloadAppService(
 
         return library;
     }
+
+    /// <inheritdoc />
+    public async Task<Library> RefreshCollectionAsync(Library library, CancellationToken cancellationToken)
+    {
+        using CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(library.CrawlerAgent.Id);
+
+        Manga manga = await crawlerAgentRepository.GetMangaAsync(crawlerAgent.Id, library.Manga.Id, cancellationToken);
+
+        MangaDownloadRecord downloadRecord = new(library, string.Empty);
+
+        using LibraryDbContext libDbContext = library.GetReadWriteDbContext();
+
+        _ = libDbContext.MangaDownloadRecords.Insert(downloadRecord);
+
+        string backgroundJobId = workerService.ScheduleMangaDownload(downloadRecord);
+
+        downloadRecord.Schedule(backgroundJobId);
+
+        _ = libDbContext.MangaDownloadRecords.Update(downloadRecord);
+
+        return library;
+    }
+
 
     /// <inheritdoc />
     public async Task<Library> RemoveFromCollectionAsync(RemoveItemCollection removeItemCollection, CancellationToken cancellationToken)

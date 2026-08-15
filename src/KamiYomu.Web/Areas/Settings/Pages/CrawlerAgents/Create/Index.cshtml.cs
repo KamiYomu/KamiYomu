@@ -1,7 +1,7 @@
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO.Compression;
 
+using KamiYomu.CrawlerAgents.Core.Inputs;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Areas.Settings.Pages.Shared;
 using KamiYomu.Web.Entities;
@@ -14,9 +14,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 
+using static KamiYomu.Web.AppOptions.Defaults;
+
 namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.Create;
 
-public class IndexModel(DbContext dbContext, IOptions<SpecialFolderOptions> specialFolderOptions, INotificationService notificationService) : PageModel
+public class IndexModel(
+    DbContext dbContext,
+    IOptions<SpecialFolderOptions> specialFolderOptions,
+    IOptions<CloudflareSolverOptions> flareSolverrOptions,
+    INotificationService notificationService) : PageModel
 {
 
     [BindProperty]
@@ -92,17 +98,26 @@ public class IndexModel(DbContext dbContext, IOptions<SpecialFolderOptions> spec
         // Load isolated assembly and extract metadata
         System.Reflection.Assembly assembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
         Dictionary<string, string> metadata = CrawlerAgent.GetAssemblyMetadata(assembly);
+
+        IEnumerable<AbstractInputAttribute> crawlerInputs = CrawlerAgent.GetCrawlerInputs(assembly);
+
+        if (flareSolverrOptions.Value.Enabled)
+        {
+            crawlerInputs = crawlerInputs.Append(new CrawlerTextAttribute(CrawlerAgentMetadata.Fields.FlareSolverrUrl, I18n.FlareSolverrUrl, true, flareSolverrOptions.Value.Uri?.ToString(), 902));
+        }
+
         InputModel inputModel = new()
         {
             DisplayName = CrawlerAgent.GetCrawlerDisplayName(assembly),
             CrawlerInputsViewModel = new CrawlerInputsViewModel
             {
-                CrawlerInputs = CrawlerAgent.GetCrawlerInputs(assembly),
+                CrawlerInputs = crawlerInputs,
                 AgentMetadata = []
             },
             TempFileId = tempUploadId,
             ReadOnlyMetadata = metadata,
         };
+
         return Partial("_CreateForm", inputModel);
     }
 
@@ -158,11 +173,11 @@ public class IndexModel(DbContext dbContext, IOptions<SpecialFolderOptions> spec
 
         // Register agent
         System.Reflection.Assembly assembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
-        IEnumerable<KamiYomu.CrawlerAgents.Core.Inputs.AbstractInputAttribute> crawlerInputs = CrawlerAgent.GetCrawlerInputs(assembly);
+        IEnumerable<AbstractInputAttribute> crawlerInputs = CrawlerAgent.GetCrawlerInputs(assembly);
         string displayName = CrawlerAgent.GetCrawlerDisplayName(assembly);
         Dictionary<string, string> assemblyMetadata = CrawlerAgent.GetAssemblyMetadata(assembly);
         Dictionary<string, object> metadata = Input.CrawlerInputsViewModel.GetAgentMetadataValues();
-        foreach (KamiYomu.CrawlerAgents.Core.Inputs.AbstractInputAttribute crawlerInput in crawlerInputs)
+        foreach (AbstractInputAttribute crawlerInput in crawlerInputs)
         {
             if (crawlerInput.Required)
             {
@@ -179,6 +194,7 @@ public class IndexModel(DbContext dbContext, IOptions<SpecialFolderOptions> spec
         if (!ModelState.IsValid)
         {
             notificationService.EnqueueErrorForNextPage(I18n.PleaseCorrectHighlightedField);
+
             Input = new InputModel
             {
                 DisplayName = displayName,

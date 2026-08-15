@@ -1,4 +1,5 @@
 using KamiYomu.CrawlerAgents.Core.Catalog;
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.AppServices.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
@@ -7,13 +8,15 @@ using KamiYomu.Web.Models;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 
 namespace KamiYomu.Web.Areas.Libraries.Pages.Downloads;
 
 public class IndexModel(
     DbContext dbContext,
+    IOptions<WorkerOptions> workerOptions,
     IDownloadAppService downloadAppService,
-    ICrawlerAgentRepository agentCrawlerRepository) : PageModel
+    ICrawlerAgentRepository crawlerAgentRepository) : PageModel
 {
     public IEnumerable<CrawlerAgent> CrawlerAgents { get; set; } = [];
 
@@ -33,6 +36,8 @@ public class IndexModel(
 
     [BindProperty]
     public required string ComicInfoSeriesTemplate { get; set; }
+    [BindProperty]
+    public TimeSpan? DailyExecutionTime { get; set; } = workerOptions.Value.DailyExecutionTime;
     [BindProperty]
     public required bool MakeThisConfigurationDefault { get; set; } = false;
 
@@ -71,8 +76,8 @@ public class IndexModel(
 
         UserPreference userPreference = dbContext.UserPreferences.Query().FirstOrDefault();
         PaginationOptions paginationOptions = !string.IsNullOrWhiteSpace(ContinuationToken) ? new PaginationOptions(ContinuationToken) : new PaginationOptions(Offset, 30);
-        PagedResult<Manga> queryResult = await agentCrawlerRepository.SearchAsync(crawlerAgent.Id, Query, paginationOptions, cancellationToken);
-        Results = queryResult.Data.Where(p => p.IsFamilySafe || p.IsFamilySafe == userPreference.FamilySafeMode).Select(p => new Library(crawlerAgent, p, null, null, null));
+        PagedResult<Manga> queryResult = await crawlerAgentRepository.SearchAsync(crawlerAgent.Id, Query, paginationOptions, cancellationToken);
+        Results = queryResult.Data.Where(p => p.IsFamilySafe || p.IsFamilySafe == userPreference.FamilySafeMode).Select(p => new Library(crawlerAgent, p, null, null, null, null));
         ViewData["ShowAddToLibrary"] = true;
         ViewData["Handler"] = "Crawler";
         ViewData[nameof(Query)] = Query;
@@ -118,6 +123,7 @@ public class IndexModel(
             ComicInfoTitleTemplate = ComicInfoTitleTemplate,
             CrawlerAgentId = CrawlerAgentId,
             FilePathTemplate = FilePathTemplate,
+            DailyExecutionTime = DailyExecutionTime,
             MakeThisConfigurationDefault = MakeThisConfigurationDefault,
             MangaId = MangaId
         }, cancellationToken);
@@ -148,7 +154,7 @@ public class IndexModel(
 
         return ViewComponent("LibraryCard", new Dictionary<string, object>
         {
-            { "library", new Library(library.CrawlerAgent, library.Manga, null, null, null) },
+            { "library", new Library(library.CrawlerAgent, library.Manga, null, null, null, null) },
             { nameof(cancellationToken), cancellationToken }
         });
     }

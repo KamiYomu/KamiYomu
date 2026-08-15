@@ -1,3 +1,9 @@
+using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Infrastructure.HttpHandlers;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+
 using Polly;
 using Polly.Extensions.Http;
 
@@ -28,12 +34,28 @@ public static class HttpClientHostings
 
         Polly.Timeout.AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(AppOptions.Defaults.Worker.HttpTimeOutInSeconds);
 
-        _ = services.AddHttpClient(AppOptions.Defaults.Worker.HttpClientApp, client =>
+        _ = services.AddHttpClient(Defaults.Worker.HttpClientApp, client =>
         {
             client.DefaultRequestHeaders.UserAgent.ParseAdd(CrawlerAgentSettings.HttpUserAgent);
         })
             .AddPolicyHandler(retryPolicy)
             .AddPolicyHandler(timeoutPolicy);
+
+
+        AddHttpHandlers(services);
+    }
+
+    private static void AddHttpHandlers(IServiceCollection services)
+    {
+        _ = services.AddSingleton(sp =>
+        {
+            IOptions<CloudflareSolverOptions> cloudFlareOptions = sp.GetRequiredService<IOptions<CloudflareSolverOptions>>();
+            HttpClientHandler innerHandler = new()
+            {
+                AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate
+            };
+            return new CloudflareBypassHandler(innerHandler, cloudFlareOptions);
+        });
     }
 
     private static void AddIntegrationHttpClient(IServiceCollection services)

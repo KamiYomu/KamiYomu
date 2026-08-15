@@ -18,17 +18,57 @@ public class ChapterDownloadRecord
     /// <summary>
     /// Creates a new chapter download record and initializes status and timestamps.
     /// </summary>
-    /// <param name="agentCrawler">The crawler agent responsible for this chapter.</param>
+    /// <param name="crawlerAgent">The crawler agent responsible for this chapter.</param>
     /// <param name="mangaDownload">The parent manga download record.</param>
     /// <param name="chapter">The chapter metadata associated with this record.</param>
-    public ChapterDownloadRecord(CrawlerAgent agentCrawler, MangaDownloadRecord mangaDownload, Chapter chapter)
+    public ChapterDownloadRecord(CrawlerAgent crawlerAgent, MangaDownloadRecord mangaDownload, Chapter chapter)
     {
-        CrawlerAgent = agentCrawler;
+        CrawlerAgent = crawlerAgent;
         MangaDownload = mangaDownload;
         Chapter = chapter;
         DownloadStatus = DownloadStatus.ToBeRescheduled;
         StatusUpdateAt = DateTimeOffset.UtcNow;
         CreateAt = DateTimeOffset.UtcNow;
+    }
+    /// <summary>
+    /// Changes the chapter metadata associated with this record.
+    /// </summary>
+    /// <param name="chapter">Chapter metadata to associate with this chapter download record.</param>
+    /// <exception cref="InvalidOperationException"></exception>
+    public void UpdateChapterInformation(Chapter chapter)
+    {
+        if (chapter.Id != Chapter?.Id)
+        {
+            throw new InvalidOperationException($"Cannot update Chapter with a different Id. Current Chapter Id: {Chapter.Id}, New Chapter Id: {chapter.Id}");
+        }
+        Chapter = chapter;
+    }
+
+    /// <summary>
+    /// Changes the parent manga download record associated with this chapter download record.
+    /// </summary>
+    /// <param name="mangaDownload">Manga download record to associate with this chapter download record.</param>
+    /// <exception cref="InvalidOperationException"></exception>
+    public void UpdateMangaDownloadInformation(MangaDownloadRecord mangaDownload)
+    {
+        if (mangaDownload.Id != MangaDownload?.Id)
+        {
+            throw new InvalidOperationException($"Cannot update MangaDownload with a different Id. Current MangaDownload Id: {MangaDownload.Id}, New MangaDownload Id: {mangaDownload.Id}");
+        }
+        MangaDownload = mangaDownload;
+    }
+    /// <summary>
+    /// Updates the crawler agent information associated with this chapter download record.
+    /// </summary>
+    /// <param name="crawlerAgent">Crawler agent to associate with this chapter download record.</param>
+    /// <exception cref="InvalidOperationException"></exception>
+    public void UpdateCrawlerAgentInformation(CrawlerAgent crawlerAgent)
+    {
+        if (crawlerAgent.AssemblyName != CrawlerAgent?.AssemblyName)
+        {
+            throw new InvalidOperationException($"Cannot update CrawlerAgent with a different AssemblyName. Current CrawlerAgent AssemblyName: {CrawlerAgent.AssemblyName}, New CrawlerAgent AssemblyName: {crawlerAgent.AssemblyName}");
+        }
+        CrawlerAgent = crawlerAgent;
     }
 
     /// <summary>

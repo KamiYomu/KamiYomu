@@ -14,6 +14,7 @@ namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs;
 
 public class AddToCollectionModel(
     IOptions<SpecialFolderOptions> specialFolderOptions,
+    IOptions<WorkerOptions> workerOptions,
     DbContext dbContext,
     ICrawlerAgentRepository crawlerAgentRepository) : PageModel
 {
@@ -21,6 +22,7 @@ public class AddToCollectionModel(
     public TemplateVariablesViewModel Variables { get; private set; } = new();
     public Manga? Manga { get; private set; }
     public SpecialFolderOptions SpecialFolderOptions { get; private set; } = specialFolderOptions.Value;
+    public WorkerOptions WorkerOptions { get; private set; } = workerOptions.Value;
 
     [BindProperty]
     public string MangaId { get; set; } = string.Empty;
@@ -35,6 +37,8 @@ public class AddToCollectionModel(
 
     [BindProperty]
     public required string ComicInfoSeriesTemplate { get; set; }
+    [BindProperty]
+    public TimeSpan? DailyExecutionTime { get; set; } = workerOptions.Value.DailyExecutionTime;
 
     [BindProperty]
     public required bool MakeThisConfigurationDefault { get; set; } = false;
@@ -57,6 +61,7 @@ public class AddToCollectionModel(
         FilePathTemplate = string.IsNullOrWhiteSpace(preferences.FilePathTemplate) ? SpecialFolderOptions.FilePathFormat : preferences.FilePathTemplate;
         ComicInfoTitleTemplate = string.IsNullOrWhiteSpace(preferences.ComicInfoTitleTemplate) ? SpecialFolderOptions.ComicInfoTitleFormat : preferences.ComicInfoTitleTemplate;
         ComicInfoSeriesTemplate = string.IsNullOrWhiteSpace(preferences.ComicInfoSeriesTemplate) ? SpecialFolderOptions.ComicInfoSeriesFormat : preferences.ComicInfoSeriesTemplate;
+        DailyExecutionTime = preferences.DailyExecutionTime ?? WorkerOptions.DailyExecutionTime;
         Manga = await crawlerAgentRepository.GetMangaAsync(crawlerAgentId, mangaId, cancellationToken);
         TemplateResults = [.. GetTemplateResults(FilePathTemplate, Manga)];
         ComicInfoTemplateViewModel = new ComicInfoTemplateViewModel

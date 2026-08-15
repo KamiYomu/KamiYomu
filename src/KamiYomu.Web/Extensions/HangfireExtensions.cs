@@ -2,7 +2,6 @@ using Hangfire;
 using Hangfire.States;
 using Hangfire.Storage;
 
-using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Areas.Settings.Models;
 
 namespace KamiYomu.Web.Extensions;
@@ -44,5 +43,14 @@ public static class HangfireExtensions
         transaction.AddToQueue(queue, pastJobInfo.JobId);
 
         transaction.Commit();
+    }
+    /// <summary>
+    /// Gets a cron expression for a daily job at the specified time span.
+    /// </summary>
+    /// <param name="timeSpan"></param>
+    /// <returns></returns>
+    public static string ToCronDailyExpression(this TimeSpan timeSpan)
+    {
+        return Cron.Daily(timeSpan.Hours, timeSpan.Minutes);
     }
 }
