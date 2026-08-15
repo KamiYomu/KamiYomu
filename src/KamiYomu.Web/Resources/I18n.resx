@@ -1157,4 +1157,25 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="NoValidCrawlerAgentTypeFound" xml:space="preserve">
     <value>No valid crawler agent type found.</value>
   </data>
+  <data name="UpgradeCrawlerAgent" xml:space="preserve">
+    <value>Upgrade Crawler Agent</value>
+  </data>
+  <data name="UpgradeCrawlerAgentDetails" xml:space="preserve">
+    <value>You can change the crawler agent version for any Manga record in your collection, including upgrading or downgrading.</value>
+  </data>
+  <data name="Current" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Current Version</value>
+  </data>
+  <data name="SelectVersion" xml:space="preserve">
+    <value>Select Version</value>
+  </data>
+  <data name="ViewManga" xml:space="preserve">
+    <value>View Manga</value>
+  </data>
+  <data name="CrawlerAgentHasBeenUpgraded" xml:space="preserve">
+    <value>Crawler agent has been upgraded.</value>
+  </data>
 </root>

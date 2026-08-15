@@ -1151,17 +1151,32 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   <data name="CrawlerAgentHasBeenRemoved" xml:space="preserve">
     <value>O Agente Rastreador foi removido.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="FlareSolverrUrl" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="NoValidCrawlerAgentTypeFound" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="FlareSolverrUrl" xml:space="preserve">
     <value>URL do FlareSolverr</value>
   </data>
   <data name="NoValidCrawlerAgentTypeFound" xml:space="preserve">
     <value>Nenhum tipo de agente rastreador válido encontrado.</value>
+  </data>
+  <data name="UpgradeCrawlerAgent" xml:space="preserve">
+    <value>Atualizar agente rastreador</value>
+  </data>
+  <data name="UpgradeCrawlerAgentDetails" xml:space="preserve">
+    <value>Você pode alterar a versão do agente rastreador para qualquer registro de mangá em sua coleção, incluindo atualização ou downgrade.</value>
+  </data>
+  <data name="Current" xml:space="preserve">
+    <value>Atual</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Versão Atual</value>
+  </data>
+  <data name="SelectVersion" xml:space="preserve">
+    <value>Selecione a versão</value>
+  </data>
+  <data name="ViewManga" xml:space="preserve">
+    <value>Ver mangá</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="CrawlerAgentHasBeenUpgraded" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

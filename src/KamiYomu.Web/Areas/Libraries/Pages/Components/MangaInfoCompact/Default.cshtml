@@ -1,0 +1,34 @@
+@using KamiYomu.Web.Areas.Libraries.ViewComponents
+@using KamiYomu.Web.Extensions
+@model MangaInfoViewCompactComponentModel
+
+<div class="d-flex align-items-center gap-3 border rounded p-2 bg-light">
+    <a href="@Model.Manga.WebSiteUrl" target="_blank" class="flex-shrink-0">
+        <img src="@Model.Manga.CoverUrl.ToInternalImageUrl()"
+             alt="@Model.Manga.Title"
+             class="rounded"
+             style="width: 48px; height: 64px; object-fit: cover;" />
+    </a>
+
+    <div class="min-width-0 flex-grow-1">
+        <div class="fw-semibold text-truncate" title="@Model.Manga.Title">
+            @Model.Manga.Title
+        </div>
+
+        <div class="small text-muted mt-1">
+            @Model.Manga.ReleaseStatus
+            @if (Model.Manga.Year > 0)
+            {
+                <span class="mx-1">·</span>
+                @Model.Manga.Year
+            }
+        </div>
+    </div>
+
+    <a href="@Model.Manga.WebSiteUrl"
+       target="_blank"
+       class="btn btn-sm btn-outline-secondary flex-shrink-0"
+       title="@I18n.ViewManga">
+        <i class="bi bi-box-arrow-up-right"></i>
+    </a>
+</div>

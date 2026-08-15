@@ -103,7 +103,7 @@ public class IndexModel(
 
         if (flareSolverrOptions.Value.Enabled)
         {
-            crawlerInputs = crawlerInputs.Append(new CrawlerTextAttribute(CrawlerAgentMetadataFields.FlareSolverrUrl, I18n.FlareSolverrUrl, true, flareSolverrOptions.Value.Uri?.ToString(), 902));
+            crawlerInputs = crawlerInputs.Append(new CrawlerTextAttribute(CrawlerAgentMetadata.Fields.FlareSolverrUrl, I18n.FlareSolverrUrl, true, flareSolverrOptions.Value.Uri?.ToString(), 902));
         }
 
         InputModel inputModel = new()

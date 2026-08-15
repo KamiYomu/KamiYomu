@@ -655,6 +655,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crawler agent has been upgraded..
+        /// </summary>
+        public static string CrawlerAgentHasBeenUpgraded {
+            get {
+                return ResourceManager.GetString("CrawlerAgentHasBeenUpgraded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crawler Agent Removed Successfully.
         /// </summary>
         public static string CrawlerAgentRemovedSuccessfully {
@@ -709,6 +718,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current.
+        /// </summary>
+        public static string Current {
+            get {
+                return ResourceManager.GetString("Current", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current Directory.
         /// </summary>
         public static string CurrentDirectory {
@@ -732,6 +750,15 @@ namespace KamiYomu.Web.Resources {
         public static string CurrentTimeZone {
             get {
                 return ResourceManager.GetString("CurrentTimeZone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Version.
+        /// </summary>
+        public static string CurrentVersion {
+            get {
+                return ResourceManager.GetString("CurrentVersion", resourceCulture);
             }
         }
         
@@ -2465,6 +2492,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select Version.
+        /// </summary>
+        public static string SelectVersion {
+            get {
+                return ResourceManager.GetString("SelectVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Series.
         /// </summary>
         public static string Series {
@@ -2861,6 +2897,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Upgrade Crawler Agent.
+        /// </summary>
+        public static string UpgradeCrawlerAgent {
+            get {
+                return ResourceManager.GetString("UpgradeCrawlerAgent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can change the crawler agent version for any Manga record in your collection, including upgrading or downgrading..
+        /// </summary>
+        public static string UpgradeCrawlerAgentDetails {
+            get {
+                return ResourceManager.GetString("UpgradeCrawlerAgentDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A User-Agent is a text string that a web browser or HTTP client sends along with its requests to a server..
         /// </summary>
         public static string UserAgentExplanation {
@@ -2965,6 +3019,15 @@ namespace KamiYomu.Web.Resources {
         public static string ViewLibraryDescription {
             get {
                 return ResourceManager.GetString("ViewLibraryDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View Manga.
+        /// </summary>
+        public static string ViewManga {
+            get {
+                return ResourceManager.GetString("ViewManga", resourceCulture);
             }
         }
         

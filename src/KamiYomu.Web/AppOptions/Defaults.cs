@@ -185,27 +185,51 @@ public partial class Defaults
         public const string LibraryId = nameof(LibraryId);
     }
     /// <summary>
-    /// 
+    /// Contains string constants representing metadata field names for crawler agent configuration.
+    /// These field names are used as keys when injecting dependencies or configuring crawler agent behavior.
     /// </summary>
-    public class CrawlerAgentMetadataFields
+    public static class CrawlerAgentMetadata
     {
         /// <summary>
         /// 
         /// </summary>
-        public const string BrowserUserAgent = nameof(BrowserUserAgent);
+        public static class Fields
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            public const string BrowserUserAgent = nameof(BrowserUserAgent);
+            /// <summary>
+            /// 
+            /// </summary>
+            public const string HttpClientTimeout = nameof(HttpClientTimeout);
+            /// <summary>
+            /// 
+            /// </summary>
+            public const string KamiYomuILogger = nameof(KamiYomuILogger);
+            /// <summary>
+            /// 
+            /// </summary>
+            public const string FlareSolverrUrl = nameof(FlareSolverrUrl);
+            /// <summary>
+            /// 
+            /// </summary>
+            public const string FlareSolverrHttpHandler = nameof(FlareSolverrHttpHandler);
+        }
         /// <summary>
         /// 
         /// </summary>
-        public const string HttpClientTimeout = nameof(HttpClientTimeout);
-        /// <summary>
-        /// 
-        /// </summary>
-        public const string KamiYomuILogger = nameof(KamiYomuILogger);
-        /// <summary>
-        /// 
-        /// </summary>
-        public const string FlareSolverrUrl = nameof(FlareSolverrUrl);
-        public const string FlareSolverrHttpHandler = nameof(FlareSolverrHttpHandler);
+        public static class Values
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            public static string KamiYomuHttpUserAgent = $"KamiYomu-Agent/1.0 ({Environment.OSVersion.Platform}; {(Environment.Is64BitOperatingSystem ? "x64" : "x86")})";
+            /// <summary>
+            /// 
+            /// </summary>
+            public static int TimeoutMilliseconds = 60_000;
+        }
     }
 
     /// <summary>

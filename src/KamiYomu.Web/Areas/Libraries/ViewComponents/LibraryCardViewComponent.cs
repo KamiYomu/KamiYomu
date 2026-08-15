@@ -25,6 +25,8 @@ public class LibraryCardViewComponent(DbContext dbContext) : ViewComponent
         string removeFromCollectionUrl = $"/Libraries/Collection/Dialogs/RemoveFromCollection?LibraryId={library.Id}&RefreshElementId={cardId}";
         string downloadStatusUrl = $"/Libraries/Collection/Dialogs/DownloadStatus?libraryId={library.Id}";
         string mangaDetailsUrl = $"/Libraries/Collection/Dialogs/MangaDetails?crawlerAgentId={library.CrawlerAgent.Id}&mangaId={library.Manga.Id}";
+        string upgradeCrawlerAgentUrl = $"/Libraries/Collection/Dialogs/UpgradeCrawlerAgent?libraryId={library.Id}&refreshElementId={cardId}";
+
         return View(
             new LibraryCardViewComponentModel(
                 library,
@@ -35,6 +37,7 @@ public class LibraryCardViewComponent(DbContext dbContext) : ViewComponent
                 removeFromCollectionUrl,
                 downloadStatusUrl,
                 mangaDetailsUrl,
+                upgradeCrawlerAgentUrl,
                 crawlerAgentDisabled));
     }
 }
@@ -48,4 +51,5 @@ public record LibraryCardViewComponentModel(
     string RemoveFromCollectionUrl,
     string DownloadStatusUrl,
     string MangaDetailsUrl,
+    string UpgradeCrawlerAgentUrl,
     bool CrawlerAgentDisabled);
