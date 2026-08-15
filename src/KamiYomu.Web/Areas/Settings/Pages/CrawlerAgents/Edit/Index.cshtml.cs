@@ -39,7 +39,7 @@ public class IndexModel(DbContext dbContext,
         IEnumerable<AbstractInputAttribute> crawlerInputs = crawlerAgent.GetCrawlerInputs();
         if (flareSolverrOptions.Value.Enabled)
         {
-            crawlerInputs = crawlerInputs.Append(new CrawlerTextAttribute(CrawlerAgentMetadataFields.FlareSolverrUrl, I18n.FlareSolverrUrl, true, flareSolverrOptions.Value.Uri?.ToString(), 902));
+            crawlerInputs = crawlerInputs.Append(new CrawlerTextAttribute(CrawlerAgentMetadata.Fields.FlareSolverrUrl, I18n.FlareSolverrUrl, true, flareSolverrOptions.Value.Uri?.ToString(), 902));
         }
 
         Input = new InputModel()
@@ -62,7 +62,7 @@ public class IndexModel(DbContext dbContext,
         IEnumerable<AbstractInputAttribute> crawlerInputs = crawlerAgent.GetCrawlerInputs();
         if (flareSolverrOptions.Value.Enabled)
         {
-            crawlerInputs = crawlerInputs.Append(new CrawlerTextAttribute(CrawlerAgentMetadataFields.FlareSolverrUrl, I18n.FlareSolverrUrl, true, flareSolverrOptions.Value.Uri?.ToString(), 902));
+            crawlerInputs = crawlerInputs.Append(new CrawlerTextAttribute(CrawlerAgentMetadata.Fields.FlareSolverrUrl, I18n.FlareSolverrUrl, true, flareSolverrOptions.Value.Uri?.ToString(), 902));
         }
 
         foreach (AbstractInputAttribute crawlerInput in crawlerInputs)

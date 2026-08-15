@@ -377,6 +377,15 @@ public class Library
         return comicInfo.ToString();
     }
 
+    public void SetCrawlerAgent(CrawlerAgent crawlerAgent)
+    {
+        if (crawlerAgent.AssemblyName != CrawlerAgent.AssemblyName)
+        {
+            throw new InvalidOperationException($"Cannot set CrawlerAgent with a different AssemblyName. Current: {CrawlerAgent.AssemblyName}, New: {crawlerAgent.AssemblyName}");
+        }
+        CrawlerAgent = crawlerAgent;
+    }
+
     /// <summary>
     /// Gets the unique identifier for this library.
     /// </summary>

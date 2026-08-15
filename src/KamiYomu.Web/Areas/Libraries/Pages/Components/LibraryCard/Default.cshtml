@@ -86,6 +86,17 @@
 
                         @if (!Model.IsNew)
                         {
+
+                            <li>
+                                <button class="dropdown-item"
+                                        hx-get="@Model.UpgradeCrawlerAgentUrl"
+                                        hx-target="#modal-body"
+                                        hx-swap="innerHTML"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modal">
+                                    <i class="bi bi-arrow-up-circle me-2"></i> @I18n.UpgradeCrawlerAgent
+                                </button>
+                            </li>
                             <li>
                                 <button class="dropdown-item bg-danger text-light"
                                         hx-get="@Model.RemoveFromCollectionUrl"

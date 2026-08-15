@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 using KamiYomu.CrawlerAgents.Core.Inputs;
 using KamiYomu.Web.AppOptions;
@@ -99,8 +100,8 @@ public class CrawlerAgent : IDisposable
         HttpMessageHandler cloudflareBypassHandler = ServiceLocator.Instance.GetRequiredService<CloudflareBypassHandler>();
         Dictionary<string, object> metadata = new(AgentMetadata)
         {
-            [CrawlerAgentMetadataFields.KamiYomuILogger] = logger,
-            [CrawlerAgentMetadataFields.FlareSolverrHttpHandler] = cloudflareBypassHandler
+            [CrawlerAgentMetadata.Fields.KamiYomuILogger] = logger,
+            [CrawlerAgentMetadata.Fields.FlareSolverrHttpHandler] = cloudflareBypassHandler
         };
 
         _crawler = GetCrawlerInstance(AssemblyPath, metadata);
@@ -214,8 +215,8 @@ public class CrawlerAgent : IDisposable
 
         fields.AddRange(
         [
-            new CrawlerTextAttribute(CrawlerAgentMetadataFields.BrowserUserAgent, I18n.UserAgentExplanation, true, CrawlerAgentSettings.HttpUserAgent, 900),
-            new CrawlerTextAttribute(CrawlerAgentMetadataFields.HttpClientTimeout, I18n.TimeoutExplanation, true, CrawlerAgentSettings.TimeoutMilliseconds.ToString(), 901),
+            new CrawlerTextAttribute(CrawlerAgentMetadata.Fields.BrowserUserAgent, I18n.UserAgentExplanation, true, CrawlerAgentMetadata.Values.KamiYomuHttpUserAgent, 900),
+            new CrawlerTextAttribute(CrawlerAgentMetadata.Fields.HttpClientTimeout, I18n.TimeoutExplanation, true, CrawlerAgentMetadata.Values.TimeoutMilliseconds.ToString(), 901),
         ]);
 
         return fields;
@@ -242,6 +243,20 @@ public class CrawlerAgent : IDisposable
         string dir = GetCrawlerAgentDir(AssemblyName);
         return Directory.Exists(dir);
     }
+    /// <summary>
+    /// Get Folder version from the assembly name. It extracts the version number from the assembly name using a regular expression.
+    /// </summary>
+    /// <returns>The version number as a string in the format "major.minor.patch". If no version is found, returns "0.0.0".</returns>
+    public Version GetVersion()
+    {
+        Dictionary<string, string> metadata = GetAssemblyMetadata();
+
+        return metadata.TryGetValue("Version", out string? version) &&
+            Version.TryParse(version, out Version? parsedVersion)
+            ? parsedVersion
+            : new Version(0, 0, 0);
+    }
+
 
     /// <summary>
     /// Extracts metadata from the specified assembly, including title, description, company, product, and version information.
@@ -324,6 +339,8 @@ public class CrawlerAgent : IDisposable
 
         return directory;
     }
+
+
 
     /// <summary>
     /// Extracts the directory name from the given assembly file name by removing the file extension.

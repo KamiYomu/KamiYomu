@@ -1,0 +1,130 @@
+@page
+@using KamiYomu.Web.Entities
+@model KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs.UpgradeCrawlerAgentModel
+@{
+    Layout = null;
+
+    var currentVersion = Model.Library.CrawlerAgent.GetVersion();
+
+    bool isCurrentVersion(CrawlerAgent crawlerAgent) =>
+        crawlerAgent.GetVersion() == currentVersion;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title">@I18n.UpgradeCrawlerAgent</h5>
+
+    <button type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"></button>
+</div>
+
+<div class="modal-body">
+
+    <div class="row g-4">
+
+        <!-- Manga -->
+        <div class="col-4 col-md-3">
+            <vc:manga-info-vertical manga="@Model.Library.Manga" />
+        </div>
+
+        <!-- Crawler Agent -->
+        <div class="col-8 col-md-9">
+
+            <p class="text-muted small mb-4">
+                @I18n.UpgradeCrawlerAgentDetails
+            </p>
+
+            <div class="card border-0 bg-light">
+                <div class="card-body">
+
+                    <div class="mb-4">
+                        <div class="small text-muted mb-1">
+                            @I18n.CrawlerAgent
+                        </div>
+
+                        <div class="fw-semibold">
+                            @Model.Library.CrawlerAgent.DisplayName
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label for="crawlerAgentVersion"
+                                   class="form-label fw-semibold mb-0">
+                                @I18n.Version
+                            </label>
+
+                            <span class="badge text-bg-secondary">
+                                @I18n.Current:
+                                @currentVersion
+                            </span>
+                        </div>
+
+                        <select id="crawlerAgentVersion"
+                                name="crawlerAgentId"
+                                class="form-select"
+                                form="upgrade-crawler-agent-form">
+
+                            @foreach (var crawlerAgent in Model.AvailableVersions)
+                            {
+                                var version = crawlerAgent.GetVersion();
+
+                                @if (isCurrentVersion(crawlerAgent))
+                                {
+                                    <option value="@crawlerAgent.Id" selected disabled>
+                                        @($"{crawlerAgent.DisplayName} ({version}) — {I18n.Current}")
+                                    </option>
+                                }
+                                else
+                                {
+                                    <option value="@crawlerAgent.Id">
+                                        @($"{crawlerAgent.DisplayName} ({version})")
+                                    </option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="modal-footer">
+
+    <button type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal">
+        @I18n.Cancel
+    </button>
+
+    <form id="upgrade-crawler-agent-form"
+          method="post"
+          hx-post="/Libraries/Collection/Dialogs/UpgradeCrawlerAgent?handler=UpgradeCrawlerAgent"
+          hx-target="#@Model.RefreshElementId"
+          hx-swap="innerHTML">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden"
+               name="libraryId"
+               value="@Model.Library.Id" />
+
+        <input type="hidden"
+               name="refreshElementId"
+               value="@Model.RefreshElementId" />
+
+        <button type="submit"
+                class="btn btn-primary" data-bs-dismiss="modal">
+            @I18n.SelectVersion
+        </button>
+
+    </form>
+
+</div>

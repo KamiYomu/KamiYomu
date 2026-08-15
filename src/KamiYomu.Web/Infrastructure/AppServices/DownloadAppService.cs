@@ -84,6 +84,29 @@ public class DownloadAppService(
     }
 
     /// <inheritdoc />
+    public async Task<Library> RefreshCollectionAsync(Library library, CancellationToken cancellationToken)
+    {
+        using CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(library.CrawlerAgent.Id);
+
+        Manga manga = await crawlerAgentRepository.GetMangaAsync(crawlerAgent.Id, library.Manga.Id, cancellationToken);
+
+        MangaDownloadRecord downloadRecord = new(library, string.Empty);
+
+        using LibraryDbContext libDbContext = library.GetReadWriteDbContext();
+
+        _ = libDbContext.MangaDownloadRecords.Insert(downloadRecord);
+
+        string backgroundJobId = workerService.ScheduleMangaDownload(downloadRecord);
+
+        downloadRecord.Schedule(backgroundJobId);
+
+        _ = libDbContext.MangaDownloadRecords.Update(downloadRecord);
+
+        return library;
+    }
+
+
+    /// <inheritdoc />
     public async Task<Library> RemoveFromCollectionAsync(RemoveItemCollection removeItemCollection, CancellationToken cancellationToken)
     {
         Library library = dbContext.Libraries.Include(p => p.Manga)
