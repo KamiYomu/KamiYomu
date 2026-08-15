@@ -1148,11 +1148,20 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="CancelledDuringTheRunningJob" xml:space="preserve">
     <value>Annulé pendant la tâche en cours : {0}</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="CrawlerAgentHasBeenRemoved" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="CrawlerAgentHasBeenRemoved" xml:space="preserve">
     <value>L'agent du robot d'exploration a été supprimé.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="FlareSolverrUrl" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="NoValidCrawlerAgentTypeFound" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="FlareSolverrUrl" xml:space="preserve">
+    <value>URL de FlareSolverr</value>
+  </data>
+  <data name="NoValidCrawlerAgentTypeFound" xml:space="preserve">
+    <value>Aucun type d'agent d'analyseur valide trouvé.</value>
   </data>
 </root>

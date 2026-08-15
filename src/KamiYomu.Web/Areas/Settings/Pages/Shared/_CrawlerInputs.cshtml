@@ -11,13 +11,14 @@
             ? value?.ToString() ?? string.Empty
             : crawlerText.DefaultValue;
 
-        @ViewData.ModelState.TryGetValue($"AgentMetadata[{crawlerText.Name}]", out var entry)
+        ViewData.ModelState.TryGetValue($"AgentMetadata[{crawlerText.Name}]", out var entry);
+
 
 
         <vc:crawler-text crawler-text-attribute="@crawlerText"
                          field-name="Input.CrawlerInputsViewModel.AgentMetadata[@crawlerText.Name]"
                          field-value="@formValue"
-                         model-state-entry="entry" />
+        model-state-entry="entry" />
     }
     else if (inputField is CrawlerPasswordAttribute crawlerPassword)
     {
@@ -25,7 +26,7 @@
         ? value?.ToString() ?? string.Empty
         : crawlerPassword.DefaultValue;
 
-        @ViewData.ModelState.TryGetValue($"AgentMetadata[{crawlerPassword.Name}]", out var entry)
+        ViewData.ModelState.TryGetValue($"AgentMetadata[{crawlerPassword.Name}]", out var entry);
 
 
         <vc:crawler-password crawler-password-attribute="@crawlerPassword"
@@ -42,7 +43,7 @@
         ? stringValue
         : crawlerSelect.DefaultValue;
 
-        @ViewData.ModelState.TryGetValue($"AgentMetadata[{crawlerSelect.Name}]", out var entry)
+        ViewData.ModelState.TryGetValue($"AgentMetadata[{crawlerSelect.Name}]", out var entry);
 
         var fieldName = $"Input.CrawlerInputsViewModel.AgentMetadata[{crawlerSelect.Name}]";
 
@@ -54,7 +55,7 @@
     }
     else if (inputField is CrawlerCheckBoxAttribute crawlerCheckbox)
     {
-        @ViewData.ModelState.TryGetValue($"AgentMetadata[{crawlerCheckbox.Name}]", out var entry)
+        ViewData.ModelState.TryGetValue($"AgentMetadata[{crawlerCheckbox.Name}]", out var entry);
 
         <vc:crawler-check-box crawler-check-box-attribute="@crawlerCheckbox"
                               selected-data="Model.AgentMetadata"
