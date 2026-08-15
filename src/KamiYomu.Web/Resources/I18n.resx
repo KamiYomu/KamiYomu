@@ -1124,4 +1124,31 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="SearchingForChapters" xml:space="preserve">
     <value>Searching for chapters...</value>
   </data>
+  <data name="DailyExecutionSchedule" xml:space="preserve">
+    <value>Daily Execution Schedule</value>
+  </data>
+  <data name="DailyAt" xml:space="preserve">
+    <value>Daily at</value>
+  </data>
+  <data name="DailyExecutionTime" xml:space="preserve">
+    <value>Daily Execution Time</value>
+  </data>
+  <data name="DailyExecutionTimeDetails" xml:space="preserve">
+    <value>Select the daily time when the system should automatically check for new chapters.</value>
+  </data>
+  <data name="CurrentTimeZone" xml:space="preserve">
+    <value>Current Time Zone</value>
+  </data>
+  <data name="CurrentSystemTime" xml:space="preserve">
+    <value>Current System Time</value>
+  </data>
+  <data name="UserRemovedMangaTitleFromLibrary" xml:space="preserve">
+    <value>The user has removed the manga title from their library.</value>
+  </data>
+  <data name="CancelledDuringTheRunningJob" xml:space="preserve">
+    <value>Cancelled during the running job: {0}</value>
+  </data>
+  <data name="CrawlerAgentHasBeenRemoved" xml:space="preserve">
+    <value>Crawler Agent has been removed.</value>
+  </data>
 </root>

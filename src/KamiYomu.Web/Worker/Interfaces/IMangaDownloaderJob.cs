@@ -13,7 +13,7 @@ public interface IMangaDownloaderJob
     /// Dispatches a manga download job to the specified queue for asynchronous processing.
     /// </summary>
     /// <param name="queue">The name of the queue to dispatch the job to.</param>
-    /// <param name="crawlerId">The unique identifier of the crawler instance.</param>
+    /// <param name="crawlerAgentId">The unique identifier of the crawler instance.</param>
     /// <param name="libraryId">The unique identifier of the manga library.</param>
     /// <param name="mangaDownloadId">The unique identifier of the manga download request.</param>
     /// <param name="title">The title of the manga to download.</param>
@@ -22,7 +22,7 @@ public interface IMangaDownloaderJob
     /// <returns>A task representing the asynchronous dispatch operation.</returns>
     [Queue("{0}")]
     [JobDisplayName("Down Manga {4}")]
-    [PerKeyConcurrency("crawlerId")]
+    [PerKeyConcurrency("crawlerAgentId")]
     [MangaCancelOnFail("libraryId", "title")]
-    Task DispatchAsync(string queue, Guid crawlerId, Guid libraryId, Guid mangaDownloadId, string title, PerformContext context, CancellationToken cancellationToken);
+    Task DispatchAsync(string queue, Guid crawlerAgentId, Guid libraryId, Guid mangaDownloadId, string title, PerformContext context, CancellationToken cancellationToken);
 }

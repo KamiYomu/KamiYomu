@@ -33,9 +33,11 @@ public class ChapterDiscoveryJob(
     private readonly WorkerOptions _workerOptions = workerOptions.Value;
 
     /// <inheritdoc/>
-    public async Task DispatchAsync(string queue, Guid crawlerId, Guid libraryId, PerformContext context, CancellationToken cancellationToken)
+    public async Task DispatchAsync(string queue, Guid crawlerAgentId, Guid libraryId, PerformContext context, CancellationToken cancellationToken)
     {
         logger.LogInformation("Dispatch \"{title}\".", nameof(ChapterDiscoveryJob));
+        context.SetJobParameter(Defaults.Worker.CrawlerAgentId, crawlerAgentId);
+        context.SetJobParameter(Defaults.Worker.LibraryId, libraryId);
 
         SetupCultureInfo();
 
@@ -63,7 +65,9 @@ public class ChapterDiscoveryJob(
 
         CompleteDownloadRecord(libDbContext, mangaDownload);
 
-        SetJobContextParameters(context, library);
+        context.SetJobParameter(nameof(library.CrawlerAgent), library.CrawlerAgent.DisplayName);
+        context.SetJobParameter(nameof(library.Manga), library.Manga.Title);
+        context.SetJobParameter(nameof(library.Manga.WebSiteUrl), library.Manga.WebSiteUrl);
 
         logger.LogInformation("Dispatch \"{title}\" completed.", nameof(ChapterDiscoveryJob));
     }
@@ -102,7 +106,7 @@ public class ChapterDiscoveryJob(
     private async Task DiscoverAndScheduleChaptersAsync(LibraryDbContext libDbContext, MangaDownloadRecord mangaDownload, Library library, CancellationToken cancellationToken)
     {
         CrawlerAgent crawlerAgent = mangaDownload.Library.CrawlerAgent;
-        string mangaId = mangaDownload.Library.Manga!.Id;
+        string? mangaId = mangaDownload.Library.Manga!.Id;
 
         int offset = 0;
         const int limit = 30;
@@ -157,7 +161,7 @@ public class ChapterDiscoveryJob(
                 continue;
             }
 
-            await ScheduleChapterDownloadAsync(libDbContext, record, library, crawlerAgent, mangaDownload, chapter, cancellationToken);
+            await ScheduleChapterDownloadAsync(libDbContext, record, library, mangaDownload, chapter, cancellationToken);
         }
     }
 
@@ -173,21 +177,16 @@ public class ChapterDiscoveryJob(
 
     private bool ShouldSkipChapterRecord(ChapterDownloadRecord record)
     {
-        if (record.IsInProgress())
-        {
-            return true;
-        }
-
-        return record.IsCompleted() && record.LastUpdatedStatusTotalDays() < 1;
+        return record.IsInProgress() || (record.IsCompleted() && record.LastUpdatedStatusTotalDays() < 1);
     }
 
-    private async Task ScheduleChapterDownloadAsync(LibraryDbContext libDbContext, ChapterDownloadRecord record, Library library, CrawlerAgent crawlerAgent, MangaDownloadRecord mangaDownload, Chapter chapter, CancellationToken cancellationToken)
+    private async Task ScheduleChapterDownloadAsync(LibraryDbContext libDbContext, ChapterDownloadRecord record, Library library, MangaDownloadRecord mangaDownload, Chapter chapter, CancellationToken cancellationToken)
     {
         record.ToBeRescheduled();
         _ = libDbContext.ChapterDownloadRecords.Upsert(record);
 
         Hangfire.States.EnqueuedState queueState = hangfireRepository.GetLeastLoadedDownloadChapterQueue();
-        string backgroundJobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(
+        string? backgroundJobId = BackgroundJob.Enqueue<IChapterDownloaderJob>(
             queueState.Queue,
             p => p.DispatchAsync(
                 queueState.Queue,
@@ -215,7 +214,7 @@ public class ChapterDiscoveryJob(
     private void HandleCancellationDuringFetch(LibraryDbContext libDbContext, MangaDownloadRecord mangaDownload, string mangaId)
     {
         logger.LogWarning("Dispatch cancelled during chapter fetch for manga: '{MangaId}'", mangaId);
-        mangaDownload.Cancelled($"Cancelled during the running job: {mangaId}");
+        mangaDownload.Cancelled(string.Format(I18n.CancelledDuringTheRunningJob, mangaId));
         _ = libDbContext.MangaDownloadRecords.Update(mangaDownload);
     }
 
@@ -227,13 +226,6 @@ public class ChapterDiscoveryJob(
         }
 
         _ = libDbContext.MangaDownloadRecords.Update(mangaDownload);
-    }
-
-    private void SetJobContextParameters(PerformContext context, Library library)
-    {
-        context.SetJobParameter(nameof(library.CrawlerAgent), library.CrawlerAgent.DisplayName);
-        context.SetJobParameter(nameof(library.Manga), library.Manga.Title);
-        context.SetJobParameter(nameof(library.Manga.WebSiteUrl), library.Manga.WebSiteUrl);
     }
 
     private async Task UpdateMangaRecordAsync(Library library, CancellationToken cancellationToken)

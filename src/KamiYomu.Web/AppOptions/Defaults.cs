@@ -169,6 +169,20 @@ public partial class Defaults
         /// The directory name for worker temporary files.
         /// </summary>
         public const string TempDirName = "kamiyomu-worker.tmp";
+
+        /// <summary>
+        /// Recurring Job Id label used in Hangfire
+        /// </summary>
+        public const string RecurringJobId = nameof(RecurringJobId);
+
+        /// <summary>
+        /// Crawler Agent id used for identify what crawler agent is being executed
+        /// </summary>
+        public const string CrawlerAgentId = "crawlerAgentId";
+        /// <summary>
+        /// Library id used for identify what Library is being executed
+        /// </summary>
+        public const string LibraryId = "libraryId";
     }
 
     /// <summary>

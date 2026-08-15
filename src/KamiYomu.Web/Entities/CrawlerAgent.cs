@@ -224,11 +224,21 @@ public class CrawlerAgent : IDisposable
     /// </summary>
     public void DeleteAssembly()
     {
-        string dir = GetAgentDir(AssemblyName);
+        string dir = GetCrawlerAgentDir(AssemblyName);
         if (Directory.Exists(dir))
         {
             Directory.Delete(dir, true);
         }
+    }
+
+    /// <summary>
+    /// Checks if the crawler agent directory exists.
+    /// </summary>
+    /// <returns>True if the directory exists; otherwise, false.</returns>
+    public bool IsCrawlerAgentExists()
+    {
+        string dir = GetCrawlerAgentDir(AssemblyName);
+        return Directory.Exists(dir);
     }
 
     /// <summary>
@@ -300,7 +310,7 @@ public class CrawlerAgent : IDisposable
     /// </summary>
     /// <param name="fileName">The name of the agent assembly file.</param>
     /// <returns>The full directory path where the agent files are stored.</returns>
-    public static string GetAgentDir(string fileName)
+    public static string GetCrawlerAgentDir(string fileName)
     {
         IOptions<SpecialFolderOptions> specialFolderOptions = Defaults.ServiceLocator.Instance.GetRequiredService<IOptions<SpecialFolderOptions>>();
 
