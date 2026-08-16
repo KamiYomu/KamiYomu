@@ -37,15 +37,14 @@ public class Library
     /// <param name="filePathTemplate">Optional custom file path template for organizing downloaded files.</param>
     /// <param name="comicInfoTitleTemplateFormat">Optional custom template format for comic info title metadata.</param>
     /// <param name="comicInfoSeriesTemplate">Optional custom template for comic info series metadata.</param>
-    /// <param name="dailyExecutionTime">Optional custom daily execution time for the library's crawler agent.</param>
-    public Library(CrawlerAgent agentCrawler, Manga manga, string? filePathTemplate, string? comicInfoTitleTemplateFormat, string? comicInfoSeriesTemplate, string? dailyExecutionTime) : this()
+    /// <param name="dailyExecutionSchedule">Optional custom daily execution schedule for the library's crawler agent.</param>
+    public Library(CrawlerAgent agentCrawler, Manga manga, string? filePathTemplate, string? comicInfoTitleTemplateFormat, string? comicInfoSeriesTemplate) : this()
     {
         CrawlerAgent = agentCrawler;
         Manga = string.IsNullOrEmpty(manga.Title) ? null : manga;
         FilePathTemplate = filePathTemplate;
         ComicInfoTitleTemplateFormat = comicInfoTitleTemplateFormat;
         ComicInfoSeriesTemplate = comicInfoSeriesTemplate;
-        DailyExecutionTime = dailyExecutionTime;
         CreatedDate = DateTimeOffset.UtcNow;
     }
 
@@ -420,12 +419,6 @@ public class Library
     /// Gets the custom template for comic info series metadata, or null if using default.
     /// </summary>
     public string? ComicInfoSeriesTemplate { get; private set; }
-
-
-    /// <summary>
-    /// Gets the daily execution time for scheduled crawler jobs, if configured.
-    /// </summary>
-    public string? DailyExecutionTime { get; private set; }
 
 
     /// <summary>

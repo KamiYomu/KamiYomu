@@ -1,7 +1,9 @@
 using Hangfire;
+using Hangfire.Storage;
 
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 
@@ -33,10 +35,16 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
 
     public void OnGet(Guid libraryId)
     {
+        Library = dbContext.Libraries.FindOne(p => p.Id == libraryId);
+        using IStorageConnection connection = JobStorage.Current.GetConnection();
+
+        RecurringJobDto? recurringJob = connection.GetRecurringJobs([Library.GetDiscovertyJobId()]).FirstOrDefault();
+
         FollowButtonViewModel = new FollowButtonViewModel
         {
             IsFollowing = false,
-            LibraryId = libraryId
+            LibraryId = libraryId,
+            DailyExecutionSchedule = string.IsNullOrWhiteSpace(recurringJob?.Cron) ? workerOptions.Value.DailyExecutionTime : HangfireExtensions.ConvertCronDailyToTimeSpan(recurringJob.Cron)
         };
 
         ScanNowButtonViewModel = new ScanNowButtonViewModel
@@ -45,7 +53,7 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
             LibraryId = libraryId
         };
 
-        Library = dbContext.Libraries.FindOne(p => p.Id == libraryId);
+
         using LibraryDbContext libDbContext = Library.GetReadOnlyDbContext();
 
         MangaDownloadRecord downloadManga = libDbContext.MangaDownloadRecords.FindOne(p => p.Library.Id == Library.Id);
@@ -76,12 +84,15 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
         }
         else
         {
-            workerService.ScheduleDiscoverRecurringJob(Library);
+            TimeSpan? schedule = FollowButtonViewModel.DailyExecutionSchedule.HasValue ? FollowButtonViewModel.DailyExecutionSchedule : workerOptions.Value.DailyExecutionTime;
+
+            workerService.ScheduleDiscoverRecurringJob(Library, schedule);
 
             await notificationService.PushSuccessAsync(I18n.YouStartedFollowingThisTitle, cancellationToken);
         }
 
         FollowButtonViewModel.IsFollowing = !FollowButtonViewModel.IsFollowing;
+
 
         return ViewComponent("FollowButton", FollowButtonViewModel);
     }
@@ -116,6 +127,8 @@ public class FollowButtonViewModel
     public bool IsFollowing { get; set; }
     [BindProperty]
     public Guid LibraryId { get; set; }
+    [BindProperty]
+    public TimeSpan? DailyExecutionSchedule { get; set; }
 }
 
 

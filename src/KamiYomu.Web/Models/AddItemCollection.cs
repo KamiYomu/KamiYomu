@@ -38,7 +38,7 @@ public record AddItemCollection
     /// </summary>
     public bool MakeThisConfigurationDefault { get; set; } = false;
     /// <summary>
-    /// Recurring daily execution time for the chapter discovery job. This property specifies the time of day at which the job should be executed. If not set, it defaults to 19:00 (7 PM).
+    /// Recurring daily execution schedule for the chapter discovery job. This property specifies the time of day at which the job should be executed. If not set, it defaults to 19:00 (7 PM).
     /// </summary>
-    public TimeSpan? DailyExecutionTime { get; set; } = TimeSpan.FromHours(19);
+    public TimeSpan? DailyExecutionSchedule { get; set; } = TimeSpan.FromHours(19);
 }

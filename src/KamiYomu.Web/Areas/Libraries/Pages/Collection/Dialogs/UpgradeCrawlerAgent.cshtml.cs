@@ -34,6 +34,8 @@ public class UpgradeCrawlerAgentModel(
 
         if (Guid.Empty != crawlerAgentId)
         {
+            TimeSpan? scheduled = workerService.GetDiscovertySchedule(library);
+
             CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindOne(p => p.Id == crawlerAgentId);
 
             library.SetCrawlerAgent(crawlerAgent);
@@ -46,15 +48,14 @@ public class UpgradeCrawlerAgentModel(
             {
                 mangaDownload.UpdateLibraryInformation(library);
 
-                UpdateMangaDownloadRecord(crawlerAgent, libDbContext, mangaDownload);
+                UpdateMangaDownloadRecord(crawlerAgent, libDbContext, mangaDownload, scheduled);
             }
             else
             {
-                _ = dbContext.Libraries.Update(library);
-
                 library = await downloadAppService.RefreshCollectionAsync(library, cancellationToken);
-
             }
+
+            _ = dbContext.Libraries.Update(library);
 
             await notificationService.PushSuccessAsync(I18n.CrawlerAgentHasBeenUpgraded, cancellationToken);
         }
@@ -67,8 +68,9 @@ public class UpgradeCrawlerAgentModel(
 
     }
 
-    private void UpdateMangaDownloadRecord(CrawlerAgent crawlerAgent, LibraryDbContext libDbContext, MangaDownloadRecord mangaDownload)
+    private void UpdateMangaDownloadRecord(CrawlerAgent crawlerAgent, LibraryDbContext libDbContext, MangaDownloadRecord mangaDownload, TimeSpan? scheduled)
     {
+
         workerService.CancelMangaDownload(mangaDownload);
 
         List<ChapterDownloadRecord> chapterDownloads = libDbContext.ChapterDownloadRecords.Query().Where(p => p.MangaDownload.Id == mangaDownload.Id).ToList();
@@ -76,12 +78,9 @@ public class UpgradeCrawlerAgentModel(
         {
             chapterDownload.UpdateMangaDownloadInformation(mangaDownload);
             chapterDownload.UpdateCrawlerAgentInformation(crawlerAgent);
-            if (chapterDownload.CrawlerAgent.Id != crawlerAgent.Id)
-            {
-                chapterDownload.ToBeRescheduled(I18n.CrawlerAgentHasBeenUpgraded);
-            }
+            chapterDownload.ToBeRescheduled(I18n.CrawlerAgentHasBeenUpgraded);
         }
-        string jobId = workerService.ScheduleMangaDownload(mangaDownload);
+        string jobId = workerService.ScheduleMangaDownload(mangaDownload, scheduled);
 
         mangaDownload.Schedule(jobId, I18n.CrawlerAgentHasBeenUpgraded);
 

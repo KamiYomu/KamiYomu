@@ -1,4 +1,5 @@
 using Hangfire;
+using Hangfire.Common;
 using Hangfire.Storage;
 using Hangfire.Storage.Monitoring;
 
@@ -19,15 +20,17 @@ namespace KamiYomu.Web.Infrastructure.Services;
 /// </summary>
 /// <param name="logger"></param>
 /// <param name="workerOptions"></param>
+/// <param name="dbContext"></param>
 /// <param name="hangfireRepository"></param>
 /// <param name="jobClient"></param>
 public class WorkerService(ILogger<WorkerService> logger,
                            IOptions<WorkerOptions> workerOptions,
+                           DbContext dbContext,
                            IHangfireRepository hangfireRepository,
                            IBackgroundJobClient jobClient) : IWorkerService
 {
     /// <inheritdoc/>
-    public string ScheduleMangaDownload(MangaDownloadRecord mangaDownloadRecord)
+    public string ScheduleMangaDownload(MangaDownloadRecord mangaDownloadRecord, TimeSpan? schedule)
     {
 
         Hangfire.States.EnqueuedState mangaDownloadQueueState = hangfireRepository.GetLeastLoadedMangaDownloadSchedulerQueue();
@@ -39,9 +42,20 @@ public class WorkerService(ILogger<WorkerService> logger,
         connection.SetJobParameter(jobId, Defaults.Worker.LibraryId, mangaDownloadRecord.Library.Id.ToString());
         connection.SetJobParameter(jobId, Defaults.Worker.CrawlerAgentId, mangaDownloadRecord.Library.CrawlerAgent.Id.ToString());
 
-        ScheduleDiscoverRecurringJob(mangaDownloadRecord.Library);
+        ScheduleDiscoverRecurringJob(mangaDownloadRecord.Library, schedule);
 
         return jobId;
+    }
+
+    /// <inheritdoc/>
+    public TimeSpan? GetDiscovertySchedule(Library library)
+    {
+        using IStorageConnection connection = JobStorage.Current.GetConnection();
+
+        RecurringJobDto? discoveryJob = connection.GetRecurringJobs()
+                                                  .FirstOrDefault(job => string.Equals(job.Id, library.GetDiscovertyJobId(), StringComparison.OrdinalIgnoreCase));
+
+        return !string.IsNullOrWhiteSpace(discoveryJob?.Cron) ? HangfireExtensions.ConvertCronDailyToTimeSpan(discoveryJob.Cron) : null;
     }
 
     /// <inheritdoc/>
@@ -78,12 +92,11 @@ public class WorkerService(ILogger<WorkerService> logger,
     }
 
     /// <inheritdoc/>
-    public void ScheduleDiscoverRecurringJob(Library library)
+    public void ScheduleDiscoverRecurringJob(Library library, TimeSpan? schedule)
     {
         string mangaDiscoveryQueue = workerOptions.Value.DiscoveryNewChapterQueues.First();
 
-        string cronExpression = string.IsNullOrWhiteSpace(library.DailyExecutionTime) ? workerOptions.Value.DailyExecutionTime.ToCronDailyExpression() : library.DailyExecutionTime;
-
+        string cronExpression = schedule.HasValue ? schedule.Value.ToCronDailyExpression() : workerOptions.Value.DailyExecutionTime.ToCronDailyExpression();
         RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(library.GetDiscovertyJobId(), (job) => job.DispatchAsync(mangaDiscoveryQueue, library.CrawlerAgent.Id, library.Id, null!, CancellationToken.None), cronExpression, new RecurringJobOptions()
         {
             TimeZone = TimeZoneInfo.Local,
