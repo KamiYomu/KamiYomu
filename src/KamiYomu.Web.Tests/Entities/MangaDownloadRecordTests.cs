@@ -7,7 +7,7 @@ public class MangaDownloadRecordTests
 {
     private Library CreateLibrary()
     {
-        return new Library(new CrawlerAgent(), new Manga(), "test", "test", "test", TimeSpan.FromHours(19));
+        return new Library(new CrawlerAgent(), new Manga(), "test", "test", "test");
     }
     private MangaDownloadRecord CreateRecord()
     {

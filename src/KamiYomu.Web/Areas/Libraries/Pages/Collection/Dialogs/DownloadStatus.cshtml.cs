@@ -1,7 +1,9 @@
 using Hangfire;
+using Hangfire.Storage;
 
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 
@@ -34,12 +36,15 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
     public void OnGet(Guid libraryId)
     {
         Library = dbContext.Libraries.FindOne(p => p.Id == libraryId);
+        using IStorageConnection connection = JobStorage.Current.GetConnection();
+
+        RecurringJobDto? recurringJob = connection.GetRecurringJobs([Library.GetDiscovertyJobId()]).FirstOrDefault();
 
         FollowButtonViewModel = new FollowButtonViewModel
         {
             IsFollowing = false,
             LibraryId = libraryId,
-            DailyExecutionSchedule = Library.DailyExecutionSchedule.HasValue ? Library.DailyExecutionSchedule : workerOptions.Value.DailyExecutionTime
+            DailyExecutionSchedule = string.IsNullOrWhiteSpace(recurringJob?.Cron) ? workerOptions.Value.DailyExecutionTime : HangfireExtensions.ConvertCronDailyToTimeSpan(recurringJob.Cron)
         };
 
         ScanNowButtonViewModel = new ScanNowButtonViewModel
@@ -80,11 +85,8 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
         else
         {
             TimeSpan? schedule = FollowButtonViewModel.DailyExecutionSchedule.HasValue ? FollowButtonViewModel.DailyExecutionSchedule : workerOptions.Value.DailyExecutionTime;
-            Library.UpdateDailyExecutionSchedule(schedule);
 
-            _ = dbContext.Libraries.Update(Library);
-
-            workerService.ScheduleDiscoverRecurringJob(Library);
+            workerService.ScheduleDiscoverRecurringJob(Library, schedule);
 
             await notificationService.PushSuccessAsync(I18n.YouStartedFollowingThisTitle, cancellationToken);
         }

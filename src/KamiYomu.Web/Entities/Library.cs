@@ -38,14 +38,13 @@ public class Library
     /// <param name="comicInfoTitleTemplateFormat">Optional custom template format for comic info title metadata.</param>
     /// <param name="comicInfoSeriesTemplate">Optional custom template for comic info series metadata.</param>
     /// <param name="dailyExecutionSchedule">Optional custom daily execution schedule for the library's crawler agent.</param>
-    public Library(CrawlerAgent agentCrawler, Manga manga, string? filePathTemplate, string? comicInfoTitleTemplateFormat, string? comicInfoSeriesTemplate, TimeSpan? dailyExecutionSchedule) : this()
+    public Library(CrawlerAgent agentCrawler, Manga manga, string? filePathTemplate, string? comicInfoTitleTemplateFormat, string? comicInfoSeriesTemplate) : this()
     {
         CrawlerAgent = agentCrawler;
         Manga = string.IsNullOrEmpty(manga.Title) ? null : manga;
         FilePathTemplate = filePathTemplate;
         ComicInfoTitleTemplateFormat = comicInfoTitleTemplateFormat;
         ComicInfoSeriesTemplate = comicInfoSeriesTemplate;
-        DailyExecutionSchedule = dailyExecutionSchedule;
         CreatedDate = DateTimeOffset.UtcNow;
     }
 
@@ -386,11 +385,6 @@ public class Library
         CrawlerAgent = crawlerAgent;
     }
 
-    internal void UpdateDailyExecutionSchedule(TimeSpan? dailyExecutionSchedule)
-    {
-        DailyExecutionSchedule = dailyExecutionSchedule;
-    }
-
     /// <summary>
     /// Gets the unique identifier for this library.
     /// </summary>
@@ -425,12 +419,6 @@ public class Library
     /// Gets the custom template for comic info series metadata, or null if using default.
     /// </summary>
     public string? ComicInfoSeriesTemplate { get; private set; }
-
-
-    /// <summary>
-    /// Gets the daily execution schedule for scheduled crawler jobs, if configured.
-    /// </summary>
-    public TimeSpan? DailyExecutionSchedule { get; private set; }
 
 
     /// <summary>
