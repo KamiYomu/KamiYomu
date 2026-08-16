@@ -1,4 +1,5 @@
 using System.IO.Compression;
+using System.Linq.Expressions;
 
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Areas.Settings.Models;
@@ -161,17 +162,29 @@ public class IndexModel(ILogger<IndexModel> logger,
                 }
             }
 
-            // Extract main package first into a dedicated subfolder
-            ZipFile.ExtractToDirectory(tempPackagePath, crawlerAgentDir, overwriteFiles: true);
 
-            // Scan only the main package's extracted folder for the DLL
-            string dllPath = Directory.EnumerateFiles(crawlerAgentDir, "*.dll", SearchOption.AllDirectories).FirstOrDefault(p => p.EndsWith($"{packageId}.dll")) ?? throw new FileNotFoundException("Main package DLL not found.");
-
-            // Extract dependencies into the same root directory
-            foreach (string? path in savedPaths.Skip(1))
+            try
             {
-                ZipFile.ExtractToDirectory(path, crawlerAgentDir, overwriteFiles: true);
+                // Extract main package first into a dedicated subfolder
+                ZipFile.ExtractToDirectory(tempPackagePath, crawlerAgentDir, overwriteFiles: true);
+
+                // Extract dependencies into the same root directory
+                foreach (string? path in savedPaths.Skip(1))
+                {
+                    ZipFile.ExtractToDirectory(path, crawlerAgentDir, overwriteFiles: true);
+                }
+
             }
+            catch (IOException ex)
+            {
+                logger.LogWarning(ex, "Unable to overwrite because it is locked by another process. ");
+
+                await Task.Delay(200);
+            }
+
+            string dllPath = Directory.EnumerateFiles(crawlerAgentDir, "*.dll", SearchOption.AllDirectories)
+                                    .FirstOrDefault(p => p.EndsWith($"{packageId}.dll"))
+                                    ?? throw new FileNotFoundException("Main package DLL not found.");
 
             System.Reflection.Assembly assembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
             Dictionary<string, string> metadata = CrawlerAgent.GetAssemblyMetadata(assembly);
