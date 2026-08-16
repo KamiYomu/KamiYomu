@@ -63,25 +63,39 @@ public class CrawlerAgent : IDisposable
     /// <exception cref="InvalidOperationException">Thrown when the assembly does not contain any non-abstract class implementing <see cref="ICrawlerAgent"/>.</exception>
     public static Assembly GetIsolatedAssembly(string assemblyPath)
     {
-
         if (!File.Exists(assemblyPath))
         {
             throw new FileNotFoundException($"Assembly file not found at path: {assemblyPath}");
         }
+        CrawlerAgentLoadContext? context = null;
+        try
+        {
+            context = new(assemblyPath);
+            Assembly assembly = context.LoadFromAssemblyPath(assemblyPath);
 
-        CrawlerAgentLoadContext context = new(assemblyPath);
-        Assembly assembly = context.LoadFromAssemblyPath(assemblyPath);
+            Type interfaceType = typeof(ICrawlerAgent);
+            bool validTypes = assembly.GetTypes().Any(t =>
+                t.IsClass &&
+                !t.IsAbstract &&
+                t.GetInterfaces().Any(i => i.FullName == interfaceType.FullName));
 
-        Type interfaceType = typeof(ICrawlerAgent);
-        bool validTypes = assembly.GetTypes().Any(t =>
-            t.IsClass &&
-            !t.IsAbstract &&
-            t.GetInterfaces().Any(i => i.FullName == interfaceType.FullName));
+            return !validTypes
+                ? throw new InvalidOperationException(
+                    $"Assembly '{assembly.FullName}' does not contain any non-abstract class implementing '{nameof(ICrawlerAgent)}'.")
+                : assembly;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+        finally
+        {
+            context?.Unload();
+            context = null;
 
-        return !validTypes
-            ? throw new InvalidOperationException(
-                $"Assembly '{assembly.FullName}' does not contain any non-abstract class implementing '{nameof(ICrawlerAgent)}'.")
-            : assembly;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
     }
 
     /// <summary>
