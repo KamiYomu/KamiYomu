@@ -82,7 +82,7 @@ public class WorkerService(ILogger<WorkerService> logger,
     {
         string mangaDiscoveryQueue = workerOptions.Value.DiscoveryNewChapterQueues.First();
 
-        string cronExpression = string.IsNullOrWhiteSpace(library.DailyExecutionTime) ? workerOptions.Value.DailyExecutionTime.ToCronDailyExpression() : library.DailyExecutionTime;
+        string cronExpression = library.DailyExecutionSchedule.HasValue ? library.DailyExecutionSchedule.Value.ToCronDailyExpression() : workerOptions.Value.DailyExecutionTime.ToCronDailyExpression();
 
         RecurringJob.AddOrUpdate<IChapterDiscoveryJob>(library.GetDiscovertyJobId(), (job) => job.DispatchAsync(mangaDiscoveryQueue, library.CrawlerAgent.Id, library.Id, null!, CancellationToken.None), cronExpression, new RecurringJobOptions()
         {

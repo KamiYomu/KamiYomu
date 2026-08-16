@@ -33,10 +33,13 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
 
     public void OnGet(Guid libraryId)
     {
+        Library = dbContext.Libraries.FindOne(p => p.Id == libraryId);
+
         FollowButtonViewModel = new FollowButtonViewModel
         {
             IsFollowing = false,
-            LibraryId = libraryId
+            LibraryId = libraryId,
+            DailyExecutionSchedule = Library.DailyExecutionSchedule.HasValue ? Library.DailyExecutionSchedule : workerOptions.Value.DailyExecutionTime
         };
 
         ScanNowButtonViewModel = new ScanNowButtonViewModel
@@ -45,7 +48,7 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
             LibraryId = libraryId
         };
 
-        Library = dbContext.Libraries.FindOne(p => p.Id == libraryId);
+
         using LibraryDbContext libDbContext = Library.GetReadOnlyDbContext();
 
         MangaDownloadRecord downloadManga = libDbContext.MangaDownloadRecords.FindOne(p => p.Library.Id == Library.Id);
@@ -76,12 +79,18 @@ public class DownloadStatusModel(IOptions<WorkerOptions> workerOptions,
         }
         else
         {
+            TimeSpan? schedule = FollowButtonViewModel.DailyExecutionSchedule.HasValue ? FollowButtonViewModel.DailyExecutionSchedule : workerOptions.Value.DailyExecutionTime;
+            Library.UpdateDailyExecutionSchedule(schedule);
+
+            _ = dbContext.Libraries.Update(Library);
+
             workerService.ScheduleDiscoverRecurringJob(Library);
 
             await notificationService.PushSuccessAsync(I18n.YouStartedFollowingThisTitle, cancellationToken);
         }
 
         FollowButtonViewModel.IsFollowing = !FollowButtonViewModel.IsFollowing;
+
 
         return ViewComponent("FollowButton", FollowButtonViewModel);
     }
@@ -116,6 +125,8 @@ public class FollowButtonViewModel
     public bool IsFollowing { get; set; }
     [BindProperty]
     public Guid LibraryId { get; set; }
+    [BindProperty]
+    public TimeSpan? DailyExecutionSchedule { get; set; }
 }
 
 
