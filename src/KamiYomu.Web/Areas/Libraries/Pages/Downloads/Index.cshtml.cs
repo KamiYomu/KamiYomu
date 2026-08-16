@@ -77,7 +77,7 @@ public class IndexModel(
         UserPreference userPreference = dbContext.UserPreferences.Query().FirstOrDefault();
         PaginationOptions paginationOptions = !string.IsNullOrWhiteSpace(ContinuationToken) ? new PaginationOptions(ContinuationToken) : new PaginationOptions(Offset, 30);
         PagedResult<Manga> queryResult = await crawlerAgentRepository.SearchAsync(crawlerAgent.Id, Query, paginationOptions, cancellationToken);
-        Results = queryResult.Data.Where(p => p.IsFamilySafe || p.IsFamilySafe == userPreference.FamilySafeMode).Select(p => new Library(crawlerAgent, p, null, null, null, null));
+        Results = queryResult.Data.Where(p => p.IsFamilySafe || p.IsFamilySafe == userPreference.FamilySafeMode).Select(p => new Library(crawlerAgent, p, null, null, null));
         ViewData["ShowAddToLibrary"] = true;
         ViewData["Handler"] = "Crawler";
         ViewData[nameof(Query)] = Query;
@@ -154,7 +154,7 @@ public class IndexModel(
 
         return ViewComponent("LibraryCard", new Dictionary<string, object>
         {
-            { "library", new Library(library.CrawlerAgent, library.Manga, null, null, null, null) },
+            { "library", new Library(library.CrawlerAgent, library.Manga, null, null, null) },
             { nameof(cancellationToken), cancellationToken }
         });
     }

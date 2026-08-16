@@ -49,9 +49,9 @@ public class DownloadAppService(
         string filePathTemplateFormat = string.IsNullOrWhiteSpace(addItemCollection.FilePathTemplate) ? specialFolderOptions.Value.FilePathFormat : addItemCollection.FilePathTemplate;
         string comicInfoTitleTemplateFormat = string.IsNullOrWhiteSpace(addItemCollection.ComicInfoTitleTemplate) ? specialFolderOptions.Value.ComicInfoTitleFormat : addItemCollection.ComicInfoTitleTemplate;
         string comicInfoSeriesTemplate = string.IsNullOrWhiteSpace(addItemCollection.ComicInfoSeriesTemplate) ? specialFolderOptions.Value.ComicInfoSeriesFormat : addItemCollection.ComicInfoSeriesTemplate;
-        TimeSpan? dailyExecutionSchedule = addItemCollection.DailyExecutionSchedule.HasValue ? addItemCollection.DailyExecutionSchedule : workerOptions.Value.DailyExecutionTime;
+        TimeSpan? schedule = addItemCollection.DailyExecutionSchedule.HasValue ? addItemCollection.DailyExecutionSchedule : workerOptions.Value.DailyExecutionTime;
 
-        Library library = new(crawlerAgent, manga, filePathTemplateFormat, comicInfoTitleTemplateFormat, comicInfoSeriesTemplate, dailyExecutionSchedule);
+        Library library = new(crawlerAgent, manga, filePathTemplateFormat, comicInfoTitleTemplateFormat, comicInfoSeriesTemplate);
 
         _ = dbContext.Libraries.Insert(library);
 
@@ -61,7 +61,7 @@ public class DownloadAppService(
 
         _ = libDbContext.MangaDownloadRecords.Insert(downloadRecord);
 
-        string backgroundJobId = workerService.ScheduleMangaDownload(downloadRecord);
+        string backgroundJobId = workerService.ScheduleMangaDownload(downloadRecord, schedule);
 
         downloadRecord.Schedule(backgroundJobId);
 
@@ -96,7 +96,7 @@ public class DownloadAppService(
 
         _ = libDbContext.MangaDownloadRecords.Insert(downloadRecord);
 
-        string backgroundJobId = workerService.ScheduleMangaDownload(downloadRecord);
+        string backgroundJobId = workerService.ScheduleMangaDownload(downloadRecord, null);
 
         downloadRecord.Schedule(backgroundJobId);
 

@@ -11,8 +11,9 @@ public interface IWorkerService
     /// Schedules a manga download job for the specified download record.
     /// </summary>
     /// <param name="mangaDownloadRecord">The manga download record containing download details.</param>
+    /// <param name="schedule">The optional schedule for the download job.</param>
     /// <returns>The job ID of the scheduled download.</returns>
-    string ScheduleMangaDownload(MangaDownloadRecord mangaDownloadRecord);
+    string ScheduleMangaDownload(MangaDownloadRecord mangaDownloadRecord, TimeSpan? schedule);
 
     /// <summary>
     /// Cancels a previously scheduled manga download job.
@@ -27,10 +28,18 @@ public interface IWorkerService
     void RemoveDiscoverRecurringJob(Library library);
 
     /// <summary>
+    /// Gets the schedule for the recurring discovery job of the specified library.
+    /// </summary>
+    /// <param name="library">The library of discovery job.</param>
+    /// <returns>The schedule of the recurring discovery job, or null if not scheduled.</returns>
+    TimeSpan? GetDiscovertySchedule(Library library);
+
+    /// <summary>
     /// Schedules a recurring discovery job for the specified library.
     /// </summary>
     /// <param name="library">The library for which to schedule the recurring discovery job.</param>
-    void ScheduleDiscoverRecurringJob(Library library);
+    /// <param name="schedule">The optional schedule for the recurring discovery job.</param>
+    void ScheduleDiscoverRecurringJob(Library library, TimeSpan? schedule);
 
     /// <summary>
     /// Triggers an immediate execution of the discovery job for the specified library.
