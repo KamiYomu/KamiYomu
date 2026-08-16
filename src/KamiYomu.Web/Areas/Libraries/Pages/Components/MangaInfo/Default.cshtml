@@ -5,12 +5,7 @@
 <div class="container-fluid">
     <div class="row g-4">
         <div class="col-md-3">
-            <div class="border rounded shadow-sm overflow-hidden">
-                <a href="@Model.Manga.WebSiteUrl" alt="@Model.Manga.Title" target="_blank">
-                    <img src="@Model.Manga.CoverUrl.ToInternalImageUrl()" alt="@Model.Manga.Title"
-                         class="img-fluid w-100" style="object-fit: cover; max-height: 400px;" />
-                </a>
-            </div>
+            <vc:manga-info-vertical manga="@Model.Manga" />
         </div>
 
         <div class="col-md-9">

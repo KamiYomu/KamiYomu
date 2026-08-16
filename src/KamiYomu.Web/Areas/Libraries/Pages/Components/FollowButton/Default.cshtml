@@ -1,22 +1,43 @@
 @using KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
 
 @model FollowButtonViewModel
-<button id="followBtn"
-        class="btn btn-sm @(Model.IsFollowing ? "btn-success" : "btn-outline-secondary")"
-        hx-post="/Libraries/Collection/Dialogs/DownloadStatus?handler=ToggleFollowing"
-        hx-vals='{
-            "FollowButtonViewModel.LibraryId": "@Model.LibraryId",
-            "FollowButtonViewModel.IsFollowing": "@Model.IsFollowing.ToString().ToLower()"
-        }' 
-        hx-target="this"
-        hx-swap="outerHTML"
-        title="@(Model.IsFollowing? I18n.Following: I18n.Follow)"
-        data-bs-toggle="popover"
-        data-bs-trigger="hover focus"
-        data-bs-placement="top"
-        data-bs-content="@(Model.IsFollowing? I18n.YouStartedFollowingThisTitle: I18n.YouAreNoLongerFollowingThisTitle)"
-        data-bs-title="@I18n.Follow">
+<form class="d-flex align-items-center gap-2"
+      hx-post="/Libraries/Collection/Dialogs/DownloadStatus?handler=ToggleFollowing"
+      hx-target="this"
+      hx-swap="outerHTML">
 
-    <i class="bi @(Model.IsFollowing ? "bi-eye-fill" : "bi-eye") me-2"></i>
-    @(Model.IsFollowing? I18n.Following: I18n.Follow)
-</button>
+    <input type="hidden"
+           name="FollowButtonViewModel.LibraryId"
+           value="@Model.LibraryId" />
+
+    <input type="hidden"
+           name="FollowButtonViewModel.IsFollowing"
+           value="@Model.IsFollowing.ToString().ToLower()" />
+
+    <div class="input-group input-group-sm" style="width: 140px;">
+        <span class="input-group-text">
+            <i class="bi bi-clock"></i>
+        </span>
+
+        <input type="time"
+               class="form-control"
+               name="FollowButtonViewModel.DailyExecutionSchedule"
+               asp-for="DailyExecutionSchedule"
+               placeholder="@Model.DailyExecutionSchedule"/>
+    </div>
+
+    <button id="followBtn"
+            type="submit"
+            class="btn btn-sm @(Model.IsFollowing ? "btn-success" : "btn-outline-secondary")"
+            title="@(Model.IsFollowing? I18n.Following: I18n.Follow)"
+            data-bs-toggle="popover"
+            data-bs-trigger="hover focus"
+            data-bs-placement="top"
+            data-bs-content="@(Model.IsFollowing? I18n.YouStartedFollowingThisTitle: I18n.YouAreNoLongerFollowingThisTitle)"
+            data-bs-title="@I18n.Follow">
+
+        <i class="bi @(Model.IsFollowing ? "bi-eye-fill" : "bi-eye") me-2"></i>
+        @(Model.IsFollowing? I18n.Following: I18n.Follow)
+    </button>
+</form>
+

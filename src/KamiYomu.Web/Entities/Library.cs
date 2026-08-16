@@ -37,15 +37,15 @@ public class Library
     /// <param name="filePathTemplate">Optional custom file path template for organizing downloaded files.</param>
     /// <param name="comicInfoTitleTemplateFormat">Optional custom template format for comic info title metadata.</param>
     /// <param name="comicInfoSeriesTemplate">Optional custom template for comic info series metadata.</param>
-    /// <param name="dailyExecutionTime">Optional custom daily execution time for the library's crawler agent.</param>
-    public Library(CrawlerAgent agentCrawler, Manga manga, string? filePathTemplate, string? comicInfoTitleTemplateFormat, string? comicInfoSeriesTemplate, string? dailyExecutionTime) : this()
+    /// <param name="dailyExecutionSchedule">Optional custom daily execution schedule for the library's crawler agent.</param>
+    public Library(CrawlerAgent agentCrawler, Manga manga, string? filePathTemplate, string? comicInfoTitleTemplateFormat, string? comicInfoSeriesTemplate, TimeSpan? dailyExecutionSchedule) : this()
     {
         CrawlerAgent = agentCrawler;
         Manga = string.IsNullOrEmpty(manga.Title) ? null : manga;
         FilePathTemplate = filePathTemplate;
         ComicInfoTitleTemplateFormat = comicInfoTitleTemplateFormat;
         ComicInfoSeriesTemplate = comicInfoSeriesTemplate;
-        DailyExecutionTime = dailyExecutionTime;
+        DailyExecutionSchedule = dailyExecutionSchedule;
         CreatedDate = DateTimeOffset.UtcNow;
     }
 
@@ -386,6 +386,11 @@ public class Library
         CrawlerAgent = crawlerAgent;
     }
 
+    internal void UpdateDailyExecutionSchedule(TimeSpan? dailyExecutionSchedule)
+    {
+        DailyExecutionSchedule = dailyExecutionSchedule;
+    }
+
     /// <summary>
     /// Gets the unique identifier for this library.
     /// </summary>
@@ -423,9 +428,9 @@ public class Library
 
 
     /// <summary>
-    /// Gets the daily execution time for scheduled crawler jobs, if configured.
+    /// Gets the daily execution schedule for scheduled crawler jobs, if configured.
     /// </summary>
-    public string? DailyExecutionTime { get; private set; }
+    public TimeSpan? DailyExecutionSchedule { get; private set; }
 
 
     /// <summary>

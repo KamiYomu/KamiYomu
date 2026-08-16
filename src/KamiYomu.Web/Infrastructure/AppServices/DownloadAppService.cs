@@ -49,9 +49,9 @@ public class DownloadAppService(
         string filePathTemplateFormat = string.IsNullOrWhiteSpace(addItemCollection.FilePathTemplate) ? specialFolderOptions.Value.FilePathFormat : addItemCollection.FilePathTemplate;
         string comicInfoTitleTemplateFormat = string.IsNullOrWhiteSpace(addItemCollection.ComicInfoTitleTemplate) ? specialFolderOptions.Value.ComicInfoTitleFormat : addItemCollection.ComicInfoTitleTemplate;
         string comicInfoSeriesTemplate = string.IsNullOrWhiteSpace(addItemCollection.ComicInfoSeriesTemplate) ? specialFolderOptions.Value.ComicInfoSeriesFormat : addItemCollection.ComicInfoSeriesTemplate;
-        string dailyExecutionTime = addItemCollection.DailyExecutionTime.HasValue ? addItemCollection.DailyExecutionTime.Value.ToCronDailyExpression() : workerOptions.Value.DailyExecutionTime.ToCronDailyExpression();
+        TimeSpan? dailyExecutionSchedule = addItemCollection.DailyExecutionSchedule.HasValue ? addItemCollection.DailyExecutionSchedule : workerOptions.Value.DailyExecutionTime;
 
-        Library library = new(crawlerAgent, manga, filePathTemplateFormat, comicInfoTitleTemplateFormat, comicInfoSeriesTemplate, dailyExecutionTime);
+        Library library = new(crawlerAgent, manga, filePathTemplateFormat, comicInfoTitleTemplateFormat, comicInfoSeriesTemplate, dailyExecutionSchedule);
 
         _ = dbContext.Libraries.Insert(library);
 
@@ -74,7 +74,7 @@ public class DownloadAppService(
             preferences.SetFilePathTemplate(filePathTemplateFormat);
             preferences.SetComicInfoTitleTemplate(comicInfoTitleTemplateFormat);
             preferences.SetComicInfoSeriesTemplate(comicInfoSeriesTemplate);
-            preferences.SetDailyExecutionTime(addItemCollection.DailyExecutionTime);
+            preferences.SetDailyExecutionTime(addItemCollection.DailyExecutionSchedule);
             _ = dbContext.UserPreferences.Upsert(preferences);
         }
 

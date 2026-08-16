@@ -37,7 +37,7 @@ public class IndexModel(
     [BindProperty]
     public required string ComicInfoSeriesTemplate { get; set; }
     [BindProperty]
-    public TimeSpan? DailyExecutionTime { get; set; } = workerOptions.Value.DailyExecutionTime;
+    public TimeSpan? DailyExecutionSchedule { get; set; } = workerOptions.Value.DailyExecutionTime;
     [BindProperty]
     public required bool MakeThisConfigurationDefault { get; set; } = false;
 
@@ -123,7 +123,7 @@ public class IndexModel(
             ComicInfoTitleTemplate = ComicInfoTitleTemplate,
             CrawlerAgentId = CrawlerAgentId,
             FilePathTemplate = FilePathTemplate,
-            DailyExecutionTime = DailyExecutionTime,
+            DailyExecutionSchedule = DailyExecutionSchedule,
             MakeThisConfigurationDefault = MakeThisConfigurationDefault,
             MangaId = MangaId
         }, cancellationToken);
