@@ -44,6 +44,7 @@ public static class ServicesHostings
     private static void AddAppServices(WebApplicationBuilder builder)
     {
         _ = builder.Services.AddTransient<IDownloadAppService, DownloadAppService>();
+        _ = builder.Services.AddTransient<ICrawlerAgentAppService, CrawlerAgentAppService>();
     }
 
     private static void AddWindowsServices(WebApplicationBuilder builder)

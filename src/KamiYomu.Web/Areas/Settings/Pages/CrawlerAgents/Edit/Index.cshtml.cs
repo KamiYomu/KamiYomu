@@ -5,6 +5,8 @@ using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Areas.Settings.Pages.Shared;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
+using KamiYomu.Web.Infrastructure.AppServices;
+using KamiYomu.Web.Infrastructure.AppServices.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 
@@ -19,6 +21,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.Edit;
 public class IndexModel(DbContext dbContext,
                        CacheContext cacheContext,
                        IOptions<CloudflareSolverOptions> flareSolverrOptions,
+                       ICrawlerAgentAppService crawlerAgentAppService,
                        INotificationService notificationService) : PageModel
 {
     [BindProperty(SupportsGet = true)]
@@ -93,8 +96,10 @@ public class IndexModel(DbContext dbContext,
         cacheContext.EmptyAgentKeys(crawlerAgent.Id);
 
         notificationService.EnqueueSuccessForNextPage(I18n.CrawlerAgentSavedSuccessfully);
-        
+
         Id = Input.Id;
+
+
         Input = new InputModel()
         {
             Id = Input.Id,
