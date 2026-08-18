@@ -1179,4 +1179,13 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="CrawlerAgentHasBeenUpgraded" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="CancelledByTheUser" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="CrawlerAgentHasBeenUpgraded" xml:space="preserve">
+    <value>L'agent du robot d'exploration a été mis à niveau.</value>
+  </data>
+  <data name="CancelledByTheUser" xml:space="preserve">
+    <value>Annulé par l'utilisateur.</value>
+  </data>
 </root>

@@ -376,6 +376,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancelled by the user..
+        /// </summary>
+        public static string CancelledByTheUser {
+            get {
+                return ResourceManager.GetString("CancelledByTheUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancelled during the running job: {0}.
         /// </summary>
         public static string CancelledDuringTheRunningJob {

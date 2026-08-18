@@ -2,9 +2,11 @@ using KamiYomu.Web.Infrastructure.Contexts;
 
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
+using static KamiYomu.Web.AppOptions.Defaults;
+
 namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs;
 
-public class RemoveFromCollectionModel(DbContext dbContext) : PageModel
+public class RemoveFromCollectionModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext) : PageModel
 {
 
     public Guid LibraryId { get; set; }

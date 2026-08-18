@@ -3,9 +3,11 @@ using KamiYomu.Web.Infrastructure.Contexts;
 
 using Microsoft.AspNetCore.Mvc;
 
+using static KamiYomu.Web.AppOptions.Defaults;
+
 namespace KamiYomu.Web.Areas.Libraries.ViewComponents;
 
-public class LibraryCardViewComponent(DbContext dbContext) : ViewComponent
+public class LibraryCardViewComponent([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext) : ViewComponent
 {
     public async Task<IViewComponentResult> InvokeAsync(Library library, CancellationToken cancellationToken = default)
     {

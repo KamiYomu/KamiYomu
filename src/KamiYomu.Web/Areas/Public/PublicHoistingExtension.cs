@@ -66,7 +66,7 @@ public static class PublicHoistingExtension
                         Timestamp = DateTime.UtcNow
                     };
 
-                    string json = JsonSerializer.Serialize(errorResponse);
+                    string json = System.Text.Json.JsonSerializer.Serialize(errorResponse);
                     await context.Response.WriteAsync(json);
                 }
             });
