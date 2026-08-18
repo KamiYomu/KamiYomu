@@ -10,10 +10,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 
+using static KamiYomu.Web.AppOptions.Defaults;
+
 namespace KamiYomu.Web.Areas.Libraries.Pages.Downloads;
 
 public class IndexModel(
-    DbContext dbContext,
+    [FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext,
     IOptions<WorkerOptions> workerOptions,
     IDownloadAppService downloadAppService,
     ICrawlerAgentRepository crawlerAgentRepository) : PageModel
@@ -63,7 +65,7 @@ public class IndexModel(
 
     public async Task<IActionResult> OnGetSearchAsync(CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(Query))
+        if (string.IsNullOrWhiteSpace(Query) || SelectedAgent is null)
         {
             return new EmptyResult();
         }

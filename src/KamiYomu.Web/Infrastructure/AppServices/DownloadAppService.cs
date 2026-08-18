@@ -155,7 +155,7 @@ public class DownloadAppService(
 
         _ = BackgroundJob.Delete(chapterDownloadRecord.BackgroundJobId);
 
-        chapterDownloadRecord.Cancelled("Cancelled by the user.");
+        chapterDownloadRecord.Cancelled(I18n.CancelledByTheUser);
 
         logger.LogInformation("Cancelled by the user.");
 

@@ -21,7 +21,7 @@ public class GitHubService(IHttpClientFactory httpClientFactory, CacheContext ca
             {
                 string response = await _httpClient.GetStringAsync(url, cancellationToken);
 
-                JsonElement releases = JsonSerializer.Deserialize<JsonElement>(response);
+                JsonElement releases = System.Text.Json.JsonSerializer.Deserialize<JsonElement>(response);
                 if (releases.GetArrayLength() > 0)
                 {
                     JsonElement latest = releases[0];

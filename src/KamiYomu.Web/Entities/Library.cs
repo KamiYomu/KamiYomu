@@ -356,7 +356,7 @@ public class Library
     /// <returns>An XML string containing the ComicInfo metadata.</returns>
     public string ToComicInfo(Chapter chapter)
     {
-        string chapterJson = JsonSerializer.Serialize(chapter);
+        string chapterJson = System.Text.Json.JsonSerializer.Serialize(chapter);
         XElement comicInfo = new("ComicInfo",
             new XElement("Title", $"{GetComicInfoTitleTemplateResolved(chapter)}"),
             new XElement("Series", $"{GetComicInfoSeriesTemplateResolved(chapter)}"),

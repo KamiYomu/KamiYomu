@@ -1179,4 +1179,13 @@ voor de &lt;code&gt;WorkerCount&lt;/code&gt;-instelling van Hangfire om te bepal
   <data name="CrawlerAgentHasBeenUpgraded" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="CancelledByTheUser" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="CrawlerAgentHasBeenUpgraded" xml:space="preserve">
+    <value>Crawleragent is geüpgraded.</value>
+  </data>
+  <data name="CancelledByTheUser" xml:space="preserve">
+    <value>Geannuleerd door de gebruiker.</value>
+  </data>
 </root>

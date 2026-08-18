@@ -1179,4 +1179,13 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   <data name="CrawlerAgentHasBeenUpgraded" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="CancelledByTheUser" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="CrawlerAgentHasBeenUpgraded" xml:space="preserve">
+    <value>O agente rastreador foi atualizado.</value>
+  </data>
+  <data name="CancelledByTheUser" xml:space="preserve">
+    <value>Cancelado pelo usuário.</value>
+  </data>
 </root>

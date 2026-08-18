@@ -7,9 +7,11 @@ using KamiYomu.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
+using static KamiYomu.Web.AppOptions.Defaults;
+
 namespace KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs;
 
-public class DownloadChapterTableModel(DbContext dbContext,
+public class DownloadChapterTableModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext,
                                        IDownloadAppService downloadAppService) : PageModel
 {
     public IEnumerable<ChapterDownloadRecord> Records { get; set; } = [];
@@ -41,15 +43,15 @@ public class DownloadChapterTableModel(DbContext dbContext,
         using LibraryDbContext db = downloadChapterRecords.GetReadOnlyDbContext();
 
         // Get all records for this library
-        List<ChapterDownloadRecord> allRecords = [.. db.ChapterDownloadRecords.Find(p => true)];
+        ILiteQueryable<ChapterDownloadRecord> allRecords = db.ChapterDownloadRecords.Query().Where(p => true);
 
         // Sorting
         IEnumerable<ChapterDownloadRecord> query = SortColumn switch
         {
-            nameof(ChapterDownloadRecord.StatusUpdateAt) => SortAsc ? allRecords.OrderBy(r => r.StatusUpdateAt) : allRecords.OrderByDescending(r => r.CreateAt),
-            nameof(ChapterDownloadRecord.DownloadStatus) => SortAsc ? allRecords.OrderBy(r => r.DownloadStatus) : allRecords.OrderByDescending(r => r.DownloadStatus),
-            nameof(ChapterDownloadRecord.Chapter) => SortAsc ? allRecords.OrderBy(r => r.Chapter.Number) : allRecords.OrderByDescending(r => r.Chapter.Number),
-            _ => allRecords.OrderByDescending(r => r.Chapter.Number).ThenBy(r => r.StatusUpdateAt)
+            nameof(ChapterDownloadRecord.StatusUpdateAt) => SortAsc ? allRecords.OrderBy(r => r.StatusUpdateAt).ToList() : allRecords.OrderByDescending(r => r.CreateAt).ToList(),
+            nameof(ChapterDownloadRecord.DownloadStatus) => SortAsc ? allRecords.OrderBy(r => r.DownloadStatus).ToList() : allRecords.OrderByDescending(r => r.DownloadStatus).ToList(),
+            nameof(ChapterDownloadRecord.Chapter) => SortAsc ? allRecords.OrderBy(r => r.Chapter.Number).ToList() : allRecords.OrderByDescending(r => r.Chapter.Number).ToList(),
+            _ => allRecords.OrderByDescending(r => r.Chapter.Number).OrderBy(r => r.StatusUpdateAt).ToList()
         };
 
         // Pagination

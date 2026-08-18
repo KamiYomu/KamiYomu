@@ -58,7 +58,7 @@ public sealed class PublicApiExceptionMiddleware(
         context.Response.StatusCode = statusCode;
         context.Response.ContentType = "application/json";
 
-        string json = JsonSerializer.Serialize(response, new JsonSerializerOptions
+        string json = System.Text.Json.JsonSerializer.Serialize(response, new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         });
