@@ -1,0 +1,45 @@
+@model KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.Edit.IndexModel
+<div class="modal fade show d-block" style="background: rgba(0,0,0,.5);">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">@I18n.ConfirmUpgrade</h5>
+            </div>
+
+            <div class="modal-body">
+                <p class="text-muted">
+                    @I18n.CrawlerAgentConfirmationDialogMessage
+                </p>
+
+                <div class="form-check mt-2">
+                    <input class="form-check-input" asp-for="UpgradeAffectedLibraries" />
+                    <label class="form-check-label" asp-for="UpgradeAffectedLibraries">
+                        @I18n.UpgradeAffectedLibraries (@Model.LibrariesUsingThisCrawlerAgent)
+                    </label>
+                </div>
+            </div>
+
+
+            <div class="modal-footer">
+
+                <!-- CONFIRM BUTTON -->
+                <button type="submit"
+                        asp-page-handler="ConfirmUpgrade"
+                        class="btn btn-primary">
+                    @I18n.Confirm
+                </button>
+
+                <!-- CANCEL BUTTON -->
+                <button type="submit"
+                        asp-page-handler="Cancel"
+                        class="btn btn-secondary">
+                    @I18n.Cancel
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+

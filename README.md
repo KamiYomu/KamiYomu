@@ -26,6 +26,25 @@ By leveraging a modular **Crawler Agent** architecture, KamiYomu empowers you to
 
 ---
 
+# 🚀 Why KamiYomu?
+
+Whether you're cataloging rare series, powering a personal manga dashboard, or seeking a cleaner alternative to bloated online readers, KamiYomu puts you in control. It's a lightweight, developer-friendly crawler built for clarity, extensibility, and respectful use of publicly accessible sources.
+
+<img src="./screenshots/welcome-page.jpeg" alt="Welcome Page" width="600"/>
+
+
+# 📦 Getting Started
+
+KamiYomu supports Docker, Windows, and Linux installations. For detailed instructions, see theinstallation guides:.
+
+- [Docker](https://kamiyomu.com/docs/Installation/Install-via-docker/)
+- [Windows](https://kamiyomu.com/docs/Installation/install-via-windows/)
+- [Linux](https://kamiyomu.com/docs/Installation/install-via-linux/)
+
+
+--- 
+
+
 # 🤝 Join the KamiYomu Community
 
 KamiYomu is built by people who care about great tooling for managing manga. Get involved — your feedback, bug reports, and contributions help shape the project.
@@ -37,7 +56,6 @@ KamiYomu is built by people who care about great tooling for managing manga. Get
 | **Contribute** | [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?logo=github)](https://github.com/KamiYomu/KamiYomu/pulls) |
 | **Sponsor** | [![GitHub Sponsors](https://img.shields.io/github/sponsors/kamiyomu?logo=github&label=Sponsor)](https://github.com/sponsors/kamiyomu) |
 
----
 
 ## 🌐 Community Crawler Agents
 
@@ -78,22 +96,6 @@ Have a manga source you'd like to support? **You can build your own Crawler Agen
 
 **Questions?** Join our [Discord community](https://discord.gg/b9zwEEejsJ) or [open an issue](https://github.com/KamiYomu/KamiYomu/issues) on GitHub!
 
----
-
-# 🚀 Why KamiYomu?
-
-Whether you're cataloging rare series, powering a personal manga dashboard, or seeking a cleaner alternative to bloated online readers, KamiYomu puts you in control. It's a lightweight, developer-friendly crawler built for clarity, extensibility, and respectful use of publicly accessible sources.
-
-<img src="./screenshots/welcome-page.jpeg" alt="Welcome Page" width="600"/>
-
-
-# 📦 Getting Started
-
-KamiYomu supports Docker, Windows, and Linux installations. For detailed instructions, see theinstallation guides:.
-
-- [Docker](https://kamiyomu.com/docs/Installation/Install-via-docker/)
-- [Windows](https://kamiyomu.com/docs/Installation/install-via-windows/)
-- [Linux](https://kamiyomu.com/docs/Installation/install-via-linux/)
 
 # 🌐 Public API & OPDS Catalog
 
