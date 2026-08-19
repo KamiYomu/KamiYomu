@@ -8,6 +8,13 @@ namespace KamiYomu.Web.Infrastructure.AppServices.Interfaces;
 public interface ICrawlerAgentAppService
 {
     /// <summary>
+    /// Recreates the manga download collection for the specified crawler agent id, updating its crawler agent information and ensuring that the latest chapters are available.
+    /// </summary>
+    /// <param name="crawlerAgent"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<IEnumerable<Library>> RefreshCollectionAsync(CrawlerAgent crawlerAgent, CancellationToken cancellationToken);
+    /// <summary>
     /// Recreates the manga download collection for the specified library, updating its crawler agent information and ensuring that the latest chapters are available.
     /// </summary>
     /// <param name="library">The library to refresh.</param>

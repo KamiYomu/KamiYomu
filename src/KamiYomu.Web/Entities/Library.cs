@@ -37,7 +37,6 @@ public class Library
     /// <param name="filePathTemplate">Optional custom file path template for organizing downloaded files.</param>
     /// <param name="comicInfoTitleTemplateFormat">Optional custom template format for comic info title metadata.</param>
     /// <param name="comicInfoSeriesTemplate">Optional custom template for comic info series metadata.</param>
-    /// <param name="dailyExecutionSchedule">Optional custom daily execution schedule for the library's crawler agent.</param>
     public Library(CrawlerAgent agentCrawler, Manga manga, string? filePathTemplate, string? comicInfoTitleTemplateFormat, string? comicInfoSeriesTemplate) : this()
     {
         CrawlerAgent = agentCrawler;
