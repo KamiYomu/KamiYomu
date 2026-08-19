@@ -2,9 +2,6 @@ using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.Contexts;
-using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
-
-using LiteDB;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -41,11 +38,13 @@ public class IndexModel(
     public void OnGet()
     {
         UserPreference userPreference = dbContext.UserPreferences.Query().FirstOrDefault();
-        Results = [.. dbContext.Libraries.Include(p => p.CrawlerAgent)
-                                         .Find(p => (Query == string.Empty || p.Manga.Title.Contains(Query))
+        Results = dbContext.Libraries.Include(p => p.CrawlerAgent)
+                                         .Query()
+                                         .Where(p => (Query == string.Empty || p.Manga.Title.Contains(Query))
                                            && (p.Manga.IsFamilySafe || p.Manga.IsFamilySafe == userPreference.FamilySafeMode))
                                          .Skip(Offset)
-                                         .Take(Limit)];
+                                         .Limit(Limit)
+                                         .ToList();
         ViewData["ShowAddToLibrary"] = false;
         ViewData["Handler"] = "Search";
         ViewData[nameof(Query)] = Query;
@@ -57,11 +56,12 @@ public class IndexModel(
     public IActionResult OnGetSearch()
     {
         UserPreference userPreference = dbContext.UserPreferences.Query().FirstOrDefault();
-        Results = [.. dbContext.Libraries.Include(p => p.CrawlerAgent)
-                                         .Find(p => (Query == string.Empty || p.Manga.Title.Contains(Query))
+        Results = dbContext.Libraries.Include(p => p.CrawlerAgent)
+                                         .Query().Where(p => (Query == string.Empty || p.Manga.Title.Contains(Query))
                                            && (p.Manga.IsFamilySafe || p.Manga.IsFamilySafe == userPreference.FamilySafeMode))
                                          .Skip(Offset)
-                                         .Take(Limit)];
+                                         .Limit(Limit)
+                                         .ToList();
         ViewData["ShowAddToLibrary"] = false;
         ViewData["Handler"] = "Search";
         ViewData[nameof(Query)] = Query;

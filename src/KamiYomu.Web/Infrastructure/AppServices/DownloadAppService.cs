@@ -83,28 +83,6 @@ public class DownloadAppService(
         return library;
     }
 
-    /// <inheritdoc />
-    public async Task<Library> RefreshCollectionAsync(Library library, CancellationToken cancellationToken)
-    {
-        using CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(library.CrawlerAgent.Id);
-
-        Manga manga = await crawlerAgentRepository.GetMangaAsync(crawlerAgent.Id, library.Manga.Id, cancellationToken);
-
-        MangaDownloadRecord downloadRecord = new(library, string.Empty);
-
-        using LibraryDbContext libDbContext = library.GetReadWriteDbContext();
-
-        _ = libDbContext.MangaDownloadRecords.Insert(downloadRecord);
-
-        string backgroundJobId = workerService.ScheduleMangaDownload(downloadRecord, null);
-
-        downloadRecord.Schedule(backgroundJobId);
-
-        _ = libDbContext.MangaDownloadRecords.Update(downloadRecord);
-
-        return library;
-    }
-
 
     /// <inheritdoc />
     public async Task<Library> RemoveFromCollectionAsync(RemoveItemCollection removeItemCollection, CancellationToken cancellationToken)
@@ -155,7 +133,7 @@ public class DownloadAppService(
 
         _ = BackgroundJob.Delete(chapterDownloadRecord.BackgroundJobId);
 
-        chapterDownloadRecord.Cancelled("Cancelled by the user.");
+        chapterDownloadRecord.Cancelled(I18n.CancelledByTheUser);
 
         logger.LogInformation("Cancelled by the user.");
 

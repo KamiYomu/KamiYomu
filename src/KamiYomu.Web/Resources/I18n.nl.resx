@@ -1175,8 +1175,41 @@ voor de &lt;code&gt;WorkerCount&lt;/code&gt;-instelling van Hangfire om te bepal
   <data name="ViewManga" xml:space="preserve">
     <value>Manga bekijken</value>
   </data>
+  <data name="CrawlerAgentHasBeenUpgraded" xml:space="preserve">
+    <value>Crawleragent is geüpgraded.</value>
+  </data>
+  <data name="CancelledByTheUser" xml:space="preserve">
+    <value>Geannuleerd door de gebruiker.</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="CrawlerAgentHasBeenUpgraded" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="ConfirmUpdate" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
+  </data>
+  <data name="ConfirmUpgrade" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="Confirm" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="CrawlerAgentConfirmationDialogMessage" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="UpgradeAffectedLibraries" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ConfirmUpdate" xml:space="preserve">
+    <value>Bevestig bijwerken</value>
+  </data>
+  <data name="ConfirmUpgrade" xml:space="preserve">
+    <value>Bevestig upgrade</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Bevestigen</value>
+  </data>
+  <data name="CrawlerAgentConfirmationDialogMessage" xml:space="preserve">
+    <value>Deze crawleragent wordt door meerdere bibliotheken gebruikt. Het bijwerken ervan kan extra verwerking vereisen en kan langer duren.</value>
+  </data>
+  <data name="UpgradeAffectedLibraries" xml:space="preserve">
+    <value>Upgrade de getroffen bibliotheken</value>
   </data>
 </root>

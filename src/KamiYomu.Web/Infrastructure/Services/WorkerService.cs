@@ -5,6 +5,7 @@ using Hangfire.Storage.Monitoring;
 
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.Definitions;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
@@ -70,7 +71,11 @@ public class WorkerService(ILogger<WorkerService> logger,
             _ = jobClient.Delete(mangaDownloadRecord.BackgroundJobId);
         }
 
-        IEnumerable<ChapterDownloadRecord> chapterDownloads = libDbContext.ChapterDownloadRecords.FindAll();
+        List<ChapterDownloadRecord> chapterDownloads = libDbContext.ChapterDownloadRecords
+                                                                   .Query()
+                                                                   .Where(p => (int)(object)p.DownloadStatus == (int)(object)DownloadStatus.Scheduled
+                                                                            || (int)(object)p.DownloadStatus == (int)(object)DownloadStatus.ToBeRescheduled)
+                                                                   .ToList();
 
         foreach (ChapterDownloadRecord chapterDownload in chapterDownloads)
         {

@@ -75,6 +75,19 @@
     document.body.addEventListener('htmx:timeout', cleanupRequest);
     document.body.addEventListener('htmx:abort', cleanupRequest);
 
+    document.addEventListener("submit", evt => {
+
+        if (!evt.target.hasAttribute("hx-post") &&
+            !evt.target.hasAttribute("hx-put") &&
+            !evt.target.hasAttribute("hx-delete") &&
+            !evt.target.hasAttribute("hx-patch")) {
+
+            showLoading();
+        }
+    });
+
+    window.addEventListener("pageshow", cleanupRequest);
+
     cancelBtn.addEventListener('click', () => {
         if (currentRequest) {
             currentRequest.abort();

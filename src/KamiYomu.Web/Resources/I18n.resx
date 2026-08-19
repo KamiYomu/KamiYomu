@@ -1178,4 +1178,22 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="CrawlerAgentHasBeenUpgraded" xml:space="preserve">
     <value>Crawler agent has been upgraded.</value>
   </data>
+  <data name="CancelledByTheUser" xml:space="preserve">
+    <value>Cancelled by the user.</value>
+  </data>
+  <data name="ConfirmUpdate" xml:space="preserve">
+    <value>Confirm Update</value>
+  </data>
+  <data name="ConfirmUpgrade" xml:space="preserve">
+    <value>Confirm Upgrade</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="CrawlerAgentConfirmationDialogMessage" xml:space="preserve">
+    <value>This crawler agent is used by multiple libraries. Updating it may require additional processing and could take longer.</value>
+  </data>
+  <data name="UpgradeAffectedLibraries" xml:space="preserve">
+    <value>Upgrade affected libraries</value>
+  </data>
 </root>

@@ -3,7 +3,6 @@ using System.Globalization;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.Contexts;
-using KamiYomu.Web.Infrastructure.HttpHandlers;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 
 using Microsoft.AspNetCore.Localization;

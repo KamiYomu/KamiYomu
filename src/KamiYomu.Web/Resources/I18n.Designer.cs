@@ -376,6 +376,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancelled by the user..
+        /// </summary>
+        public static string CancelledByTheUser {
+            get {
+                return ResourceManager.GetString("CancelledByTheUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancelled during the running job: {0}.
         /// </summary>
         public static string CancelledDuringTheRunningJob {
@@ -538,6 +547,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Confirm.
+        /// </summary>
+        public static string Confirm {
+            get {
+                return ResourceManager.GetString("Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm Add NuGet.org as Source.
         /// </summary>
         public static string ConfirmAddNugetOrg {
@@ -561,6 +579,24 @@ namespace KamiYomu.Web.Resources {
         public static string ConfirmDelete {
             get {
                 return ResourceManager.GetString("ConfirmDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm Update.
+        /// </summary>
+        public static string ConfirmUpdate {
+            get {
+                return ResourceManager.GetString("ConfirmUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm Upgrade.
+        /// </summary>
+        public static string ConfirmUpgrade {
+            get {
+                return ResourceManager.GetString("ConfirmUpgrade", resourceCulture);
             }
         }
         
@@ -624,6 +660,15 @@ namespace KamiYomu.Web.Resources {
         public static string CrawlerAgent {
             get {
                 return ResourceManager.GetString("CrawlerAgent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This crawler agent is used by multiple libraries. Updating it may require additional processing and could take longer..
+        /// </summary>
+        public static string CrawlerAgentConfirmationDialogMessage {
+            get {
+                return ResourceManager.GetString("CrawlerAgentConfirmationDialogMessage", resourceCulture);
             }
         }
         
@@ -2893,6 +2938,15 @@ namespace KamiYomu.Web.Resources {
         public static string UpdateAvailable {
             get {
                 return ResourceManager.GetString("UpdateAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upgrade affected libraries.
+        /// </summary>
+        public static string UpgradeAffectedLibraries {
+            get {
+                return ResourceManager.GetString("UpgradeAffectedLibraries", resourceCulture);
             }
         }
         

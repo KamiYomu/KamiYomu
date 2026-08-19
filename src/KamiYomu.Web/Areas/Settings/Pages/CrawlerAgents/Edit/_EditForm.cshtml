@@ -12,7 +12,10 @@
             <a asp-area="Settings" asp-page="/CrawlerAgents/Index" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left-circle"></i> @I18n.Back
             </a>
-            <button type="submit" class="btn btn-outline-primary">
+            <button type="submit" 
+                    name="handler"
+                    value="Save" 
+                    class="btn btn-outline-primary">
                 <i class="bi bi-save me-2"></i> @I18n.Save
             </button>
         </div>
@@ -60,7 +63,10 @@
             <a asp-area="Settings" asp-page="/CrawlerAgents/Index" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left-circle"></i> @I18n.Back
             </a>
-            <button type="submit" class="btn btn-outline-primary">
+            <button type="submit"
+                    name="handler"
+                    value="Save"
+                    class="btn btn-outline-primary">
                 <i class="bi bi-save me-2"></i> @I18n.Save
             </button>
         </div>

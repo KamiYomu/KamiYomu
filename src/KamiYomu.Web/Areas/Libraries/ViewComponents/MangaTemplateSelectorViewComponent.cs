@@ -1,5 +1,3 @@
-using System.Security.Cryptography.Xml;
-
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.Contexts;

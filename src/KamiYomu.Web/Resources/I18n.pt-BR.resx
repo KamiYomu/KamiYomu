@@ -1175,8 +1175,41 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   <data name="ViewManga" xml:space="preserve">
     <value>Ver mangá</value>
   </data>
+  <data name="CrawlerAgentHasBeenUpgraded" xml:space="preserve">
+    <value>O agente rastreador foi atualizado.</value>
+  </data>
+  <data name="CancelledByTheUser" xml:space="preserve">
+    <value>Cancelado pelo usuário.</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="CrawlerAgentHasBeenUpgraded" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="ConfirmUpdate" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
+  </data>
+  <data name="ConfirmUpgrade" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="Confirm" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="CrawlerAgentConfirmationDialogMessage" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="UpgradeAffectedLibraries" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="ConfirmUpdate" xml:space="preserve">
+    <value>Confirmar atualização</value>
+  </data>
+  <data name="ConfirmUpgrade" xml:space="preserve">
+    <value>Confirmar atualização</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="CrawlerAgentConfirmationDialogMessage" xml:space="preserve">
+    <value>Este agente rastreador é usado por diversas bibliotecas. A atualização pode exigir processamento adicional e demorar mais.</value>
+  </data>
+  <data name="UpgradeAffectedLibraries" xml:space="preserve">
+    <value>Atualizar bibliotecas afetadas</value>
   </data>
 </root>
