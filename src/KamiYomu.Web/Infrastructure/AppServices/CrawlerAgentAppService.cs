@@ -35,11 +35,11 @@ public class CrawlerAgentAppService(ILogger<CrawlerAgentAppService> logger,
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            notificationService.PushInfoAsync(string.Format("Starts {0}. {1}/{2} total.", libraries[i].Manga.Title, i + 1, libraries.Count), cancellationToken);
+            notificationService.PushInfoAsync(string.Format("{0} — {1}/{2}", libraries[i].Manga.Title, i + 1, libraries.Count), cancellationToken);
 
             libraries[i] = await UpgradeCrawlerAgentAsync(libraries[i].Id, crawlerAgent.Id, cancellationToken);
 
-            notificationService.PushSuccessAsync(string.Format("{0} completed. {1}/{2} total.", libraries[i].Manga.Title, i + 1, libraries.Count), cancellationToken);
+            notificationService.PushSuccessAsync(string.Format("{0} — {1}/{2}", libraries[i].Manga.Title, i + 1, libraries.Count), cancellationToken);
         }
 
         return libraries;
