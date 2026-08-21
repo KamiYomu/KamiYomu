@@ -1209,4 +1209,7 @@ para que la configuración &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire cont
   <data name="AllLibrariesSharedSameCrawlerAgentSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="AllLibrariesSharedSameCrawlerAgentSuccessfully" xml:space="preserve">
+    <value>Todas las bibliotecas que compartían el mismo tipo de agente rastreador se han consolidado en el agente rastreador que seleccionó.</value>
+  </data>
 </root>

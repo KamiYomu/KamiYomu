@@ -1209,4 +1209,7 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="AllLibrariesSharedSameCrawlerAgentSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="AllLibrariesSharedSameCrawlerAgentSuccessfully" xml:space="preserve">
+    <value>Toutes les bibliothèques partageant le même type d'agent d'analyseur ont été regroupées dans l'agent d'analyseur que vous avez sélectionné.</value>
+  </data>
 </root>
