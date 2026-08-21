@@ -1196,4 +1196,16 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="UpgradeAffectedLibraries" xml:space="preserve">
     <value>Upgrade affected libraries</value>
   </data>
+  <data name="Consolidate" xml:space="preserve">
+    <value>Consolidate</value>
+  </data>
+  <data name="AllLibrariesWillBeConsolidatedUnderSelectedCrawlerAgent" xml:space="preserve">
+    <value>All libraries will be consolidated under the selected crawler agent.</value>
+  </data>
+  <data name="ThisProcessCouldTakeWhile" xml:space="preserve">
+    <value>This process may take a while, but it will continue running until it’s fully completed.</value>
+  </data>
+  <data name="AllLibrariesSharedSameCrawlerAgentSuccessfully" xml:space="preserve">
+    <value>All libraries that shared the same crawler agent type have been consolidated into the crawler agent you selected.</value>
+  </data>
 </root>
