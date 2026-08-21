@@ -1181,22 +1181,6 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="CancelledByTheUser" xml:space="preserve">
     <value>Annulé par l'utilisateur.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ConfirmUpdate" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="ConfirmUpgrade" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="Confirm" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="CrawlerAgentConfirmationDialogMessage" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="UpgradeAffectedLibraries" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="ConfirmUpdate" xml:space="preserve">
     <value>Confirmer la mise à jour</value>
   </data>
@@ -1211,5 +1195,18 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   </data>
   <data name="UpgradeAffectedLibraries" xml:space="preserve">
     <value>Mettre à niveau les bibliothèques concernées</value>
+  </data>
+  <data name="Consolidate" xml:space="preserve">
+    <value>Consolider</value>
+  </data>
+  <data name="AllLibrariesWillBeConsolidatedUnderSelectedCrawlerAgent" xml:space="preserve">
+    <value>Toutes les bibliothèques seront consolidées sous l'agent de robot d'exploration sélectionné.</value>
+  </data>
+  <data name="ThisProcessCouldTakeWhile" xml:space="preserve">
+    <value>Ce processus peut prendre un certain temps, mais il se poursuivra jusqu’à ce qu’il soit complètement terminé.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="AllLibrariesSharedSameCrawlerAgentSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

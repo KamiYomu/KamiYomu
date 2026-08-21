@@ -1181,22 +1181,6 @@ para que la configuración &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire cont
   <data name="CancelledByTheUser" xml:space="preserve">
     <value>Cancelado por el usuario.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ConfirmUpdate" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="ConfirmUpgrade" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="Confirm" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="CrawlerAgentConfirmationDialogMessage" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="UpgradeAffectedLibraries" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="ConfirmUpdate" xml:space="preserve">
     <value>Confirmar actualización</value>
   </data>
@@ -1211,5 +1195,18 @@ para que la configuración &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire cont
   </data>
   <data name="UpgradeAffectedLibraries" xml:space="preserve">
     <value>Actualizar las bibliotecas afectadas</value>
+  </data>
+  <data name="Consolidate" xml:space="preserve">
+    <value>Consolidar</value>
+  </data>
+  <data name="AllLibrariesWillBeConsolidatedUnderSelectedCrawlerAgent" xml:space="preserve">
+    <value>Todas las bibliotecas se consolidarán bajo el agente rastreador seleccionado.</value>
+  </data>
+  <data name="ThisProcessCouldTakeWhile" xml:space="preserve">
+    <value>Este proceso puede tardar un poco, pero continuará ejecutándose hasta que se complete por completo.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="AllLibrariesSharedSameCrawlerAgentSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>
