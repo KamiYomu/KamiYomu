@@ -55,6 +55,19 @@
                                     </a>
                                 </li>
                                 <li>
+                                     <button class="dropdown-item"
+                                            title="@I18n.Consolidate"
+                                            aria-label="@I18n.Consolidate"
+                                            hx-get="/Settings/CrawlerAgents/Dialogs/ConsolidateCrawlerAgent?id=@item.Id"
+                                            hx-target="#modal-body"
+                                            hx-swap="innerHTML"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modal">
+                                             <i class="bi bi-boxes me-1"></i> @I18n.Consolidate
+                                    </button>
+                                   
+                                </li>
+                                <li>
                                     <button class="dropdown-item bg-danger text-light"
                                             title="@I18n.Delete"
                                             aria-label="@I18n.Delete"

@@ -214,6 +214,24 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All libraries that shared the same crawler agent type have been consolidated into the crawler agent you selected..
+        /// </summary>
+        public static string AllLibrariesSharedSameCrawlerAgentSuccessfully {
+            get {
+                return ResourceManager.GetString("AllLibrariesSharedSameCrawlerAgentSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All libraries will be consolidated under the selected crawler agent..
+        /// </summary>
+        public static string AllLibrariesWillBeConsolidatedUnderSelectedCrawlerAgent {
+            get {
+                return ResourceManager.GetString("AllLibrariesWillBeConsolidatedUnderSelectedCrawlerAgent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Also known as.
         /// </summary>
         public static string AlsoKnownAs {
@@ -606,6 +624,15 @@ namespace KamiYomu.Web.Resources {
         public static string ConnectionSuccessfully {
             get {
                 return ResourceManager.GetString("ConnectionSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Consolidate.
+        /// </summary>
+        public static string Consolidate {
+            get {
+                return ResourceManager.GetString("Consolidate", resourceCulture);
             }
         }
         
@@ -2830,6 +2857,15 @@ namespace KamiYomu.Web.Resources {
         public static string TheTemplatePathIsMissingOrInvalid {
             get {
                 return ResourceManager.GetString("TheTemplatePathIsMissingOrInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This process may take a while, but it will continue running until it’s fully completed..
+        /// </summary>
+        public static string ThisProcessCouldTakeWhile {
+            get {
+                return ResourceManager.GetString("ThisProcessCouldTakeWhile", resourceCulture);
             }
         }
         

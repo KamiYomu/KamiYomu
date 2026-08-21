@@ -1181,22 +1181,6 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   <data name="CancelledByTheUser" xml:space="preserve">
     <value>Cancelado pelo usuário.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ConfirmUpdate" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="ConfirmUpgrade" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="Confirm" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="CrawlerAgentConfirmationDialogMessage" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="UpgradeAffectedLibraries" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="ConfirmUpdate" xml:space="preserve">
     <value>Confirmar atualização</value>
   </data>
@@ -1211,5 +1195,18 @@ para a configuração &lt;code&gt;WorkerCount&lt;/code&gt; do Hangfire para cont
   </data>
   <data name="UpgradeAffectedLibraries" xml:space="preserve">
     <value>Atualizar bibliotecas afetadas</value>
+  </data>
+  <data name="Consolidate" xml:space="preserve">
+    <value>Consolidar</value>
+  </data>
+  <data name="AllLibrariesWillBeConsolidatedUnderSelectedCrawlerAgent" xml:space="preserve">
+    <value>Todas as bibliotecas serão consolidadas no agente rastreador selecionado.</value>
+  </data>
+  <data name="ThisProcessCouldTakeWhile" xml:space="preserve">
+    <value>Este processo pode demorar um pouco, mas continuará em execução até ser totalmente concluído.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="AllLibrariesSharedSameCrawlerAgentSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

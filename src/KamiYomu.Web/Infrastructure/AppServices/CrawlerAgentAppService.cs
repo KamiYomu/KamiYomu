@@ -1,16 +1,9 @@
-
-
-using System.Threading;
-
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Infrastructure.AppServices.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
-using KamiYomu.Web.Infrastructure.Services;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
-
-using static SQLite.SQLite3;
 
 namespace KamiYomu.Web.Infrastructure.AppServices;
 /// <summary>
@@ -28,7 +21,7 @@ public class CrawlerAgentAppService(ILogger<CrawlerAgentAppService> logger,
 {
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<Library>> RefreshCollectionAsync(CrawlerAgent crawlerAgent, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Library>> ConsolidateCollectionByCrawlerAgentAsync(CrawlerAgent crawlerAgent, CancellationToken cancellationToken)
     {
         List<Library> libraries = dbContext.Libraries.Query().Where(p => p.CrawlerAgent.Id == crawlerAgent.Id).ToList();
         for (int i = 0; i < libraries.Count; i++)
@@ -42,6 +35,26 @@ public class CrawlerAgentAppService(ILogger<CrawlerAgentAppService> logger,
             notificationService.PushSuccessAsync(string.Format("{0} — {1}/{2}", libraries[i].Manga.Title, i + 1, libraries.Count), cancellationToken);
         }
 
+        return libraries;
+    }
+
+
+    /// <inheritdoc/>
+    public async Task<IEnumerable<Library>> ConsolidateCollectionByAssemblyNameAsync(CrawlerAgent crawlerAgent, CancellationToken cancellationToken)
+    {
+        List<Library> libraries = dbContext.Libraries.Query().Where(p => p.CrawlerAgent.AssemblyName == crawlerAgent.AssemblyName).ToList();
+        for (int i = 0; i < libraries.Count; i++)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            notificationService.PushInfoAsync(string.Format("{0} — {1}/{2}", libraries[i].Manga.Title, i + 1, libraries.Count), cancellationToken);
+
+            libraries[i] = await UpgradeCrawlerAgentAsync(libraries[i].Id, crawlerAgent.Id, cancellationToken);
+
+            notificationService.PushSuccessAsync(string.Format("{0} — {1}/{2}", libraries[i].Manga.Title, i + 1, libraries.Count), cancellationToken);
+        }
+
+        dbContext.Libraries.Update(libraries);
         return libraries;
     }
 
@@ -108,7 +121,11 @@ public class CrawlerAgentAppService(ILogger<CrawlerAgentAppService> logger,
     {
         workerService.CancelMangaDownload(mangaDownload);
 
-        List<ChapterDownloadRecord> chapterDownloads = libDbContext.ChapterDownloadRecords.Query().Where(p => p.MangaDownload.Id == mangaDownload.Id).ToList();
+        List<ChapterDownloadRecord> chapterDownloads = libDbContext.ChapterDownloadRecords
+                                                                   .Query()
+                                                                   .Where(p => p.MangaDownload.Id == mangaDownload.Id)
+                                                                   .ToList();
+
         foreach (ChapterDownloadRecord chapterDownload in chapterDownloads)
         {
             chapterDownload.UpdateMangaDownloadInformation(mangaDownload);

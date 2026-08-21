@@ -1181,22 +1181,6 @@ voor de &lt;code&gt;WorkerCount&lt;/code&gt;-instelling van Hangfire om te bepal
   <data name="CancelledByTheUser" xml:space="preserve">
     <value>Geannuleerd door de gebruiker.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ConfirmUpdate" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="ConfirmUpgrade" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="Confirm" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="CrawlerAgentConfirmationDialogMessage" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="UpgradeAffectedLibraries" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="ConfirmUpdate" xml:space="preserve">
     <value>Bevestig bijwerken</value>
   </data>
@@ -1211,5 +1195,18 @@ voor de &lt;code&gt;WorkerCount&lt;/code&gt;-instelling van Hangfire om te bepal
   </data>
   <data name="UpgradeAffectedLibraries" xml:space="preserve">
     <value>Upgrade de getroffen bibliotheken</value>
+  </data>
+  <data name="Consolidate" xml:space="preserve">
+    <value>Consolideren</value>
+  </data>
+  <data name="AllLibrariesWillBeConsolidatedUnderSelectedCrawlerAgent" xml:space="preserve">
+    <value>Alle bibliotheken worden geconsolideerd onder de geselecteerde crawleragent.</value>
+  </data>
+  <data name="ThisProcessCouldTakeWhile" xml:space="preserve">
+    <value>Dit proces kan enige tijd duren, maar het blijft doorgaan totdat het volledig is voltooid.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="AllLibrariesSharedSameCrawlerAgentSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

@@ -197,7 +197,7 @@ public class IndexModel(DbContext dbContext,
 
         if (UpgradeAffectedLibraries)
         {
-            _ = await crawlerAgentAppService.RefreshCollectionAsync(crawlerAgent, cancellationToken);
+            _ = await crawlerAgentAppService.ConsolidateCollectionByCrawlerAgentAsync(crawlerAgent, cancellationToken);
         }
         cacheContext.EmptyAgentKeys(crawlerAgent.Id);
 

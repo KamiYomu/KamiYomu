@@ -1,0 +1,35 @@
+@page
+@model KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.Dialogs.ConsolidateCrawlerAgentModel
+@{
+    Layout = null;
+}
+
+
+
+<div class="modal-header">
+    <h5 class="modal-title">@I18n.Consolidate: @Model.CrawlerAgent.DisplayName</h5>
+</div>
+
+<div class="modal-body">
+    <p class="text-muted">
+        @I18n.AllLibrariesWillBeConsolidatedUnderSelectedCrawlerAgent
+        <br />
+        @I18n.ThisProcessCouldTakeWhile
+    </p>
+
+    <div class="form-check mt-2 fw-bold">
+        @I18n.UpgradeAffectedLibraries (@Model.LibrariesUsingThisCrawlerAgent)
+    </div>
+</div>
+
+<div class="modal-footer">
+    <form method="post"
+          hx-post="/Settings/CrawlerAgents/Dialogs/ConsolidateCrawlerAgent"
+          hx-target="#crawler-agent-list"
+          hx-swap="innerHtml">
+        @Html.AntiForgeryToken()
+        <input asp-for="CrawlerAgentId" type="hidden" />
+        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">@I18n.Confirm</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@I18n.Close</button>
+    </form>
+</div>
