@@ -215,6 +215,14 @@ public partial class Defaults
             /// 
             /// </summary>
             public const string FlareSolverrHttpHandler = nameof(FlareSolverrHttpHandler);
+            /// <summary>
+            /// 
+            /// </summary>
+            public const string ChromiumHttpHandler = nameof(ChromiumHttpHandler);
+            /// <summary>
+            /// 
+            /// </summary>
+            public const string SmartCrawlerHttpHandler = nameof(SmartCrawlerHttpHandler);
         }
         /// <summary>
         /// 

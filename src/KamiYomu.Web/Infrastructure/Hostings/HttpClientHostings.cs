@@ -1,7 +1,8 @@
+using System.Net;
+
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Infrastructure.HttpHandlers;
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 using Polly;
@@ -49,13 +50,38 @@ public static class HttpClientHostings
     {
         _ = services.AddSingleton(sp =>
         {
-            IOptions<CloudflareSolverOptions> cloudFlareOptions = sp.GetRequiredService<IOptions<CloudflareSolverOptions>>();
+            IOptions<CloudflareSolverOptions> options = sp.GetRequiredService<IOptions<CloudflareSolverOptions>>();
             HttpClientHandler innerHandler = new()
             {
-                AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
             };
-            return new CloudflareBypassHandler(innerHandler, cloudFlareOptions);
+            return new CloudflareBypassHandler(innerHandler, options);
         });
+
+        _ = services.AddSingleton(sp =>
+        {
+            IOptions<ChromiumOptions> options = sp.GetRequiredService<IOptions<ChromiumOptions>>();
+            HttpClientHandler innerHandler = new()
+            {
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+            };
+            return new ChromiumHandler(innerHandler, options);
+        });
+
+        _ = services.AddSingleton(sp =>
+        {
+            CloudflareBypassHandler cf = sp.GetRequiredService<CloudflareBypassHandler>();
+            ChromiumHandler chromium = sp.GetRequiredService<ChromiumHandler>();
+
+            return new SmartCrawlerHandler(
+                new HttpClientHandler
+                {
+                    AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+                },
+                cf,
+                chromium);
+        });
+
     }
 
     private static void AddIntegrationHttpClient(IServiceCollection services)
