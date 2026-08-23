@@ -112,10 +112,15 @@ public class CrawlerAgent : IDisposable
 
         ILogger logger = ServiceLocator.Instance.GetRequiredService<ILogger<CrawlerAgent>>();
         HttpMessageHandler cloudflareBypassHandler = ServiceLocator.Instance.GetRequiredService<CloudflareBypassHandler>();
+        HttpMessageHandler chromiumHandler = ServiceLocator.Instance.GetRequiredService<ChromiumHandler>();
+        HttpMessageHandler smartCrawlerHandler = ServiceLocator.Instance.GetRequiredService<SmartCrawlerHandler>();
+
         Dictionary<string, object> metadata = new(AgentMetadata)
         {
             [CrawlerAgentMetadata.Fields.KamiYomuILogger] = logger,
-            [CrawlerAgentMetadata.Fields.FlareSolverrHttpHandler] = cloudflareBypassHandler
+            [CrawlerAgentMetadata.Fields.FlareSolverrHttpHandler] = cloudflareBypassHandler,
+            [CrawlerAgentMetadata.Fields.ChromiumHttpHandler] = chromiumHandler,
+            [CrawlerAgentMetadata.Fields.SmartCrawlerHttpHandler] = smartCrawlerHandler
         };
 
         _crawler = GetCrawlerInstance(AssemblyPath, metadata);

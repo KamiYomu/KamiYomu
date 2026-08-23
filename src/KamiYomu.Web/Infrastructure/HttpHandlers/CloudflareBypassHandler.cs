@@ -97,5 +97,28 @@ public class CloudflareBypassHandler(HttpMessageHandler innerHandler, IOptions<C
 
         return (cookieHeader, userAgent);
     }
+
+    public async Task<HttpResponseMessage?> TrySendAsync(
+    HttpRequestMessage request,
+    CancellationToken ct)
+    {
+        try
+        {
+            HttpResponseMessage response = await SendAsync(request, ct);
+
+            // If Cloudflare solved → return response
+            if (!await IsCloudflareBlock(response))
+            {
+                return response;
+            }
+
+            return null; // Cloudflare still blocking → escalate
+        }
+        catch
+        {
+            return null; // Fail silently → escalate
+        }
+    }
+
 }
 
