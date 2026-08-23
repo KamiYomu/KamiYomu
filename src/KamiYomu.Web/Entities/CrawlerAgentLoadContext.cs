@@ -8,60 +8,123 @@ using System.Runtime.Loader;
 namespace KamiYomu.Web.Entities;
 
 /// <summary>
-/// 
+/// Provides an isolated, collectible assembly load context for dynamically loaded crawler agents,
+/// resolving their dependencies from the agent's installation directory while sharing the main
+/// KamiYomu.CrawlerAgents.Core assembly with the host application.
 /// </summary>
-/// <param name="assemblyPath"></param>
-public class CrawlerAgentLoadContext(string assemblyPath) : AssemblyLoadContext(isCollectible: true)
+public sealed class CrawlerAgentLoadContext : AssemblyLoadContext
 {
-    private readonly string _baseDir = Path.GetDirectoryName(assemblyPath)!;
-    private readonly AssemblyDependencyResolver _resolver = new(assemblyPath);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="assemblyName"></param>
-    /// <returns></returns>
+    private readonly AssemblyDependencyResolver _resolver;
+    private readonly string _baseDir;
+
+    private const string CoreAssemblyName = "KamiYomu.CrawlerAgents.Core";
+
+    public CrawlerAgentLoadContext(string assemblyPath)
+        : base(isCollectible: true)
+    {
+        if (string.IsNullOrWhiteSpace(assemblyPath))
+        {
+            throw new ArgumentException(
+                "Assembly path cannot be empty.",
+                nameof(assemblyPath));
+        }
+
+        if (!File.Exists(assemblyPath))
+        {
+            throw new FileNotFoundException(
+                "Crawler agent assembly was not found.",
+                assemblyPath);
+        }
+
+        _baseDir = Path.GetDirectoryName(assemblyPath)!;
+        _resolver = new AssemblyDependencyResolver(assemblyPath);
+    }
+    /// <inheritdoc />
     protected override Assembly? Load(AssemblyName assemblyName)
     {
+        ArgumentNullException.ThrowIfNull(assemblyName);
 
-        // 1. Try application bin path first
-        if (string.Equals(assemblyName.Name, "KamiYomu.CrawlerAgents.Core"))
+        /*
+         * IMPORTANT:
+         *
+         * The Core is owned by the main KamiYomu application.
+         * Do NOT load another copy of it inside this context.
+         *
+         * Returning null tells the runtime to resolve it from
+         * another AssemblyLoadContext, normally the Default one.
+         */
+        if (string.Equals(
+                assemblyName.Name,
+                CoreAssemblyName,
+                StringComparison.OrdinalIgnoreCase))
         {
             return null;
         }
 
+        /*
+         * First, let AssemblyDependencyResolver resolve the
+         * dependencies declared by the crawler agent.
+         */
+        string? resolvedPath =
+            _resolver.ResolveAssemblyToPath(assemblyName);
 
-        // 2. Try default resolver
-        string? resolvedPath = _resolver.ResolveAssemblyToPath(assemblyName);
-        if (resolvedPath != null && File.Exists(resolvedPath))
+        if (!string.IsNullOrEmpty(resolvedPath) &&
+            File.Exists(resolvedPath))
         {
             return LoadFromAssemblyPath(resolvedPath);
         }
 
-        // 3. Try same folder as invoker
-        string localPath = Path.Combine(_baseDir, $"{assemblyName.Name}.dll");
+        /*
+         * Fallback: same directory as the crawler agent.
+         */
+        string localPath = Path.Combine(
+            _baseDir,
+            $"{assemblyName.Name}.dll");
+
         if (File.Exists(localPath))
         {
             return LoadFromAssemblyPath(localPath);
         }
 
-        // 4. Try bin folder relative to invoker base
-        string binPath = Path.Combine(_baseDir, "bin", $"{assemblyName.Name}.dll");
+        /*
+         * Fallback: agent/bin
+         */
+        string binPath = Path.Combine(
+            _baseDir,
+            "bin",
+            $"{assemblyName.Name}.dll");
+
         if (File.Exists(binPath))
         {
             return LoadFromAssemblyPath(binPath);
         }
 
-        // 5. Try obj folder relative to invoker base
-        string objPath = Path.Combine(_baseDir, "obj", $"{assemblyName.Name}.dll");
+        /*
+         * Fallback: agent/obj
+         */
+        string objPath = Path.Combine(
+            _baseDir,
+            "obj",
+            $"{assemblyName.Name}.dll");
+
         if (File.Exists(objPath))
         {
             return LoadFromAssemblyPath(objPath);
         }
 
-        // 6. Try agent folder
-        IOptions<SpecialFolderOptions> specialFolderOptions = Defaults.ServiceLocator.Instance.GetRequiredService<IOptions<SpecialFolderOptions>>();
+        /*
+         * Final fallback: configured agents directory.
+         */
+        IOptions<SpecialFolderOptions> specialFolderOptions =
+            Defaults.ServiceLocator.Instance
+                .GetRequiredService<
+                    IOptions<SpecialFolderOptions>>();
 
-        string agentPath = Path.Combine(specialFolderOptions.Value.AgentsDir, Path.GetFileName(_baseDir), $"{assemblyName.Name}.dll");
+        string agentPath = Path.Combine(
+            specialFolderOptions.Value.AgentsDir,
+            Path.GetFileName(_baseDir),
+            $"{assemblyName.Name}.dll");
+
         return File.Exists(agentPath) ? LoadFromAssemblyPath(agentPath) : null;
     }
 }
