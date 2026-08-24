@@ -2,8 +2,6 @@ using KamiYomu.CrawlerAgents.Core.Catalog.Definitions;
 using KamiYomu.Web.Entities.Definitions;
 using KamiYomu.Web.Models.Definitions;
 
-using LiteDB;
-
 
 namespace KamiYomu.Web.AppOptions;
 /// <summary>
@@ -230,11 +228,15 @@ public partial class Defaults
         public static class Values
         {
             /// <summary>
-            /// 
+            /// The user agent string for KamiYomu HTTP requests.
             /// </summary>
             public static string KamiYomuHttpUserAgent = $"KamiYomu-Agent/1.0 ({Environment.OSVersion.Platform}; {(Environment.Is64BitOperatingSystem ? "x64" : "x86")})";
             /// <summary>
-            /// 
+            /// The user agent string to mimic a common browser for HTTP requests.
+            /// </summary>
+            public const string MimicUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36";
+            /// <summary>
+            /// The default timeout in milliseconds for HTTP requests.
             /// </summary>
             public static int TimeoutMilliseconds = 60_000;
         }

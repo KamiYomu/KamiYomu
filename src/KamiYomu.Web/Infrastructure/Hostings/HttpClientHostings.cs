@@ -33,11 +33,11 @@ public static class HttpClientHostings
          .HandleTransientHttpError()
          .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 
-        Polly.Timeout.AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(AppOptions.Defaults.Worker.HttpTimeOutInSeconds);
+        Polly.Timeout.AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(Defaults.Worker.HttpTimeOutInSeconds);
 
         _ = services.AddHttpClient(Defaults.Worker.HttpClientApp, client =>
         {
-            client.DefaultRequestHeaders.UserAgent.ParseAdd(CrawlerAgentSettings.HttpUserAgent);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(CrawlerAgentMetadata.Values.MimicUserAgent);
         })
             .AddPolicyHandler(retryPolicy)
             .AddPolicyHandler(timeoutPolicy);
@@ -90,11 +90,11 @@ public static class HttpClientHostings
          .HandleTransientHttpError()
          .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 
-        Polly.Timeout.AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(AppOptions.Defaults.Worker.HttpTimeOutInSeconds);
+        Polly.Timeout.AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(Defaults.Worker.HttpTimeOutInSeconds);
 
         _ = services.AddHttpClient(Integrations.HttpClientApp, client =>
         {
-            client.DefaultRequestHeaders.UserAgent.ParseAdd(CrawlerAgentSettings.HttpUserAgent);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(CrawlerAgentMetadata.Values.MimicUserAgent);
         })
             .AddPolicyHandler(retryPolicy)
             .AddPolicyHandler(timeoutPolicy)
@@ -102,7 +102,7 @@ public static class HttpClientHostings
             {
                 return new HttpClientHandler
                 {
-                    AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate
+                    AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
                 };
             });
     }

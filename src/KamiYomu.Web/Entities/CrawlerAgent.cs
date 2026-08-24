@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
 using KamiYomu.CrawlerAgents.Core.Inputs;
 using KamiYomu.Web.AppOptions;
@@ -24,7 +23,7 @@ public class CrawlerAgent : IDisposable
     public Dictionary<string, object> AgentMetadata { get; private set; }
     public Dictionary<string, string> AssemblyProperties { get; private set; } = [];
 
-    private Assembly _assembly;
+    private LoadedCrawlerAssembly _assembly;
     private ICrawlerAgent _crawler;
     private bool disposedValue;
 
@@ -61,43 +60,75 @@ public class CrawlerAgent : IDisposable
     /// <returns>The loaded assembly.</returns>
     /// <exception cref="FileNotFoundException">Thrown when the assembly file does not exist at the specified path.</exception>
     /// <exception cref="InvalidOperationException">Thrown when the assembly does not contain any non-abstract class implementing <see cref="ICrawlerAgent"/>.</exception>
-    public static Assembly GetIsolatedAssembly(string assemblyPath)
+    public static LoadedCrawlerAssembly GetIsolatedAssembly(
+    string assemblyPath)
     {
         if (!File.Exists(assemblyPath))
         {
-            throw new FileNotFoundException($"Assembly file not found at path: {assemblyPath}");
+            throw new FileNotFoundException(
+                $"Assembly file not found at path: {assemblyPath}");
         }
-        CrawlerAgentLoadContext? context = null;
+
+        var context = new CrawlerAgentLoadContext(assemblyPath);
+
         try
         {
-            context = new(assemblyPath);
-            Assembly assembly = context.LoadFromAssemblyPath(assemblyPath);
+            Assembly assembly =
+                context.LoadFromAssemblyPath(
+                    Path.GetFullPath(assemblyPath));
 
             Type interfaceType = typeof(ICrawlerAgent);
-            bool validTypes = assembly.GetTypes().Any(t =>
-                t.IsClass &&
-                !t.IsAbstract &&
-                t.GetInterfaces().Any(i => i.FullName == interfaceType.FullName));
 
-            return !validTypes
-                ? throw new InvalidOperationException(
-                    $"Assembly '{assembly.FullName}' does not contain any non-abstract class implementing '{nameof(ICrawlerAgent)}'.")
-                : assembly;
+            Type[] types;
+
+            try
+            {
+                types = assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                IEnumerable<string> loaderExceptions = ex.LoaderExceptions
+                    .Where(e => e != null)
+                    .Select(e => e!.ToString());
+
+                throw new InvalidOperationException(
+                    $"Failed to load types from crawler agent assembly " +
+                    $"'{assembly.FullName}'. " +
+                    $"Loader errors: {string.Join(
+                        Environment.NewLine,
+                        loaderExceptions)}",
+                    ex);
+            }
+
+            bool validTypes = types.Any(type =>
+                type is
+                {
+                    IsClass: true,
+                    IsAbstract: false
+                }
+                &&
+                type.GetInterfaces().Any(
+                    implementedInterface =>
+                        implementedInterface == interfaceType));
+
+            if (!validTypes)
+            {
+                throw new InvalidOperationException(
+                    $"Assembly '{assembly.FullName}' does not contain " +
+                    $"any non-abstract class implementing " +
+                    $"'{nameof(ICrawlerAgent)}'.");
+            }
+
+            return new LoadedCrawlerAssembly(
+                assembly,
+                context);
         }
-        catch (Exception)
+        catch
         {
+            context.Unload();
             throw;
         }
-        finally
-        {
-            context?.Unload();
-            context = null;
-
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-        }
     }
-
     /// <summary>
     /// Gets or creates a cached instance of the crawler agent from the loaded assembly.
     /// Injects required services such as logger and HTTP message handlers into the crawler instance.
@@ -135,8 +166,8 @@ public class CrawlerAgent : IDisposable
     /// <returns>An instance of <see cref="ICrawlerAgent"/>.</returns>
     public static ICrawlerAgent GetCrawlerInstance(string assemblyPath, IDictionary<string, object> options)
     {
-        Assembly assembly = GetIsolatedAssembly(assemblyPath);
-        return GetCrawlerInstance(assembly, options);
+        LoadedCrawlerAssembly crawlerAssembly = GetIsolatedAssembly(assemblyPath);
+        return GetCrawlerInstance(crawlerAssembly.Assembly, options);
     }
 
     /// <summary>
@@ -214,7 +245,7 @@ public class CrawlerAgent : IDisposable
     public IEnumerable<AbstractInputAttribute> GetCrawlerInputs()
     {
         _assembly ??= GetIsolatedAssembly(AssemblyPath);
-        return GetCrawlerInputs(_assembly);
+        return GetCrawlerInputs(_assembly.Assembly);
     }
 
     /// <summary>
@@ -282,65 +313,85 @@ public class CrawlerAgent : IDisposable
     /// </summary>
     /// <param name="assembly">The assembly to extract metadata from.</param>
     /// <returns>A dictionary containing assembly metadata with keys such as FilePath, Title, Description, Company, Product, Version, FileVersion, and InformationalVersion.</returns>
-    public static Dictionary<string, string> GetAssemblyMetadata(Assembly assembly)
+    public static Dictionary<string, string> GetAssemblyMetadata(
+    LoadedCrawlerAssembly loadedAssembly)
     {
+        ArgumentNullException.ThrowIfNull(loadedAssembly);
+
+        Assembly assembly = loadedAssembly.Assembly;
+
         Dictionary<string, string> metadata = [];
 
-        //Path
+        // File path
         metadata["FilePath"] = assembly.Location;
 
         // Title
-        AssemblyTitleAttribute? titleAttr = assembly.GetCustomAttribute<AssemblyTitleAttribute>();
-        if (titleAttr != null)
+        AssemblyTitleAttribute? titleAttribute =
+            assembly.GetCustomAttribute<AssemblyTitleAttribute>();
+
+        if (!string.IsNullOrWhiteSpace(titleAttribute?.Title))
         {
-            metadata["Title"] = titleAttr.Title;
+            metadata["Title"] = titleAttribute.Title;
         }
 
         // Description
-        AssemblyDescriptionAttribute? descAttr = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>();
-        if (descAttr != null)
+        AssemblyDescriptionAttribute? descriptionAttribute =
+            assembly.GetCustomAttribute<AssemblyDescriptionAttribute>();
+
+        if (!string.IsNullOrWhiteSpace(descriptionAttribute?.Description))
         {
-            metadata["Description"] = descAttr.Description;
+            metadata["Description"] = descriptionAttribute.Description;
         }
 
         // Company
-        AssemblyCompanyAttribute? companyAttr = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
-        if (companyAttr != null)
+        AssemblyCompanyAttribute? companyAttribute =
+            assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
+
+        if (!string.IsNullOrWhiteSpace(companyAttribute?.Company))
         {
-            metadata["Company"] = companyAttr.Company;
+            metadata["Company"] = companyAttribute.Company;
         }
 
         // Product
-        AssemblyProductAttribute? productAttr = assembly.GetCustomAttribute<AssemblyProductAttribute>();
-        if (productAttr != null)
+        AssemblyProductAttribute? productAttribute =
+            assembly.GetCustomAttribute<AssemblyProductAttribute>();
+
+        if (!string.IsNullOrWhiteSpace(productAttribute?.Product))
         {
-            metadata["Product"] = productAttr.Product;
+            metadata["Product"] = productAttribute.Product;
         }
 
-        // Version
-        string? version = assembly.GetName().Version?.ToString();
-        if (!string.IsNullOrEmpty(version))
+        // Assembly version
+        string? version =
+            assembly.GetName().Version?.ToString();
+
+        if (!string.IsNullOrWhiteSpace(version))
         {
             metadata["Version"] = version;
         }
 
-        // File Version
-        AssemblyFileVersionAttribute? fileVersionAttr = assembly.GetCustomAttribute<AssemblyFileVersionAttribute>();
-        if (fileVersionAttr != null)
+        // File version
+        AssemblyFileVersionAttribute? fileVersionAttribute =
+            assembly.GetCustomAttribute<AssemblyFileVersionAttribute>();
+
+        if (!string.IsNullOrWhiteSpace(fileVersionAttribute?.Version))
         {
-            metadata["FileVersion"] = fileVersionAttr.Version;
+            metadata["FileVersion"] = fileVersionAttribute.Version;
         }
 
-        // Informational Version
-        AssemblyInformationalVersionAttribute? infoVersionAttr = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-        if (infoVersionAttr != null)
+        // Informational version
+        AssemblyInformationalVersionAttribute? informationalVersionAttribute =
+            assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+
+        if (!string.IsNullOrWhiteSpace(
+                informationalVersionAttribute?.InformationalVersion))
         {
-            metadata["InformationalVersion"] = infoVersionAttr.InformationalVersion;
+            metadata["InformationalVersion"] =
+                informationalVersionAttribute.InformationalVersion;
         }
 
         return metadata;
     }
-
     /// <summary>
     /// Gets or creates the directory path for the specified agent assembly file.
     /// </summary>
@@ -439,3 +490,8 @@ public class CrawlerAgent : IDisposable
         GC.SuppressFinalize(this);
     }
 }
+
+
+public sealed record LoadedCrawlerAssembly(
+    Assembly Assembly,
+    CrawlerAgentLoadContext LoadContext);

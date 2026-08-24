@@ -18,7 +18,7 @@ public class NugetPackageInfo
     public required List<NugetDependencyInfo> Dependencies { get; set; }
 
 
-    public string GetKamiYomuCoreRangeVersion()
+    public string GetNugetPackageKamiYomuCoreRangeVersion()
     {
         NugetDependencyInfo? kamiYomuCoreDependency = Dependencies?
             .FirstOrDefault(d => d.Id?.Equals("KamiYomu.CrawlerAgents.Core", StringComparison.OrdinalIgnoreCase) == true);
@@ -27,7 +27,7 @@ public class NugetPackageInfo
 
     public string GetKamiYomuCoreVersion()
     {
-        string range = GetKamiYomuCoreRangeVersion();
+        string range = GetNugetPackageKamiYomuCoreRangeVersion();
 
         if (string.IsNullOrWhiteSpace(range) || range == "Unknown")
         {
@@ -44,24 +44,54 @@ public class NugetPackageInfo
 
     public bool IsVersionCompatible()
     {
-        string versionRangeString = GetKamiYomuCoreRangeVersion(); // e.g. "[1.1.0, )"
-        Version currentVersion = typeof(ICrawlerAgent)
-            .Assembly
-            .GetName()
-            .Version ?? new Version(0, 0, 0);
+        string coreVersionRangeString = GetNugetPackageKamiYomuCoreRangeVersion();
 
-        if (VersionRange.TryParse(versionRangeString, out VersionRange? range))
+        if (string.IsNullOrWhiteSpace(coreVersionRangeString) ||
+            coreVersionRangeString.Equals("Unknown", StringComparison.OrdinalIgnoreCase))
         {
-            NuGetVersion nugetVersion = new(currentVersion);
-            return range.Satisfies(nugetVersion) &&
-                  range.MinVersion != null &&
-                  nugetVersion == range.MinVersion;
-
+            return false;
         }
 
-        // If parsing fails, treat as incompatible
-        return false;
+        if (!VersionRange.TryParse(coreVersionRangeString, out VersionRange? range))
+        {
+            return false;
+        }
+
+        // Extract the minimum version from the range
+        NuGetVersion? minVersion = range.MinVersion;
+
+        if (minVersion is null)
+        {
+            return false;
+        }
+
+        // Reject anything below 1.1.4
+        NuGetVersion minimumRequired = new NuGetVersion(1, 1, 4);
+        if (minVersion < minimumRequired)
+        {
+            return false;
+        }
+
+        // Now check if the range itself is valid for the current agent version
+        Version? currentVersion = typeof(ICrawlerAgent)
+            .Assembly
+            .GetName()
+            .Version;
+
+        if (currentVersion is null)
+        {
+            return false;
+        }
+
+        NuGetVersion agentVersion = new(
+            currentVersion.Major,
+            currentVersion.Minor,
+            currentVersion.Build);
+
+        return range.Satisfies(agentVersion);
     }
+
+
 
     public bool IsNsfw()
     {
