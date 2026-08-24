@@ -2,7 +2,7 @@ using KamiYomu.CrawlerAgents.Core.Catalog;
 
 namespace KamiYomu.Web.Entities;
 
-public class CrawlerAgentDecorator(ICrawlerAgent inner) : ICrawlerAgent, IDownloadHeaders
+public class CrawlerAgentDecorator(ICrawlerAgent inner) : ICrawlerAgent, IDefaultHeadersCrawlerAgent
 {
     private readonly ICrawlerAgent _inner = inner;
 
@@ -39,7 +39,7 @@ public class CrawlerAgentDecorator(ICrawlerAgent inner) : ICrawlerAgent, IDownlo
     /// <inheritdoc/>
     public IEnumerable<KeyValuePair<string, string>> GetDefaultHeaders()
     {
-        return _inner is IDownloadHeaders downloadHeaders ? downloadHeaders.GetDefaultHeaders() : [];
+        return _inner is IDefaultHeadersCrawlerAgent downloadHeaders ? downloadHeaders.GetDefaultHeaders() : [];
     }
 
     /// <inheritdoc/>

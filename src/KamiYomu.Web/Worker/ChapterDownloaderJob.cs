@@ -200,9 +200,6 @@ public class ChapterDownloaderJob(
         logger.LogInformation("Dispatch \"{title}\" completed.", title);
     }
 
-
-
-
     private async Task SavePageAsync(ICrawlerAgent crawlerAgent, string filePath, Page page, CancellationToken cancellationToken)
     {
         using HttpRequestMessage request = new(HttpMethod.Get, page.ImageUrl)
@@ -210,7 +207,7 @@ public class ChapterDownloaderJob(
             Version = HttpVersion.Version20 // optional, but good for modern servers
         };
 
-        if (crawlerAgent is IDownloadHeaders headers)
+        if (crawlerAgent is IDefaultHeadersCrawlerAgent headers)
         {
             request.LoadHttpRequestHeaders(headers.GetDefaultHeaders());
         }
@@ -244,9 +241,10 @@ public class ChapterDownloaderJob(
         {
             using HttpResponseMessage response = await _httpClient.GetAsync(
                 manga.CoverUrl,
-                HttpCompletionOption.ResponseHeadersRead);
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken);
             _ = response.EnsureSuccessStatusCode();
-            using Stream httpStream = await response.Content.ReadAsStreamAsync();
+            using Stream httpStream = await response.Content.ReadAsStreamAsync(cancellationToken);
             using FileStream fileStream = File.Create(coverFilePath);
             httpStream.CopyTo(fileStream);
             logger.LogInformation("Copied cover image to chapter folder: '{CoverFilePath}'", coverFilePath);
