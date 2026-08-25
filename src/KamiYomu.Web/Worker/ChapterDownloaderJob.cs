@@ -6,6 +6,7 @@ using Hangfire;
 using Hangfire.Server;
 
 using KamiYomu.CrawlerAgents.Core.Catalog;
+using KamiYomu.CrawlerAgents.Core.Extensions;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Extensions;
@@ -209,7 +210,7 @@ public class ChapterDownloaderJob(
 
         if (crawlerAgent is IDefaultHeadersCrawlerAgent headers)
         {
-            request.LoadHttpRequestHeaders(headers.GetDefaultHeaders());
+            request.AddRangeHeaders([.. headers.GetDefaultHeaders()]);
         }
 
         using HttpResponseMessage response = await _httpClient.SendAsync(
