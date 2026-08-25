@@ -96,10 +96,10 @@ public class IndexModel(
         }
 
         // Load isolated assembly and extract metadata
-        System.Reflection.Assembly assembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
-        Dictionary<string, string> metadata = CrawlerAgent.GetAssemblyMetadata(assembly);
+        LoadedCrawlerAssembly crawlerAssembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
+        Dictionary<string, string> metadata = CrawlerAgent.GetAssemblyMetadata(crawlerAssembly);
 
-        IEnumerable<AbstractInputAttribute> crawlerInputs = CrawlerAgent.GetCrawlerInputs(assembly);
+        IEnumerable<AbstractInputAttribute> crawlerInputs = CrawlerAgent.GetCrawlerInputs(crawlerAssembly.Assembly);
 
         if (flareSolverrOptions.Value.Enabled)
         {
@@ -108,7 +108,7 @@ public class IndexModel(
 
         InputModel inputModel = new()
         {
-            DisplayName = CrawlerAgent.GetCrawlerDisplayName(assembly),
+            DisplayName = CrawlerAgent.GetCrawlerDisplayName(crawlerAssembly.Assembly),
             CrawlerInputsViewModel = new CrawlerInputsViewModel
             {
                 CrawlerInputs = crawlerInputs,
@@ -172,10 +172,10 @@ public class IndexModel(
         }
 
         // Register agent
-        System.Reflection.Assembly assembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
-        IEnumerable<AbstractInputAttribute> crawlerInputs = CrawlerAgent.GetCrawlerInputs(assembly);
-        string displayName = CrawlerAgent.GetCrawlerDisplayName(assembly);
-        Dictionary<string, string> assemblyMetadata = CrawlerAgent.GetAssemblyMetadata(assembly);
+        LoadedCrawlerAssembly crawlerAssembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
+        IEnumerable<AbstractInputAttribute> crawlerInputs = CrawlerAgent.GetCrawlerInputs(crawlerAssembly.Assembly);
+        string displayName = CrawlerAgent.GetCrawlerDisplayName(crawlerAssembly.Assembly);
+        Dictionary<string, string> assemblyMetadata = CrawlerAgent.GetAssemblyMetadata(crawlerAssembly);
         Dictionary<string, object> metadata = Input.CrawlerInputsViewModel.GetAgentMetadataValues();
         foreach (AbstractInputAttribute crawlerInput in crawlerInputs)
         {

@@ -1,5 +1,4 @@
 using System.IO.Compression;
-using System.Linq.Expressions;
 
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Areas.Settings.Models;
@@ -186,9 +185,9 @@ public class IndexModel(ILogger<IndexModel> logger,
                                     .FirstOrDefault(p => p.EndsWith($"{packageId}.dll"))
                                     ?? throw new FileNotFoundException("Main package DLL not found.");
 
-            System.Reflection.Assembly assembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
-            Dictionary<string, string> metadata = CrawlerAgent.GetAssemblyMetadata(assembly);
-            string displayName = CrawlerAgent.GetCrawlerDisplayName(assembly);
+            LoadedCrawlerAssembly crawlerAssembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
+            Dictionary<string, string> metadata = CrawlerAgent.GetAssemblyMetadata(crawlerAssembly);
+            string displayName = CrawlerAgent.GetCrawlerDisplayName(crawlerAssembly.Assembly);
 
             using CrawlerAgent crawlerAgent = new(dllPath, displayName, []);
             _ = dbContext.CrawlerAgents.Insert(crawlerAgent);
