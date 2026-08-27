@@ -21,14 +21,14 @@ namespace KamiYomu.Web.Worker;
 /// </summary>
 /// <param name="logger"></param>
 /// <param name="workerOptions"></param>
-/// <param name="crawlerAgentAssemblyLoader"></param>
+/// <param name="crawlerAgentFactory"></param>
 /// <param name="agentCrawlerRepository"></param>
 /// <param name="hangfireRepository"></param>
 /// <param name="dbContext"></param>
 public class ChapterDiscoveryJob(
     ILogger<ChapterDiscoveryJob> logger,
     IOptions<WorkerOptions> workerOptions,
-    ICrawlerAgentAssemblyLoader crawlerAgentAssemblyLoader,
+    ICrawlerAgentFactory crawlerAgentFactory,
     ICrawlerAgentRepository agentCrawlerRepository,
     IHangfireRepository hangfireRepository,
     DbContext dbContext) : IChapterDiscoveryJob
@@ -238,7 +238,7 @@ public class ChapterDiscoveryJob(
             return;
         }
 
-        using ICrawlerAgentDecorator? crawlerAgent = crawlerAgentAssemblyLoader.GetCrawlerInstance(library.CrawlerAgent);
+        using ICrawlerAgentDecorator? crawlerAgent = crawlerAgentFactory.Create(library.CrawlerAgent);
 
         if (crawlerAgent == null)
         {

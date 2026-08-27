@@ -21,7 +21,6 @@ public class IndexModel(ILogger<IndexModel> logger,
                         DbContext dbContext,
                         INugetService nugetService,
                         INotificationService notificationService,
-                        ICrawlerAgentFactory crawlerAgentFactory,
                         ICrawlerAgentAssemblyLoader crawlerAgentAssemblyLoader) : PageModel
 {
     [BindProperty(SupportsGet = true)]

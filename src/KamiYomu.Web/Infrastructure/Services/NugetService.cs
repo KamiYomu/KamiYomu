@@ -3,15 +3,20 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json.Nodes;
 
+using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Areas.Settings.Models;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
+
+using Microsoft.Extensions.Options;
+
+using NuGet.Versioning;
 
 using static KamiYomu.Web.AppOptions.Defaults;
 
 namespace KamiYomu.Web.Infrastructure.Services;
 
-public class NugetService(DbContext dbContext) : INugetService
+public class NugetService(DbContext dbContext, IOptions<StartupOptions> startupOptions) : INugetService
 {
     public async Task<NugetPackageInfo?> GetPackageMetadataAsync(Guid sourceId, string packageId, string version, CancellationToken cancellationToken)
     {
@@ -151,7 +156,11 @@ public class NugetService(DbContext dbContext) : INugetService
         return packages;
     }
 
-    public async Task<Stream[]> OnGetDownloadAsync(Guid sourceId, string packageId, string packageVersion, CancellationToken cancellationToken)
+    public async Task<Stream[]> OnGetDownloadAsync(
+    Guid sourceId,
+    string packageId,
+    string packageVersion,
+    CancellationToken cancellationToken)
     {
         NugetSource source = dbContext.NugetSources.FindById(sourceId);
         if (source == null || string.IsNullOrWhiteSpace(packageId) || string.IsNullOrWhiteSpace(packageVersion))
@@ -162,25 +171,26 @@ public class NugetService(DbContext dbContext) : INugetService
         using HttpClientHandler handler = new();
         using HttpClient client = new(handler);
 
+        // Authentication
         if (!string.IsNullOrWhiteSpace(source.UserName) && !string.IsNullOrWhiteSpace(source.Password))
         {
             byte[] byteArray = Encoding.ASCII.GetBytes($"{source.UserName}:{source.Password}");
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
         }
         else if (!string.IsNullOrWhiteSpace(source.Password))
         {
             client.DefaultRequestHeaders.Add("X-NuGet-ApiKey", source.Password);
         }
 
+        // Discover endpoints
         string indexJson = await client.GetStringAsync(source.Url, cancellationToken);
-        JsonNode? index = JsonNode.Parse(indexJson);
+        JsonNode index = JsonNode.Parse(indexJson)!;
 
-        string? packageBaseUrl = index?["resources"]?
-            .AsArray()
+        string? packageBaseUrl = index["resources"]?.AsArray()
             .FirstOrDefault(r => r?["@type"]?.ToString()?.StartsWith("PackageBaseAddress") ?? false)?["@id"]?.ToString();
 
-        string? registrationBaseUrl = index?["resources"]?
-            .AsArray()
+        string? registrationBaseUrl = index["resources"]?.AsArray()
             .FirstOrDefault(r => r?["@type"]?.ToString()?.StartsWith("RegistrationsBaseUrl") ?? false)?["@id"]?.ToString();
 
         if (string.IsNullOrEmpty(packageBaseUrl) || string.IsNullOrEmpty(registrationBaseUrl))
@@ -191,87 +201,129 @@ public class NugetService(DbContext dbContext) : INugetService
         HashSet<string> visited = new(StringComparer.OrdinalIgnoreCase);
         List<Stream> streams = [];
 
-        async Task DownloadWithDependenciesAsync(string id, string version, bool mainPackage)
+        // Recursive downloader
+        async Task DownloadWithDependenciesAsync(string id, string version, int level)
         {
+            if (level > startupOptions.Value.MaximumPackageDependencyDepth)
+            {
+                return; // Limit recursion depth to avoid excessive downloads
+            }
+
             string key = $"{id.ToLowerInvariant()}:{version.ToLowerInvariant()}";
             if (!visited.Add(key))
             {
                 return;
             }
 
-            string cleanVersion = version
-                .Split(',')[0]
-                .Trim()
-                .Trim('[', ']', '(', ')');
+            // Parse version range properly
+            VersionRange range = VersionRange.Parse(version);
+            NuGetVersion minVersion = range.MinVersion ?? NuGetVersion.Parse(version);
+            string cleanVersion = minVersion.ToNormalizedString().ToLowerInvariant();
 
-            string packageUrl = $"{packageBaseUrl.TrimEnd('/')}/{id.ToLowerInvariant()}/{cleanVersion.ToLowerInvariant()}/{id.ToLowerInvariant()}.{cleanVersion.ToLowerInvariant()}.nupkg";
-            Stream stream = await client.GetStreamAsync(packageUrl, cancellationToken);
-            streams.Add(stream);
+            // Download .nupkg
+            string packageUrl =
+                $"{packageBaseUrl.TrimEnd('/')}/{id.ToLowerInvariant()}/{cleanVersion}/{id.ToLowerInvariant()}.{cleanVersion}.nupkg";
 
-            string registrationUrl = $"{registrationBaseUrl.TrimEnd('/')}/{id.ToLowerInvariant()}/index.json";
+            try
+            {
+                Stream pkgStream = await client.GetStreamAsync(packageUrl, cancellationToken);
+                streams.Add(pkgStream);
+            }
+            catch (Exception)
+            {
+                if (level > 0)
+                {
+                    return;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+
+            // Fetch registration index
+            string registrationUrl =
+                $"{registrationBaseUrl.TrimEnd('/')}/{id.ToLowerInvariant()}/{version}.json";
+
             using HttpResponseMessage response = await client.GetAsync(registrationUrl, cancellationToken);
 
-            if (!response.IsSuccessStatusCode && mainPackage)
+            if (!response.IsSuccessStatusCode)
             {
-                _ = response.EnsureSuccessStatusCode();
-            }
-            else
-            {
-                return;
+                if (level == 0)
+                {
+                    _ = response.EnsureSuccessStatusCode(); // main package must exist
+                }
 
+                return; // dependencies may not have registration index → skip dependency discovery
             }
 
-            using Stream regStream = await response.Content.ReadAsStreamAsync(cancellationToken);
             JsonNode reg;
             if (response.Content.Headers.ContentEncoding.Contains("gzip"))
             {
-                using GZipStream gzipStream = new(await response.Content.ReadAsStreamAsync(cancellationToken), CompressionMode.Decompress);
-                using StreamReader reader = new(gzipStream);
-                string regJson = await reader.ReadToEndAsync();
-                reg = JsonNode.Parse(regJson);
+                using Stream raw = await response.Content.ReadAsStreamAsync(cancellationToken);
+                using GZipStream gzip = new(raw, CompressionMode.Decompress);
+                using StreamReader reader = new(gzip);
+                reg = JsonNode.Parse(await reader.ReadToEndAsync())!;
             }
             else
             {
-                string regJson = await response.Content.ReadAsStringAsync(cancellationToken);
-                reg = JsonNode.Parse(regJson);
+                reg = JsonNode.Parse(await response.Content.ReadAsStringAsync(cancellationToken))!;
             }
 
-            IEnumerable<JsonNode?>? entries = reg?["items"]?.AsArray()
-                .SelectMany(item => item?["items"]?.AsArray() ?? [])
-                .Where(entry => string.Equals(entry?["catalogEntry"]?["version"]?.ToString(), version, StringComparison.OrdinalIgnoreCase));
-
-            foreach (JsonNode? entry in entries ?? [])
+            // Find catalog entries for this version
+            IEnumerable<JsonNode?> entries = null;
+            if (Uri.IsWellFormedUriString(reg["catalogEntry"]?.ToString(), UriKind.Absolute))
             {
-                JsonArray? groups = entry?["catalogEntry"]?["dependencyGroups"]?.AsArray();
-                if (groups == null)
-                {
-                    continue;
-                }
+                using HttpResponseMessage catalogEntryResponse = await client.GetAsync(reg["catalogEntry"].ToString(), cancellationToken);
+                _ = catalogEntryResponse.EnsureSuccessStatusCode();
+                reg = JsonNode.Parse(await catalogEntryResponse.Content.ReadAsStringAsync(cancellationToken))!;
 
-                foreach (JsonNode? group in groups)
-                {
-                    JsonArray? dependencies = group?["dependencies"]?.AsArray();
-                    if (dependencies == null)
-                    {
-                        continue;
-                    }
+                entries = reg["dependencyGroups"]
+                 .AsArray()
+                 .SelectMany(item => item?["dependencies"]?.AsArray() ?? []).ToArray();
+            }
+            else
+            {
+                entries = reg["catalogEntry"]?["dependencyGroups"]
+                   .AsArray()
+                   .SelectMany(item => item?["dependencies"]?.AsArray() ?? []).ToArray();
 
-                    foreach (JsonNode? dep in dependencies)
-                    {
-                        string? depId = dep?["id"]?.ToString();
-                        string? depVersion = dep?["range"]?.ToString()?.Trim('[', ']');
-                        if (!string.IsNullOrWhiteSpace(depId) && !string.IsNullOrWhiteSpace(depVersion))
-                        {
-                            await DownloadWithDependenciesAsync(depId, depVersion, false);
-                        }
-                    }
+            }
+
+            if (entries == null)
+            {
+                return;
+            }
+
+            // Process dependency groups
+            foreach (JsonNode? entry in entries)
+            {
+                string? depId = entry?["id"]?.ToString();
+                string? depRange = entry?["range"]?.ToString();
+
+                if (!string.IsNullOrWhiteSpace(depId) && !string.IsNullOrWhiteSpace(depRange))
+                {
+                    await DownloadWithDependenciesAsync(depId, CleanVersion(depRange), level + 1);
                 }
             }
         }
 
-        await DownloadWithDependenciesAsync(packageId, packageVersion, true);
+        // Start recursion
+        await DownloadWithDependenciesAsync(packageId, packageVersion, 0);
+
         return [.. streams];
     }
+
+
+    string CleanVersion(string range)
+    {
+        VersionRange vr = VersionRange.Parse(range);
+        NuGetVersion min = vr.MinVersion ?? throw new Exception("No minimum version found.");
+        return min.ToNormalizedString();
+    }
+
+
 
     private string? ExtractResourceUrl(JsonNode? index, string resourceType)
     {
@@ -368,7 +420,7 @@ public class NugetService(DbContext dbContext) : INugetService
             client,
             cancellationToken);
 
-        List<string> allDependencies = new(firstLevelDeps);
+        List<string> allDependencies = [.. firstLevelDeps];
 
         foreach (string[] secondLevelDeps in secondLevelDepsMap.Values)
         {
@@ -381,12 +433,9 @@ public class NugetService(DbContext dbContext) : INugetService
     private string[] ExtractDirectDependencies(JsonNode catalogEntry)
     {
         JsonArray? dependencyGroups = catalogEntry?["dependencyGroups"]?.AsArray();
-        if (dependencyGroups is null)
-        {
-            return [];
-        }
-
-        return dependencyGroups
+        return dependencyGroups is null
+            ? []
+            : dependencyGroups
             .SelectMany(g => g?["dependencies"]?.AsArray() ?? [])
             .Select(d =>
             {
@@ -488,16 +537,16 @@ public class NugetService(DbContext dbContext) : INugetService
                                {
                                    string? id = d?["id"]?.ToString();
                                    string? range = d?["range"]?.ToString();
-                               
+
                                    if (string.IsNullOrEmpty(id))
                                    {
                                        return null;
                                    }
-                               
+
                                    // Extract the minimum version from the range
                                    // Example: "[1.2.3]" → "1.2.3"
                                    string version = ExtractVersionFromRange(range);
-                               
+
                                    return $"{id}:{version}";
                                })
                                .Where(x => x is not null)

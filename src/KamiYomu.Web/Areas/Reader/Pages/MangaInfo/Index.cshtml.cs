@@ -14,7 +14,7 @@ namespace KamiYomu.Web.Areas.Reader.Pages.MangaInfo;
 
 public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext,
                         [FromKeyedServices(ServiceLocator.ReadOnlyReadingDbContext)] ReadingDbContext readingDbContext,
-                        ICrawlerAgentAssemblyLoader crawlerAgentAssemblyLoader) : PageModel
+                        ICrawlerAgentFactory crawlerAgentFactory) : PageModel
 {
     public Library Library { get; set; } = default!;
     public Manga Manga { get; set; } = default!;
@@ -50,7 +50,7 @@ public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] Db
                                         .OrderBy(p => p.Chapter.Number)
                                         .FirstOrDefault();
 
-        using ICrawlerAgentDecorator crawlerInstance = crawlerAgentAssemblyLoader.GetCrawlerInstance(Library.CrawlerAgent);
+        using ICrawlerAgentDecorator crawlerInstance = crawlerAgentFactory.Create(Library.CrawlerAgent);
         CrawlerAgentFaviconUrl = await crawlerInstance.GetFaviconAsync(CancellationToken.None);
     }
 }

@@ -8,9 +8,8 @@ namespace KamiYomu.Web.Infrastructure.HttpHandlers;
 /// <summary>
 /// 
 /// </summary>
-/// <param name="innerHandler"></param>
 /// <param name="options"></param>
-public sealed class ChromiumHandler(HttpMessageHandler innerHandler, IOptions<ChromiumOptions> options) : DelegatingHandler(innerHandler)
+public sealed class ChromiumHandler(IOptions<ChromiumOptions> options) : DelegatingHandler
 {
     private readonly ChromiumOptions _options = options.Value;
 

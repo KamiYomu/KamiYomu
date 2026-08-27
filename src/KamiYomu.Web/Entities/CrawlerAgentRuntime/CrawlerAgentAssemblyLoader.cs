@@ -95,17 +95,7 @@ public class CrawlerAgentAssemblyLoader : ICrawlerAgentAssemblyLoader
 
         return metadata;
     }
-    /// <inheritdoc/>
-    public ICrawlerAgentDecorator GetCrawlerInstance(CrawlerAgent crawlerAgent)
-    {
-        return GetCrawlerInstance(crawlerAgent.AssemblyPath, crawlerAgent.AgentMetadata);
-    }
-    /// <inheritdoc/>
-    public ICrawlerAgentDecorator GetCrawlerInstance(string assemblyPath, IDictionary<string, object> options)
-    {
-        CrawlerAgentAssembly crawlerAssembly = GetIsolatedAssembly(assemblyPath);
-        return GetCrawlerInstance(crawlerAssembly.Assembly, options);
-    }
+
     /// <inheritdoc/>
     public CrawlerAgentAssembly GetIsolatedAssembly(string assemblyPath)
     {

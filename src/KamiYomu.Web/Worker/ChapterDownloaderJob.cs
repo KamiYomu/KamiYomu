@@ -9,6 +9,7 @@ using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.CrawlerAgents.Core.Extensions;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime;
 using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
@@ -25,7 +26,7 @@ public class ChapterDownloaderJob(
     DbContext dbContext,
     CacheContext cacheContext,
     ICrawlerAgentRepository agentCrawlerRepository,
-    ICrawlerAgentAssemblyLoader crawlerAgentAssemblyLoader,
+    ICrawlerAgentFactory crawlerAgentFactory,
     IHttpClientFactory httpClientFactory,
     IHangfireRepository hangfireRepository,
     INotificationService notificationService,
@@ -122,7 +123,7 @@ public class ChapterDownloaderJob(
             _ = await SaveCoverAsync(library.Manga, tempChapterFolder, cancellationToken);
 
             int index = 1;
-            using ICrawlerAgentDecorator crawlerAgent = crawlerAgentAssemblyLoader.GetCrawlerInstance(library.CrawlerAgent);
+            using ICrawlerAgentDecorator crawlerAgent = crawlerAgentFactory.Create(library.CrawlerAgent);
             foreach (Page? page in pages.OrderBy(p => p.PageNumber))
             {
                 cancellationToken.ThrowIfCancellationRequested();

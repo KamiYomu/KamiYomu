@@ -3,7 +3,7 @@
 @using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces
 @using KamiYomu.Web.Extensions
 @using KamiYomu.Web.Entities.CrawlerAgentRuntime
-@inject ICrawlerAgentAssemblyLoader CrawlerAgentAssemblyLoader
+@inject ICrawlerAgentFactory crawlerAgentFactory
 @model IndexModel
 
 @{
@@ -44,7 +44,7 @@
                     <ul class="dropdown-menu w-md-auto">
                         @foreach (var crawlerAgent in Model.CrawlerAgents)
                         {
-                            using ICrawlerAgentDecorator crawlerInstance = CrawlerAgentAssemblyLoader.GetCrawlerInstance(crawlerAgent);
+                            using ICrawlerAgentDecorator crawlerInstance = crawlerAgentFactory.Create(crawlerAgent);
                             var faviconUrl = await crawlerInstance.GetFaviconAsync(CancellationToken.None);
 
                             <li>

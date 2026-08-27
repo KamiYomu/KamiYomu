@@ -22,19 +22,7 @@ public interface ICrawlerAgentAssemblyLoader
     /// <param name="loadedAssembly">The assembly to extract metadata from.</param>
     /// <returns>A dictionary containing assembly metadata with keys such as FilePath, Title, Description, Company, Product, Version, FileVersion, and InformationalVersion.</returns>
     Dictionary<string, string> GetAssemblyMetadata(CrawlerAgentAssembly loadedAssembly);
-    /// <summary>
-    /// Creates a new instance of the crawler agent from the assembly at the specified path.
-    /// </summary>
-    /// <param name="crawlerAgent">Crawler Agent</param>
-    /// <returns>An instance of <see cref="ICrawlerAgentDecorator"/>.</returns>
-    ICrawlerAgentDecorator GetCrawlerInstance(CrawlerAgent crawlerAgent);
-    /// <summary>
-    /// Creates a new instance of the crawler agent from the assembly at the specified path.
-    /// </summary>
-    /// <param name="assemblyPath">The file path to the crawler agent assembly.</param>
-    /// <param name="options">A dictionary of options and dependencies to inject into the crawler instance constructor.</param>
-    /// <returns>An instance of <see cref="ICrawlerAgentDecorator"/>.</returns>
-    ICrawlerAgentDecorator GetCrawlerInstance(string assemblyPath, IDictionary<string, object> options);
+
     /// <summary>
     /// Loads an assembly from the specified path into an isolated <see cref="AssemblyLoadContext"/>.
     /// Validates that the assembly contains at least one non-abstract class implementing <see cref="ICrawlerAgent"/>.

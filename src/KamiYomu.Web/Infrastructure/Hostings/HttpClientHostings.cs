@@ -56,39 +56,28 @@ public static class HttpClientHostings
 
     private static void AddHttpHandlers(IServiceCollection services)
     {
-        _ = services.AddSingleton(sp =>
+        _ = services.AddTransient(sp =>
         {
             IOptions<CloudflareSolverOptions> options = sp.GetRequiredService<IOptions<CloudflareSolverOptions>>();
-            HttpClientHandler innerHandler = new()
-            {
-                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-            };
-            return new CloudflareBypassHandler(innerHandler, options);
+            return new CloudflareBypassHandler(options);
         });
 
-        _ = services.AddSingleton(sp =>
+        _ = services.AddTransient(sp =>
         {
             IOptions<ChromiumOptions> options = sp.GetRequiredService<IOptions<ChromiumOptions>>();
-            HttpClientHandler innerHandler = new()
-            {
-                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-            };
-            return new ChromiumHandler(innerHandler, options);
+            return new ChromiumHandler(options);
         });
 
-        _ = services.AddSingleton(sp =>
+        _ = services.AddTransient(sp =>
         {
             CloudflareBypassHandler cf = sp.GetRequiredService<CloudflareBypassHandler>();
             ChromiumHandler chromium = sp.GetRequiredService<ChromiumHandler>();
 
             return new SmartCrawlerHandler(
-                new HttpClientHandler
-                {
-                    AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-                },
                 cf,
                 chromium);
         });
+
 
     }
 

@@ -1,3 +1,4 @@
+using KamiYomu.CrawlerAgents.Core;
 using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 using KamiYomu.Web.Infrastructure.HttpHandlers;
 
@@ -25,7 +26,14 @@ public class CrawlerAgentFactory(
     /// <inheritdoc/>
     public ICrawlerAgentDecorator Create(CrawlerAgent crawlerAgent)
     {
-        Dictionary<string, object> metadata = new(crawlerAgent.AgentMetadata)
+        ICrawlerAgentDecorator crawlerInstance = Create(crawlerAgent.AssemblyPath, crawlerAgent.AgentMetadata);
+
+        return crawlerInstance;
+    }
+    /// <inheritdoc/>
+    public ICrawlerAgentDecorator Create(string assemblyPath, Dictionary<string, object> metadata)
+    {
+        Dictionary<string, object> crawlerAgentMetadata = new(metadata)
         {
             [CrawlerAgentMetadata.Fields.KamiYomuILogger] = logger,
             [CrawlerAgentMetadata.Fields.ApplicationHttpClient] = httpClientFactory.CreateClient(CrawlerAgentMetadata.Fields.ApplicationHttpClient),
@@ -35,22 +43,14 @@ public class CrawlerAgentFactory(
             [CrawlerAgentMetadata.Fields.SmartCrawlerHttpHandler] = smartCrawler
         };
 
-        ICrawlerAgentDecorator crawlerInstance = crawlerAgentAssemblyLoader.GetCrawlerInstance(crawlerAgent.AssemblyPath, metadata);
+        ICrawlerAgentDecorator crawlerInstance = GetCrawlerInstance(assemblyPath, crawlerAgentMetadata);
 
         return crawlerInstance;
     }
-    /// <inheritdoc/>
-    public ICrawlerAgentDecorator Create(string assemblyPath, Dictionary<string, object> metadata)
+
+    private ICrawlerAgentDecorator GetCrawlerInstance(string assemblyPath, IDictionary<string, object> options)
     {
-        metadata[CrawlerAgentMetadata.Fields.KamiYomuILogger] = logger;
-        metadata[CrawlerAgentMetadata.Fields.ApplicationHttpClient] = httpClientFactory.CreateClient(CrawlerAgentMetadata.Fields.ApplicationHttpClient);
-
-        metadata[CrawlerAgentMetadata.Fields.FlareSolverrHttpHandler] = cloudflare;
-        metadata[CrawlerAgentMetadata.Fields.ChromiumHttpHandler] = chromiumHandler;
-        metadata[CrawlerAgentMetadata.Fields.SmartCrawlerHttpHandler] = smartCrawler;
-
-        ICrawlerAgentDecorator crawlerInstance = crawlerAgentAssemblyLoader.GetCrawlerInstance(assemblyPath, metadata);
-
-        return crawlerInstance;
+        CrawlerAgentAssembly crawlerAssembly = crawlerAgentAssemblyLoader.GetIsolatedAssembly(assemblyPath);
+        return crawlerAgentAssemblyLoader.GetCrawlerInstance(crawlerAssembly.Assembly, options);
     }
 }

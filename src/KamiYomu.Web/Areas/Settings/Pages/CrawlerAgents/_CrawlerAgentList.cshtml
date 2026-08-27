@@ -2,6 +2,7 @@
 @using KamiYomu.Web.Entities
 @using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces
 @inject ICrawlerAgentAssemblyLoader CrawlerAgentAssemblyLoader
+@inject ICrawlerAgentFactory CrawlerAgentFactory
 @model IEnumerable<CrawlerAgent>
 <table class="table table-striped table-hover table-sm align-middle">
     <thead>
@@ -15,7 +16,7 @@
         {
             @foreach (var item in Model)
             {
-                using ICrawlerAgentDecorator crawlerInstance = CrawlerAgentAssemblyLoader.GetCrawlerInstance(item);
+                using ICrawlerAgentDecorator crawlerInstance = CrawlerAgentFactory.Create(item);
                 var faviconUrl = await crawlerInstance.GetFaviconAsync(CancellationToken.None);
                 <tr>
                     <td>
