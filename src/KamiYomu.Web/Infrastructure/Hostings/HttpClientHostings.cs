@@ -29,21 +29,29 @@ public static class HttpClientHostings
 
     private static void AddWorkerHttpClient(IServiceCollection services)
     {
+        AddHttpHandlers(services);
+
         Polly.Retry.AsyncRetryPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtensions
          .HandleTransientHttpError()
          .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 
         Polly.Timeout.AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(Defaults.Worker.HttpTimeOutInSeconds);
 
-        _ = services.AddHttpClient(Defaults.Worker.HttpClientApp, client =>
+        _ = services.AddHttpClient(Defaults.Worker.WorkerHttpClient, client =>
         {
             client.DefaultRequestHeaders.UserAgent.ParseAdd(CrawlerAgentMetadata.Values.MimicUserAgent);
         })
             .AddPolicyHandler(retryPolicy)
             .AddPolicyHandler(timeoutPolicy);
 
+        _ = services.AddHttpClient(CrawlerAgentMetadata.Fields.ApplicationHttpClient, client =>
+        {
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(CrawlerAgentMetadata.Values.MimicUserAgent);
+        }).AddHttpMessageHandler<SmartCrawlerHandler>()
+        .AddPolicyHandler(retryPolicy)
+        .AddPolicyHandler(timeoutPolicy);
 
-        AddHttpHandlers(services);
+
     }
 
     private static void AddHttpHandlers(IServiceCollection services)

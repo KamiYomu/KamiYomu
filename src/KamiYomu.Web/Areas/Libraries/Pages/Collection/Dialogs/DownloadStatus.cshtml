@@ -1,13 +1,15 @@
 @page
 @using System.Text
 @using KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs
+@using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces
 @using KamiYomu.Web.Extensions
 @using KamiYomu.Web.Infrastructure.Services.Interfaces
 @inject IUserClockManager UserClockService
+@inject ICrawlerAgentAssemblyLoader CrawlerAgentAssemblyLoader
 @model KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs.DownloadStatusModel
 @{
     Layout = null;
-    using var crawlerInstance = Model.Library.CrawlerAgent.GetCrawlerInstance();
+    using ICrawlerAgentDecorator crawlerInstance = CrawlerAgentAssemblyLoader.GetCrawlerInstance(Model.Library.CrawlerAgent.AssemblyPath, Model.Library.CrawlerAgent.AgentMetadata);
     var faviconUrl = await crawlerInstance.GetFaviconAsync(CancellationToken.None);
     var badgeClass = Model.Record.DownloadStatus switch
     {

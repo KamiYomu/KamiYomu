@@ -23,9 +23,9 @@ public class CrawlerInputsViewModel
         return metadata;
     }
 
-    public static Dictionary<string, string> GetAgentMetadataValues(Dictionary<string, object> values)
+    public static Dictionary<string, string?> GetAgentMetadataValues(Dictionary<string, object> values)
     {
-        Dictionary<string, string> metadata = [];
+        Dictionary<string, string?> metadata = [];
         foreach (KeyValuePair<string, object> item in values)
         {
             metadata[item.Key] = item.Value?.ToString();

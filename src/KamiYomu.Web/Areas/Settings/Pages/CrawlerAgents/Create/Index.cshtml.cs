@@ -5,6 +5,8 @@ using KamiYomu.CrawlerAgents.Core.Inputs;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Areas.Settings.Pages.Shared;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
@@ -22,7 +24,9 @@ public class IndexModel(
     DbContext dbContext,
     IOptions<SpecialFolderOptions> specialFolderOptions,
     IOptions<CloudflareSolverOptions> flareSolverrOptions,
-    INotificationService notificationService) : PageModel
+    INotificationService notificationService,
+    ICrawlerAgentFactory crawlerAgentFactory,
+    ICrawlerAgentAssemblyLoader crawlerAgentAssemblyLoader) : PageModel
 {
 
     [BindProperty]
@@ -72,7 +76,7 @@ public class IndexModel(
 
         // Save to permanent storage
         _ = dbContext.CrawlerAgentFileStorage.Upload(tempUploadId, agentFile.FileName, agentFile.OpenReadStream());
-        LiteDB.LiteFileInfo<Guid> fileStorage = dbContext.CrawlerAgentFileStorage.FindById(tempUploadId);
+        LiteFileInfo<Guid> fileStorage = dbContext.CrawlerAgentFileStorage.FindById(tempUploadId);
         fileStorage.SaveAs(tempFilePath, true);
         string crawlerAgentTempDir = Path.Combine(Path.GetTempPath(), Defaults.Worker.TempDirName, CrawlerAgent.GetAgentDirName(agentFile.FileName));
         string? dllPath = "";
@@ -96,10 +100,10 @@ public class IndexModel(
         }
 
         // Load isolated assembly and extract metadata
-        LoadedCrawlerAssembly crawlerAssembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
-        Dictionary<string, string> metadata = CrawlerAgent.GetAssemblyMetadata(crawlerAssembly);
+        CrawlerAgentAssembly crawlerAssembly = crawlerAgentAssemblyLoader.GetIsolatedAssembly(dllPath);
+        Dictionary<string, string> metadata = crawlerAgentAssemblyLoader.GetAssemblyMetadata(crawlerAssembly);
 
-        IEnumerable<AbstractInputAttribute> crawlerInputs = CrawlerAgent.GetCrawlerInputs(crawlerAssembly.Assembly);
+        IEnumerable<AbstractInputAttribute> crawlerInputs = crawlerAgentAssemblyLoader.GetCrawlerInputs(crawlerAssembly.Assembly);
 
         if (flareSolverrOptions.Value.Enabled)
         {
@@ -108,7 +112,7 @@ public class IndexModel(
 
         InputModel inputModel = new()
         {
-            DisplayName = CrawlerAgent.GetCrawlerDisplayName(crawlerAssembly.Assembly),
+            DisplayName = crawlerAgentAssemblyLoader.GetCrawlerDisplayName(crawlerAssembly.Assembly),
             CrawlerInputsViewModel = new CrawlerInputsViewModel
             {
                 CrawlerInputs = crawlerInputs,
@@ -123,7 +127,7 @@ public class IndexModel(
 
     public IActionResult OnPostSave()
     {
-        LiteDB.LiteFileInfo<Guid> fileStorage = dbContext.CrawlerAgentFileStorage.FindById(Input.TempFileId);
+        LiteFileInfo<Guid> fileStorage = dbContext.CrawlerAgentFileStorage.FindById(Input.TempFileId);
 
         string extension = Path.GetExtension(fileStorage.Filename).ToLowerInvariant();
         bool isNuget = extension == ".nupkg";
@@ -172,10 +176,10 @@ public class IndexModel(
         }
 
         // Register agent
-        LoadedCrawlerAssembly crawlerAssembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
-        IEnumerable<AbstractInputAttribute> crawlerInputs = CrawlerAgent.GetCrawlerInputs(crawlerAssembly.Assembly);
-        string displayName = CrawlerAgent.GetCrawlerDisplayName(crawlerAssembly.Assembly);
-        Dictionary<string, string> assemblyMetadata = CrawlerAgent.GetAssemblyMetadata(crawlerAssembly);
+        CrawlerAgentAssembly crawlerAssembly = crawlerAgentAssemblyLoader.GetIsolatedAssembly(dllPath);
+        IEnumerable<AbstractInputAttribute> crawlerInputs = crawlerAgentAssemblyLoader.GetCrawlerInputs(crawlerAssembly.Assembly);
+        string displayName = crawlerAgentAssemblyLoader.GetCrawlerDisplayName(crawlerAssembly.Assembly);
+        Dictionary<string, string> assemblyMetadata = crawlerAgentAssemblyLoader.GetAssemblyMetadata(crawlerAssembly);
         Dictionary<string, object> metadata = Input.CrawlerInputsViewModel.GetAgentMetadataValues();
         foreach (AbstractInputAttribute crawlerInput in crawlerInputs)
         {
@@ -208,7 +212,7 @@ public class IndexModel(
             };
             return Page();
         }
-        using CrawlerAgent crawlerAgent = new(dllPath, displayName, Input.CrawlerInputsViewModel.GetAgentMetadataValues());
+        CrawlerAgent crawlerAgent = new(dllPath, displayName, Input.CrawlerInputsViewModel.GetAgentMetadataValues());
 
         _ = dbContext.CrawlerAgents.Insert(crawlerAgent);
         _ = dbContext.CrawlerAgentFileStorage.Delete(Input.TempFileId);

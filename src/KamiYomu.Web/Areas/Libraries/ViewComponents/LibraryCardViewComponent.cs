@@ -1,4 +1,5 @@
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
 
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,9 @@ using static KamiYomu.Web.AppOptions.Defaults;
 
 namespace KamiYomu.Web.Areas.Libraries.ViewComponents;
 
-public class LibraryCardViewComponent([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext) : ViewComponent
+public class LibraryCardViewComponent(
+    [FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext,
+    ICrawlerAgentAssemblyLoader crawlerAgentAssemblyLoader) : ViewComponent
 {
     public async Task<IViewComponentResult> InvokeAsync(Library library, CancellationToken cancellationToken = default)
     {
@@ -16,7 +19,7 @@ public class LibraryCardViewComponent([FromKeyedServices(ServiceLocator.ReadOnly
         bool crawlerAgentDisabled = true;
         if (crawlerAgent != null)
         {
-            using ICrawlerAgent crawlerInstance = library.CrawlerAgent.GetCrawlerInstance();
+            using ICrawlerAgentDecorator crawlerInstance = crawlerAgentAssemblyLoader.GetCrawlerInstance(library.CrawlerAgent);
             faviconUrl = await crawlerInstance.GetFaviconAsync(cancellationToken);
             crawlerAgentDisabled = false;
         }

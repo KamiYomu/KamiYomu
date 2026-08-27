@@ -2303,6 +2303,15 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Project Url.
+        /// </summary>
+        public static string ProjectUrl {
+            get {
+                return ResourceManager.GetString("ProjectUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Property.
         /// </summary>
         public static string Property {

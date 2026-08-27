@@ -42,7 +42,7 @@ public class DownloadAppService(
     /// <inheritdoc />
     public async Task<Library> AddToCollectionAsync(AddItemCollection addItemCollection, CancellationToken cancellationToken)
     {
-        using CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(addItemCollection.CrawlerAgentId);
+        CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(addItemCollection.CrawlerAgentId);
 
         Manga manga = await crawlerAgentRepository.GetMangaAsync(crawlerAgent.Id, addItemCollection.MangaId, cancellationToken);
 

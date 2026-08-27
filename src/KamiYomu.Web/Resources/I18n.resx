@@ -1208,4 +1208,7 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="AllLibrariesSharedSameCrawlerAgentSuccessfully" xml:space="preserve">
     <value>All libraries that shared the same crawler agent type have been consolidated into the crawler agent you selected.</value>
   </data>
+  <data name="ProjectUrl" xml:space="preserve">
+    <value>Project Url</value>
+  </data>
 </root>

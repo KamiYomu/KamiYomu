@@ -1,3 +1,5 @@
+using System.Text.Json.Nodes;
+
 using NuGet.Versioning;
 
 using static KamiYomu.Web.AppOptions.Defaults;
@@ -12,17 +14,31 @@ public class NugetPackageInfo
     public string? Description { get; init; }
     public string[] Authors { get; init; } = [];
     public string[] Tags { get; init; } = [];
-    public int? TotalDownloads { get; init; }
+    public long? TotalDownloads { get; init; }
     public Uri? LicenseUrl { get; init; }
     public Uri? RepositoryUrl { get; init; }
-    public required List<NugetDependencyInfo> Dependencies { get; set; }
+    public List<string> Dependencies { get; set; } = [];
 
-
+    public static Uri GetIconUri(JsonNode? info, string packageId)
+    {
+        string? iconUrl = info?["iconUrl"]?.GetValue<string>();
+        if (!string.IsNullOrWhiteSpace(iconUrl))
+        {
+            return new Uri(iconUrl, UriKind.Absolute);
+        }
+        else
+        {
+            string repository = info?["projectUrl"]?.GetValue<string>() ?? string.Empty;
+            return !string.IsNullOrWhiteSpace(repository)
+                ? new Uri(repository.TrimEnd('/') + $"/raw/branch/main/src/{packageId}/Resources/logo.png", UriKind.Absolute)
+                : new Uri("/images/favicon.ico", UriKind.Relative);
+        }
+    }
     public string GetNugetPackageKamiYomuCoreRangeVersion()
     {
-        NugetDependencyInfo? kamiYomuCoreDependency = Dependencies?
-            .FirstOrDefault(d => d.Id?.Equals("KamiYomu.CrawlerAgents.Core", StringComparison.OrdinalIgnoreCase) == true);
-        return kamiYomuCoreDependency?.VersionRange ?? "Unknown";
+        string? kamiYomuCoreDependency = Dependencies?
+            .FirstOrDefault(d => d.StartsWith("KamiYomu.CrawlerAgents.Core", StringComparison.OrdinalIgnoreCase));
+        return kamiYomuCoreDependency.Split(":")[1] ?? "Unknown";
     }
 
     public string GetKamiYomuCoreVersion()

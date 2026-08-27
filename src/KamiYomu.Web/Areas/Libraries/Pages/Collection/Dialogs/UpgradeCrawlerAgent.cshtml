@@ -1,13 +1,15 @@
 @page
 @using KamiYomu.Web.Entities
+@using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces
+@inject ICrawlerAgentAssemblyLoader CrawlerAgentAssemblyLoader
 @model KamiYomu.Web.Areas.Libraries.Pages.Collection.Dialogs.UpgradeCrawlerAgentModel
 @{
     Layout = null;
 
-    var currentVersion = Model.Library.CrawlerAgent.GetVersion();
+    var currentVersion = CrawlerAgentAssemblyLoader.GetVersion(Model.Library.CrawlerAgent);
 
     bool isCurrentVersion(CrawlerAgent crawlerAgent) =>
-        crawlerAgent.GetVersion() == currentVersion;
+        CrawlerAgentAssemblyLoader.GetVersion(crawlerAgent) == currentVersion;
 }
 
 <div class="modal-header">
@@ -68,7 +70,7 @@
 
                             @foreach (var crawlerAgent in Model.AvailableVersions)
                             {
-                                var version = crawlerAgent.GetVersion();
+                                var version = CrawlerAgentAssemblyLoader.GetVersion(crawlerAgent);
 
                                 @if (isCurrentVersion(crawlerAgent))
                                 {

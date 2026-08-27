@@ -1205,11 +1205,11 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="ThisProcessCouldTakeWhile" xml:space="preserve">
     <value>Ce processus peut prendre un certain temps, mais il se poursuivra jusqu’à ce qu’il soit complètement terminé.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="AllLibrariesSharedSameCrawlerAgentSuccessfully" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="AllLibrariesSharedSameCrawlerAgentSuccessfully" xml:space="preserve">
     <value>Toutes les bibliothèques partageant le même type d'agent d'analyseur ont été regroupées dans l'agent d'analyseur que vous avez sélectionné.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ProjectUrl" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

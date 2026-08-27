@@ -6,6 +6,7 @@ using Hangfire.Server;
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 using KamiYomu.Web.Entities.Definitions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
@@ -20,12 +21,14 @@ namespace KamiYomu.Web.Worker;
 /// </summary>
 /// <param name="logger"></param>
 /// <param name="workerOptions"></param>
+/// <param name="crawlerAgentAssemblyLoader"></param>
 /// <param name="agentCrawlerRepository"></param>
 /// <param name="hangfireRepository"></param>
 /// <param name="dbContext"></param>
 public class ChapterDiscoveryJob(
     ILogger<ChapterDiscoveryJob> logger,
     IOptions<WorkerOptions> workerOptions,
+    ICrawlerAgentAssemblyLoader crawlerAgentAssemblyLoader,
     ICrawlerAgentRepository agentCrawlerRepository,
     IHangfireRepository hangfireRepository,
     DbContext dbContext) : IChapterDiscoveryJob
@@ -235,7 +238,7 @@ public class ChapterDiscoveryJob(
             return;
         }
 
-        using ICrawlerAgent? crawlerAgent = library.CrawlerAgent.GetCrawlerInstance();
+        using ICrawlerAgentDecorator? crawlerAgent = crawlerAgentAssemblyLoader.GetCrawlerInstance(library.CrawlerAgent);
 
         if (crawlerAgent == null)
         {
