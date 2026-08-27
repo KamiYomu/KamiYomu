@@ -1,4 +1,5 @@
-using KamiYomu.CrawlerAgents.Core;
+using System.Reflection;
+
 using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 using KamiYomu.Web.Infrastructure.HttpHandlers;
 
@@ -31,7 +32,7 @@ public class CrawlerAgentFactory(
         return crawlerInstance;
     }
     /// <inheritdoc/>
-    public ICrawlerAgentDecorator Create(string assemblyPath, Dictionary<string, object> metadata)
+    public ICrawlerAgentDecorator Create(string assemblyPath, IDictionary<string, object> metadata)
     {
         Dictionary<string, object> crawlerAgentMetadata = new(metadata)
         {
@@ -48,9 +49,38 @@ public class CrawlerAgentFactory(
         return crawlerInstance;
     }
 
+    /// <inheritdoc/>
+    public ICrawlerAgentDecorator Create(Assembly assembly, IDictionary<string, object> options)
+    {
+        string interfaceName = typeof(ICrawlerAgent).FullName!;
+
+        Type crawlerType = assembly.GetTypes()
+            .FirstOrDefault(t =>
+                t.IsClass &&
+                !t.IsAbstract &&
+                t.GetInterfaces().Any(i => i.FullName == interfaceName))
+            ?? throw new InvalidOperationException(I18n.NoValidCrawlerAgentTypeFound);
+
+        object instance = Activator.CreateInstance(crawlerType, options)
+            ?? throw new InvalidOperationException("Failed to create crawler instance.");
+
+        // Safe cast only if type identity matches
+        if (instance is ICrawlerAgent typedInstance)
+        {
+            return new CrawlerAgentDecorator(typedInstance);
+        }
+
+        // Fallback: wrap dynamically if cast fails
+        throw new InvalidCastException(
+            $"The type '{crawlerType.FullName}' could not be cast to '{interfaceName}'. " +
+            $"This usually means the interface was loaded in a different AssemblyLoadContext. " +
+            $"Ensure both the main app and the plugin reference the same shared interface assembly, " +
+            $"and that it is loaded only once in the default context.");
+    }
+
     private ICrawlerAgentDecorator GetCrawlerInstance(string assemblyPath, IDictionary<string, object> options)
     {
         CrawlerAgentAssembly crawlerAssembly = crawlerAgentAssemblyLoader.GetIsolatedAssembly(assemblyPath);
-        return crawlerAgentAssemblyLoader.GetCrawlerInstance(crawlerAssembly.Assembly, options);
+        return Create(crawlerAssembly.Assembly, options);
     }
 }

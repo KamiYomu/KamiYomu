@@ -7,7 +7,10 @@ using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 using static KamiYomu.Web.AppOptions.Defaults;
 
 namespace KamiYomu.Web.Entities.CrawlerAgentRuntime;
-
+/// <summary>
+/// Crawler Agent Assembly Loader is responsible for loading and managing assemblies of crawler agents in an isolated context. 
+/// It provides methods to retrieve assembly metadata, load assemblies, create instances of crawler agents, and extract input attributes required for the crawler's operation.
+/// </summary>
 public class CrawlerAgentAssemblyLoader : ICrawlerAgentAssemblyLoader
 {
     /// <inheritdoc/>
@@ -164,34 +167,6 @@ public class CrawlerAgentAssemblyLoader : ICrawlerAgentAssemblyLoader
             context.Unload();
             throw;
         }
-    }
-    /// <inheritdoc/>
-    public ICrawlerAgentDecorator GetCrawlerInstance(Assembly assembly, IDictionary<string, object> options)
-    {
-        string interfaceName = typeof(ICrawlerAgent).FullName!;
-
-        Type crawlerType = assembly.GetTypes()
-            .FirstOrDefault(t =>
-                t.IsClass &&
-                !t.IsAbstract &&
-                t.GetInterfaces().Any(i => i.FullName == interfaceName))
-            ?? throw new InvalidOperationException(I18n.NoValidCrawlerAgentTypeFound);
-
-        object instance = Activator.CreateInstance(crawlerType, options)
-            ?? throw new InvalidOperationException("Failed to create crawler instance.");
-
-        // Safe cast only if type identity matches
-        if (instance is ICrawlerAgent typedInstance)
-        {
-            return new CrawlerAgentDecorator(typedInstance);
-        }
-
-        // Fallback: wrap dynamically if cast fails
-        throw new InvalidCastException(
-            $"The type '{crawlerType.FullName}' could not be cast to '{interfaceName}'. " +
-            $"This usually means the interface was loaded in a different AssemblyLoadContext. " +
-            $"Ensure both the main app and the plugin reference the same shared interface assembly, " +
-            $"and that it is loaded only once in the default context.");
     }
     /// <inheritdoc/>
     public string GetCrawlerDisplayName(Assembly assembly)

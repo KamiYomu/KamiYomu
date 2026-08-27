@@ -32,15 +32,7 @@ public interface ICrawlerAgentAssemblyLoader
     /// <exception cref="FileNotFoundException">Thrown when the assembly file does not exist at the specified path.</exception>
     /// <exception cref="InvalidOperationException">Thrown when the assembly does not contain any non-abstract class implementing <see cref="ICrawlerAgent"/>.</exception>
     CrawlerAgentAssembly GetIsolatedAssembly(string assemblyPath);
-    /// <summary>
-    /// Creates a new instance of the crawler agent from the specified assembly.
-    /// </summary>
-    /// <param name="assembly">The assembly containing the crawler agent implementation.</param>
-    /// <param name="options">A dictionary of options and dependencies to inject into the crawler instance constructor.</param>
-    /// <returns>An instance of <see cref="ICrawlerAgentDecorator"/> wrapped in a <see cref="ICrawlerAgentDecorator"/>.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when no valid crawler type is found in the assembly.</exception>
-    /// <exception cref="InvalidCastException">Thrown when the created instance cannot be cast to <see cref="ICrawlerAgentDecorator"/>, typically due to assembly load context issues.</exception>
-    ICrawlerAgentDecorator GetCrawlerInstance(Assembly assembly, IDictionary<string, object> options);
+
     /// <summary>
     /// Extracts the display name of the crawler agent from the specified assembly.
     /// Uses the <see cref="DisplayNameAttribute"/> if available, otherwise falls back to the assembly full name or "Agent".
