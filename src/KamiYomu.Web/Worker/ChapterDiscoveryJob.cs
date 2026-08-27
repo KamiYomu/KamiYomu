@@ -133,7 +133,7 @@ public class ChapterDiscoveryJob(
 
             await ProcessChaptersAsync(libDbContext, page.Data, mangaDownload, library, crawlerAgent, cancellationToken);
 
-            continuationToken = page.PaginationOptions.ContinuationToken;
+            continuationToken = page.PaginationOptions?.ContinuationToken ?? null;
             offset += limit;
             fetchMoreChapters = DetermineFetchMoreChapters(page, offset);
 
@@ -209,9 +209,9 @@ public class ChapterDiscoveryJob(
 
     private bool DetermineFetchMoreChapters(PagedResult<Chapter> page, int offset)
     {
-        return !string.IsNullOrWhiteSpace(page.PaginationOptions.ContinuationToken)
+        return !string.IsNullOrWhiteSpace(page.PaginationOptions?.ContinuationToken)
             ? page.Data.Count() > 0
-            : offset < page.PaginationOptions.Total;
+            : offset < (page?.PaginationOptions?.Total ?? 0);
     }
 
     private void HandleCancellationDuringFetch(LibraryDbContext libDbContext, MangaDownloadRecord mangaDownload, string mangaId)

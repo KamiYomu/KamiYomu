@@ -2,7 +2,6 @@ using System.Globalization;
 
 using Hangfire;
 using Hangfire.Server;
-using Hangfire.Storage;
 
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
@@ -88,7 +87,7 @@ public class MangaDownloaderJob(
 
                 PagedResult<Chapter> page = await agentCrawlerRepository.GetMangaChaptersAsync(crawlerAgent.Id, mangaId, new PaginationOptions(offset, limit), cancellationToken);
 
-                total = page.PaginationOptions.Total;
+                total = page?.PaginationOptions?.Total ?? 0;
 
                 foreach (Chapter chapter in page.Data)
                 {
