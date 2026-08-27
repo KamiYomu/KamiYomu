@@ -1,5 +1,4 @@
 using Hangfire;
-using Hangfire.Common;
 using Hangfire.Storage;
 using Hangfire.Storage.Monitoring;
 
@@ -21,12 +20,10 @@ namespace KamiYomu.Web.Infrastructure.Services;
 /// </summary>
 /// <param name="logger"></param>
 /// <param name="workerOptions"></param>
-/// <param name="dbContext"></param>
 /// <param name="hangfireRepository"></param>
 /// <param name="jobClient"></param>
 public class WorkerService(ILogger<WorkerService> logger,
                            IOptions<WorkerOptions> workerOptions,
-                           DbContext dbContext,
                            IHangfireRepository hangfireRepository,
                            IBackgroundJobClient jobClient) : IWorkerService
 {
@@ -62,9 +59,7 @@ public class WorkerService(ILogger<WorkerService> logger,
     /// <inheritdoc/>
     public void CancelMangaDownload(MangaDownloadRecord mangaDownloadRecord)
     {
-        using LibraryDbContext libDbContext = mangaDownloadRecord.Library.GetReadWriteDbContext();
-
-        mangaDownloadRecord.Cancelled(I18n.UserRemovedMangaTitleFromLibrary);
+        using LibraryDbContext libDbContext = mangaDownloadRecord.Library.GetReadOnlyDbContext();
 
         if (!string.IsNullOrWhiteSpace(mangaDownloadRecord.BackgroundJobId))
         {
@@ -86,8 +81,6 @@ public class WorkerService(ILogger<WorkerService> logger,
         }
 
         RemoveDiscoverRecurringJob(mangaDownloadRecord.Library);
-
-        _ = libDbContext.MangaDownloadRecords.Update(mangaDownloadRecord);
     }
 
     /// <inheritdoc/>

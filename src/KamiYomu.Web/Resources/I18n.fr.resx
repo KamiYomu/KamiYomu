@@ -1212,4 +1212,7 @@ pour le paramètre &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire pour contrô
   <data name="ProjectUrl" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="ProjectUrl" xml:space="preserve">
+    <value>URL du projet</value>
+  </data>
 </root>
