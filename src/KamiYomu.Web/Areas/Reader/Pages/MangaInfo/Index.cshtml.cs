@@ -2,6 +2,7 @@ using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Areas.Reader.Data;
 using KamiYomu.Web.Areas.Reader.Models;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 using KamiYomu.Web.Entities.Definitions;
 using KamiYomu.Web.Infrastructure.Contexts;
 
@@ -12,7 +13,8 @@ using static KamiYomu.Web.AppOptions.Defaults;
 namespace KamiYomu.Web.Areas.Reader.Pages.MangaInfo;
 
 public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] DbContext dbContext,
-                        [FromKeyedServices(ServiceLocator.ReadOnlyReadingDbContext)] ReadingDbContext readingDbContext) : PageModel
+                        [FromKeyedServices(ServiceLocator.ReadOnlyReadingDbContext)] ReadingDbContext readingDbContext,
+                        ICrawlerAgentFactory crawlerAgentFactory) : PageModel
 {
     public Library Library { get; set; } = default!;
     public Manga Manga { get; set; } = default!;
@@ -48,7 +50,7 @@ public class IndexModel([FromKeyedServices(ServiceLocator.ReadOnlyDbContext)] Db
                                         .OrderBy(p => p.Chapter.Number)
                                         .FirstOrDefault();
 
-        using ICrawlerAgent crawlerInstance = Library.CrawlerAgent.GetCrawlerInstance();
+        using ICrawlerAgentDecorator crawlerInstance = crawlerAgentFactory.Create(Library.CrawlerAgent);
         CrawlerAgentFaviconUrl = await crawlerInstance.GetFaviconAsync(CancellationToken.None);
     }
 }

@@ -84,9 +84,9 @@ public class IndexModel(
         ViewData["Handler"] = "Crawler";
         ViewData[nameof(Query)] = Query;
         ViewData[nameof(SelectedAgent)] = SelectedAgent;
-        ViewData[nameof(PaginationOptions.OffSet)] = queryResult.PaginationOptions.OffSet + queryResult.PaginationOptions.Limit;
-        ViewData[nameof(PaginationOptions.Limit)] = queryResult.PaginationOptions.Limit;
-        ViewData[nameof(PaginationOptions.ContinuationToken)] = queryResult.PaginationOptions.ContinuationToken;
+        ViewData[nameof(PaginationOptions.OffSet)] = queryResult?.PaginationOptions?.OffSet ?? 0 + queryResult?.PaginationOptions?.Limit ?? 30;
+        ViewData[nameof(PaginationOptions.Limit)] = queryResult?.PaginationOptions?.Limit ?? 30;
+        ViewData[nameof(PaginationOptions.ContinuationToken)] = queryResult?.PaginationOptions?.ContinuationToken;
 
         if (Request.Headers.ContainsKey("HX-Request"))
         {

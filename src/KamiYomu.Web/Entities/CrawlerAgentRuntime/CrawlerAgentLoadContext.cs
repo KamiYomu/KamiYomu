@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 using System.Reflection;
 using System.Runtime.Loader;
 
-namespace KamiYomu.Web.Entities;
+namespace KamiYomu.Web.Entities.CrawlerAgentRuntime;
 
 /// <summary>
 /// Provides an isolated, collectible assembly load context for dynamically loaded crawler agents,

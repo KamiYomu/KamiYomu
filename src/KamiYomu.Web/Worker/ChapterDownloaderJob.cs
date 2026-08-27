@@ -9,7 +9,8 @@ using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.CrawlerAgents.Core.Extensions;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
-using KamiYomu.Web.Extensions;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
@@ -25,13 +26,14 @@ public class ChapterDownloaderJob(
     DbContext dbContext,
     CacheContext cacheContext,
     ICrawlerAgentRepository agentCrawlerRepository,
+    ICrawlerAgentFactory crawlerAgentFactory,
     IHttpClientFactory httpClientFactory,
     IHangfireRepository hangfireRepository,
     INotificationService notificationService,
     IGotifyService gotifyService) : IChapterDownloaderJob, IDisposable
 {
     private readonly WorkerOptions _workerOptions = workerOptions.Value;
-    private readonly HttpClient _httpClient = httpClientFactory.CreateClient(Defaults.Worker.HttpClientApp);
+    private readonly HttpClient _httpClient = httpClientFactory.CreateClient(Defaults.Worker.WorkerHttpClient);
     private bool disposedValue;
 
     public async Task DispatchAsync(string queue, Guid crawlerAgentId, Guid libraryId, Guid mangaDownloadId, Guid chapterDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
@@ -121,7 +123,7 @@ public class ChapterDownloaderJob(
             _ = await SaveCoverAsync(library.Manga, tempChapterFolder, cancellationToken);
 
             int index = 1;
-            using ICrawlerAgent crawlerAgent = library.CrawlerAgent.GetCrawlerInstance();
+            using ICrawlerAgentDecorator crawlerAgent = crawlerAgentFactory.Create(library.CrawlerAgent);
             foreach (Page? page in pages.OrderBy(p => p.PageNumber))
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -201,17 +203,14 @@ public class ChapterDownloaderJob(
         logger.LogInformation("Dispatch \"{title}\" completed.", title);
     }
 
-    private async Task SavePageAsync(ICrawlerAgent crawlerAgent, string filePath, Page page, CancellationToken cancellationToken)
+    private async Task SavePageAsync(ICrawlerAgentDecorator crawlerAgent, string filePath, Page page, CancellationToken cancellationToken)
     {
         using HttpRequestMessage request = new(HttpMethod.Get, page.ImageUrl)
         {
             Version = HttpVersion.Version20 // optional, but good for modern servers
         };
 
-        if (crawlerAgent is IDefaultHeadersCrawlerAgent headers)
-        {
-            request.AddRangeHeaders([.. headers.GetDefaultHeaders()]);
-        }
+        request.AddRangeHeaders([.. crawlerAgent.GetDefaultHeaders()]);
 
         using HttpResponseMessage response = await _httpClient.SendAsync(
             request,

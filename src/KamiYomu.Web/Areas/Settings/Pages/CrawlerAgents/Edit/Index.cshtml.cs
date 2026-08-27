@@ -4,6 +4,7 @@ using KamiYomu.CrawlerAgents.Core.Inputs;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Areas.Settings.Pages.Shared;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.AppServices.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
@@ -20,6 +21,7 @@ namespace KamiYomu.Web.Areas.Settings.Pages.CrawlerAgents.Edit;
 public class IndexModel(DbContext dbContext,
                        CacheContext cacheContext,
                        IOptions<CloudflareSolverOptions> flareSolverrOptions,
+                       ICrawlerAgentAssemblyLoader crawlerAgentAssemblyLoader,
                        ICrawlerAgentAppService crawlerAgentAppService,
                        INotificationService notificationService) : PageModel
 {
@@ -47,12 +49,10 @@ public class IndexModel(DbContext dbContext,
     private void FetchData()
     {
         // --- Load crawler agent safely ---
-        var crawlerAgent = dbContext.CrawlerAgents.FindById(Id);
-        if (crawlerAgent is null)
-            throw new InvalidOperationException($"CrawlerAgent '{Id}' not found.");
+        CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(Id) ?? throw new InvalidOperationException($"CrawlerAgent '{Id}' not found.");
 
         // --- Build crawler inputs (with FlareSolverr if enabled) ---
-        var crawlerInputs = crawlerAgent.GetCrawlerInputs() ?? Enumerable.Empty<AbstractInputAttribute>();
+        IEnumerable<AbstractInputAttribute> crawlerInputs = crawlerAgentAssemblyLoader.GetCrawlerInputs(crawlerAgent) ?? [];
 
         if (flareSolverrOptions.Value.Enabled)
         {
@@ -85,7 +85,7 @@ public class IndexModel(DbContext dbContext,
         }
 
         // --- Populate ReadOnlyMetadata only if missing ---
-        Input.ReadOnlyMetadata ??= crawlerAgent.GetAssemblyMetadata();
+        Input.ReadOnlyMetadata ??= crawlerAgentAssemblyLoader.GetAssemblyMetadata(crawlerAgent);
 
         // --- Ensure CrawlerInputsViewModel exists ---
         if (Input.CrawlerInputsViewModel is null)
@@ -97,8 +97,7 @@ public class IndexModel(DbContext dbContext,
         if (Input.CrawlerInputsViewModel.AgentMetadata == null ||
             !Input.CrawlerInputsViewModel.AgentMetadata.Any())
         {
-            Input.CrawlerInputsViewModel.AgentMetadata =
-                CrawlerInputsViewModel.GetAgentMetadataValues(crawlerAgent.AgentMetadata);
+            Input.CrawlerInputsViewModel.AgentMetadata = CrawlerInputsViewModel.GetAgentMetadataValues(crawlerAgent.AgentMetadata);
         }
 
         // --- Always set crawler inputs (safe to overwrite) ---
@@ -154,7 +153,7 @@ public class IndexModel(DbContext dbContext,
         CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(Input.Id);
 
         Dictionary<string, object> metadata = Input.CrawlerInputsViewModel.GetAgentMetadataValues();
-        IEnumerable<AbstractInputAttribute> crawlerInputs = crawlerAgent.GetCrawlerInputs();
+        IEnumerable<AbstractInputAttribute> crawlerInputs = crawlerAgentAssemblyLoader.GetCrawlerInputs(crawlerAgent);
 
         if (flareSolverrOptions.Value.Enabled)
         {
@@ -210,7 +209,7 @@ public class IndexModel(DbContext dbContext,
         {
             Id = Input.Id,
             DisplayName = crawlerAgent.DisplayName,
-            ReadOnlyMetadata = crawlerAgent.GetAssemblyMetadata(),
+            ReadOnlyMetadata = crawlerAgentAssemblyLoader.GetAssemblyMetadata(crawlerAgent),
             CrawlerInputsViewModel = new CrawlerInputsViewModel
             {
                 CrawlerInputs = crawlerInputs,

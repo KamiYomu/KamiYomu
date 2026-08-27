@@ -1,9 +1,8 @@
 namespace KamiYomu.Web.Infrastructure.HttpHandlers;
 
 public class SmartCrawlerHandler(
-    HttpMessageHandler innerHandler,
     CloudflareBypassHandler cloudflare,
-    ChromiumHandler chromium) : DelegatingHandler(innerHandler)
+    ChromiumHandler chromium) : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,

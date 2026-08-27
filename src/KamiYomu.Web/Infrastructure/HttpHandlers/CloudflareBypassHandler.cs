@@ -10,7 +10,7 @@ namespace KamiYomu.Web.Infrastructure.HttpHandlers;
 /// </summary>
 /// <param name="innerHandler">The inner HttpMessageHandler to delegate requests to.</param>
 /// <param name="options">The CloudflareSolverOptions instance.</param>
-public class CloudflareBypassHandler(HttpMessageHandler innerHandler, IOptions<CloudflareSolverOptions> options) : DelegatingHandler(innerHandler)
+public class CloudflareBypassHandler(IOptions<CloudflareSolverOptions> options) : DelegatingHandler
 {
     /// <summary>
     /// Sends an HTTP request and attempts to bypass Cloudflare's anti-bot protection if necessary.

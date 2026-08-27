@@ -1,8 +1,9 @@
 using KamiYomu.CrawlerAgents.Core.Catalog;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 
-namespace KamiYomu.Web.Entities;
+namespace KamiYomu.Web.Entities.CrawlerAgentRuntime;
 
-public class CrawlerAgentDecorator(ICrawlerAgent inner) : ICrawlerAgent, IDefaultHeadersCrawlerAgent
+public class CrawlerAgentDecorator(ICrawlerAgent inner) : ICrawlerAgentDecorator
 {
     private readonly ICrawlerAgent _inner = inner;
 

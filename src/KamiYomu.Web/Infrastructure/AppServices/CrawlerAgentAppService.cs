@@ -61,7 +61,7 @@ public class CrawlerAgentAppService(ILogger<CrawlerAgentAppService> logger,
     /// <inheritdoc/>
     public async Task<Library> RefreshCollectionAsync(Library library, CancellationToken cancellationToken)
     {
-        using CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(library.CrawlerAgent.Id);
+        CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(library.CrawlerAgent.Id);
 
         Manga manga = await crawlerAgentRepository.GetMangaAsync(crawlerAgent.Id, library.Manga.Id, cancellationToken);
 
