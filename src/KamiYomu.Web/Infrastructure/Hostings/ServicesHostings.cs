@@ -1,3 +1,5 @@
+using KamiYomu.Web.Entities.CrawlerAgentRuntime;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 using KamiYomu.Web.Infrastructure.AppServices;
 using KamiYomu.Web.Infrastructure.AppServices.Interfaces;
 using KamiYomu.Web.Infrastructure.Browser;
@@ -30,6 +32,7 @@ public static class ServicesHostings
         _ = builder.Services.AddTransient<IZipService, ZipService>();
 
         AddAppServices(builder);
+        AddCrawlerAgentRuntimeServices(builder);
 
         if (OperatingSystem.IsLinux())
         {
@@ -39,6 +42,13 @@ public static class ServicesHostings
         {
             AddWindowsServices(builder);
         }
+    }
+    private static void AddCrawlerAgentRuntimeServices(WebApplicationBuilder builder)
+    {
+        _ = builder.Services.AddTransient<ICrawlerAgentAssemblyLoader, CrawlerAgentAssemblyLoader>();
+        _ = builder.Services.AddTransient<ICrawlerAgentFactory, CrawlerAgentFactory>();
+
+
     }
 
     private static void AddAppServices(WebApplicationBuilder builder)
