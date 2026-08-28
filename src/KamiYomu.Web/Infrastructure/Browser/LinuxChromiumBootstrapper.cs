@@ -3,7 +3,6 @@ using System.IO.Compression;
 
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Infrastructure.Browser.Interfaces;
-using KamiYomu.Web.Infrastructure.Storage;
 
 using Microsoft.Extensions.Options;
 
@@ -24,12 +23,6 @@ public class LinuxChromiumBootstrapper(
     {
         try
         {
-            if (FileNameHelper.IsRunningInDocker())
-            {
-                logger.LogInformation("Running in Docker. Skipping Chromium bootstrap for Linux.");
-                return;
-            }
-
             if (!OperatingSystem.IsLinux())
             {
                 logger.LogInformation("Not running on Linux. Skipping Chromium bootstrap for Linux.");
@@ -37,8 +30,8 @@ public class LinuxChromiumBootstrapper(
             }
 
             string baseDir = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "KamiYomu",
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "AppData",
                 "chromium"
             );
 

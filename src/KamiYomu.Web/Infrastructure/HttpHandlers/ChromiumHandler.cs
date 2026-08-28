@@ -5,17 +5,20 @@ using Microsoft.Extensions.Options;
 using PuppeteerSharp;
 
 namespace KamiYomu.Web.Infrastructure.HttpHandlers;
+
 /// <summary>
-/// 
+/// HTTP handler that uses Chromium to render pages via PuppeteerSharp.
+/// Manages browser lifecycle with proper disposal of resources.
 /// </summary>
-/// <param name="options"></param>
-public sealed class ChromiumHandler(IOptions<ChromiumOptions> options) : DelegatingHandler
+/// <param name="options">Configuration options for Chromium behavior</param>
+public sealed class ChromiumHandler(IOptions<ChromiumOptions> options) : DelegatingHandler, IAsyncDisposable
 {
     private readonly ChromiumOptions _options = options.Value;
 
     // Shared browser instance
     private static IBrowser? _browser;
     private static readonly SemaphoreSlim _browserInitLock = new(1, 1);
+    private static bool _disposed = false;
 
     protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
@@ -42,6 +45,7 @@ public sealed class ChromiumHandler(IOptions<ChromiumOptions> options) : Delegat
         {
             return null;
         }
+
         if (_browser != null && !_browser.IsClosed)
         {
             return _browser;
@@ -108,11 +112,12 @@ public sealed class ChromiumHandler(IOptions<ChromiumOptions> options) : Delegat
         IResponse response = await page.GoToAsync(url, new NavigationOptions
         {
             Timeout = _options.RequestTimeout,
-            WaitUntil = [
+            WaitUntil =
+            [
                 WaitUntilNavigation.DOMContentLoaded,
                 WaitUntilNavigation.Load,
                 WaitUntilNavigation.Networkidle0
-                ]
+            ]
         });
 
         string content = await page.GetContentAsync();
@@ -133,8 +138,8 @@ public sealed class ChromiumHandler(IOptions<ChromiumOptions> options) : Delegat
     }
 
     public async Task<HttpResponseMessage?> TrySendAsync(
-    HttpRequestMessage request,
-    CancellationToken ct)
+        HttpRequestMessage request,
+        CancellationToken ct)
     {
         try
         {
@@ -147,4 +152,51 @@ public sealed class ChromiumHandler(IOptions<ChromiumOptions> options) : Delegat
         }
     }
 
+    /// <summary>
+    /// Disposes the browser and releases all associated resources.
+    /// </summary>
+    public async ValueTask DisposeAsync()
+    {
+        await _browserInitLock.WaitAsync();
+        try
+        {
+            if (!_disposed && _browser != null && !_browser.IsClosed)
+            {
+                await _browser.CloseAsync();
+            }
+
+            _disposed = true;
+        }
+        finally
+        {
+            _ = _browserInitLock.Release();
+            // await base.DisposeAsync();
+        }
+    }
+
+    /// <summary>
+    /// Synchronous disposal fallback for compatibility.
+    /// </summary>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _browserInitLock.WaitAsync().GetAwaiter().GetResult();
+            try
+            {
+                if (!_disposed && _browser != null && !_browser.IsClosed)
+                {
+                    _browser.CloseAsync().GetAwaiter().GetResult();
+                }
+
+                _disposed = true;
+            }
+            finally
+            {
+                _ = _browserInitLock.Release();
+            }
+        }
+
+        base.Dispose(disposing);
+    }
 }
