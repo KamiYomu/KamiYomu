@@ -7,7 +7,7 @@ namespace KamiYomu.Web.Infrastructure.Services;
 
 public class GitHubService(IHttpClientFactory httpClientFactory, CacheContext cacheContext) : IDisposable, IGitHubService
 {
-    private readonly HttpClient _httpClient = httpClientFactory.CreateClient(AppOptions.Defaults.Worker.HttpClientApp);
+    private readonly HttpClient _httpClient = httpClientFactory.CreateClient(AppOptions.Defaults.Worker.WorkerHttpClient);
     private bool disposedValue;
     private const string Owner = "KamiYomu";
     private const string Repo = "KamiYomu";

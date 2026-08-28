@@ -1,12 +1,16 @@
 using System.Globalization;
 using System.IO.Compression;
+using System.Net;
 
 using Hangfire;
 using Hangfire.Server;
 
 using KamiYomu.CrawlerAgents.Core.Catalog;
+using KamiYomu.CrawlerAgents.Core.Extensions;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
@@ -22,13 +26,14 @@ public class ChapterDownloaderJob(
     DbContext dbContext,
     CacheContext cacheContext,
     ICrawlerAgentRepository agentCrawlerRepository,
+    ICrawlerAgentFactory crawlerAgentFactory,
     IHttpClientFactory httpClientFactory,
     IHangfireRepository hangfireRepository,
     INotificationService notificationService,
     IGotifyService gotifyService) : IChapterDownloaderJob, IDisposable
 {
     private readonly WorkerOptions _workerOptions = workerOptions.Value;
-    private readonly HttpClient _httpClient = httpClientFactory.CreateClient(Defaults.Worker.HttpClientApp);
+    private readonly HttpClient _httpClient = httpClientFactory.CreateClient(Defaults.Worker.WorkerHttpClient);
     private bool disposedValue;
 
     public async Task DispatchAsync(string queue, Guid crawlerAgentId, Guid libraryId, Guid mangaDownloadId, Guid chapterDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
@@ -118,7 +123,7 @@ public class ChapterDownloaderJob(
             _ = await SaveCoverAsync(library.Manga, tempChapterFolder, cancellationToken);
 
             int index = 1;
-
+            using ICrawlerAgentDecorator crawlerAgent = crawlerAgentFactory.Create(library.CrawlerAgent);
             foreach (Page? page in pages.OrderBy(p => p.PageNumber))
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -128,7 +133,7 @@ public class ChapterDownloaderJob(
 
                     string filePath = Path.Combine(tempChapterFolder, fileName);
 
-                    await SavePageAsync(filePath, page, cancellationToken);
+                    await SavePageAsync(crawlerAgent, filePath, page, cancellationToken);
 
                     logger.LogInformation("Dispatch '{Title}' using crawler '{crawler}': Downloaded page '{Index}'/'{count}' to '{FilePath}'", title, library.CrawlerAgent.DisplayName, index, pageCount, filePath);
                 }
@@ -198,12 +203,17 @@ public class ChapterDownloaderJob(
         logger.LogInformation("Dispatch \"{title}\" completed.", title);
     }
 
-
-
-    private async Task SavePageAsync(string filePath, Page page, CancellationToken cancellationToken)
+    private async Task SavePageAsync(ICrawlerAgentDecorator crawlerAgent, string filePath, Page page, CancellationToken cancellationToken)
     {
-        using HttpResponseMessage response = await _httpClient.GetAsync(
-            page.ImageUrl,
+        using HttpRequestMessage request = new(HttpMethod.Get, page.ImageUrl)
+        {
+            Version = HttpVersion.Version20 // optional, but good for modern servers
+        };
+
+        request.AddRangeHeaders([.. crawlerAgent.GetDefaultHeaders()]);
+
+        using HttpResponseMessage response = await _httpClient.SendAsync(
+            request,
             HttpCompletionOption.ResponseHeadersRead,
             cancellationToken
         );
@@ -231,9 +241,10 @@ public class ChapterDownloaderJob(
         {
             using HttpResponseMessage response = await _httpClient.GetAsync(
                 manga.CoverUrl,
-                HttpCompletionOption.ResponseHeadersRead);
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken);
             _ = response.EnsureSuccessStatusCode();
-            using Stream httpStream = await response.Content.ReadAsStreamAsync();
+            using Stream httpStream = await response.Content.ReadAsStreamAsync(cancellationToken);
             using FileStream fileStream = File.Create(coverFilePath);
             httpStream.CopyTo(fileStream);
             logger.LogInformation("Copied cover image to chapter folder: '{CoverFilePath}'", coverFilePath);

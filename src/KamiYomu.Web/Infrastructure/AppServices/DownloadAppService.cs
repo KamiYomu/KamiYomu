@@ -4,7 +4,6 @@ using Hangfire.States;
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
-using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.AppServices.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
@@ -42,7 +41,7 @@ public class DownloadAppService(
     /// <inheritdoc />
     public async Task<Library> AddToCollectionAsync(AddItemCollection addItemCollection, CancellationToken cancellationToken)
     {
-        using CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(addItemCollection.CrawlerAgentId);
+        CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(addItemCollection.CrawlerAgentId);
 
         Manga manga = await crawlerAgentRepository.GetMangaAsync(crawlerAgent.Id, addItemCollection.MangaId, cancellationToken);
 
@@ -182,6 +181,5 @@ public class DownloadAppService(
         await notificationService.PushSuccessAsync($"{I18n.DownloadChapterSchedule}: {chapterDownloadRecord.MangaDownload.Library.GetCbzFileName(chapterDownloadRecord.Chapter)}", cancellationToken);
 
         return chapterDownloadRecord;
-
     }
 }

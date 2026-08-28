@@ -1,8 +1,9 @@
-﻿using KamiYomu.CrawlerAgents.Core.Catalog;
+using KamiYomu.CrawlerAgents.Core.Catalog;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 
-namespace KamiYomu.Web.Entities;
+namespace KamiYomu.Web.Entities.CrawlerAgentRuntime;
 
-public class CrawlerAgentDecorator(ICrawlerAgent inner) : ICrawlerAgent
+public class CrawlerAgentDecorator(ICrawlerAgent inner) : ICrawlerAgentDecorator
 {
     private readonly ICrawlerAgent _inner = inner;
 
@@ -37,9 +38,17 @@ public class CrawlerAgentDecorator(ICrawlerAgent inner) : ICrawlerAgent
     }
 
     /// <inheritdoc/>
+    public IEnumerable<KeyValuePair<string, string>> GetDefaultHeaders()
+    {
+        return _inner is IDefaultHeadersCrawlerAgent downloadHeaders ? downloadHeaders.GetDefaultHeaders() : [];
+    }
+
+    /// <inheritdoc/>
     public void Dispose()
     {
         _inner.Dispose();
         GC.SuppressFinalize(this);
     }
+
+
 }

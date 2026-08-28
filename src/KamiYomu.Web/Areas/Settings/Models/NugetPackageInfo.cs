@@ -1,3 +1,5 @@
+using System.Text.Json.Nodes;
+
 using NuGet.Versioning;
 
 using static KamiYomu.Web.AppOptions.Defaults;
@@ -12,22 +14,36 @@ public class NugetPackageInfo
     public string? Description { get; init; }
     public string[] Authors { get; init; } = [];
     public string[] Tags { get; init; } = [];
-    public int? TotalDownloads { get; init; }
+    public long? TotalDownloads { get; init; }
     public Uri? LicenseUrl { get; init; }
     public Uri? RepositoryUrl { get; init; }
-    public required List<NugetDependencyInfo> Dependencies { get; set; }
+    public List<string> Dependencies { get; set; } = [];
 
-
-    public string GetKamiYomuCoreRangeVersion()
+    public static Uri GetIconUri(JsonNode? info, string packageId)
     {
-        NugetDependencyInfo? kamiYomuCoreDependency = Dependencies?
-            .FirstOrDefault(d => d.Id?.Equals("KamiYomu.CrawlerAgents.Core", StringComparison.OrdinalIgnoreCase) == true);
-        return kamiYomuCoreDependency?.VersionRange ?? "Unknown";
+        string? iconUrl = info?["iconUrl"]?.GetValue<string>();
+        if (!string.IsNullOrWhiteSpace(iconUrl))
+        {
+            return new Uri(iconUrl, UriKind.Absolute);
+        }
+        else
+        {
+            string repository = info?["projectUrl"]?.GetValue<string>() ?? string.Empty;
+            return !string.IsNullOrWhiteSpace(repository)
+                ? new Uri(repository.TrimEnd('/') + $"/raw/branch/main/src/{packageId}/Resources/logo.png", UriKind.Absolute)
+                : new Uri("/images/favicon.ico", UriKind.Relative);
+        }
+    }
+    public string GetNugetPackageKamiYomuCoreRangeVersion()
+    {
+        string? kamiYomuCoreDependency = Dependencies?
+            .FirstOrDefault(d => d.StartsWith("KamiYomu.CrawlerAgents.Core", StringComparison.OrdinalIgnoreCase));
+        return kamiYomuCoreDependency.Split(":")[1] ?? "Unknown";
     }
 
     public string GetKamiYomuCoreVersion()
     {
-        string range = GetKamiYomuCoreRangeVersion();
+        string range = GetNugetPackageKamiYomuCoreRangeVersion();
 
         if (string.IsNullOrWhiteSpace(range) || range == "Unknown")
         {
@@ -44,24 +60,54 @@ public class NugetPackageInfo
 
     public bool IsVersionCompatible()
     {
-        string versionRangeString = GetKamiYomuCoreRangeVersion(); // e.g. "[1.1.0, )"
-        Version currentVersion = typeof(ICrawlerAgent)
-            .Assembly
-            .GetName()
-            .Version ?? new Version(0, 0, 0);
+        string coreVersionRangeString = GetNugetPackageKamiYomuCoreRangeVersion();
 
-        if (VersionRange.TryParse(versionRangeString, out VersionRange? range))
+        if (string.IsNullOrWhiteSpace(coreVersionRangeString) ||
+            coreVersionRangeString.Equals("Unknown", StringComparison.OrdinalIgnoreCase))
         {
-            NuGetVersion nugetVersion = new(currentVersion);
-            return range.Satisfies(nugetVersion) &&
-                  range.MinVersion != null &&
-                  nugetVersion == range.MinVersion;
-
+            return false;
         }
 
-        // If parsing fails, treat as incompatible
-        return false;
+        if (!VersionRange.TryParse(coreVersionRangeString, out VersionRange? range))
+        {
+            return false;
+        }
+
+        // Extract the minimum version from the range
+        NuGetVersion? minVersion = range.MinVersion;
+
+        if (minVersion is null)
+        {
+            return false;
+        }
+
+        // Reject anything below 1.1.4
+        NuGetVersion minimumRequired = new NuGetVersion(1, 1, 4);
+        if (minVersion < minimumRequired)
+        {
+            return false;
+        }
+
+        // Now check if the range itself is valid for the current agent version
+        Version? currentVersion = typeof(ICrawlerAgent)
+            .Assembly
+            .GetName()
+            .Version;
+
+        if (currentVersion is null)
+        {
+            return false;
+        }
+
+        NuGetVersion agentVersion = new(
+            currentVersion.Major,
+            currentVersion.Minor,
+            currentVersion.Build);
+
+        return range.Satisfies(agentVersion);
     }
+
+
 
     public bool IsNsfw()
     {

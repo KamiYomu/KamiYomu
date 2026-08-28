@@ -22,12 +22,12 @@ public class NugetPackageGroupedViewModel
     public string? Description { get; set; }
     public string[] Authors { get; set; } = [];
     public string[] Tags { get; set; } = [];
-    public int TotalDownloads { get; set; }
+    public long TotalDownloads { get; set; }
     public required NugetPackageInfo VersionSelected { get; set; }
     public IEnumerable<string?> Versions { get; set; } = [];
     public Uri? LicenseUrl { get; set; }
     public Uri? RepositoryUrl { get; set; }
-    public Dictionary<string, List<NugetDependencyInfo>> DependenciesByVersion { get; set; } = [];
+    public Dictionary<string, string> DependenciesByVersion { get; set; } = [];
 
     public string GetCardId()
     {

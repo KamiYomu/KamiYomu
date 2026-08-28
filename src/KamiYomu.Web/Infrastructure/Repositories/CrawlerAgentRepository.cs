@@ -1,9 +1,10 @@
+using System.Text.RegularExpressions;
+
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
-
-using System.Text.RegularExpressions;
 
 namespace KamiYomu.Web.Infrastructure.Repositories;
 /// <summary>
@@ -13,15 +14,19 @@ namespace KamiYomu.Web.Infrastructure.Repositories;
 /// </summary>
 /// <param name="dbContext"></param>
 /// <param name="cacheContext"></param>
-public class CrawlerAgentRepository(DbContext dbContext, CacheContext cacheContext) : ICrawlerAgentRepository
+/// <param name="crawlerAgentFactory"></param>
+public class CrawlerAgentRepository(
+    DbContext dbContext,
+    CacheContext cacheContext,
+    ICrawlerAgentFactory crawlerAgentFactory) : ICrawlerAgentRepository
 {
     ///<inheritdoc/>
     public Task<Manga> GetMangaAsync(Guid crawlerAgentId, string mangaId, CancellationToken cancellationToken)
     {
         return cacheContext.GetOrSetAsync($"{crawlerAgentId}-manga-{mangaId}", async () =>
         {
-            using CrawlerAgent agentCrawler = dbContext.CrawlerAgents.FindById(crawlerAgentId);
-            using ICrawlerAgent crawlerInstance = agentCrawler.GetCrawlerInstance();
+            CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(crawlerAgentId);
+            using dynamic crawlerInstance = crawlerAgentFactory.Create(crawlerAgent);
             Manga manga = await crawlerInstance.GetByIdAsync(mangaId.ToString(), cancellationToken);
             return manga;
         }, TimeSpan.FromMinutes(30));
@@ -32,9 +37,9 @@ public class CrawlerAgentRepository(DbContext dbContext, CacheContext cacheConte
     {
         return cacheContext.GetOrSetAsync($"{crawlerAgentId}-manga-{mangaId}-{paginationOptions}", async () =>
         {
-            using CrawlerAgent agentCrawler = dbContext.CrawlerAgents.FindById(crawlerAgentId);
+            CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(crawlerAgentId);
             Library library = dbContext.Libraries.Include(p => p.Manga).FindOne(p => p.Manga.Id == mangaId);
-            using ICrawlerAgent crawlerInstance = agentCrawler.GetCrawlerInstance();
+            using ICrawlerAgentDecorator crawlerInstance = crawlerAgentFactory.Create(crawlerAgent);
             return await crawlerInstance.GetChaptersAsync(library.Manga, paginationOptions, cancellationToken);
         }, TimeSpan.FromMinutes(30));
     }
@@ -44,8 +49,8 @@ public class CrawlerAgentRepository(DbContext dbContext, CacheContext cacheConte
     {
         return cacheContext.GetOrSetAsync($"{crawlerAgentId}-chapter-{chapter.ParentManga.Id}-{chapter.Id}", async () =>
         {
-            using CrawlerAgent agentCrawler = dbContext.CrawlerAgents.FindById(crawlerAgentId);
-            using ICrawlerAgent crawlerInstance = agentCrawler.GetCrawlerInstance();
+            CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(crawlerAgentId);
+            using ICrawlerAgentDecorator crawlerInstance = crawlerAgentFactory.Create(crawlerAgent);
             return await crawlerInstance.GetChapterPagesAsync(chapter, cancellationToken);
         }, TimeSpan.FromMinutes(30));
     }
@@ -55,8 +60,8 @@ public class CrawlerAgentRepository(DbContext dbContext, CacheContext cacheConte
     {
         return cacheContext.GetOrSetAsync($"{crawlerAgentId}-agent-{Regex.Replace(query, @"[^a-zA-Z0-9]", "")}-{paginationOptions}", async () =>
         {
-            using CrawlerAgent agentCrawler = dbContext.CrawlerAgents.FindById(crawlerAgentId);
-            using ICrawlerAgent crawlerInstance = agentCrawler.GetCrawlerInstance();
+            CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(crawlerAgentId);
+            using ICrawlerAgentDecorator crawlerInstance = crawlerAgentFactory.Create(crawlerAgent);
             return await crawlerInstance.SearchAsync(query, paginationOptions, cancellationToken);
         }, TimeSpan.FromMinutes(5));
     }

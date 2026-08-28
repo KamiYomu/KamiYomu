@@ -1,5 +1,6 @@
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.Definitions;
 using KamiYomu.Web.Infrastructure.AppServices.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
@@ -47,21 +48,21 @@ public class CrawlerAgentAppService(ILogger<CrawlerAgentAppService> logger,
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            notificationService.PushInfoAsync(string.Format("{0} — {1}/{2}", libraries[i].Manga.Title, i + 1, libraries.Count), cancellationToken);
+            _ = notificationService.PushInfoAsync(string.Format("{0} — {1}/{2}", libraries[i].Manga.Title, i + 1, libraries.Count), cancellationToken);
 
             libraries[i] = await UpgradeCrawlerAgentAsync(libraries[i].Id, crawlerAgent.Id, cancellationToken);
 
-            notificationService.PushSuccessAsync(string.Format("{0} — {1}/{2}", libraries[i].Manga.Title, i + 1, libraries.Count), cancellationToken);
+            _ = notificationService.PushSuccessAsync(string.Format("{0} — {1}/{2}", libraries[i].Manga.Title, i + 1, libraries.Count), cancellationToken);
         }
 
-        dbContext.Libraries.Update(libraries);
+        _ = dbContext.Libraries.Update(libraries);
         return libraries;
     }
 
     /// <inheritdoc/>
     public async Task<Library> RefreshCollectionAsync(Library library, CancellationToken cancellationToken)
     {
-        using CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(library.CrawlerAgent.Id);
+        CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(library.CrawlerAgent.Id);
 
         Manga manga = await crawlerAgentRepository.GetMangaAsync(crawlerAgent.Id, library.Manga.Id, cancellationToken);
 
@@ -130,7 +131,12 @@ public class CrawlerAgentAppService(ILogger<CrawlerAgentAppService> logger,
         {
             chapterDownload.UpdateMangaDownloadInformation(mangaDownload);
             chapterDownload.UpdateCrawlerAgentInformation(crawlerAgent);
-            chapterDownload.ToBeRescheduled(I18n.CrawlerAgentHasBeenUpgraded);
+            if (chapterDownload.DownloadStatus
+                is not DownloadStatus.Completed)
+            {
+                chapterDownload.ToBeRescheduled(I18n.CrawlerAgentHasBeenUpgraded);
+            }
+
         }
         string jobId = workerService.ScheduleMangaDownload(mangaDownload, scheduled);
 

@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text.Json;
 
 using KamiYomu.Web.AppOptions;
@@ -8,43 +9,49 @@ namespace KamiYomu.Web.Infrastructure.HttpHandlers;
 /// <summary>
 /// CloudflareBypassHandler is an HttpMessageHandler that attempts to bypass Cloudflare's anti-bot protection by using FlareSolverr.
 /// </summary>
-/// <param name="innerHandler">The inner HttpMessageHandler to delegate requests to.</param>
+/// <param name="logger">The ILogger instance.</param>
 /// <param name="options">The CloudflareSolverOptions instance.</param>
-public class CloudflareBypassHandler(HttpMessageHandler innerHandler, IOptions<CloudflareSolverOptions> options) : DelegatingHandler(innerHandler)
+public class CloudflareBypassHandler(ILogger<CloudflareBypassHandler> logger, IOptions<CloudflareSolverOptions> options)
+    : DelegatingHandler
 {
-    /// <summary>
-    /// Sends an HTTP request and attempts to bypass Cloudflare's anti-bot protection if necessary.
-    /// </summary>
-    /// <param name="request">The HTTP request message to send.</param>
-    /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
-    /// <returns>The HTTP response message.</returns>
+    ///<inheritdoc/>
     protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
-        // First attempt
-        HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
+        logger.LogDebug("FlareSolverr: First attempt, without flaresolverr");
+        HttpRequestMessage send = new(request.Method, request.RequestUri);
+
+        using HttpClient client = new(new HttpClientHandler
+        {
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+        });
+
+        HttpResponseMessage response = await client.SendAsync(send, cancellationToken);
 
         if (!await IsCloudflareBlock(response))
         {
+            logger.LogDebug("FlareSolverr: Request not blocked. Returning response.");
             return response;
         }
 
-        // Solve using FlareSolverr
-        (string cookieHeader, string userAgent) = await SolveWithFlareSolverr(request.RequestUri.ToString());
+        logger.LogDebug("FlareSolverr: Solve using FlareSolverr.");
+        (string cookieHeader, string userAgent) = await SolveWithFlareSolverr(request.RequestUri!.ToString());
 
-        // Retry with cookies + UA
+        logger.LogDebug("FlareSolverr: Retry with cookies + UA.");
+
         HttpRequestMessage retry = new(request.Method, request.RequestUri);
 
         retry.Headers.Add("User-Agent", userAgent);
         retry.Headers.Add("Cookie", cookieHeader);
 
-        return await base.SendAsync(retry, cancellationToken);
+
+        return await client.SendAsync(retry, cancellationToken);
     }
 
     private async Task<bool> IsCloudflareBlock(HttpResponseMessage response)
     {
-        // If the CloudflareSolverr is not enabled, we won't attempt to bypass Cloudflare.
+        logger.LogDebug("FlareSolverr: If the CloudflareSolverr is not enabled, we won't attempt to bypass Cloudflare.: {enabled}", options.Value.Enabled);
         if (!options.Value.Enabled)
         {
             return false;
@@ -52,6 +59,7 @@ public class CloudflareBypassHandler(HttpMessageHandler innerHandler, IOptions<C
 
         if ((int)response.StatusCode is 403 or 503)
         {
+            logger.LogDebug("FlareSolverr: Response blocked: status code {StatusCode}", response.StatusCode);
             return true;
         }
 
@@ -72,6 +80,7 @@ public class CloudflareBypassHandler(HttpMessageHandler innerHandler, IOptions<C
 
     private async Task<(string cookieHeader, string userAgent)> SolveWithFlareSolverr(string url)
     {
+        logger.LogDebug("FlareSolverr: Start solving...");
         var payload = new
         {
             cmd = "request.get",
@@ -83,7 +92,7 @@ public class CloudflareBypassHandler(HttpMessageHandler innerHandler, IOptions<C
         HttpResponseMessage response = await client.PostAsJsonAsync($"{options.Value.Uri}/v1", payload);
         string json = await response.Content.ReadAsStringAsync();
 
-        // Extract only what we need using JsonDocument (no POCO classes)
+        logger.LogDebug("FlareSolverr: Extract only what we need using JsonDocument (no POCO classes)");
         using JsonDocument doc = JsonDocument.Parse(json);
         JsonElement solution = doc.RootElement.GetProperty("solution");
 
@@ -96,6 +105,30 @@ public class CloudflareBypassHandler(HttpMessageHandler innerHandler, IOptions<C
         string cookieHeader = string.Join("; ", cookies);
 
         return (cookieHeader, userAgent);
+    }
+
+    public async Task<HttpResponseMessage?> TrySendAsync(
+        HttpRequestMessage request,
+        CancellationToken ct)
+    {
+        try
+        {
+            HttpResponseMessage response = await SendAsync(request, ct);
+
+            logger.LogDebug("FlareSolverr: If Cloudflare solved -> return response");
+            if (!await IsCloudflareBlock(response))
+            {
+                return response;
+            }
+
+            logger.LogDebug("FlareSolverr: Cloudflare still blocking -> escalate");
+            return null;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "FlareSolverr: Fail -> escalate");
+            return null;
+        }
     }
 }
 

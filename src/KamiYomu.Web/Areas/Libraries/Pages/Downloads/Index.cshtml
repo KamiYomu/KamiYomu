@@ -1,6 +1,9 @@
 @page
 @using KamiYomu.Web.Areas.Libraries.Pages.Downloads
+@using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces
 @using KamiYomu.Web.Extensions
+@using KamiYomu.Web.Entities.CrawlerAgentRuntime
+@inject ICrawlerAgentFactory crawlerAgentFactory
 @model IndexModel
 
 @{
@@ -39,16 +42,16 @@
                         <span id="selectedAgentLabel" class="text-truncate">@I18n.SelectCrawlerAgent</span>
                     </button>
                     <ul class="dropdown-menu w-md-auto">
-                        @foreach (var agent in Model.CrawlerAgents)
+                        @foreach (var crawlerAgent in Model.CrawlerAgents)
                         {
-                            using var crawlerInstance = agent.GetCrawlerInstance();
+                            using ICrawlerAgentDecorator crawlerInstance = crawlerAgentFactory.Create(crawlerAgent);
                             var faviconUrl = await crawlerInstance.GetFaviconAsync(CancellationToken.None);
 
                             <li>
                                 <a class="dropdown-item d-flex align-items-center" href="#"
-                                   onclick="selectSite('@agent.Id', '@agent.DisplayName', '@faviconUrl.ToInternalImageUrl()')">
+                                   onclick="selectSite('@crawlerAgent.Id', '@crawlerAgent.DisplayName', '@faviconUrl.ToInternalImageUrl()')">
                                     <img src="@faviconUrl.ToInternalImageUrl()" width="20" class="me-2" />
-                                    @agent.DisplayName
+                                    @crawlerAgent.DisplayName
                                 </a>
                             </li>
                         }

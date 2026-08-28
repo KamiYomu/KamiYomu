@@ -1,10 +1,11 @@
 using System.IO.Compression;
-using System.Linq.Expressions;
 
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Areas.Settings.Models;
 using KamiYomu.Web.Areas.Settings.ViewComponents;
 using KamiYomu.Web.Entities;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime;
+using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 using KamiYomu.Web.Extensions;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
@@ -19,7 +20,8 @@ public class IndexModel(ILogger<IndexModel> logger,
                         IOptions<StartupOptions> startupOptions,
                         DbContext dbContext,
                         INugetService nugetService,
-                        INotificationService notificationService) : PageModel
+                        INotificationService notificationService,
+                        ICrawlerAgentAssemblyLoader crawlerAgentAssemblyLoader) : PageModel
 {
     [BindProperty(SupportsGet = true)]
     public SearchBarViewModel SearchBarViewModel { get; set; } = new();
@@ -63,12 +65,11 @@ public class IndexModel(ILogger<IndexModel> logger,
             VersionSelected = package,
             Versions = packageVersions.OrderByDescending(p => p.Version).Select(p => p.Version).Where(v => v != null)!,
             Tags = package.Tags ?? [],
-            TotalDownloads = package.TotalDownloads ?? 0,
-            DependenciesByVersion = packageVersions
-                .Where(p => !string.IsNullOrEmpty(p.Version))
+            TotalDownloads = package.TotalDownloads ?? 0L,
+            DependenciesByVersion = packageVersions.SelectMany(p => p.Dependencies)
                 .ToDictionary(
-                    p => p.Version!,
-                    p => p.Dependencies ?? []
+                    p => p.Split(":")[1],
+                    p => p.Split(":")[0]
                 )
         });
     }
@@ -94,17 +95,11 @@ public class IndexModel(ILogger<IndexModel> logger,
                                            Description = g.FirstOrDefault()?.Description,
                                            Authors = g.FirstOrDefault()?.Authors ?? [],
                                            Tags = g.FirstOrDefault()?.Tags ?? [],
-                                           TotalDownloads = g.Sum(x => x.TotalDownloads ?? 0),
+                                           TotalDownloads = g.Sum(x => x.TotalDownloads ?? 0L),
                                            LicenseUrl = g.FirstOrDefault()?.LicenseUrl,
                                            RepositoryUrl = g.FirstOrDefault()?.RepositoryUrl,
                                            VersionSelected = g.FirstOrDefault() ?? null,
                                            Versions = [.. g.Select(x => x.Version!)],
-                                           DependenciesByVersion = g
-                                               .Where(x => x.Version != null)
-                                               .ToDictionary(
-                                                   x => x.Version!,
-                                                   x => x.Dependencies ?? []
-                                               )
                                        })
             };
 
@@ -186,11 +181,12 @@ public class IndexModel(ILogger<IndexModel> logger,
                                     .FirstOrDefault(p => p.EndsWith($"{packageId}.dll"))
                                     ?? throw new FileNotFoundException("Main package DLL not found.");
 
-            System.Reflection.Assembly assembly = CrawlerAgent.GetIsolatedAssembly(dllPath);
-            Dictionary<string, string> metadata = CrawlerAgent.GetAssemblyMetadata(assembly);
-            string displayName = CrawlerAgent.GetCrawlerDisplayName(assembly);
+            CrawlerAgentAssembly crawlerAssembly = crawlerAgentAssemblyLoader.GetIsolatedAssembly(dllPath);
+            Dictionary<string, string> metadata = crawlerAgentAssemblyLoader.GetAssemblyMetadata(crawlerAssembly);
+            string displayName = crawlerAgentAssemblyLoader.GetCrawlerDisplayName(crawlerAssembly.Assembly);
 
-            using CrawlerAgent crawlerAgent = new(dllPath, displayName, []);
+            CrawlerAgent crawlerAgent = new(dllPath, displayName, []);
+            crawlerAgent.UpdateAssemblyProperties(crawlerAgentAssemblyLoader.GetAssemblyMetadata(crawlerAssembly));
             _ = dbContext.CrawlerAgents.Insert(crawlerAgent);
 
             _ = dbContext.CrawlerAgentFileStorage.Delete(tempUploadId);

@@ -2,8 +2,6 @@ using KamiYomu.CrawlerAgents.Core.Catalog.Definitions;
 using KamiYomu.Web.Entities.Definitions;
 using KamiYomu.Web.Models.Definitions;
 
-using LiteDB;
-
 
 namespace KamiYomu.Web.AppOptions;
 /// <summary>
@@ -128,7 +126,7 @@ public partial class Defaults
         /// <summary>
         /// The service registration name for the HTTP client used by worker services.
         /// </summary>
-        public const string HttpClientApp = $"{nameof(Worker)}.{nameof(HttpClientApp)}";
+        public const string WorkerHttpClient = $"{nameof(Worker)}.{nameof(WorkerHttpClient)}";
 
         /// <summary>
         /// The timeout duration in seconds for HTTP requests made by worker services.
@@ -191,42 +189,60 @@ public partial class Defaults
     public static class CrawlerAgentMetadata
     {
         /// <summary>
-        /// 
+        /// Contains string constants representing metadata field names for crawler agent configuration.
+        /// These field names are used as keys when injecting dependencies or configuring crawler agent behavior.
         /// </summary>
         public static class Fields
         {
             /// <summary>
-            /// 
+            /// The metadata field name for the browser user agent string used in HTTP requests.
             /// </summary>
             public const string BrowserUserAgent = nameof(BrowserUserAgent);
             /// <summary>
-            /// 
+            /// The metadata field name for the HTTP client timeout duration configuration.
             /// </summary>
             public const string HttpClientTimeout = nameof(HttpClientTimeout);
             /// <summary>
-            /// 
+            /// The metadata field name for the KamiYomu ILogger instance dependency.
             /// </summary>
             public const string KamiYomuILogger = nameof(KamiYomuILogger);
             /// <summary>
-            /// 
+            /// The metadata field name for the FlareSolverr proxy URL endpoint configuration.
             /// </summary>
             public const string FlareSolverrUrl = nameof(FlareSolverrUrl);
             /// <summary>
-            /// 
+            /// The metadata field name for the application HTTP client instance dependency.
+            /// </summary>
+            public const string ApplicationHttpClient = nameof(ApplicationHttpClient);
+            /// <summary>
+            /// The metadata field name for the FlareSolverr HTTP message handler dependency.
             /// </summary>
             public const string FlareSolverrHttpHandler = nameof(FlareSolverrHttpHandler);
+            /// <summary>
+            /// The metadata field name for the Chromium-based HTTP message handler dependency.
+            /// </summary>
+            public const string ChromiumHttpHandler = nameof(ChromiumHttpHandler);
+            /// <summary>
+            /// The metadata field name for the smart crawler HTTP message handler dependency.
+            /// </summary>
+            public const string SmartCrawlerHttpHandler = nameof(SmartCrawlerHttpHandler);
         }
+
         /// <summary>
         /// 
         /// </summary>
         public static class Values
         {
             /// <summary>
-            /// 
+            /// The user agent string for KamiYomu HTTP requests.
             /// </summary>
             public static string KamiYomuHttpUserAgent = $"KamiYomu-Agent/1.0 ({Environment.OSVersion.Platform}; {(Environment.Is64BitOperatingSystem ? "x64" : "x86")})";
             /// <summary>
-            /// 
+            /// The user agent string to mimic a common browser for HTTP requests.
+            /// </summary>
+            public const string MimicUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36";
+            /// <summary>
+            /// The default timeout in milliseconds for HTTP requests.
             /// </summary>
             public static int TimeoutMilliseconds = 60_000;
         }
