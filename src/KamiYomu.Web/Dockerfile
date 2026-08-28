@@ -1,5 +1,15 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 
+# Install required libraries
+RUN apt-get update \
+  && apt-get install -y \
+    libx11-6 libx11-xcb1 libatk1.0-0 libgtk-3-0 libcups2 libdrm2 \
+    libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 \
+    libpango-1.0-0 libcairo2 libasound2 libxshmfence1 libnss3 \
+    libfontconfig1 libfreetype6 libharfbuzz0b libpng16-16 libjpeg62-turbo \
+  && apt-get autopurge -y \
+  && apt-get autoclean -y
+
 # Create folders for persistent data
 RUN mkdir -p /manga /db /logs /agents
 

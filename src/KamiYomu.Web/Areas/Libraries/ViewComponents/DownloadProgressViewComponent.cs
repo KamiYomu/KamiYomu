@@ -19,9 +19,8 @@ public class DownloadProgressViewComponent : ViewComponent
         ILiteQueryable<ChapterDownloadRecord> downloadChapters = libDbContext.ChapterDownloadRecords
                                                                    .Query()
                                                                    .Where(p => p.MangaDownload.Id == downloadManga.Id);
-
-        decimal completed = downloadChapters.Where(p => (int)(object)p.DownloadStatus == (int)(object)DownloadStatus.Completed).Count();
         decimal total = downloadChapters.Count();
+        decimal completed = downloadChapters.Where(p => (int)(object)p.DownloadStatus == (int)(object)DownloadStatus.Completed).Count();
         decimal progress = total > 0 ? completed / total * 100 : 0;
 
         return View(new DownloadProgressViewComponentModel(progress, total, completed, downloadManga));

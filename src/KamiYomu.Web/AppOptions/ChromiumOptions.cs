@@ -7,13 +7,23 @@ public class ChromiumOptions
     public string ExecutableName { get; init; }
     public int RequestTimeout { get; init; }
     public string[] Arguments { get; init; }
+
+    public string GetBaseDirectory()
+    {
+        return Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "AppData",
+            "chromium"
+        );
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="PlatformNotSupportedException"></exception>
     public string GetExecutablePath()
     {
-        string baseDir = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "KamiYomu",
-                "chromium"
-            );
+        string baseDir = GetBaseDirectory();
 
         return OperatingSystem.IsWindows()
             ? Path.Combine(baseDir, "chrome-win", ExecutableName)

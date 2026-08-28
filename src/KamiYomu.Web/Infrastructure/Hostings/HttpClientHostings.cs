@@ -3,8 +3,6 @@ using System.Net;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Infrastructure.HttpHandlers;
 
-using Microsoft.Extensions.Options;
-
 using Polly;
 using Polly.Extensions.Http;
 
@@ -56,29 +54,9 @@ public static class HttpClientHostings
 
     private static void AddHttpHandlers(IServiceCollection services)
     {
-        _ = services.AddTransient(sp =>
-        {
-            IOptions<CloudflareSolverOptions> options = sp.GetRequiredService<IOptions<CloudflareSolverOptions>>();
-            return new CloudflareBypassHandler(options);
-        });
-
-        _ = services.AddTransient(sp =>
-        {
-            IOptions<ChromiumOptions> options = sp.GetRequiredService<IOptions<ChromiumOptions>>();
-            return new ChromiumHandler(options);
-        });
-
-        _ = services.AddTransient(sp =>
-        {
-            CloudflareBypassHandler cf = sp.GetRequiredService<CloudflareBypassHandler>();
-            ChromiumHandler chromium = sp.GetRequiredService<ChromiumHandler>();
-
-            return new SmartCrawlerHandler(
-                cf,
-                chromium);
-        });
-
-
+        _ = services.AddTransient<CloudflareBypassHandler>();
+        _ = services.AddTransient<ChromiumHandler>();
+        _ = services.AddTransient<SmartCrawlerHandler>();
     }
 
     private static void AddIntegrationHttpClient(IServiceCollection services)

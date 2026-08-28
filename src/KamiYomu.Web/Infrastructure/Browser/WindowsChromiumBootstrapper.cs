@@ -35,27 +35,21 @@ public class WindowsChromiumBootstrapper(
                 return;
             }
 
-            string baseDir = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "KamiYomu",
-                "chromium"
-            );
-
-            _ = Directory.CreateDirectory(baseDir);
+            _ = Directory.CreateDirectory(options.Value.GetBaseDirectory());
 
             // ✔ If Chromium already exists, skip download
-            string executablePath = Path.Combine(baseDir, "chrome-win", _options.ExecutableName);
+            string executablePath = Path.Combine(options.Value.GetBaseDirectory(), "chrome-win", _options.ExecutableName);
 
             if (File.Exists(executablePath))
             {
-                SetEnvironmentVariables(baseDir, executablePath);
+                SetEnvironmentVariables(Path.Combine(options.Value.GetBaseDirectory(), "chrome-win"), executablePath);
                 logger.LogInformation("Chromium already installed at {Path}", executablePath);
                 return;
             }
 
-            logger.LogInformation("Chromium not found. Installing into {Dir}", baseDir);
+            logger.LogInformation("Chromium not found. Installing into {Dir}", options.Value.GetBaseDirectory());
 
-            string zipPath = Path.Combine(baseDir, "chromium.zip");
+            string zipPath = Path.Combine(options.Value.GetBaseDirectory(), "chromium.zip");
 
             using HttpClient client = new();
             logger.LogInformation("Downloading Chromium from {Url}", _options.DownloadUrl);
@@ -64,11 +58,11 @@ public class WindowsChromiumBootstrapper(
             await File.WriteAllBytesAsync(zipPath, data, cancellationToken);
 
             logger.LogInformation("Extracting Chromium archive...");
-            ZipFile.ExtractToDirectory(zipPath, baseDir, true);
+            ZipFile.ExtractToDirectory(zipPath, options.Value.GetBaseDirectory(), true);
 
             File.Delete(zipPath);
 
-            SetEnvironmentVariables(baseDir, executablePath);
+            SetEnvironmentVariables(Path.Combine(options.Value.GetBaseDirectory(), "chrome-win"), executablePath);
 
             logger.LogInformation("Chromium installation completed. Executable at {Path}", executablePath);
         }
