@@ -3,7 +3,6 @@ using System.IO.Compression;
 
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Infrastructure.Browser.Interfaces;
-using KamiYomu.Web.Infrastructure.Storage;
 
 using Microsoft.Extensions.Options;
 
@@ -24,40 +23,28 @@ public class LinuxChromiumBootstrapper(
     {
         try
         {
-            if (FileNameHelper.IsRunningInDocker())
-            {
-                logger.LogInformation("Running in Docker. Skipping Chromium bootstrap for Linux.");
-                return;
-            }
-
             if (!OperatingSystem.IsLinux())
             {
                 logger.LogInformation("Not running on Linux. Skipping Chromium bootstrap for Linux.");
                 return;
             }
 
-            string baseDir = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "KamiYomu",
-                "chromium"
-            );
-
-            _ = Directory.CreateDirectory(baseDir);
+            _ = Directory.CreateDirectory(options.Value.GetBaseDirectory());
 
             // Linux snapshot folder name is usually "chrome-linux"
-            string executablePath = Path.Combine(baseDir, "chrome-linux", options.Value.ExecutableName);
+            string executablePath = Path.Combine(options.Value.GetBaseDirectory(), "chrome-linux", options.Value.ExecutableName);
 
             // ✔ If Chromium already exists, skip download
             if (File.Exists(executablePath))
             {
-                SetEnvironmentVariables(Path.Combine(baseDir, "chrome-linux"), executablePath);
+                SetEnvironmentVariables(Path.Combine(options.Value.GetBaseDirectory(), "chrome-linux"), executablePath);
                 logger.LogInformation("Chromium already installed at {Path}", executablePath);
                 return;
             }
 
-            logger.LogInformation("Chromium not found. Installing into {Dir}", baseDir);
+            logger.LogInformation("Chromium not found. Installing into {Dir}", options.Value.GetBaseDirectory());
 
-            string zipPath = Path.Combine(baseDir, "chromium.zip");
+            string zipPath = Path.Combine(options.Value.GetBaseDirectory(), "chromium.zip");
 
             using HttpClient client = new();
             logger.LogInformation("Downloading Chromium from {Url}", options.Value.DownloadUrl);
@@ -66,12 +53,12 @@ public class LinuxChromiumBootstrapper(
             await File.WriteAllBytesAsync(zipPath, data, cancellationToken);
 
             logger.LogInformation("Extracting Chromium archive...");
-            ZipFile.ExtractToDirectory(zipPath, baseDir, true);
+            ZipFile.ExtractToDirectory(zipPath, options.Value.GetBaseDirectory(), true);
 
             File.Delete(zipPath);
 
             // Chromium snapshot folder for Linux
-            baseDir = Path.Combine(baseDir, "chrome-linux");
+            string baseDir = Path.Combine(options.Value.GetBaseDirectory(), "chrome-linux");
 
             SetEnvironmentVariables(baseDir, executablePath);
 

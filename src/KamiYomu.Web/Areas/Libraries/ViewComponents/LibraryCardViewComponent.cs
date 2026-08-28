@@ -1,6 +1,5 @@
 using KamiYomu.Web.Entities;
 using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
-using KamiYomu.Web.Infrastructure.AppServices.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
 
 using Microsoft.AspNetCore.Mvc;
