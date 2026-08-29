@@ -16,10 +16,26 @@ public class ChromiumOptions
             "chromium"
         );
     }
+
+    public string GetLinuxDirectory()
+    {
+        return Path.Combine(GetBaseDirectory(), "chrome-linux");
+    }
+
+    public string GetWindowsDirectory()
+    {
+        return Path.Combine(GetBaseDirectory(), "chrome-win");
+    }
+
+    public bool IsExecutableExists()
+    {
+        string executablePath = GetExecutablePath();
+        return File.Exists(executablePath);
+    }
     /// <summary>
-    /// 
+    /// Gets the full path to the Chromium executable based on the operating system.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The full path to the Chromium executable.</returns>
     /// <exception cref="PlatformNotSupportedException"></exception>
     public string GetExecutablePath()
     {

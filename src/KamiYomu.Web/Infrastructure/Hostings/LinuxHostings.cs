@@ -59,7 +59,7 @@ public static class LinuxHostings
     /// <returns></returns>
     public static async Task UseLinuxHostingsAsync(this WebApplication app)
     {
-        if (!OperatingSystem.IsLinux())
+        if (FileNameHelper.IsRunningInDocker() || !OperatingSystem.IsLinux())
         {
             return;
         }

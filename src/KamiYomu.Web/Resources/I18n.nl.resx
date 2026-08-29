@@ -1208,11 +1208,20 @@ voor de &lt;code&gt;WorkerCount&lt;/code&gt;-instelling van Hangfire om te bepal
   <data name="AllLibrariesSharedSameCrawlerAgentSuccessfully" xml:space="preserve">
     <value>Alle bibliotheken die hetzelfde type crawleragent delen, zijn geconsolideerd in de crawleragent die u heeft geselecteerd.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ProjectUrl" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="ProjectUrl" xml:space="preserve">
     <value>Project-URL</value>
+  </data>
+  <data name="ChromiumInstallationDirectory" xml:space="preserve">
+    <value>Chromium-installatiemap</value>
+  </data>
+  <data name="ChromiumDirectory" xml:space="preserve">
+    <value>Chromium-gids</value>
+  </data>
+  <data name="ChromiumPath" xml:space="preserve">
+    <value>Chromium's pad</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Unknown" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

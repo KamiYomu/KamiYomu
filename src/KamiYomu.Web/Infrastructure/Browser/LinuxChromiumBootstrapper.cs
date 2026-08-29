@@ -3,6 +3,7 @@ using System.IO.Compression;
 
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Infrastructure.Browser.Interfaces;
+using KamiYomu.Web.Infrastructure.Storage;
 
 using Microsoft.Extensions.Options;
 
@@ -17,28 +18,32 @@ public class LinuxChromiumBootstrapper(
     IOptions<ChromiumOptions> options,
     ILogger<LinuxChromiumBootstrapper> logger) : IChromiumBootstrapper
 {
+    private readonly ChromiumOptions _options = options.Value;
 
     /// <inheritdoc/>
     public async Task InitializeAsync(CancellationToken cancellationToken)
     {
         try
         {
+            if (FileNameHelper.IsRunningInDocker())
+            {
+                logger.LogInformation("Running in Docker. Skipping Chromium bootstrap for Linux.");
+                return;
+            }
+
             if (!OperatingSystem.IsLinux())
             {
                 logger.LogInformation("Not running on Linux. Skipping Chromium bootstrap for Linux.");
                 return;
             }
-
             _ = Directory.CreateDirectory(options.Value.GetBaseDirectory());
 
-            // Linux snapshot folder name is usually "chrome-linux"
-            string executablePath = Path.Combine(options.Value.GetBaseDirectory(), "chrome-linux", options.Value.ExecutableName);
 
             // ✔ If Chromium already exists, skip download
-            if (File.Exists(executablePath))
+            if (options.Value.IsExecutableExists())
             {
-                SetEnvironmentVariables(Path.Combine(options.Value.GetBaseDirectory(), "chrome-linux"), executablePath);
-                logger.LogInformation("Chromium already installed at {Path}", executablePath);
+                SetEnvironmentVariables();
+                logger.LogInformation("Chromium already installed at {Path}", options.Value.GetExecutablePath());
                 return;
             }
 
@@ -47,22 +52,21 @@ public class LinuxChromiumBootstrapper(
             string zipPath = Path.Combine(options.Value.GetBaseDirectory(), "chromium.zip");
 
             using HttpClient client = new();
-            logger.LogInformation("Downloading Chromium from {Url}", options.Value.DownloadUrl);
 
-            byte[] data = await client.GetByteArrayAsync(options.Value.DownloadUrl, cancellationToken);
+            logger.LogInformation("Downloading Chromium from {Url}", _options.DownloadUrl);
+
+            byte[] data = await client.GetByteArrayAsync(_options.DownloadUrl, cancellationToken);
+
             await File.WriteAllBytesAsync(zipPath, data, cancellationToken);
 
             logger.LogInformation("Extracting Chromium archive...");
-            ZipFile.ExtractToDirectory(zipPath, options.Value.GetBaseDirectory(), true);
+            ZipFile.ExtractToDirectory(zipPath, _options.GetBaseDirectory(), true);
 
             File.Delete(zipPath);
 
-            // Chromium snapshot folder for Linux
-            string baseDir = Path.Combine(options.Value.GetBaseDirectory(), "chrome-linux");
+            SetEnvironmentVariables();
 
-            SetEnvironmentVariables(baseDir, executablePath);
-
-            logger.LogInformation("Chromium installation completed. Executable at {Path}", executablePath);
+            logger.LogInformation("Chromium installation completed. Executable at {Path}", options.Value.GetExecutablePath());
         }
         catch (Exception ex)
         {
@@ -71,19 +75,25 @@ public class LinuxChromiumBootstrapper(
         }
     }
 
-    private void SetEnvironmentVariables(string baseDir, string executablePath)
+    private void SetEnvironmentVariables()
     {
-        string configPath = Path.Combine(baseDir, ".config");
-        string cachePath = Path.Combine(baseDir, ".cache");
+        string configPath = Path.Combine(options.Value.GetLinuxDirectory(), ".config");
+        string cachePath = Path.Combine(options.Value.GetLinuxDirectory(), ".cache");
 
 
         Environment.SetEnvironmentVariable("PUPPETEER_SKIP_CHROMIUM_DOWNLOAD", "true");
-        Environment.SetEnvironmentVariable("PUPPETEER_EXECUTABLE_PATH", executablePath);
+        Environment.SetEnvironmentVariable("PUPPETEER_EXECUTABLE_PATH", options.Value.GetExecutablePath());
 
         // Linux-specific Puppeteer/XDG requirements
         Environment.SetEnvironmentVariable("XDG_CONFIG_HOME", configPath);
         Environment.SetEnvironmentVariable("XDG_CACHE_HOME", cachePath);
 
-        logger.LogInformation("Environment variables set for Chromium: PUPPETEER_EXECUTABLE_PATH={ExecutablePath}, XDG_CONFIG_HOME={ConfigPath}, XDG_CACHE_HOME={CachePath}", executablePath, configPath, cachePath);
+        logger.LogInformation(@"
+                                Environment variables set for Chromium: 
+                                PUPPETEER_EXECUTABLE_PATH={ExecutablePath}, 
+                                XDG_CONFIG_HOME={ConfigPath}, 
+                                XDG_CACHE_HOME={CachePath}",
+                                options.Value.GetExecutablePath(),
+                                configPath, cachePath);
     }
 }

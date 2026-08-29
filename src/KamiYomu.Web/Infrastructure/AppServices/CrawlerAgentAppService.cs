@@ -29,11 +29,11 @@ public class CrawlerAgentAppService(ILogger<CrawlerAgentAppService> logger,
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            notificationService.PushInfoAsync(string.Format("{0} — {1}/{2}", libraries[i].Manga.Title, i + 1, libraries.Count), cancellationToken);
+            _ = notificationService.PushInfoAsync(string.Format("{0} — {1}/{2}", libraries[i].Manga.Title, i + 1, libraries.Count), cancellationToken);
 
             libraries[i] = await UpgradeCrawlerAgentAsync(libraries[i].Id, crawlerAgent.Id, cancellationToken);
 
-            notificationService.PushSuccessAsync(string.Format("{0} — {1}/{2}", libraries[i].Manga.Title, i + 1, libraries.Count), cancellationToken);
+            _ = notificationService.PushSuccessAsync(string.Format("{0} — {1}/{2}", libraries[i].Manga.Title, i + 1, libraries.Count), cancellationToken);
         }
 
         return libraries;
@@ -60,37 +60,15 @@ public class CrawlerAgentAppService(ILogger<CrawlerAgentAppService> logger,
     }
 
     /// <inheritdoc/>
-    public async Task<Library> RefreshCollectionAsync(Library library, CancellationToken cancellationToken)
-    {
-        CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindById(library.CrawlerAgent.Id);
-
-        Manga manga = await crawlerAgentRepository.GetMangaAsync(crawlerAgent.Id, library.Manga.Id, cancellationToken);
-
-        MangaDownloadRecord downloadRecord = new(library, string.Empty);
-
-        using LibraryDbContext libDbContext = library.GetReadWriteDbContext();
-
-        _ = libDbContext.MangaDownloadRecords.Insert(downloadRecord);
-
-        string backgroundJobId = workerService.ScheduleMangaDownload(downloadRecord, null);
-
-        downloadRecord.Schedule(backgroundJobId);
-
-        _ = libDbContext.MangaDownloadRecords.Update(downloadRecord);
-
-        return library;
-    }
-
-    /// <inheritdoc/>
     public async Task<Library> UpgradeCrawlerAgentAsync(Guid libraryId, Guid crawlerAgentId, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         Library library = dbContext.Libraries.FindOne(p => p.Id == libraryId);
 
-        if (Guid.Empty != crawlerAgentId)
+        if (crawlerAgentId != Guid.Empty)
         {
-            TimeSpan? scheduled = workerService.GetDiscovertySchedule(library);
+            TimeSpan? scheduled = workerService.GetDiscoverySchedule(library);
 
             CrawlerAgent crawlerAgent = dbContext.CrawlerAgents.FindOne(p => p.Id == crawlerAgentId);
 
@@ -104,7 +82,15 @@ public class CrawlerAgentAppService(ILogger<CrawlerAgentAppService> logger,
             {
                 mangaDownload.UpdateLibraryInformation(library);
 
-                UpdateMangaDownloadRecord(crawlerAgent, libDbContext, mangaDownload, scheduled);
+                workerService.CancelMangaDownload(mangaDownload);
+
+                string backgroundJobId = workerService.ScheduleMangaDownload(mangaDownload, scheduled);
+
+                mangaDownload.Schedule(backgroundJobId, I18n.CrawlerAgentHasBeenUpgraded);
+
+                UpdateChapterDownloadRecords(crawlerAgent, libDbContext, mangaDownload);
+
+                _ = libDbContext.MangaDownloadRecords.Update(mangaDownload);
             }
             else
             {
@@ -118,9 +104,26 @@ public class CrawlerAgentAppService(ILogger<CrawlerAgentAppService> logger,
         return library;
     }
 
-    private void UpdateMangaDownloadRecord(CrawlerAgent crawlerAgent, LibraryDbContext libDbContext, MangaDownloadRecord mangaDownload, TimeSpan? scheduled)
+    /// <inheritdoc/>
+    public async Task<Library> RefreshCollectionAsync(Library library, CancellationToken cancellationToken)
     {
-        workerService.CancelMangaDownload(mangaDownload);
+        using LibraryDbContext libDbContext = library.GetReadWriteDbContext();
+
+        MangaDownloadRecord mangaDownloadRecord = new(library, string.Empty);
+
+        _ = libDbContext.MangaDownloadRecords.Insert(mangaDownloadRecord);
+
+        string backgroundJobId = workerService.ScheduleMangaDownload(mangaDownloadRecord, null);
+
+        mangaDownloadRecord.Schedule(backgroundJobId);
+
+        _ = libDbContext.MangaDownloadRecords.Update(mangaDownloadRecord);
+
+        return library;
+    }
+
+    private void UpdateChapterDownloadRecords(CrawlerAgent crawlerAgent, LibraryDbContext libDbContext, MangaDownloadRecord mangaDownload)
+    {
 
         List<ChapterDownloadRecord> chapterDownloads = libDbContext.ChapterDownloadRecords
                                                                    .Query()
@@ -131,19 +134,12 @@ public class CrawlerAgentAppService(ILogger<CrawlerAgentAppService> logger,
         {
             chapterDownload.UpdateMangaDownloadInformation(mangaDownload);
             chapterDownload.UpdateCrawlerAgentInformation(crawlerAgent);
-            if (chapterDownload.DownloadStatus
-                is not DownloadStatus.Completed)
+            if (chapterDownload.DownloadStatus is not DownloadStatus.Completed)
             {
                 chapterDownload.ToBeRescheduled(I18n.CrawlerAgentHasBeenUpgraded);
+                workerService.CancelChapterDownload(chapterDownload);
             }
-
+            _ = libDbContext.ChapterDownloadRecords.Update(chapterDownload);
         }
-        string jobId = workerService.ScheduleMangaDownload(mangaDownload, scheduled);
-
-        mangaDownload.Schedule(jobId, I18n.CrawlerAgentHasBeenUpgraded);
-
-        _ = libDbContext.MangaDownloadRecords.Update(mangaDownload);
-        _ = libDbContext.ChapterDownloadRecords.Update(chapterDownloads);
-
     }
 }

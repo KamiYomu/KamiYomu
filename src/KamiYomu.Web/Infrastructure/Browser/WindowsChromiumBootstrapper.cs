@@ -38,12 +38,10 @@ public class WindowsChromiumBootstrapper(
             _ = Directory.CreateDirectory(options.Value.GetBaseDirectory());
 
             // ✔ If Chromium already exists, skip download
-            string executablePath = Path.Combine(options.Value.GetBaseDirectory(), "chrome-win", _options.ExecutableName);
-
-            if (File.Exists(executablePath))
+            if (options.Value.IsExecutableExists())
             {
-                SetEnvironmentVariables(Path.Combine(options.Value.GetBaseDirectory(), "chrome-win"), executablePath);
-                logger.LogInformation("Chromium already installed at {Path}", executablePath);
+                SetEnvironmentVariables();
+                logger.LogInformation("Chromium already installed at {Path}", options.Value.GetExecutablePath());
                 return;
             }
 
@@ -58,13 +56,12 @@ public class WindowsChromiumBootstrapper(
             await File.WriteAllBytesAsync(zipPath, data, cancellationToken);
 
             logger.LogInformation("Extracting Chromium archive...");
-            ZipFile.ExtractToDirectory(zipPath, options.Value.GetBaseDirectory(), true);
-
+            ZipFile.ExtractToDirectory(zipPath, _options.GetBaseDirectory(), true);
             File.Delete(zipPath);
 
-            SetEnvironmentVariables(Path.Combine(options.Value.GetBaseDirectory(), "chrome-win"), executablePath);
+            SetEnvironmentVariables();
 
-            logger.LogInformation("Chromium installation completed. Executable at {Path}", executablePath);
+            logger.LogInformation("Chromium installation completed. Executable at {Path}", _options.GetExecutablePath());
         }
         catch (Exception ex)
         {
@@ -73,16 +70,24 @@ public class WindowsChromiumBootstrapper(
         }
     }
 
-    private void SetEnvironmentVariables(string baseDir, string executablePath)
+    private void SetEnvironmentVariables()
     {
-        string configPath = Path.Combine(baseDir, ".config");
-        string cachePath = Path.Combine(baseDir, ".cache");
+        string configPath = Path.Combine(_options.GetWindowsDirectory(), ".config");
+        string cachePath = Path.Combine(_options.GetWindowsDirectory(), ".cache");
 
         Environment.SetEnvironmentVariable("PUPPETEER_SKIP_CHROMIUM_DOWNLOAD", "true");
-        Environment.SetEnvironmentVariable("PUPPETEER_EXECUTABLE_PATH", executablePath);
+        Environment.SetEnvironmentVariable("PUPPETEER_EXECUTABLE_PATH", _options.GetExecutablePath());
+
+        // Linux-specific Puppeteer/XDG requirements
         Environment.SetEnvironmentVariable("XDG_CONFIG_HOME", configPath);
         Environment.SetEnvironmentVariable("XDG_CACHE_HOME", cachePath);
 
-        logger.LogInformation("Environment variables set for Chromium: PUPPETEER_EXECUTABLE_PATH={ExecutablePath}, XDG_CONFIG_HOME={ConfigPath}, XDG_CACHE_HOME={CachePath}", executablePath, configPath, cachePath);
+        logger.LogInformation(@"
+                                Environment variables set for Chromium: 
+                                PUPPETEER_EXECUTABLE_PATH={ExecutablePath}, 
+                                XDG_CONFIG_HOME={ConfigPath}, 
+                                XDG_CACHE_HOME={CachePath}",
+                                options.Value.GetExecutablePath(),
+                                configPath, cachePath);
     }
 }

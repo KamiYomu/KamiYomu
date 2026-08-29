@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices;
-
 using KamiYomu.Web.Infrastructure.Browser;
 using KamiYomu.Web.Infrastructure.Browser.Interfaces;
 using KamiYomu.Web.Infrastructure.Storage;
@@ -33,10 +31,5 @@ public static class DockerHosting
                    .ReadFrom.Services(services)
                    .Enrich.FromLogContext()
            );
-
-        if (OperatingSystem.IsLinux())
-        {
-            _ = builder.Services.AddTransient<IChromiumBootstrapper, LinuxChromiumBootstrapper>();
-        }
     }
 }
