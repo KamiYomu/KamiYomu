@@ -502,6 +502,33 @@ namespace KamiYomu.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chromium&apos;s Directory.
+        /// </summary>
+        public static string ChromiumDirectory {
+            get {
+                return ResourceManager.GetString("ChromiumDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chromium Installation Directory.
+        /// </summary>
+        public static string ChromiumInstallationDirectory {
+            get {
+                return ResourceManager.GetString("ChromiumInstallationDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chromium&apos;s Path.
+        /// </summary>
+        public static string ChromiumPath {
+            get {
+                return ResourceManager.GetString("ChromiumPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         public static string Close {
@@ -2965,6 +2992,15 @@ namespace KamiYomu.Web.Resources {
         public static string TotalDownloads {
             get {
                 return ResourceManager.GetString("TotalDownloads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string Unknown {
+            get {
+                return ResourceManager.GetString("Unknown", resourceCulture);
             }
         }
         

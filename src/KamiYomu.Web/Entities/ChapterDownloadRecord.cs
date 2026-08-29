@@ -254,6 +254,7 @@ public class ChapterDownloadRecord
     /// <summary>
     /// Unique identifier for the chapter download record.
     /// </summary>
+    [BsonId]
     public Guid Id { get; private set; }
 
     /// <summary>

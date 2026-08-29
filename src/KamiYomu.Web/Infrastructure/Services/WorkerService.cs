@@ -46,7 +46,7 @@ public class WorkerService(ILogger<WorkerService> logger,
     }
 
     /// <inheritdoc/>
-    public TimeSpan? GetDiscovertySchedule(Library library)
+    public TimeSpan? GetDiscoverySchedule(Library library)
     {
         using IStorageConnection connection = JobStorage.Current.GetConnection();
 
@@ -74,13 +74,18 @@ public class WorkerService(ILogger<WorkerService> logger,
 
         foreach (ChapterDownloadRecord chapterDownload in chapterDownloads)
         {
-            if (!string.IsNullOrWhiteSpace(chapterDownload.BackgroundJobId))
-            {
-                _ = jobClient.Delete(chapterDownload.BackgroundJobId);
-            }
+            CancelChapterDownload(chapterDownload);
         }
 
         RemoveDiscoverRecurringJob(mangaDownloadRecord.Library);
+    }
+
+    public void CancelChapterDownload(ChapterDownloadRecord chapterDownloadRecord)
+    {
+        if (!string.IsNullOrWhiteSpace(chapterDownloadRecord.BackgroundJobId))
+        {
+            _ = jobClient.Delete(chapterDownloadRecord.BackgroundJobId);
+        }
     }
 
     /// <inheritdoc/>
@@ -233,5 +238,6 @@ public class WorkerService(ILogger<WorkerService> logger,
             }
         }
     }
+
 
 }

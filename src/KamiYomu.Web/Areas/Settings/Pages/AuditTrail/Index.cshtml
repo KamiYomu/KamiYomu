@@ -4,6 +4,8 @@
 @model KamiYomu.Web.Areas.Settings.Pages.AuditTrail.IndexModel
 @inject IConfiguration Configuration
 @inject IOptions<SpecialFolderOptions> SpecialFolderOptions
+@inject IOptions<ChromiumOptions> chromiumOptions
+
 @section Styles {
     <link rel="stylesheet" href="~/lib/xterm/xterm.min.css" />
 }
@@ -115,6 +117,10 @@
                     <li class="list-group-item d-flex justify-content-between">
                         <span>@I18n.LogDirectory</span>
                         <span>@SpecialFolderOptions.Value.LogDir</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@I18n.ChromiumDirectory</span>
+                        <span>@chromiumOptions.Value.GetExecutablePath()</span>
                     </li>
                 </ul>
             </div>

@@ -272,7 +272,7 @@ public class NugetService(DbContext dbContext, IOptions<StartupOptions> startupO
             }
 
             // Find catalog entries for this version
-            IEnumerable<JsonNode?> entries = null;
+            IEnumerable<JsonNode?>? entries = null;
             if (Uri.IsWellFormedUriString(reg["catalogEntry"]?.ToString(), UriKind.Absolute))
             {
                 using HttpResponseMessage catalogEntryResponse = await client.GetAsync(reg["catalogEntry"].ToString(), cancellationToken);
@@ -316,7 +316,7 @@ public class NugetService(DbContext dbContext, IOptions<StartupOptions> startupO
     }
 
 
-    string CleanVersion(string range)
+    private string CleanVersion(string range)
     {
         VersionRange vr = VersionRange.Parse(range);
         NuGetVersion min = vr.MinVersion ?? throw new Exception("No minimum version found.");

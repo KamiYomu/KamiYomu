@@ -49,7 +49,6 @@ public static class WindowsHostings
         Log.Logger.Information("MangaDir: {MangaDir}", special.MangaDir);
         Log.Logger.Information("AgentsDir: {AgentsDir}", special.AgentsDir);
         Log.Logger.Information("DbDir: {DbDir}", special.DbDir);
-
     }
 
     /// <summary>
