@@ -1,5 +1,3 @@
-using KamiYomu.Web.Infrastructure.Browser;
-using KamiYomu.Web.Infrastructure.Browser.Interfaces;
 using KamiYomu.Web.Infrastructure.Storage;
 
 using Serilog;

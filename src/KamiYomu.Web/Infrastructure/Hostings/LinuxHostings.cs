@@ -1,9 +1,10 @@
 using KamiYomu.Web.AppOptions;
-using KamiYomu.Web.Infrastructure.Browser;
-using KamiYomu.Web.Infrastructure.Browser.Interfaces;
 using KamiYomu.Web.Infrastructure.Storage;
 
 using Microsoft.Extensions.Options;
+
+using PuppeteerSharp;
+using PuppeteerSharp.BrowserData;
 
 using Serilog;
 
@@ -43,7 +44,20 @@ public static class LinuxHostings
                    .Enrich.FromLogContext()
            );
 
-        _ = builder.Services.AddTransient<IChromiumBootstrapper, LinuxChromiumBootstrapper>();
+        Log.Logger.Debug("Chromium: Ensure Chromium is downloaded.");
+        BrowserFetcher fetcher = new();
+
+        if (fetcher.GetInstalledBrowsers().Any())
+        {
+            Log.Logger.Debug("Chromium: executable already exists. Skipping download.");
+        }
+        else
+        {
+            Log.Logger.Debug("Chromium: executable not found. Downloading...");
+            _ = fetcher.DownloadAsync(BrowserTag.Stable).GetAwaiter().GetResult();
+        }
+
+        DownloadChromium();
 
         Log.Logger.Information("Linux hostings configured successfully.");
         Log.Logger.Information("LogDir: {LogDir}", special.LogDir);
@@ -52,20 +66,28 @@ public static class LinuxHostings
         Log.Logger.Information("DbDir: {DbDir}", special.DbDir);
     }
 
-    /// <summary>
-    /// uses Linux-specific hosting configurations in the WebApplication. This method checks if the application is running on a Linux operating system and, if so, initializes the LinuxChromiumBootstrapper service (unless running in Docker).
-    /// </summary>
-    /// <param name="app"></param>
-    /// <returns></returns>
-    public static async Task UseLinuxHostingsAsync(this WebApplication app)
+    private static void DownloadChromium()
     {
-        if (FileNameHelper.IsRunningInDocker() || !OperatingSystem.IsLinux())
+        Log.Logger.Debug("Chromium: Ensure Chromium is downloaded.");
+        BrowserFetcher fetcher = new(
+            browser: SupportedBrowser.Chromium
+            );
+
+        if (fetcher.GetInstalledBrowsers().Any())
         {
-            return;
+            Log.Logger.Debug("Chromium: executable already exists. Skipping download.");
+        }
+        else
+        {
+            Log.Logger.Debug("Chromium: executable not found. Downloading...");
+            _ = fetcher.DownloadAsync(BrowserTag.Stable).GetAwaiter().GetResult();
         }
 
-        IChromiumBootstrapper chromium = app.Services.GetRequiredService<IChromiumBootstrapper>();
-        await chromium.InitializeAsync(CancellationToken.None);
+        InstalledBrowser chromium = fetcher.GetInstalledBrowsers().First();
+        string executable = chromium.GetExecutablePath();
 
+        Environment.SetEnvironmentVariable("PUPPETEER_SKIP_CHROMIUM_DOWNLOAD", "true");
+        Environment.SetEnvironmentVariable("PUPPETEER_EXECUTABLE_PATH", executable);
+        Environment.SetEnvironmentVariable("XDG_CACHE_HOME", fetcher.CacheDir);
     }
 }

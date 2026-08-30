@@ -46,7 +46,5 @@ app.UseWebHostings();
 
 app.UseWorkerJobsHostings();
 
-await app.UseLinuxHostingsAsync();
-await app.UseWindowsHostingsAsync();
 await app.RunAsync();
 
