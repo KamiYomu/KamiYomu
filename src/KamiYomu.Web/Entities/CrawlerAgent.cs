@@ -1,10 +1,4 @@
-using System.Reflection;
-
-using KamiYomu.CrawlerAgents.Core.Inputs;
 using KamiYomu.Web.AppOptions;
-using KamiYomu.Web.Entities.CrawlerAgentRuntime;
-using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
-using KamiYomu.Web.Infrastructure.HttpHandlers;
 
 using Microsoft.Extensions.Options;
 
@@ -52,84 +46,6 @@ public class CrawlerAgent
     }
 
     /// <summary>
-    /// Loads an assembly from the specified path into an isolated <see cref="AssemblyLoadContext"/>.
-    /// Validates that the assembly contains at least one non-abstract class implementing <see cref="ICrawlerAgent"/>.
-    /// </summary>
-    /// <param name="assemblyPath">The file path to the assembly to load.</param>
-    /// <returns>The loaded assembly.</returns>
-    /// <exception cref="FileNotFoundException">Thrown when the assembly file does not exist at the specified path.</exception>
-    /// <exception cref="InvalidOperationException">Thrown when the assembly does not contain any non-abstract class implementing <see cref="ICrawlerAgent"/>.</exception>
-    public static CrawlerAgentAssembly GetIsolatedAssembly(
-    string assemblyPath)
-    {
-        if (!File.Exists(assemblyPath))
-        {
-            throw new FileNotFoundException(
-                $"Assembly file not found at path: {assemblyPath}");
-        }
-
-        CrawlerAgentLoadContext context = new CrawlerAgentLoadContext(assemblyPath);
-
-        try
-        {
-            Assembly assembly =
-                context.LoadFromAssemblyPath(
-                    Path.GetFullPath(assemblyPath));
-
-            Type interfaceType = typeof(ICrawlerAgent);
-
-            Type[] types;
-
-            try
-            {
-                types = assembly.GetTypes();
-            }
-            catch (ReflectionTypeLoadException ex)
-            {
-                IEnumerable<string> loaderExceptions = ex.LoaderExceptions
-                    .Where(e => e != null)
-                    .Select(e => e!.ToString());
-
-                throw new InvalidOperationException(
-                    $"Failed to load types from crawler agent assembly " +
-                    $"'{assembly.FullName}'. " +
-                    $"Loader errors: {string.Join(
-                        Environment.NewLine,
-                        loaderExceptions)}",
-                    ex);
-            }
-
-            bool validTypes = types.Any(type =>
-                type is
-                {
-                    IsClass: true,
-                    IsAbstract: false
-                }
-                &&
-                type.GetInterfaces().Any(
-                    implementedInterface =>
-                        implementedInterface == interfaceType));
-
-            if (!validTypes)
-            {
-                throw new InvalidOperationException(
-                    $"Assembly '{assembly.FullName}' does not contain " +
-                    $"any non-abstract class implementing " +
-                    $"'{nameof(ICrawlerAgent)}'.");
-            }
-
-            return new CrawlerAgentAssembly(
-                assembly,
-                context);
-        }
-        catch
-        {
-            context.Unload();
-            throw;
-        }
-    }
-
-    /// <summary>
     /// Deletes the directory containing the crawler agent assembly and all associated files.
     /// </summary>
     public void DeleteAssembly()
@@ -141,16 +57,6 @@ public class CrawlerAgent
         }
     }
 
-    /// <summary>
-    /// Checks if the crawler agent directory exists.
-    /// </summary>
-    /// <returns>True if the directory exists; otherwise, false.</returns>
-    public bool IsCrawlerAgentExists()
-    {
-        string dir = GetCrawlerAgentDir(AssemblyName);
-        return Directory.Exists(dir);
-    }
-    
     /// <summary>
     /// Gets or creates the directory path for the specified agent assembly file.
     /// </summary>

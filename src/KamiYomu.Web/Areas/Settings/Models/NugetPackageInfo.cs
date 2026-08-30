@@ -36,9 +36,20 @@ public class NugetPackageInfo
     }
     public string GetNugetPackageKamiYomuCoreRangeVersion()
     {
-        string? kamiYomuCoreDependency = Dependencies?
+        if (Dependencies?.Count > 0)
+        {
+            string? kamiYomuCoreDependency = Dependencies?
             .FirstOrDefault(d => d.StartsWith("KamiYomu.CrawlerAgents.Core", StringComparison.OrdinalIgnoreCase));
-        return kamiYomuCoreDependency.Split(":")[1] ?? "Unknown";
+            if (!string.IsNullOrWhiteSpace(kamiYomuCoreDependency))
+            {
+                string[] parts = kamiYomuCoreDependency.Split(':', 2);
+                if (parts.Length == 2)
+                {
+                    return parts[1];
+                }
+            }
+        }
+        return I18n.Unknown;
     }
 
     public string GetKamiYomuCoreVersion()

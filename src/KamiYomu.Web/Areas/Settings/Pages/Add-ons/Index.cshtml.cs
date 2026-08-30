@@ -182,11 +182,12 @@ public class IndexModel(ILogger<IndexModel> logger,
                                     ?? throw new FileNotFoundException("Main package DLL not found.");
 
             CrawlerAgentAssembly crawlerAssembly = crawlerAgentAssemblyLoader.GetIsolatedAssembly(dllPath);
-            Dictionary<string, string> metadata = crawlerAgentAssemblyLoader.GetAssemblyMetadata(crawlerAssembly);
             string displayName = crawlerAgentAssemblyLoader.GetCrawlerDisplayName(crawlerAssembly.Assembly);
 
             CrawlerAgent crawlerAgent = new(dllPath, displayName, []);
+
             crawlerAgent.UpdateAssemblyProperties(crawlerAgentAssemblyLoader.GetAssemblyMetadata(crawlerAssembly));
+
             _ = dbContext.CrawlerAgents.Insert(crawlerAgent);
 
             _ = dbContext.CrawlerAgentFileStorage.Delete(tempUploadId);

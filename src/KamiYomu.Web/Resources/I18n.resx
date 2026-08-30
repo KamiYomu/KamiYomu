@@ -1211,4 +1211,16 @@ for Hangfire's &lt;code&gt;WorkerCount&lt;/code&gt; setting to control how many 
   <data name="ProjectUrl" xml:space="preserve">
     <value>Project Url</value>
   </data>
+  <data name="ChromiumInstallationDirectory" xml:space="preserve">
+    <value>Chromium Installation Directory</value>
+  </data>
+  <data name="ChromiumDirectory" xml:space="preserve">
+    <value>Chromium's Directory</value>
+  </data>
+  <data name="ChromiumPath" xml:space="preserve">
+    <value>Chromium's Path</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
 </root>

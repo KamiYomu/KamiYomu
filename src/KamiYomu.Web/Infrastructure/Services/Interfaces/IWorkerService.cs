@@ -22,6 +22,12 @@ public interface IWorkerService
     void CancelMangaDownload(MangaDownloadRecord mangaDownloadRecord);
 
     /// <summary>
+    /// Cancels a previously scheduled manga download job.
+    /// </summary>
+    /// <param name="chapterDownloadRecord">The chapter download record to cancel.</param>
+    void CancelChapterDownload(ChapterDownloadRecord chapterDownloadRecord);
+
+    /// <summary>
     /// Removes a recurring discovery job for the specified library.
     /// </summary>
     /// <param name="library">The library whose recurring discovery job should be removed.</param>
@@ -32,7 +38,7 @@ public interface IWorkerService
     /// </summary>
     /// <param name="library">The library of discovery job.</param>
     /// <returns>The schedule of the recurring discovery job, or null if not scheduled.</returns>
-    TimeSpan? GetDiscovertySchedule(Library library);
+    TimeSpan? GetDiscoverySchedule(Library library);
 
     /// <summary>
     /// Schedules a recurring discovery job for the specified library.

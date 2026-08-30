@@ -1208,11 +1208,20 @@ para que la configuración &lt;code&gt;WorkerCount&lt;/code&gt; de Hangfire cont
   <data name="AllLibrariesSharedSameCrawlerAgentSuccessfully" xml:space="preserve">
     <value>Todas las bibliotecas que compartían el mismo tipo de agente rastreador se han consolidado en el agente rastreador que seleccionó.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ProjectUrl" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="ProjectUrl" xml:space="preserve">
     <value>URL del proyecto</value>
+  </data>
+  <data name="ChromiumInstallationDirectory" xml:space="preserve">
+    <value>Directorio de instalación de Chromium</value>
+  </data>
+  <data name="ChromiumDirectory" xml:space="preserve">
+    <value>Directorio de cromo</value>
+  </data>
+  <data name="ChromiumPath" xml:space="preserve">
+    <value>El camino del cromo</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Unknown" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

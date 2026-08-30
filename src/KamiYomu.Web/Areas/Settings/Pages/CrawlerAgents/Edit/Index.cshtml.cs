@@ -85,7 +85,7 @@ public class IndexModel(DbContext dbContext,
         }
 
         // --- Populate ReadOnlyMetadata only if missing ---
-        Input.ReadOnlyMetadata ??= crawlerAgentAssemblyLoader.GetAssemblyMetadata(crawlerAgent);
+        Input.ReadOnlyMetadata = crawlerAgentAssemblyLoader.GetAssemblyMetadata(crawlerAgent);
 
         // --- Ensure CrawlerInputsViewModel exists ---
         if (Input.CrawlerInputsViewModel is null)
