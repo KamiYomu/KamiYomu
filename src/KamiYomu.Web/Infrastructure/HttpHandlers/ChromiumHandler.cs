@@ -1,6 +1,8 @@
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 
 using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Infrastructure.Storage;
 
 using Microsoft.Extensions.Options;
 
@@ -64,28 +66,11 @@ public sealed class ChromiumHandler(ILogger<ChromiumHandler> logger, IOptions<Ch
                 return _browser;
             }
 
-            logger.LogDebug("Chromium: Ensure Chromium is downloaded.");
-            BrowserFetcher fetcher = new(new BrowserFetcherOptions
-            {
-                Path = _options.GetExecutablePath()
-            });
-
-            if (File.Exists(_options.GetExecutablePath()))
-            {
-                logger.LogDebug("Chromium: executable already exists at {Path}. Skipping download.", fetcher.GetExecutablePath(_options.GetExecutablePath()));
-            }
-            else
-            {
-                logger.LogDebug("Chromium: executable not found. Downloading...");
-                _ = await fetcher.DownloadAsync(BrowserTag.Stable);
-            }
-
             // Launch Chromium
             logger.LogDebug("Chromium: Launching browser instance.");
             _browser = await Puppeteer.LaunchAsync(new LaunchOptions
             {
                 Headless = true,
-                ExecutablePath = _options.GetExecutablePath(),
                 Args = _options.Arguments
             });
 
