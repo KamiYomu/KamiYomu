@@ -27,12 +27,22 @@ public class CloudflareBypassHandler(ILogger<CloudflareBypassHandler> logger, IO
             AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
         });
 
-        HttpResponseMessage response = await client.SendAsync(send, cancellationToken);
-
-        if (!await IsCloudflareBlock(response))
+        try
         {
-            logger.LogDebug("FlareSolverr: Request not blocked. Returning response.");
-            return response;
+            HttpResponseMessage response = await client.SendAsync(send, cancellationToken);
+
+            if (!await IsCloudflareBlock(response))
+            {
+                logger.LogDebug("FlareSolverr: Request not blocked. Returning response.");
+                return response;
+            }
+
+            response.Dispose();
+        }
+        catch
+        {
+            send.Dispose();
+            throw;
         }
 
         logger.LogDebug("FlareSolverr: Solve using FlareSolverr.");
@@ -42,11 +52,22 @@ public class CloudflareBypassHandler(ILogger<CloudflareBypassHandler> logger, IO
 
         HttpRequestMessage retry = new(request.Method, request.RequestUri);
 
-        retry.Headers.Add("User-Agent", userAgent);
-        retry.Headers.Add("Cookie", cookieHeader);
+        try
+        {
+            retry.Headers.Add("User-Agent", userAgent);
+            retry.Headers.Add("Cookie", cookieHeader);
 
-
-        return await client.SendAsync(retry, cancellationToken);
+            return await client.SendAsync(retry, cancellationToken);
+        }
+        catch
+        {
+            retry.Dispose();
+            throw;
+        }
+        finally
+        {
+            send.Dispose();
+        }
     }
 
     private async Task<bool> IsCloudflareBlock(HttpResponseMessage response)

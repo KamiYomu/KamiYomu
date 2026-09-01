@@ -85,11 +85,13 @@ public class MangaDownloaderJob(
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                PagedResult<Chapter> page = await agentCrawlerRepository.GetMangaChaptersAsync(crawlerAgent.Id, mangaId, new PaginationOptions(offset, limit), cancellationToken);
+                PagedResult<Chapter>? page = null;
+
+                page = await agentCrawlerRepository.GetMangaChaptersAsync(crawlerAgent.Id, mangaId, new PaginationOptions(offset, limit), cancellationToken);
 
                 total = page?.PaginationOptions?.Total ?? 0;
 
-                foreach (Chapter chapter in page.Data)
+                foreach (Chapter chapter in page?.Data ?? [])
                 {
 
                     ChapterDownloadRecord record = libDbContext.ChapterDownloadRecords.FindOne(p => p.CrawlerAgent.Id == crawlerAgent.Id
@@ -119,6 +121,7 @@ public class MangaDownloaderJob(
 
                 offset += limit;
                 await Task.Delay(_workerOptions.GetWaitPeriod(), cancellationToken);
+
             } while (offset < total);
 
             mangaDownload.Complete();

@@ -9,7 +9,6 @@ using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.CrawlerAgents.Core.Extensions;
 using KamiYomu.Web.AppOptions;
 using KamiYomu.Web.Entities;
-using KamiYomu.Web.Entities.CrawlerAgentRuntime;
 using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
@@ -25,16 +24,15 @@ public class ChapterDownloaderJob(
     IOptions<WorkerOptions> workerOptions,
     DbContext dbContext,
     CacheContext cacheContext,
-    ICrawlerAgentRepository agentCrawlerRepository,
+    ICrawlerAgentRepository crawlerAgentRepository,
     ICrawlerAgentFactory crawlerAgentFactory,
     IHttpClientFactory httpClientFactory,
     IHangfireRepository hangfireRepository,
     INotificationService notificationService,
-    IGotifyService gotifyService) : IChapterDownloaderJob, IDisposable
+    IGotifyService gotifyService) : IChapterDownloaderJob
 {
     private readonly WorkerOptions _workerOptions = workerOptions.Value;
-    private readonly HttpClient _httpClient = httpClientFactory.CreateClient(Defaults.Worker.WorkerHttpClient);
-    private bool disposedValue;
+    private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
 
     public async Task DispatchAsync(string queue, Guid crawlerAgentId, Guid libraryId, Guid mangaDownloadId, Guid chapterDownloadId, string title, PerformContext context, CancellationToken cancellationToken)
     {
@@ -101,7 +99,7 @@ public class ChapterDownloaderJob(
 
             _ = libDbContext.ChapterDownloadRecords.Update(chapterDownload);
 
-            IEnumerable<Page> pages = await agentCrawlerRepository.GetChapterPagesAsync(
+            IEnumerable<Page> pages = await crawlerAgentRepository.GetChapterPagesAsync(
                 chapterDownload.CrawlerAgent.Id,
                 chapterDownload.Chapter,
                 cancellationToken);
@@ -205,24 +203,45 @@ public class ChapterDownloaderJob(
 
     private async Task SavePageAsync(ICrawlerAgentDecorator crawlerAgent, string filePath, Page page, CancellationToken cancellationToken)
     {
+        using HttpClient httpClient = _httpClientFactory.CreateClient(Defaults.Worker.WorkerHttpClient);
         using HttpRequestMessage request = new(HttpMethod.Get, page.ImageUrl)
         {
-            Version = HttpVersion.Version20 // optional, but good for modern servers
+            Version = HttpVersion.Version20
         };
 
         request.AddRangeHeaders([.. crawlerAgent.GetDefaultHeaders()]);
 
-        using HttpResponseMessage response = await _httpClient.SendAsync(
-            request,
-            HttpCompletionOption.ResponseHeadersRead,
-            cancellationToken
-        );
+        try
+        {
+            using HttpResponseMessage response = await httpClient.SendAsync(
+                request,
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken
+            );
 
-        _ = response.EnsureSuccessStatusCode();
+            _ = response.EnsureSuccessStatusCode();
 
-        await using Stream httpStream = await response.Content.ReadAsStreamAsync(cancellationToken);
-        await using FileStream fileStream = File.Create(filePath);
-        await httpStream.CopyToAsync(fileStream, cancellationToken);
+            await using Stream httpStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+            await using FileStream fileStream = File.Create(filePath);
+            await httpStream.CopyToAsync(fileStream, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error saving page to {FilePath}", filePath);
+            // Clean up partial file on error
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    File.Delete(filePath);
+                }
+                catch (Exception deleteEx)
+                {
+                    logger.LogWarning(deleteEx, "Failed to clean up partial page file: {FilePath}", filePath);
+                }
+            }
+            throw;
+        }
     }
 
     private async Task<bool> SaveCoverAsync(Manga manga, string mangaFolder, CancellationToken cancellationToken)
@@ -237,22 +256,35 @@ public class ChapterDownloaderJob(
         {
             return false;
         }
+        using HttpClient httpClient = _httpClientFactory.CreateClient(Defaults.Worker.WorkerHttpClient);
         try
         {
-            using HttpResponseMessage response = await _httpClient.GetAsync(
+            using HttpResponseMessage response = await httpClient.GetAsync(
                 manga.CoverUrl,
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken);
             _ = response.EnsureSuccessStatusCode();
-            using Stream httpStream = await response.Content.ReadAsStreamAsync(cancellationToken);
-            using FileStream fileStream = File.Create(coverFilePath);
-            httpStream.CopyTo(fileStream);
+            await using Stream httpStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+            await using FileStream fileStream = File.Create(coverFilePath);
+            await httpStream.CopyToAsync(fileStream, cancellationToken);
             logger.LogInformation("Copied cover image to chapter folder: '{CoverFilePath}'", coverFilePath);
             return true;
         }
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Failed to copy cover image to chapter folder: '{CoverFilePath}'", coverFilePath);
+            // Clean up partial file on error
+            if (File.Exists(coverFilePath))
+            {
+                try
+                {
+                    File.Delete(coverFilePath);
+                }
+                catch (Exception deleteEx)
+                {
+                    logger.LogWarning(deleteEx, "Failed to clean up partial cover file: '{CoverFilePath}'", coverFilePath);
+                }
+            }
             return false;
         }
     }
@@ -316,24 +348,6 @@ public class ChapterDownloaderJob(
         {
             logger.LogError(ex, ex.Message);
         }
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!disposedValue)
-        {
-            if (disposing)
-            {
-                _httpClient.Dispose();
-            }
-            disposedValue = true;
-        }
-    }
-
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
     }
 }
 
