@@ -128,14 +128,23 @@ public class ChapterDiscoveryJob(
 
             PaginationOptions paginationOptions = BuildPaginationOptions(continuationToken, offset, limit);
 
-            PagedResult<Chapter> page = await agentCrawlerRepository.GetMangaChaptersAsync(
-                crawlerAgent.Id, mangaId, paginationOptions, cancellationToken);
+            PagedResult<Chapter>? page = null;
+            try
+            {
+                page = await agentCrawlerRepository.GetMangaChaptersAsync(
+                    crawlerAgent.Id, mangaId, paginationOptions, cancellationToken);
 
-            await ProcessChaptersAsync(libDbContext, page.Data, mangaDownload, library, crawlerAgent, cancellationToken);
+                await ProcessChaptersAsync(libDbContext, page?.Data ?? [], mangaDownload, library, crawlerAgent, cancellationToken);
 
-            continuationToken = page.PaginationOptions?.ContinuationToken ?? null;
-            offset += limit;
-            fetchMoreChapters = DetermineFetchMoreChapters(page, offset);
+                continuationToken = page?.PaginationOptions?.ContinuationToken ?? null;
+                offset += limit;
+                fetchMoreChapters = DetermineFetchMoreChapters(page, offset);
+            }
+            finally
+            {
+                // Dispose PagedResult resources if implemented
+                (page as IDisposable)?.Dispose();
+            }
 
             await Task.Delay(_workerOptions.GetWaitPeriod(), cancellationToken);
         } while (fetchMoreChapters);
@@ -245,12 +254,20 @@ public class ChapterDiscoveryJob(
             return;
         }
 
-        Manga? updatedManga = await crawlerAgent.GetByIdAsync(library.Manga.Id, cancellationToken);
-
-        if (updatedManga != null)
+        try
         {
-            library.UpdateMangaInformation(updatedManga);
-            _ = dbContext.Libraries.Update(library);
+            Manga? updatedManga = await crawlerAgent.GetByIdAsync(library.Manga.Id, cancellationToken);
+
+            if (updatedManga != null)
+            {
+                library.UpdateMangaInformation(updatedManga);
+                _ = dbContext.Libraries.Update(library);
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to update manga record for library '{LibraryId}'", library.Id);
+            // Continue execution - this is not critical
         }
     }
 }

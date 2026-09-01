@@ -1,5 +1,11 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 
+# Install diagnostic tools only in development
+RUN if [ "$ASPNETCORE_ENVIRONMENT" = "Development" ]; then \
+        dotnet tool install -g dotnet-dump && \
+        echo 'export PATH="$PATH:/root/.dotnet/tools"' >> /root/.bashrc ; \
+    fi
+
 # Puppeteer environment setup
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
