@@ -209,7 +209,11 @@ public class ChapterDownloaderJob(
             Version = HttpVersion.Version20
         };
 
-        request.AddRangeHeaders([.. crawlerAgent.GetDefaultHeaders()]);
+        if (crawlerAgent.GetDefaultHeaders().Any())
+        {
+            httpClient.DefaultRequestHeaders.Clear();
+            request.AddRangeHeaders([.. crawlerAgent.GetDefaultHeaders()]);
+        }
 
         try
         {

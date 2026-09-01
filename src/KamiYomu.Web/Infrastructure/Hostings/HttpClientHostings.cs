@@ -37,7 +37,7 @@ public static class HttpClientHostings
 
         _ = services.AddHttpClient(Defaults.Worker.WorkerHttpClient, client =>
         {
-            client.DefaultRequestHeaders.UserAgent.ParseAdd(CrawlerAgentMetadata.Values.MimicUserAgent);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(CrawlerAgentMetadata.Values.KamiYomuHttpUserAgent);
         })
             .AddPolicyHandler(retryPolicy)
             .AddPolicyHandler(timeoutPolicy);
