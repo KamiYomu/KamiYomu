@@ -1,8 +1,7 @@
 using System.Net.Http.Headers;
-using System.Runtime.InteropServices;
+using System.Threading;
 
 using KamiYomu.Web.AppOptions;
-using KamiYomu.Web.Infrastructure.Storage;
 
 using Microsoft.Extensions.Options;
 
@@ -15,27 +14,35 @@ namespace KamiYomu.Web.Infrastructure.HttpHandlers;
 /// Manages browser lifecycle with proper disposal of resources.
 /// </summary>
 /// <param name="logger">The ILogger instance.</param>
-/// <param name="options">Configuration options for Chromium behavior</param>
-public sealed class ChromiumHandler(ILogger<ChromiumHandler> logger, IOptions<ChromiumOptions> options) : DelegatingHandler, IAsyncDisposable
+/// <param name="chromiumOptions">Configuration options for Chromium behavior</param>
+public sealed class ChromiumHandler(ILogger<ChromiumHandler> logger, IOptions<ChromiumOptions> chromiumOptions, IOptions<WorkerOptions> workerOptions) : DelegatingHandler, IAsyncDisposable
 {
-    private readonly ChromiumOptions _options = options.Value;
+    private readonly ChromiumOptions _options = chromiumOptions.Value;
+    private readonly WorkerOptions _workerOptions = workerOptions.Value;
 
     // Shared browser instance
     private static IBrowser? _browser;
     private static readonly SemaphoreSlim _browserInitLock = new(1, 1);
+    private static SemaphoreSlim? _maxNumberPageLock = null;
     private static bool _disposed = false;
     ///<inheritdoc/>
     protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
-        // Try Chromium first
         try
         {
             IBrowser? browser = await GetOrCreateBrowserAsync(cancellationToken);
-            return browser is null
-                ? await base.SendAsync(request, cancellationToken)
-                : await HandleWithChromiumAsync(browser, request, cancellationToken);
+
+            if (browser is null || _maxNumberPageLock is null)
+            {
+                return await base.SendAsync(request, cancellationToken);
+            }
+            else
+            {
+                return await HandleWithChromiumAsync(browser, request, cancellationToken);
+
+            }
         }
         catch
         {
@@ -74,6 +81,11 @@ public sealed class ChromiumHandler(ILogger<ChromiumHandler> logger, IOptions<Ch
                 Args = _options.Arguments
             });
 
+            int maxPage = (int)(_workerOptions.MaxConcurrentCrawlerInstances * 1.5);
+
+            logger.LogDebug("Chromium: Setting up page initialization lock with maxPage: {maxPage}", maxPage);
+            _maxNumberPageLock ??= new SemaphoreSlim(1, maxPage);
+
             return _browser;
         }
         catch (Exception ex)
@@ -90,61 +102,84 @@ public sealed class ChromiumHandler(ILogger<ChromiumHandler> logger, IOptions<Ch
     private async Task<HttpResponseMessage> HandleWithChromiumAsync(
         IBrowser browser,
         HttpRequestMessage request,
-        CancellationToken ct)
+        CancellationToken cancellationToken)
     {
-        logger.LogDebug("Chromium: Create a new Page.");
-        await using IPage page = await browser.NewPageAsync();
-        request.Headers.IfNoneMatch.Clear();
-        request.Headers.IfModifiedSince = null;
-        request.Headers.CacheControl = new CacheControlHeaderValue
+        if (_maxNumberPageLock is null)
         {
-            NoCache = true,
-            NoStore = true,
-            MaxAge = TimeSpan.Zero
-        };
-        logger.LogDebug("Chromium: Copy headers to chromium page.");
-        if (request.Headers != null)
+            throw new InvalidOperationException("Chromium: Page initialization lock is null. This should not happen.");
+        }
+        logger.LogDebug("Chromium: Wait for page available, Number of pages available: {numberPages}.", _maxNumberPageLock?.CurrentCount);
+        await _maxNumberPageLock.WaitAsync(cancellationToken);
+        try
         {
-            foreach (KeyValuePair<string, IEnumerable<string>> header in request.Headers)
+            logger.LogDebug("Chromium: Start the navigation, Number of pages available: {numberPages}.", _maxNumberPageLock?.CurrentCount);
+            logger.LogDebug("Chromium: Create a new Page.");
+            await using IPage page = await browser.NewPageAsync();
+            try
             {
-                await page.SetExtraHttpHeadersAsync(new Dictionary<string, string>
+                request.Headers.IfNoneMatch.Clear();
+                request.Headers.IfModifiedSince = null;
+                request.Headers.CacheControl = new CacheControlHeaderValue
                 {
-                    [header.Key] = string.Join(",", header.Value)
+                    NoCache = true,
+                    NoStore = true,
+                    MaxAge = TimeSpan.Zero
+                };
+                logger.LogDebug("Chromium: Copy headers to chromium page.");
+                if (request.Headers != null)
+                {
+                    foreach (KeyValuePair<string, IEnumerable<string>> header in request.Headers)
+                    {
+                        await page.SetExtraHttpHeadersAsync(new Dictionary<string, string>
+                        {
+                            [header.Key] = string.Join(",", header.Value)
+                        });
+                    }
+                }
+
+                string url = request.RequestUri!.ToString();
+
+                // Navigate
+                logger.LogDebug("Chromium: Navigate to the URL requested: {url}", url);
+                IResponse response = await page.GoToAsync(url, new NavigationOptions
+                {
+                    Timeout = _options.RequestTimeout,
+                    WaitUntil =
+                    [
+                        WaitUntilNavigation.DOMContentLoaded,
+                        WaitUntilNavigation.Load,
+                        WaitUntilNavigation.Networkidle0
+                    ]
                 });
+
+                string content = await page.GetContentAsync();
+
+                // Build HttpResponseMessage
+                logger.LogDebug("Chromium: Building HttpResponseMessage from Chromium response.");
+                HttpResponseMessage httpResponse = new(response.Status)
+                {
+                    Content = new StringContent(content)
+                };
+
+                // Copy Chromium response headers
+                foreach (KeyValuePair<string, string> h in response.Headers)
+                {
+                    _ = httpResponse.Headers.TryAddWithoutValidation(h.Key, h.Value);
+                }
+
+                return httpResponse;
+            }
+            catch
+            {
+                logger.LogError("Chromium: Error during page processing.");
+                throw;
             }
         }
-
-        string url = request.RequestUri!.ToString();
-
-        // Navigate
-        logger.LogDebug("Chromium: Navigate to the URL requested: {url}", url);
-        IResponse response = await page.GoToAsync(url, new NavigationOptions
+        finally
         {
-            Timeout = _options.RequestTimeout,
-            WaitUntil =
-            [
-                WaitUntilNavigation.DOMContentLoaded,
-                WaitUntilNavigation.Load,
-                WaitUntilNavigation.Networkidle0
-            ]
-        });
-
-        string content = await page.GetContentAsync();
-
-        // Build HttpResponseMessage
-        logger.LogDebug("Chromium: Building HttpResponseMessage from Chromium response.");
-        HttpResponseMessage httpResponse = new(response.Status)
-        {
-            Content = new StringContent(content)
-        };
-
-        // Copy Chromium response headers
-        foreach (KeyValuePair<string, string> h in response.Headers)
-        {
-            _ = httpResponse.Headers.TryAddWithoutValidation(h.Key, h.Value);
+            _ = _maxNumberPageLock?.Release();
+            logger.LogDebug("Chromium: End of the navigation, Number of pages available: {numberPages}.", _maxNumberPageLock?.CurrentCount);
         }
-
-        return httpResponse;
     }
 
     public async Task<HttpResponseMessage?> TrySendAsync(
@@ -174,15 +209,26 @@ public sealed class ChromiumHandler(ILogger<ChromiumHandler> logger, IOptions<Ch
             {
                 logger.LogDebug("Chromium: Close chromium on dispose.");
                 await _browser.CloseAsync();
+                await _browser.DisposeAsync();
+                _browser = null;
+            }
+
+            if (_maxNumberPageLock != null)
+            {
+                _maxNumberPageLock.Dispose();
+                _maxNumberPageLock = null;
             }
 
             _disposed = true;
         }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Chromium: Error during async disposal.");
+        }
         finally
         {
-            logger.LogDebug("Chromium: Release lock.");
             _ = _browserInitLock.Release();
-            // await base.DisposeAsync();
+            logger.LogDebug("Chromium: Browser instance release lock.");
         }
     }
 
@@ -194,20 +240,33 @@ public sealed class ChromiumHandler(ILogger<ChromiumHandler> logger, IOptions<Ch
         if (disposing)
         {
             _browserInitLock.WaitAsync().GetAwaiter().GetResult();
+
             try
             {
                 if (!_disposed && _browser != null && !_browser.IsClosed)
                 {
                     logger.LogDebug("Chromium: Close chromium on dispose.");
                     _browser.CloseAsync().GetAwaiter().GetResult();
+                    _browser.DisposeAsync().GetAwaiter().GetResult();
+                    _browser = null;
+                }
+
+                if (_maxNumberPageLock != null)
+                {
+                    _maxNumberPageLock.Dispose();
+                    _maxNumberPageLock = null;
                 }
 
                 _disposed = true;
             }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Chromium: Error during synchronous disposal.");
+            }
             finally
             {
-                logger.LogDebug("Chromium: Release lock.");
                 _ = _browserInitLock.Release();
+                logger.LogDebug("Chromium: Browser instance release lock.");
             }
         }
 

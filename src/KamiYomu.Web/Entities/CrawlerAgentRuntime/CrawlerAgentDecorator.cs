@@ -2,7 +2,10 @@ using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.Web.Entities.CrawlerAgentRuntime.Interfaces;
 
 namespace KamiYomu.Web.Entities.CrawlerAgentRuntime;
-
+/// <summary>
+/// CrawlerAgentDecorator is a decorator class that wraps an instance of ICrawlerAgent, providing additional functionality while maintaining the original interface. It implements the ICrawlerAgentDecorator interface, which combines the functionalities of ICrawlerAgent and IDefaultHeadersCrawlerAgent, along with IDisposable for resource management.
+/// </summary>
+/// <param name="inner"></param>
 public class CrawlerAgentDecorator(ICrawlerAgent inner) : ICrawlerAgentDecorator
 {
     private readonly ICrawlerAgent _inner = inner;
@@ -49,6 +52,4 @@ public class CrawlerAgentDecorator(ICrawlerAgent inner) : ICrawlerAgentDecorator
         _inner.Dispose();
         GC.SuppressFinalize(this);
     }
-
-
 }
