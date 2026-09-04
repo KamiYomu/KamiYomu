@@ -17,6 +17,16 @@
         <Copyright>© KamiYomu. Licensed under AGPL-3.0.</Copyright>
     </PropertyGroup>
 
+    <Target Name="LibManRestore" BeforeTargets="Build">
+        <Exec Command="dotnet tool restore"
+              IgnoreExitCode="false"
+              ContinueOnError="false" />
+
+        <Exec Command="dotnet libman restore"
+              IgnoreExitCode="false"
+              ContinueOnError="false" />
+    </Target>
+
 
     <ItemGroup>
         <Compile Remove="Areas\Public\Views\**" />

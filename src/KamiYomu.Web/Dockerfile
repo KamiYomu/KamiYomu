@@ -70,18 +70,11 @@ COPY ["KamiYomu.Web/KamiYomu.Web.csproj", "KamiYomu.Web/"]
 # Restore .NET dependencies
 RUN dotnet restore "./KamiYomu.Web/KamiYomu.Web.csproj"
 
-# Install LibMan CLI globally
-RUN dotnet tool install -g Microsoft.Web.LibraryManager.Cli
-
-# Add LibMan to PATH
-ENV PATH="$PATH:/root/.dotnet/tools"
-
 # Copy full source
 COPY . .
 
 # Restore LibMan libraries
 WORKDIR "/src/KamiYomu.Web"
-RUN libman restore
 
 # Build project with full version metadata
 RUN dotnet build "./KamiYomu.Web.csproj" \
