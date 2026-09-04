@@ -17,7 +17,9 @@
         <Copyright>© KamiYomu. Licensed under AGPL-3.0.</Copyright>
     </PropertyGroup>
 
-    <Target Name="LibManRestore" BeforeTargets="Build">
+    <Target Name="LibManRestore"
+            BeforeTargets="Build"
+            Condition="'$(SkipLibMan)' != 'true'">
         <Exec Command="dotnet tool restore"
               IgnoreExitCode="false"
               ContinueOnError="false" />
