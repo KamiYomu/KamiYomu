@@ -1,51 +1,79 @@
-# Agent Instructions — KamiYomu
+# KamiYomu — AGENTS.md
 
-These instructions apply to any AI coding agent working in this repository. Act as a **senior software architect**: favor clear boundaries, testable abstractions, and minimal, purposeful changes over quick hacks.
+Instructions for any AI coding agent (Claude, Copilot, Cursor, etc.) working in this repository.
+Act as a senior software architect: clear boundaries, testable abstractions, minimal and
+purposeful changes.
 
-## Tech Stack Context
+## Stack
 
 - .NET 8 Razor Pages, plugin-based crawler agent architecture.
-- **LiteDB** is the main application storage (manga library, chapters, reading state, etc.).
-- **SQLite** is used exclusively as the storage backend for **Hangfire** (background job scheduling/worker), not for domain data.
-- Hangfire drives scheduled/background jobs under `src/KamiYomu.Web/Worker`.
-- Tests live in `src/KamiYomu.Web.Tests` (xUnit + Moq), referencing `KamiYomu.Web.csproj`.
+- **LiteDB** — main application storage (library, chapters, reading state).
+- **SQLite** — Hangfire backend only (`src/KamiYomu.Web/Worker`), never domain data.
+- Tests: `src/KamiYomu.Web.Tests` (xUnit + Moq), referencing `KamiYomu.Web.csproj`.
 
-## Required Workflow After Implementing Any New Code
+## Core rules
 
-1. **Write testable code.** Depend on interfaces/abstractions rather than concrete LiteDB/Hangfire/SQLite types where practical, so logic can be unit tested without a live database. Inject dependencies (constructor injection) rather than using static/service-locator access.
-2. **Run the test suite** after finishing an implementation, before considering the work done:
-   ```
-   dotnet test src/KamiYomu.sln
-   ```
-   or, if scoping to the test project only:
-   ```
-   dotnet test src/KamiYomu.Web.Tests/KamiYomu.Web.Tests.csproj
-   ```
-   - **All tests must pass.** Do not report a task complete with failing or skipped tests unless the user explicitly accepts that.
-   - Add/update unit tests for any new or changed behavior, especially business logic that can be isolated from LiteDB/SQLite/Hangfire I/O.
-3. **Validate performance is not regressed.** For code on hot paths (crawler jobs, downloads, DB queries, page rendering), the change must be **better than or equivalent to** the previous implementation's performance:
-   - Where feasible, benchmark or time the affected path before and after the change (e.g., a quick timed test run, `Stopwatch` measurement, or existing benchmark).
-   - If it's not practical to measure directly, reason explicitly about algorithmic complexity/IO changes and note this in the report.
-   - Flag any suspected regression instead of hiding it.
-4. **Report a summary.** After finishing, present a concise report of the change covering:
-   - What changed and why (files/modules touched).
-   - Test results (pass/fail counts, what was newly added).
-   - Performance comparison notes (measured or reasoned).
-   - Any assumptions made (see below).
+1. **Never commit directly to `main` or `develop`.** All work happens on a branch and lands via PR.
+2. **New work branches from `develop`**, prefix `feature/<name>`; PRs target `develop`. Releases
+   flow `develop` → `main` (see [Branching](#branching)).
+3. Write testable code: depend on interfaces, not concrete LiteDB/Hangfire/SQLite types; use
+   constructor injection over static/service-locator access.
+4. **Run the test suite before calling work done**: `dotnet test src/KamiYomu.sln`
+   (or scope to `src/KamiYomu.Web.Tests/KamiYomu.Web.Tests.csproj`). All tests must pass unless the
+   user explicitly accepts failures/skips.
+5. For hot paths (crawler jobs, downloads, DB queries, page rendering), the change must not
+   regress performance — measure or reason about it explicitly, and flag suspected regressions.
+6. Keep changes surgical and scoped to the request; don't refactor unrelated code.
+7. No secrets in source, config, or commit history.
 
-## Assumption Comments for Business Rules
+## Branching
 
-When a business rule, edge case, or intended behavior is **not explicitly specified** by the user or discoverable from existing code/docs, do not silently guess:
+| Prefix      | Branches from | Purpose                       | Merges into |
+| ----------- | ------------- | ------------------------------ | ----------- |
+| `feature/`  | `develop`     | New functionality              | `develop`   |
+| `fix/`      | `develop`     | Bug fixes                      | `develop`   |
+| `hotfix/`   | `main`        | Urgent production fix          | `main`      |
+| `releases/` | `main`        | Version cut, e.g. `releases/4.0.0` |   |
 
-- Add an inline comment in the code marking the assumption, e.g.:
-  ```csharp
-  // ASSUMPTION: A chapter is considered "read" only when 100% of its pages have been viewed.
-  // Adjust if the actual business rule differs.
-  ```
-- Also call out the assumption explicitly in the final summary report so the user can confirm or correct it.
+`develop` is the integration branch for ongoing work; `main` tracks released versions.
 
-## General Principles
+**Release flow**: all `feature/*`/`fix/*` branches merge into `develop`. When it's time to cut a
+release, open a PR merging `develop` into `main` describing the features/fixes included. A
+`releases/<semver>` branch is then cut from `main` at that point using
+[Semantic Versioning](https://semver.org/) — e.g. `releases/4.0.0`. New releases start as
+pre-releases with a suffix (`-beta1`, `-rc1`, ...) before the final tag is cut.
 
-- Keep changes surgical and scoped to the request; don't refactor unrelated code.
-- Prefer dependency injection and interfaces for LiteDB repositories, Hangfire job classes, and crawler agents so they remain unit-testable in isolation.
-- Don't introduce new persistence mechanisms — use LiteDB for domain data and SQLite only for Hangfire, unless the user explicitly requests otherwise.
+## Code style
+
+Governed by `src/.editorconfig` — treat it as authoritative, don't fight its rules (e.g. explicit
+types only, no `var`; file-scoped namespaces; braces required). For anything not covered there,
+follow Microsoft's naming/design guidelines:
+
+- [C# identifier naming conventions](https://learn.microsoft.com/dotnet/csharp/fundamentals/coding-style/identifier-names)
+- [.NET general naming conventions](https://learn.microsoft.com/dotnet/standard/design-guidelines/naming-guidelines)
+- [Razor / `.cshtml` syntax reference](https://learn.microsoft.com/aspnet/core/mvc/views/razor)
+
+Quick recap:
+
+| Element                         | Convention     | Example         |
+| -------------------------------- | -------------- | --------------- |
+| Classes / Methods / Properties   | `PascalCase`   | `GetOrderAsync` |
+| Private fields                   | `_camelCase`   | `_repository`   |
+| Parameters / locals              | `camelCase`    | `orderId`       |
+| Async methods                    | `Async` suffix | `GetOrderAsync` |
+| Interfaces                       | `I` + PascalCase | `ILockManager` |
+
+## Assumption comments
+
+When a business rule or intended behavior isn't specified by the user or discoverable from
+existing code/docs, don't silently guess:
+
+- Mark it inline: `// ASSUMPTION: <what you assumed>. Adjust if the actual rule differs.`
+- Call it out again in your final summary/PR description so the user can confirm or correct it.
+
+## General principles
+
+- Prefer dependency injection and interfaces for LiteDB repositories, Hangfire jobs, and crawler
+  agents so they stay unit-testable in isolation.
+- Don't introduce new persistence mechanisms — LiteDB for domain data, SQLite only for Hangfire —
+  unless explicitly requested otherwise.
