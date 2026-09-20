@@ -8,6 +8,9 @@ namespace KamiYomu.Web.Infrastructure.Contexts;
 /// <param name="isReadOnly"></param>
 public class LibraryDbContext(Guid libraryId, bool isReadOnly = false) : IDisposable
 {
+    // ASSUMPTION: Tests may temporarily override this resolver to redirect per-library LiteDB files away from the production /db path; production keeps the current /db/lib{id}.db behavior by default.
+    internal static Func<Guid, string> DatabaseFilePathResolver { get; set; } = id => $"/db/lib{id}.db";
+
     private bool _disposed = false;
     private ILiteDatabase _raw;
     /// <summary>
@@ -64,7 +67,7 @@ public class LibraryDbContext(Guid libraryId, bool isReadOnly = false) : IDispos
     /// <returns>The file path of the database.</returns>
     public string DatabaseFilePath()
     {
-        return $"/db/lib{libraryId}.db";
+        return DatabaseFilePathResolver(libraryId);
     }
     /// <summary>
     /// Drops the database by disposing the current instance and deleting the database file.
