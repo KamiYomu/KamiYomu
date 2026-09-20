@@ -38,7 +38,7 @@ public class OpdsControllerTests : IDisposable
 
     public void Dispose()
     {
-        LibraryDbContext.DatabaseFilePathResolver = libraryId => $"/db/lib{libraryId}.db";
+        LibraryDbContext.DatabaseFilePathResolver = ServiceTestHelpers.DefaultLibraryDbContextResolver;
         try
         {
             if (Directory.Exists(_rootPath))

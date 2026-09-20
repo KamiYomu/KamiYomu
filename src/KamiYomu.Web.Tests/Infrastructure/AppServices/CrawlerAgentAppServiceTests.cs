@@ -10,6 +10,7 @@ using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Infrastructure.Repositories.Interfaces;
 using KamiYomu.Web.Infrastructure.Services.Interfaces;
 using KamiYomu.Web.Resources;
+using KamiYomu.Web.Tests.Infrastructure.Services;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -76,7 +77,7 @@ public sealed class SharedInfrastructureStateFixture : IDisposable
 
     public void Dispose()
     {
-        LibraryDbContext.DatabaseFilePathResolver = libraryId => $"/db/lib{libraryId}.db";
+        LibraryDbContext.DatabaseFilePathResolver = ServiceTestHelpers.DefaultLibraryDbContextResolver;
         TryDeleteDirectoryWithRetries(RootPath);
 
         _serviceProvider.Dispose();

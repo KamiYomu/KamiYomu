@@ -33,6 +33,15 @@ internal static class ServiceTestHelpers
 
     public static string ArtifactsRoot => Path.Combine(AppContext.BaseDirectory, "ServiceTestArtifacts");
 
+    // ASSUMPTION: LibraryDbContext hardcodes the production "/db" path rather than reading it from
+    // SpecialFolderOptions.DbDir, and that path isn't writable in the CI container (or on most dev
+    // machines outside the app's own Docker image). This is the single source of truth for where
+    // tests should redirect per-library LiteDB files instead; TestAssemblyInitializer applies it as
+    // the process-wide default so any test that forgets to override LibraryDbContext.DatabaseFilePathResolver
+    // itself still falls back to a writable location rather than the CI-only "Access to the path '/db' is denied" failure.
+    public static Func<Guid, string> DefaultLibraryDbContextResolver { get; } =
+        libraryId => Path.Combine(ArtifactsRoot, "db", "libraries", $"lib{libraryId}.db");
+
     public static void EnsureServiceLocatorConfigured()
     {
         lock (SyncRoot)

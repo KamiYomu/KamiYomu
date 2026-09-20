@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 
 using KamiYomu.Web.AppOptions;
+using KamiYomu.Web.Infrastructure.Contexts;
 using KamiYomu.Web.Tests.Infrastructure.Services;
 
 namespace KamiYomu.Web.Tests;
@@ -30,5 +31,13 @@ internal static class TestAssemblyInitializer
         // Force Defaults.ServiceLocator.Instance's backing Lazy<T> to evaluate now, while our
         // factory is the one configured, so it permanently wins the race described above.
         _ = Defaults.ServiceLocator.Instance;
+
+        // LibraryDbContext.DatabaseFilePathResolver defaults to the production "/db/lib{id}.db"
+        // path, which isn't writable in CI (or most dev environments outside the app's own Docker
+        // image). Apply the shared test-safe default up front so any test that resolves a
+        // LibraryDbContext without first overriding the resolver itself still writes somewhere
+        // writable, instead of intermittently failing with UnauthorizedAccessException depending
+        // on test run order.
+        LibraryDbContext.DatabaseFilePathResolver = ServiceTestHelpers.DefaultLibraryDbContextResolver;
     }
 }

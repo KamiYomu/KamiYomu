@@ -26,7 +26,7 @@ public class IndexModelTests : IDisposable
 
     public void Dispose()
     {
-        LibraryDbContext.DatabaseFilePathResolver = libraryId => $"/db/lib{libraryId}.db";
+        LibraryDbContext.DatabaseFilePathResolver = ServiceTestHelpers.DefaultLibraryDbContextResolver;
         _dbContext.Dispose();
         _readingDbContext.Dispose();
 
