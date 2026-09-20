@@ -10,13 +10,20 @@ namespace KamiYomu.Web.Infrastructure.Contexts;
 
 public class CacheContext
 {
-    public IBarrel Current => Barrel.Current;
+    // ASSUMPTION: Tests may temporarily override this resolver to substitute a fake IBarrel,
+    // since MonkeyCache's Barrel.Current is a process-wide singleton that is lazily created once
+    // and never rebuilt for the lifetime of the process, making it impossible to isolate or force
+    // failures via Barrel.ApplicationId alone in a shared test process. Production keeps using
+    // the real Barrel.Current by default.
+    internal static Func<IBarrel> CurrentResolver { get; set; } = () => Barrel.Current;
+
+    public IBarrel Current => CurrentResolver();
 
     public bool TryGetCached<T>(string key, out T value)
     {
-        if (!Barrel.Current.IsExpired(key) && Barrel.Current.Exists(key))
+        if (!Current.IsExpired(key) && Current.Exists(key))
         {
-            T? result = Barrel.Current.Get<T>(key, GetCacheSerializationOptions());
+            T? result = Current.Get<T>(key, GetCacheSerializationOptions());
             value = result;
             return true;
         }
@@ -27,9 +34,9 @@ public class CacheContext
     public async Task<T> GetOrSetAsync<T>(string key, Func<Task<T>> valueFactory, TimeSpan? expiration = null)
     {
         // Check if cache exists and is not expired
-        if (!Barrel.Current.IsExpired(key) && Barrel.Current.Exists(key))
+        if (!Current.IsExpired(key) && Current.Exists(key))
         {
-            T? result = Barrel.Current.Get<T>(key, GetCacheSerializationOptions());
+            T? result = Current.Get<T>(key, GetCacheSerializationOptions());
             return result;
         }
 
@@ -37,7 +44,7 @@ public class CacheContext
         T? value = await valueFactory();
 
         // Store in cache
-        Barrel.Current.Add(key, value, expiration ?? TimeSpan.FromMinutes(30));
+        Current.Add(key, value, expiration ?? TimeSpan.FromMinutes(30));
 
         return value;
     }
@@ -45,43 +52,43 @@ public class CacheContext
     public T GetOrSet<T>(string key, Func<T> valueFactory, TimeSpan? expiration = null)
     {
         // Check if cache exists and is not expired
-        if (!Barrel.Current.IsExpired(key) && Barrel.Current.Exists(key))
+        if (!Current.IsExpired(key) && Current.Exists(key))
         {
-            return Barrel.Current.Get<T>(key, GetCacheSerializationOptions());
+            return Current.Get<T>(key, GetCacheSerializationOptions());
         }
 
         // Calculate the value
         T? value = valueFactory();
 
         // Store in cache
-        Barrel.Current.Add(key, value, expiration ?? TimeSpan.FromMinutes(30));
+        Current.Add(key, value, expiration ?? TimeSpan.FromMinutes(30));
 
         return value;
     }
 
     public string[] GetKeys(Guid crawlerAgentId)
     {
-        return [.. Barrel.Current.GetKeys(CacheState.Active).Where(x => x.StartsWith(crawlerAgentId.ToString(), StringComparison.OrdinalIgnoreCase))];
+        return [.. Current.GetKeys(CacheState.Active).Where(x => x.StartsWith(crawlerAgentId.ToString(), StringComparison.OrdinalIgnoreCase))];
     }
 
     public void EmptyAgentKeys(Guid crawlerAgentId)
     {
-        Barrel.Current.Empty(GetKeys(crawlerAgentId));
+        Current.Empty(GetKeys(crawlerAgentId));
     }
 
     public void EmptyAll()
     {
-        Barrel.Current.EmptyAll();
+        Current.EmptyAll();
     }
 
     public void Empty(params string[] keys)
     {
-        Barrel.Current.Empty(keys);
+        Current.Empty(keys);
     }
 
     public void EmptyExpired()
     {
-        Barrel.Current.EmptyExpired();
+        Current.EmptyExpired();
     }
 
     private JsonSerializerOptions GetCacheSerializationOptions()

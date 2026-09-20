@@ -10,7 +10,7 @@
 
                     <!-- Icon -->
                     <div class="col-12 col-md-auto text-center">
-                        <img src="@Model?.IconUrl"
+                        <img src="@Model?.IconUrl?.ToInternalImageUrl()"
                              alt="Package Icon"
                              class="img-fluid rounded"
                              style="max-width: 64px;" />

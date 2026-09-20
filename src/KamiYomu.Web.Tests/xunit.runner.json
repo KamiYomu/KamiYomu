@@ -4,9 +4,9 @@
   "diagnosticMessages": true,
   "internalDiagnosticMessages": false,
 
-  "parallelizeAssembly": true,
-  "parallelizeTestCollections": true,
-  "maxParallelThreads": 0,
+  "parallelizeAssembly": false,
+  "parallelizeTestCollections": false,
+  "maxParallelThreads": 1,
 
   "preEnumerateTheories": true,
 
