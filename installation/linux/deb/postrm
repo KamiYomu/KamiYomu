@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+if [ -d /run/systemd/system ]; then
+    systemctl daemon-reload || true
+fi
+
+if [ "$1" = "purge" ]; then
+    # Only a purge (apt purge kamiyomu) deletes user data: library, database, logs.
+    rm -rf /var/lib/kamiyomu
+    if getent passwd kamiyomu >/dev/null; then
+        deluser --system kamiyomu >/dev/null 2>&1 || true
+    fi
+    if getent group kamiyomu >/dev/null; then
+        delgroup --system kamiyomu >/dev/null 2>&1 || true
+    fi
+fi
+
+exit 0

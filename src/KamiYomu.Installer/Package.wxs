@@ -1,0 +1,84 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+    <Package Name="KamiYomu"
+             Manufacturer="KamiYomu"
+             Version="$(Version)"
+             UpgradeCode="6F3C2B1A-8D4E-4A57-9B0C-1E2D3F4A5B6C"
+             Scope="perMachine"
+             Compressed="yes">
+
+        <SummaryInformation Description="KamiYomu - self-hosted manga crawler and reader" />
+
+        <!-- Upgrades replace the previous version in place (service is stopped/restarted by ServiceControl). -->
+        <MajorUpgrade DowngradeErrorMessage="A newer version of KamiYomu is already installed." />
+        <MediaTemplate EmbedCab="yes" />
+
+        <Feature Id="Main" Title="KamiYomu" Level="1">
+            <ComponentGroupRef Id="ServiceComponents" />
+            <ComponentGroupRef Id="PayloadComponents" />
+        </Feature>
+
+        <!-- Wizard: welcome, license (AGPL-3.0), install folder, progress, finish. -->
+        <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+        <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+        <ui:WixUI Id="WixUI_InstallDir" />
+
+        <!-- Finish page checkbox: open the web UI in the default browser. -->
+        <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Open KamiYomu in my browser (http://localhost:8080)" />
+        <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+        <Property Id="WixShellExecTarget" Value="http://localhost:8080" />
+        <CustomAction Id="LaunchKamiYomu" DllEntry="WixShellExec" Impersonate="yes" Return="ignore" BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)" />
+        <UI>
+            <Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="LaunchKamiYomu"
+                     Condition="WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 AND NOT Installed" />
+        </UI>
+    </Package>
+
+    <Fragment>
+        <!-- Installs to C:\Program Files\KamiYomu (Program Files (x86) for the x86 package), like install.ps1. -->
+        <StandardDirectory Id="ProgramFiles6432Folder">
+            <Directory Id="INSTALLFOLDER" Name="KamiYomu" />
+        </StandardDirectory>
+    </Fragment>
+
+    <Fragment>
+        <ComponentGroup Id="ServiceComponents" Directory="INSTALLFOLDER">
+            <Component Id="KamiYomuServiceExe">
+                <File Id="KamiYomuWebExe" Source="$(PayloadDir)\KamiYomu.Web.exe" KeyPath="yes" />
+
+                <ServiceInstall Id="KamiYomuServiceInstall"
+                                Name="KamiYomuService"
+                                DisplayName="KamiYomu Service"
+                                Description="KamiYomu background service"
+                                Type="ownProcess"
+                                Start="auto"
+                                ErrorControl="normal">
+                    <!-- Restart on crash after 60s; reset failure count after 1 day (sc.exe failure ... in install.ps1). -->
+                    <util:ServiceConfig FirstFailureActionType="restart"
+                                        SecondFailureActionType="restart"
+                                        ThirdFailureActionType="restart"
+                                        RestartServiceDelayInSeconds="60"
+                                        ResetPeriodInDays="1" />
+                </ServiceInstall>
+
+                <ServiceControl Id="KamiYomuServiceControl"
+                                Name="KamiYomuService"
+                                Start="install"
+                                Stop="both"
+                                Remove="uninstall"
+                                Wait="yes" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+
+    <Fragment>
+        <!-- Everything else from the publish output (appsettings, wwwroot, native libs, ...). -->
+        <ComponentGroup Id="PayloadComponents" Directory="INSTALLFOLDER">
+            <Files Include="$(PayloadDir)\**">
+                <Exclude Files="$(PayloadDir)\KamiYomu.Web.exe" />
+                <Exclude Files="$(PayloadDir)\**\*.pdb" />
+            </Files>
+        </ComponentGroup>
+    </Fragment>
+</Wix>

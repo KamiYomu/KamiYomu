@@ -1,0 +1,23 @@
+#!/bin/sh
+set -e
+
+if [ "$1" = "configure" ]; then
+    # Dedicated unprivileged service account; data lives in /var/lib/kamiyomu
+    if ! getent passwd kamiyomu >/dev/null; then
+        adduser --system --group --home /var/lib/kamiyomu --no-create-home \
+                --shell /usr/sbin/nologin --gecos "KamiYomu service" kamiyomu
+    fi
+    install -d -o kamiyomu -g kamiyomu -m 0750 /var/lib/kamiyomu
+    chown kamiyomu:kamiyomu /var/lib/kamiyomu
+
+    if [ -d /run/systemd/system ]; then
+        systemctl daemon-reload || true
+        systemctl enable kamiyomu.service || true
+        # restart (not start) so upgrades pick up the new binary
+        systemctl restart kamiyomu.service || true
+    fi
+
+    echo "KamiYomu installed. Visit http://localhost:8080"
+fi
+
+exit 0

@@ -1,0 +1,15 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+    remove|upgrade|deconfigure)
+        if [ -d /run/systemd/system ]; then
+            systemctl stop kamiyomu.service || true
+        fi
+        if [ "$1" = "remove" ] && [ -d /run/systemd/system ]; then
+            systemctl disable kamiyomu.service || true
+        fi
+        ;;
+esac
+
+exit 0

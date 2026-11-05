@@ -1,0 +1,32 @@
+<Project Sdk="WixToolset.Sdk/6.0.2">
+    <!--
+        Windows MSI installer for KamiYomu (WiX Toolset v6).
+
+        Packages a self-contained publish of KamiYomu.Web and registers it as the
+        "KamiYomuService" Windows Service (same name and behavior as installation/windows/install.ps1).
+
+        Build one MSI per architecture (x64, x86, arm64):
+          1. dotnet publish KamiYomu.Web -c Release -r win-x64 /p:PublishSingleFile=true -o publish/win-x64
+          2. dotnet build KamiYomu.Installer -c Release /p:InstallerPlatform=x64 /p:PayloadDir=ABS_PATH_TO_PUBLISH /p:Version=4.0.0
+    -->
+    <PropertyGroup>
+        <!-- x64 | x86 | arm64 -->
+        <InstallerPlatform Condition="'$(InstallerPlatform)' == ''">x64</InstallerPlatform>
+        <Version Condition="'$(Version)' == ''">1.0.0</Version>
+        <!-- PackageTag = full release tag incl. pre-release suffix (e.g. 4.0.0-beta1); Version stays numeric for MSI. -->
+        <PackageTag Condition="'$(PackageTag)' == ''">$(Version)</PackageTag>
+        <OutputName>kamiyomu-$(PackageTag)-win-$(InstallerPlatform)</OutputName>
+        <OutputType>Package</OutputType>
+        <Platform>$(InstallerPlatform)</Platform>
+        <PlatformTarget>$(InstallerPlatform)</PlatformTarget>
+        <!-- Folder holding the published KamiYomu.Web output. Defaults to the local publish layout. -->
+        <PayloadDir Condition="'$(PayloadDir)' == ''">$(MSBuildThisFileDirectory)..\..\publish\win-$(InstallerPlatform)</PayloadDir>
+        <DefineConstants>$(DefineConstants);Version=$(Version);PayloadDir=$(PayloadDir)</DefineConstants>
+        <SuppressValidation Condition="'$(OS)' != 'Windows_NT'">true</SuppressValidation>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="WixToolset.Util.wixext" Version="6.0.2" />
+        <PackageReference Include="WixToolset.UI.wixext" Version="6.0.2" />
+    </ItemGroup>
+</Project>

@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KamiYomu.Web.Tests", "KamiYomu.Web.Tests\KamiYomu.Web.Tests.csproj", "{3D3DFAD1-F232-0BD9-FCF8-BDE9BC3E823A}"
 EndProject
+Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "KamiYomu.Installer", "KamiYomu.Installer\KamiYomu.Installer.wixproj", "{DFE02571-6637-4E75-917B-7175C642FC32}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,8 @@ Global
 		{3D3DFAD1-F232-0BD9-FCF8-BDE9BC3E823A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D3DFAD1-F232-0BD9-FCF8-BDE9BC3E823A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D3DFAD1-F232-0BD9-FCF8-BDE9BC3E823A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFE02571-6637-4E75-917B-7175C642FC32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFE02571-6637-4E75-917B-7175C642FC32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

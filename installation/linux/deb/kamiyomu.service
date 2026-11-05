@@ -1,0 +1,23 @@
+[Unit]
+Description=KamiYomu background service
+After=network.target
+
+[Service]
+Type=simple
+User=kamiyomu
+Group=kamiyomu
+WorkingDirectory=/opt/KamiYomu
+ExecStart=/opt/KamiYomu/KamiYomu.Web
+Restart=always
+RestartSec=5
+
+# All application data (db, logs, manga, agents) lives under /var/lib/kamiyomu/KamiYomu.
+# KamiYomu resolves its data root from LocalApplicationData, which .NET derives from XDG_DATA_HOME.
+Environment=HOME=/var/lib/kamiyomu
+Environment=XDG_DATA_HOME=/var/lib/kamiyomu
+Environment=XDG_CONFIG_HOME=/var/lib/kamiyomu/config
+Environment=XDG_CACHE_HOME=/var/lib/kamiyomu/cache
+Environment=DOTNET_BUNDLE_EXTRACT_BASE_DIR=/var/lib/kamiyomu/.net
+
+[Install]
+WantedBy=multi-user.target

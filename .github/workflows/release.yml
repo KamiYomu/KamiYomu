@@ -215,6 +215,64 @@ jobs:
           name: kamiyomu-${{ needs.extract_version.outputs.tag }}-${{ matrix.rid }}
           path: publish/kamiyomu-${{ needs.extract_version.outputs.tag }}-${{ matrix.rid }}.tar.gz
 
+      # Debian/Ubuntu/Mint package (.deb) built from the self-contained publish above
+      - name: Build Debian package (.deb)
+        if: ${{ startsWith(matrix.rid, 'linux-') }}
+        shell: bash
+        run: >
+          bash ./installation/linux/deb/build-deb.sh
+          publish/${{ matrix.rid }}
+          ${{ needs.extract_version.outputs.tag }}
+          ${{ matrix.rid == 'linux-x64' && 'amd64' || 'arm64' }}
+          deb-out
+
+      - name: Verify Debian package exists
+        if: ${{ startsWith(matrix.rid, 'linux-') }}
+        shell: bash
+        run: |
+          DEB_VERSION="${TAG//-/\~}"
+          F="deb-out/kamiyomu_${DEB_VERSION}_${{ matrix.rid == 'linux-x64' && 'amd64' || 'arm64' }}.deb"
+          test -f "$F" || { echo "Missing $F"; ls -R deb-out; exit 1; }
+          dpkg-deb -I "$F"
+        env:
+          TAG: ${{ needs.extract_version.outputs.tag }}
+
+      - name: Upload Debian package artifact
+        if: ${{ startsWith(matrix.rid, 'linux-') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: kamiyomu-deb-${{ needs.extract_version.outputs.tag }}-${{ matrix.rid }}
+          path: deb-out/*.deb
+          if-no-files-found: error
+
+      # Windows MSI installer (WiX Toolset v6) built from the self-contained publish above
+      - name: Build Windows installer (MSI)
+        if: ${{ startsWith(matrix.rid, 'win-') }}
+        shell: pwsh
+        run: >
+          dotnet build ./src/KamiYomu.Installer/KamiYomu.Installer.wixproj
+          -c Release
+          -p:InstallerPlatform=${{ matrix.rid == 'win-x64' && 'x64' || matrix.rid == 'win-x86' && 'x86' || 'arm64' }}
+          -p:PayloadDir="${{ github.workspace }}/publish/${{ matrix.rid }}"
+          -p:Version=${{ needs.extract_version.outputs.version }}
+          -p:PackageTag=${{ needs.extract_version.outputs.tag }}
+
+      - name: Verify installer exists
+        if: ${{ startsWith(matrix.rid, 'win-') }}
+        shell: pwsh
+        run: |
+          $msi = "src/KamiYomu.Installer/bin" | Get-ChildItem -Recurse -Filter "kamiyomu-${{ needs.extract_version.outputs.tag }}-${{ matrix.rid }}.msi"
+          if (-not $msi) { throw "MSI for ${{ matrix.rid }} was not produced" }
+          $msi | ForEach-Object { Write-Host "Built $($_.FullName) ($($_.Length) bytes)" }
+
+      - name: Upload installer artifact
+        if: ${{ startsWith(matrix.rid, 'win-') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: kamiyomu-installer-${{ needs.extract_version.outputs.tag }}-${{ matrix.rid }}
+          path: src/KamiYomu.Installer/bin/**/*.msi
+          if-no-files-found: error
+
   release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
@@ -236,10 +294,31 @@ jobs:
         with:
           path: artifacts
 
+      - name: Verify installers are present
+        run: |
+          for rid in win-x64 win-x86 win-arm64; do
+            f="artifacts/kamiyomu-installer-${{ needs.build_platforms.outputs.tag }}-$rid/kamiyomu-${{ needs.build_platforms.outputs.tag }}-$rid.msi"
+            test -f "$f" || { echo "Missing installer: $f"; find artifacts -type f; exit 1; }
+          done
+
+      - name: Verify Debian packages are present
+        run: |
+          DEB_VERSION="${TAG//-/\~}"
+          for pair in linux-x64:amd64 linux-arm64:arm64; do
+            rid="${pair%%:*}"; arch="${pair##*:}"
+            f="artifacts/kamiyomu-deb-${TAG}-$rid/kamiyomu_${DEB_VERSION}_${arch}.deb"
+            test -f "$f" || { echo "Missing package: $f"; find artifacts -type f; exit 1; }
+          done
+        env:
+          TAG: ${{ needs.build_platforms.outputs.tag }}
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.build_platforms.outputs.tag }}
           name: Release ${{ needs.build_platforms.outputs.tag }}
           prerelease: ${{ needs.build_platforms.outputs.is_prerelease || false }}
-          files: artifacts/**/*.tar.gz
+          files: |
+            artifacts/**/*.tar.gz
+            artifacts/**/*.msi
+            artifacts/**/*.deb
