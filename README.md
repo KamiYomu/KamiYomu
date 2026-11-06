@@ -41,6 +41,48 @@ KamiYomu supports Docker, Windows, and Linux installations. For detailed instruc
 - [Windows](https://kamiyomu.com/docs/Installation/install-via-windows/)
 - [Linux](https://kamiyomu.com/docs/Installation/install-via-linux/)
 
+## 💾 Installers
+
+Each [GitHub release](https://github.com/KamiYomu/KamiYomu/releases) includes ready-to-use installers. KamiYomu is then available at **http://localhost:8080**.
+
+### Windows (MSI)
+
+1. Download `kamiyomu-<version>-win-<arch>.msi` from the latest release (`x64` for most PCs, `x86` for 32-bit, `arm64` for ARM devices).
+2. Run it and follow the wizard (welcome, license, install folder, finish). Administrator rights are required.
+3. KamiYomu is installed to `C:\Program Files\KamiYomu` and runs as the **KamiYomu Service** Windows service, starting automatically and restarting if it crashes.
+
+Silent install / uninstall:
+
+```powershell
+msiexec /i kamiyomu-<version>-win-x64.msi /qn
+msiexec /x kamiyomu-<version>-win-x64.msi /qn
+```
+
+Installing a newer MSI upgrades in place. Uninstalling keeps your data in `%LOCALAPPDATA%\KamiYomu`; delete that folder to remove it.
+
+### Debian / Ubuntu / Linux Mint (.deb)
+
+1. Download `kamiyomu_<version>_<arch>.deb` from the latest release (`amd64` or `arm64`).
+2. Install it (this also installs the required libraries):
+
+```bash
+sudo apt install ./kamiyomu_<version>_amd64.deb
+```
+
+KamiYomu is installed to `/opt/KamiYomu` and runs as the `kamiyomu` systemd service under a dedicated `kamiyomu` user. Manage it with `systemctl status|restart kamiyomu`.
+
+- **Data** (database, logs, manga, agents) is stored in `/var/lib/kamiyomu/KamiYomu`.
+- **Upgrade:** `sudo apt install ./kamiyomu_<new-version>_amd64.deb`.
+- **Remove:** `sudo apt remove kamiyomu` keeps your data. `sudo apt purge kamiyomu` also deletes `/var/lib/kamiyomu` and the `kamiyomu` user.
+- Coming from the `install.sh` script? That runs as root with data in `/root/.local/share/KamiYomu`. Copy that folder to `/var/lib/kamiyomu/KamiYomu` and run `sudo chown -R kamiyomu:kamiyomu /var/lib/kamiyomu` after installing the package.
+
+### Building the installers
+
+- **MSI** (WiX Toolset v6, project `src/KamiYomu.Installer`): publish `KamiYomu.Web` for a `win-*` runtime, then `dotnet build src/KamiYomu.Installer -c Release -p:InstallerPlatform=x64 -p:PayloadDir=<publish folder> -p:Version=<x.y.z>`.
+- **.deb** (`installation/linux/deb`): publish for `linux-x64` or `linux-arm64`, then `bash installation/linux/deb/build-deb.sh <publish folder> <tag> <amd64|arm64> <output folder>` (needs `dpkg-deb`).
+
+The release pipeline builds both automatically and attaches them to the release.
+
 
 --- 
 

@@ -28,3 +28,92 @@ jobs:
 
       - name: Run tests
         run: dotnet test ./src/KamiYomu.sln --no-build --configuration Release --verbosity normal /p:SkipLibMan=true
+
+  validate_installer:
+    name: Validate Windows installer (MSI)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore LibMan tools
+        run: dotnet tool restore
+        working-directory: ./src
+
+      - name: Restore LibMan libraries
+        run: dotnet libman restore
+        working-directory: ./src/KamiYomu.Web
+
+      - name: Publish (win-x64)
+        run: >
+          dotnet publish ./src/KamiYomu.Web/KamiYomu.Web.csproj
+          -c Release
+          -r win-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:SkipLibMan=true
+          -o publish/win-x64
+
+      - name: Build installer
+        run: >
+          dotnet build ./src/KamiYomu.Installer/KamiYomu.Installer.wixproj
+          -c Release
+          -p:InstallerPlatform=x64
+          -p:PayloadDir="${{ github.workspace }}/publish/win-x64"
+          -p:Version=0.0.0
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kamiyomu-installer-win-x64-pr
+          path: src/KamiYomu.Installer/bin/**/*.msi
+          if-no-files-found: error
+
+  validate_deb:
+    name: Validate Debian package (.deb)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore LibMan tools
+        run: dotnet tool restore
+        working-directory: ./src
+
+      - name: Restore LibMan libraries
+        run: dotnet libman restore
+        working-directory: ./src/KamiYomu.Web
+
+      - name: Publish (linux-x64)
+        run: >
+          dotnet publish ./src/KamiYomu.Web/KamiYomu.Web.csproj
+          -c Release
+          -r linux-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:SkipLibMan=true
+          -o publish/linux-x64
+
+      - name: Build package
+        run: bash ./installation/linux/deb/build-deb.sh publish/linux-x64 0.0.0-pr amd64 deb-out
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kamiyomu-deb-amd64-pr
+          path: deb-out/*.deb
+          if-no-files-found: error
